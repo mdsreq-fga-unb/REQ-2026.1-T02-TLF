@@ -1,6 +1,7 @@
 site_name: TLT Finanças
 site_description: Documentação do Projeto TLT Finanças
 site_author: Grupo 3 - Tengo Lengo Tengo
+site_url: https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/
 
 theme:
   name: material

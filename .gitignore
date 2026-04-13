@@ -1,0 +1,9 @@
+site/
+.DS_Store
+.env
+venv/
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+.python-version

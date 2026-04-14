@@ -2,7 +2,7 @@
 
 ## 2.1 Objetivo Geral do Produto
 
-O objetivo central do produto é aumentar a organização financeira dos usuários por meio de uma plataforma de gestão inteligente e integrada para diminuir a falta de controle e rastreabilidade das finanças. O foco é substituir o caos das planilhas manuais por um ecossistema que ofereça controle em tempo real de receitas e despesas e incentivar a educação financeira, eliminando surpresas como faturas, juros e parcelas, garantindo uma jornada de planejamento personalizada para cada perfil de consumo e auxiliando o usuário a manter a noção de seus gastos.
+O objetivo central do produto é aumentar a organização financeira e diminuir a falta de controle e rastreabilidade das finanças dos usuários por meio de uma plataforma de gestão inteligente e integrada para diminuir a falta de controle e rastreabilidade das finanças. O foco é substituir o caos das planilhas manuais por um ecossistema que ofereça controle em tempo real de receitas e despesas e incentivar a educação financeira, eliminando surpresas como faturas, juros e parcelas, garantindo uma jornada de planejamento personalizada para cada perfil de consumo e auxiliando o usuário a manter a noção de seus gastos.
 
 ## 2.2 Objetivos Específicos (OE) do Produto
 

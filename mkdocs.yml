@@ -35,7 +35,6 @@ plugins:
   - search
 
 nav:
-  - Home: index.md
   - Visão do Produto e Projeto:
     - 1-Cenário: visao/1-cenario.md
     - 2-Solução: visao/2-solucao.md
@@ -44,3 +43,4 @@ nav:
     - 5-Cronograma: visao/5-cronograma.md
     - 6-Interação entre equipe e cliente: visao/6-interacao-equipe.md
     - 10.1-Unidade 1: visao/10-unidade-1.md
+  - Entregas: entregas/apresentacao.md

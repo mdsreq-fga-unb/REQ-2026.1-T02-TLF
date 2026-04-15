@@ -1,0 +1,962 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação do Projeto TLT Finanças">
+      
+      
+        <meta name="author" content="Grupo 3 - Tengo Lengo Tengo">
+      
+      
+        <link rel="canonical" href="https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/2-solucao/">
+      
+      
+        <link rel="prev" href="../1-cenario/">
+      
+      
+        <link rel="next" href="../3-estrategias/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.14">
+    
+    
+      
+        <title>2-Solução - TLT Finanças</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.fad675c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.356b1318.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="deep-orange">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#2-solucao-proposta" class="md-skip">
+          Ir para o conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="TLT Finanças" class="md-header__button md-logo" aria-label="TLT Finanças" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            TLT Finanças
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              2-Solução
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="deep-orange"  aria-label="Alternar para modo escuro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo escuro" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3 3.19.09m3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95 2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="red" data-md-color-accent="deep-orange"  aria-label="Alternar para modo claro"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo claro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5c-.84 0-1.65.15-2.39.42L12 2M3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29L3.34 7m.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14L3.36 17M20.65 7l-1.77 3.79a7.023 7.023 0 0 0-2.38-4.15l4.15.36m-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29L20.64 17M12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44L12 22Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando a pesquisa
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../1-cenario/" class="md-tabs__link">
+          
+  
+  Visão do Produto e Projeto
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../entregas/apresentacao/" class="md-tabs__link">
+        
+  
+    
+  
+  Entregas
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="TLT Finanças" class="md-nav__button md-logo" aria-label="TLT Finanças" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    TLT Finanças
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Visão do Produto e Projeto
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Visão do Produto e Projeto
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-cenario/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1-Cenário
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    2-Solução
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    2-Solução
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#21-objetivo-geral-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 Objetivo Geral do Produto
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#22-objetivos-especificos-oe-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 Objetivos Específicos (OE) do Produto
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 Características de Produto (mapeadas com os Objetivos Específicos do Produto)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#24-tecnologias-a-serem-utilizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.4 Tecnologias a Serem Utilizadas
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#25-pesquisa-de-mercado-e-analise-competitiva" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.5 Pesquisa de Mercado e Análise Competitiva
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#26-viabilidade-da-proposta" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.6 Viabilidade da Proposta
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#27-beneficios-esperados" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.7 Benefícios Esperados
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.7 Benefícios Esperados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#beneficios-para-o-cliente-rodrigo-atila" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benefícios para o Cliente (Rodrigo Atila)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#beneficios-para-os-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benefícios para os Usuários
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-estrategias/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3-Estratégias
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4-engenharia-requisitos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4-Engenharia de Requisitos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5-cronograma/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5-Cronograma
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6-interacao-equipe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6-Interação entre equipe e cliente
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-unidade-1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    10.1-Unidade 1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entregas/apresentacao/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Entregas
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#21-objetivo-geral-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 Objetivo Geral do Produto
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#22-objetivos-especificos-oe-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 Objetivos Específicos (OE) do Produto
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 Características de Produto (mapeadas com os Objetivos Específicos do Produto)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#24-tecnologias-a-serem-utilizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.4 Tecnologias a Serem Utilizadas
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#25-pesquisa-de-mercado-e-analise-competitiva" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.5 Pesquisa de Mercado e Análise Competitiva
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#26-viabilidade-da-proposta" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.6 Viabilidade da Proposta
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#27-beneficios-esperados" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.7 Benefícios Esperados
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.7 Benefícios Esperados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#beneficios-para-o-cliente-rodrigo-atila" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benefícios para o Cliente (Rodrigo Atila)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#beneficios-para-os-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benefícios para os Usuários
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="2-solucao-proposta">2 SOLUÇÃO PROPOSTA</h1>
+<h2 id="21-objetivo-geral-do-produto">2.1 Objetivo Geral do Produto</h2>
+<p>O objetivo central do produto é aumentar a organização financeira e diminuir a falta de controle e rastreabilidade das finanças dos usuários por meio de uma plataforma de gestão inteligente e integrada para diminuir a falta de controle e rastreabilidade das finanças. O foco é substituir o caos das planilhas manuais por um ecossistema que ofereça controle em tempo real de receitas e despesas e incentivar a educação financeira, eliminando surpresas como faturas, juros e parcelas, garantindo uma jornada de planejamento personalizada para cada perfil de consumo e auxiliando o usuário a manter a noção de seus gastos.</p>
+<h2 id="22-objetivos-especificos-oe-do-produto">2.2 Objetivos Específicos (OE) do Produto</h2>
+<p>(OE1) Promover a organização financeira pessoal do usuário.</p>
+<p>(OE2) Garantir o acompanhamento claro e atualizado do fluxo de caixa.</p>
+<p>(OE3) Apoiar a análise dos gastos por meio de informações financeiras de fácil compreensão.</p>
+<p>(OE4) Permitir o registro e a sincronização dos lançamentos financeiros de forma confiável.</p>
+<p>(OE5) Assegurar uma experiência de uso simples, rápida e intuitiva em dispositivos móveis.</p>
+<p>(OE6) Proteger as informações financeiras do usuário com mecanismos adequados de segurança.</p>
+<p>(OE7) Incentivar a educação financeira do usuário de maneira simples e intuitiva.</p>
+<h2 id="23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos-do-produto">2.3 Características de Produto (mapeadas com os Objetivos Específicos do Produto)</h2>
+<p>A solução proposta para a TLT finanças deverá contemplar, de forma preliminar, as seguintes características:</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Característica</th>
+<th>Descrição resumida</th>
+<th>Valor de negócio principal</th>
+<th>Contribuição principal</th>
+<th>Contribuição secundária</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CP1</td>
+<td>Painel financeiro consolidado</td>
+<td>Visão unificada de receitas, despesas, saldo e categorias em um único painel.</td>
+<td>Facilita a organização e o entendimento da situação financeira.</td>
+<td>OE1</td>
+<td>OE2</td>
+</tr>
+<tr>
+<td>CP2</td>
+<td>Registro e acompanhamento de transações</td>
+<td>Permite registrar e ver entradas, saídas, pagamentos e recebimentos de forma simples e contínua.</td>
+<td>Melhora o controle do fluxo de caixa e reduz esquecimentos.</td>
+<td>OE2</td>
+<td>OE4</td>
+</tr>
+<tr>
+<td>CP3</td>
+<td>Planejamento financeiro mensal</td>
+<td>Apoia a criação de metas, limites de gastos e acompanhamento do orçamento do mês.</td>
+<td>Incentiva hábitos financeiros mais organizados e previsíveis.</td>
+<td>OE1</td>
+<td>OE7</td>
+</tr>
+<tr>
+<td>CP4</td>
+<td>Relatórios e gráficos analíticos</td>
+<td>Gera gráficos e resumos para facilitar a leitura e comparação dos gastos.</td>
+<td>Ajuda o usuário a interpretar seus dados financeiros com mais clareza.</td>
+<td>OE3</td>
+<td>OE1</td>
+</tr>
+<tr>
+<td>CP5</td>
+<td>Persistência offline e sincronização automática</td>
+<td>Permite lançamentos sem conexão e sincroniza os dados quando a internet for restabelecida.</td>
+<td>Garante continuidade no uso e preserva os registros financeiros.</td>
+<td>OE4</td>
+<td>OE2</td>
+</tr>
+<tr>
+<td>CP6</td>
+<td>Interface móvel simplificada</td>
+<td>Disponibiliza as funções principais com poucos cliques em dispositivos móveis.</td>
+<td>Torna o uso mais prático, rápido e acessível no dia a dia.</td>
+<td>OE5</td>
+<td>OE1</td>
+</tr>
+<tr>
+<td>CP7</td>
+<td>Segurança e proteção de dados</td>
+<td>Aplica mecanismos de autenticação, criptografia e controle de acesso.</td>
+<td>Protege informações sensíveis e aumenta a confiança no sistema.</td>
+<td>OE6</td>
+<td>OE2</td>
+</tr>
+<tr>
+<td>CP8</td>
+<td>Incentivo a educação financeira</td>
+<td>Gera conselhos e dicas personalizados de acordo com os padrões de gasto do usuário</td>
+<td>Ajuda o usuário a ter uma melhor atitude financeira</td>
+<td>OE7</td>
+<td>OE2</td>
+</tr>
+</tbody>
+</table>
+<h2 id="24-tecnologias-a-serem-utilizadas">2.4 Tecnologias a Serem Utilizadas</h2>
+<p>No frontend mobile, será utilizado React Native (Expo), por permitir o desenvolvimento de uma interface responsiva, prática e adequada para dispositivos móveis. Para a visualização de dados financeiros, será empregada a biblioteca Victory Native (Charts), possibilitando a criação de gráficos e relatórios de forma clara e intuitiva. Para a persistência local e suporte ao funcionamento offline, será utilizado o WatermelonDB, que favorece o armazenamento eficiente dos lançamentos financeiros no dispositivo do usuário.</p>
+<p>No backend, a solução será desenvolvida com Node.js e NestJS, que oferecem uma base robusta para a implementação de serviços, regras de negócio e integração entre as camadas do sistema. Para o banco de dados, será utilizado PostgreSQL, com o apoio do Prisma como ORM, facilitando o mapeamento e o gerenciamento das entidades da aplicação. A autenticação dos usuários será realizada por meio do Supabase Auth, contribuindo para o controle de acesso e proteção das informações.</p>
+<p>Além disso, serão utilizados Swagger para documentação da API, Jest para testes automatizados, API RESTful para comunicação entre os componentes do sistema e Git e GitHub para versionamento e colaboração entre os integrantes da equipe. A solução também considerará diretrizes de conformidade com a LGPD, garantindo maior cuidado com a privacidade e o tratamento dos dados financeiros do usuário.</p>
+<h2 id="25-pesquisa-de-mercado-e-analise-competitiva">2.5 Pesquisa de Mercado e Análise Competitiva</h2>
+<p>Existem várias soluções consolidadas no mercado de gerenciamento financeiro pessoal: Mobills, Organizze e Guiabolso, que oferecem funcionalidades como controle de gastos, categorização de despesas e relatórios financeiros e são amplamente utilizadas por usuários na busca de organização financeira. Contudo, apesar do caráter robusto das soluções, elas possuem algumas limitações significativas na perspectiva do público-alvo do TLT Finanças:</p>
+<ul>
+<li>
+<p><strong>Mobills</strong>: Esta plataforma possui uma interface bastante completa, mas a maioria de suas funcionalidades relevantes estão disponíveis só na versão paga, limitações que exclui os usuários de baixa renda. Adicionalmente, pode ser considerada bastante complicada para os usuários que possuem baixo nível de educação financeira.</p>
+</li>
+<li>
+<p><strong>Organizze</strong>: Apresenta um bom controle financeiro e interface simples, mas carece de funcionalidades mais sofisticadas em educação financeira e personalização de acordo com o comportamento do usuário.</p>
+</li>
+<li>
+<p><strong>Guiabolso</strong>: Oferece diferencial pela integração com contas bancárias, mas levanta questões em relação à privacidade dos dados e tem dependência muito forte de integrações externas, o que pode prejudicar a sua confiabilidade e disponibilidade.</p>
+</li>
+</ul>
+<p>Deste modo, a solução proposta pelo TLT Finanças se diferencia por:</p>
+<ul>
+<li>
+<p><strong>Foco em acessibilidade e simplicidade</strong>: A plataforma será construída para usuários de baixo nível de educação financeira, com atenção especial para uma interface intuitiva, linguagem simples e fluxo de uso direto.</p>
+</li>
+<li>
+<p><strong>Funcionalidade offline integrada com a sincronização</strong>: A funcionalidade permitirá o registro de dados mesmo offline e realizará a sincronização dos dados assim que a conexão for restabelecida, o que é particularmente relevante para usuários com acesso limitado à Internet.</p>
+</li>
+<li>
+<p><strong>Gratuidade e inclusão digital</strong>: A proposta objetiva ser acessível sem barreiras financeiras, ampliando o público-alvo para aqueles que não têm condições de arcar com soluções pagas.</p>
+</li>
+</ul>
+<h2 id="26-viabilidade-da-proposta">2.6 Viabilidade da Proposta</h2>
+<p>A proposta do TLT Finanças se revela viável no contexto da disciplina, tendo em vista o escopo definido, a composição da equipe e a possibilidade de um desenvolvimento incremental ao longo do semestre. O projeto foi pensado dentro de um modelo iterativo e incremental, com iterações semanais e entregas contínuas, possibilitando assim a validação frequente das funcionalidades com o cliente e o ajuste do escopo ao longo do tempo. Essa abordagem minimiza riscos e proporciona uma maior aderência da solução às efetivas necessidades do usuário.</p>
+<p>Do aspecto técnico, a equipe desenvolverá o projeto utilizando tecnologias já consolidadas no desenvolvimento web e mobile, como React Native, Node.js e PostgreSQL, o que favorece a curva de aprendizado e o suporte pela documentação disponível. Além disso, a divisão das funcionalidades em módulos independentes (como entrada de transações, painel financeiro e relatórios) permite a implementação do sistema de forma gradual.</p>
+<p>O maior risco do projeto está relacionado à integração de funcionalidades mais complexas, como sincronização de dados e persistência offline, além do desafio de garantir a experiência simples do usuário. No entanto, como estes riscos são mitigados pela priorização de funcionalidades essenciais em um MVP (produto mínimo viável) e pela validação constante com o cliente ao longo das iterações, a proposta é considerada viável.</p>
+<p>Dessa forma, a proposta é considerada viável, a condição de que:</p>
+<ul>
+<li>O escopo do MVP seja mantido sob controle;</li>
+<li>As funcionalidades críticas sejam priorizadas nas primeiras iterações;</li>
+<li>A equipe mantenha comunicação frequente com o cliente;</li>
+<li>O desenvolvimento tenha uma abordagem incremental e com sequência de validações.</li>
+</ul>
+<h2 id="27-beneficios-esperados">2.7 Benefícios Esperados</h2>
+<p>Com base no cenário de alto endividamento e na carência de educação financeira identificada, os benefícios do TLT finanças são:</p>
+<h3 id="beneficios-para-o-cliente-rodrigo-atila">Benefícios para o Cliente (Rodrigo Atila)</h3>
+<ul>
+<li>
+<p><strong>Validação de Necessidades</strong>: Obter uma ferramenta que valide e atenda às necessidades específicas de organização financeira do público que ele representa.</p>
+</li>
+<li>
+<p><strong>Solução Viável e de Qualidade</strong>: Receber um produto técnico de alta qualidade, construído com uma arquitetura sólida que garanta segurança e escalabilidade.</p>
+</li>
+<li>
+<p><strong>Alinhamento de Escopo</strong>: Garantia de que as funcionalidades entregues estão em conformidade com as prioridades definidas durante as iterações semanais.</p>
+</li>
+</ul>
+<h3 id="beneficios-para-os-usuarios">Benefícios para os Usuários</h3>
+<ul>
+<li>
+<p><strong>Organização e Controle em Tempo Real</strong>: Substituição do caos das planilhas manuais por um ecossistema integrado que permite o acompanhamento claro de receitas e despesas em tempo real.</p>
+</li>
+<li>
+<p><strong>Redução de Dívidas e Custos</strong>: Auxílio na eliminação de surpresas como faturas atrasadas, juros e parcelas indesejadas, ajudando a quebrar ciclos de endividamento crônico.</p>
+</li>
+<li>
+<p><strong>Acessibilidade e Usabilidade</strong>: Uma plataforma gratuita, intuitiva e simplificada, projetada para exigir o mínimo de cliques e funcionar mesmo sem conexão com a internet.</p>
+</li>
+<li>
+<p><strong>Previsibilidade</strong>: Capacidade de criar metas e limites de gastos, proporcionando uma visão exata do fluxo de caixa e planejamento mensal.</p>
+</li>
+</ul>
+<hr />
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Voltar ao topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.expand", "navigation.path", "navigation.footer.prev_next", "toc.follow", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.cd18aaf1.min.js"></script>
+      
+    
+  </body>
+</html>

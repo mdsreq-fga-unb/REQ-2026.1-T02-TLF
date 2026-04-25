@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common'
+import { Body, Controller, Post } from '@nestjs/common'
 import { ExampleService } from './example.service'
 import { ExampleDto } from './dto/example.dto'
 
@@ -6,8 +6,8 @@ import { ExampleDto } from './dto/example.dto'
 export class ExampleController {
   constructor(private readonly exampleService: ExampleService) {}
 
-  @Get()
-  getHello(@Query() exampleDto: ExampleDto): string {
+  @Post()
+  getHello(@Body() exampleDto: ExampleDto): string {
     return this.exampleService.getHello(exampleDto.name)
   }
 }

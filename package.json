@@ -11,6 +11,8 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,json}\"",
+    "precommit": "lint-staged",
+    "prepush": "npm run test",
     "prepare": "husky"
   },
   "dependencies": {

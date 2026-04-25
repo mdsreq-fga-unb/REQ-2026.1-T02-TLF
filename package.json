@@ -14,10 +14,11 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "turbo": "^2.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.59.0",
     "husky": "^9.0.0",
     "lint-staged": "^15.0.0",
-    "prettier": "^3.0.0"
+    "prettier": "^3.0.0",
+    "turbo": "^2.0.0"
   },
   "lint-staged": {
     "**/*.{ts,tsx}": [

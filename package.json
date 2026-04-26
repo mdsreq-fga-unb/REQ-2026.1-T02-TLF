@@ -3,7 +3,8 @@
   "private": true,
   "packageManager": "npm@11.6.2",
   "workspaces": [
-    "apps/backend"
+    "apps/backend",
+    "apps/mobile"
   ],
   "scripts": {
     "dev": "turbo run dev",

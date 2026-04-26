@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "TLT Finanças",
-    "slug": "tlt-financas",
+    "slug": "TLTFinanas",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -43,12 +43,7 @@
         }
       ],
       "./plugins/with-no-duplicate-simdjson",
-      [
-        "@morrowdigital/watermelondb-expo-plugin",
-        {
-          "disableJsi": true
-        }
-      ]
+      ["@morrowdigital/watermelondb-expo-plugin"]
     ],
     "extra": {
       "router": {},

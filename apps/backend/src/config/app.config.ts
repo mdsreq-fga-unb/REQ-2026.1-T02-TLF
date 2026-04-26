@@ -6,6 +6,8 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(3000),
   DATABASE_URL: z.string().url(),
   SUPABASE_URL: z.string().url(),
+  SUPABASE_ANON_KEY: z.string().min(10),
+  SUPABASE_SERVICE_KEY: z.string().min(10),
   SUPABASE_JWT_SECRET: z.string().min(10),
 })
 
@@ -16,6 +18,8 @@ export const appConfig = registerAs('app', () => ({
   port: Number(process.env.PORT ?? 3000),
   databaseUrl: process.env.DATABASE_URL,
   supabaseUrl: process.env.SUPABASE_URL,
+  supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
+  supabaseServiceKey: process.env.SUPABASE_SERVICE_KEY,
   supabaseJwtSecret: process.env.SUPABASE_JWT_SECRET,
 }))
 

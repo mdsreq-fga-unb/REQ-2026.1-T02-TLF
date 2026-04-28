@@ -1,0 +1,56 @@
+{
+  "expo": {
+    "name": "TLT Finanças",
+    "slug": "TLTFinanas",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "tltfinancas",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tltfinancas.app"
+    },
+    "android": {
+      "package": "com.tltfinancas.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 36,
+            "targetSdkVersion": 36,
+            "minSdkVersion": 24
+          }
+        }
+      ],
+      "./plugins/with-no-duplicate-simdjson",
+      ["@morrowdigital/watermelondb-expo-plugin"]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b08987c5-d23b-4f3b-99f2-c61c1d2ba740"
+      }
+    },
+    "owner": "tlt-finance"
+  }
+}

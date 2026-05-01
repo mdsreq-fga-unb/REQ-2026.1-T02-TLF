@@ -6,6 +6,5 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     gap: 15,
-    paddingTop: 10,
   },
 })

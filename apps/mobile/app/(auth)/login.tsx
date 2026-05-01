@@ -109,6 +109,7 @@ export default function LoginScreen() {
               )}
             </InputContainer>
             <ButtonPrimary title="Entrar" disabled={!isFormValid} />
+            <ThemedLink href={'/'} text="Esqueci minha senha" />
             <Separator />
             <ThemedText
               text="Não possui uma conta? "

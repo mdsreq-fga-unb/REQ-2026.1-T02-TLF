@@ -10,7 +10,7 @@ import { Separator } from '@/components/ui/Separator'
 import { ButtonSecondary } from '@/components/ui/ButtonSecondary'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
-import { ThemedTittle } from '@/components/ui/ThemedTittle'
+import { ThemedTittle } from '@/components/ui/Text'
 
 export default function LoginScreen() {
   const router = useRouter()

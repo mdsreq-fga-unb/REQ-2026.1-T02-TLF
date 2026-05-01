@@ -1,27 +1,41 @@
-// update this file with the colors of the app
-export const colors = {
-  light: {
-    primary: '#000000',
-    secondary: '#FFFFFF',
-    tertiary: '#000000',
-    quaternary: '#FFFFFF',
-    quinary: '#000000',
-    senary: '#FFFFFF',
-    septenary: '#000000',
-    octonary: '#FFFFFF',
-    nonary: '#000000',
-    denary: '#FFFFFF',
-  },
+export const Colors = {
+  warning: '#be021fff',
+
   dark: {
-    primary: '#FFFFFF',
-    secondary: '#000000',
-    tertiary: '#FFFFFF',
-    quaternary: '#000000',
-    quinary: '#FFFFFF',
-    senary: '#000000',
-    septenary: '#FFFFFF',
-    octonary: '#000000',
-    nonary: '#FFFFFF',
-    denary: '#000000',
+    text: '#F9F8F8',
+    background: '#121418',
+    blueSecondary: '#6965e680',
+    bluePrimary: '#6A66FF',
+    gray: '#21242c',
+    graySecondary: '#454954',
+  },
+  light: {
+    text: '#121212',
+    background: '#F9F8F8',
+    blueSecondary: '#6663b380',
+    bluePrimary: '#6A66FF',
+    gray: '#A2A2A2',
+    graySecondary: '#454954',
   },
 }
+
+// export const Colors = {
+//   warning: "#be021fff",
+
+//   dark: {
+//     text: "#F9F8F8",
+//     background: "#121418",
+//     blueSecondary: "#6965e680",
+//     bluePrimary: "#130f8a",
+//     gray: "#21242c",
+//     graySecondary: "#454954"
+//   },
+//   light: {
+//     text: "#121212",
+//     background: "#F9F8F8",
+//     blueSecondary: "#6663b380",
+//     bluePrimary: "#6A66FF",
+//     gray: "#A2A2A2",
+//     graySecondary: "#454954"
+//   }
+// };

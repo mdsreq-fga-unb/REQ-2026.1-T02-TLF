@@ -13,6 +13,9 @@ import { ThemedText } from '@/components/ui/ThemedText'
 import { InputContainer } from '@/components/ui/InputContainer'
 import { ThemedLink } from '@/components/ui/ThemedlLink'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { useAuthStore } from '@/stores/auth'
+import { router } from 'expo-router'
+import { login } from '@/services/api/auth'
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('')
@@ -22,6 +25,16 @@ export default function LoginScreen() {
   const [emailError, setEmailError] = useState('')
   const [passwordError, setPasswordError] = useState('')
   const themeColor = useThemeColor()
+
+  const handleLogin = async () => {
+    try {
+      const response = await login(email, password)
+      useAuthStore.getState().setSession(response.user, response.accessToken, response.refreshToken)
+      router.replace('/(tabs)')
+    } catch (error) {
+      throw new Error(`${error}`)
+    }
+  }
 
   useEffect(() => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -108,7 +121,7 @@ export default function LoginScreen() {
                 </Container>
               )}
             </InputContainer>
-            <ButtonPrimary title="Entrar" disabled={!isFormValid} />
+            <ButtonPrimary title="Entrar" onPress={handleLogin} disabled={!isFormValid} />
             <ThemedLink href={'/'} text="Esqueci minha senha" />
             <Separator />
             <ThemedText

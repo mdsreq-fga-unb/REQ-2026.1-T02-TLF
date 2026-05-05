@@ -7,6 +7,7 @@ export const Colors = {
     gray: '#21242c',
     graySecondary: '#454954',
     warning: '#be021fff',
+    success: '#2CB67D',
   },
   light: {
     text: '#121212',
@@ -16,6 +17,7 @@ export const Colors = {
     gray: '#A2A2A2',
     graySecondary: '#454954',
     warning: '#be021fff',
+    success: '#2CB67D',
   },
 }
 

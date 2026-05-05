@@ -6,9 +6,13 @@ type props = ScrollViewProps & {
   children: ReactNode
 }
 
-export function ScrollArea({ children, style, ...rest }: props) {
+export function ScrollArea({ children, style, contentContainerStyle, ...rest }: props) {
   return (
-    <ScrollView style={[styles.scrollArea, { backgroundColor: 'transparent' }, style]} {...rest}>
+    <ScrollView
+      style={[{ backgroundColor: 'transparent' }, style]}
+      contentContainerStyle={[styles.scrollArea, contentContainerStyle]}
+      {...rest}
+    >
       {children}
     </ScrollView>
   )

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, HttpCode, HttpStatus, Get, Req } from '@nestjs/common'
+import { Body, Controller, Post, HttpCode, HttpStatus, Get, Req, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { TransactionsService } from './transactions.service'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
@@ -24,9 +24,12 @@ export class TransactionsController {
     return this.transactionsService.create(userId, dto)
   }
 
-  //Issue #10 - CA1
+  //Issue #10 - CA1, CA2
   @Get()
-  findAll(@Req() req: AuthRequest) {
-    return this.transactionsService.findAll(req.user.id);
-  }
+  findAll(@Req() req: AuthRequest, @Query('category') category?: string) {
+        return this.transactionsService.findAll({
+            userId: req.user.id,
+            category,
+        });
+    }
 }

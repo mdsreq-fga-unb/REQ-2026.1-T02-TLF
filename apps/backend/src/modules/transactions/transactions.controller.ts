@@ -1,9 +1,10 @@
-import { Body, Controller, Post, HttpCode, HttpStatus, Get, Req, Query, Param } from '@nestjs/common'
+import { Body, Controller, Post, HttpCode, HttpStatus, Get, Req, Query, Param, Patch } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { TransactionsService } from './transactions.service'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
 import { Request } from 'express';
-import {FilterTransactionsDto} from './dto/filter-transactions.dto';
+import { FilterTransactionsDto } from './dto/filter-transactions.dto';
+import { UpdateTransactionDto } from './dto/update-transaction.dto';
 
 interface AuthRequest extends Request {
   user: {
@@ -27,23 +28,37 @@ export class TransactionsController {
 
   //Issue #10 - CA1, CA2, CA3
   @Get()
-    findAll(@Req() req: AuthRequest,
+  findAll(@Req() req: AuthRequest,
     @Query() query: FilterTransactionsDto) {
-        return this.transactionsService.findAll({
-            userId: req.user.id,
-            ...query,
-        });
-    }
+    return this.transactionsService.findAll({
+      userId: req.user.id,
+      ...query,
+    });
+  }
 
-    //Issue #10 - CA4
-    @Get(':id')
-    findOne(
+  //Issue #10 - CA4
+  @Get(':id')
+  findOne(
     @Req() req: AuthRequest,
     @Param('id') id: string,
-    ) {
-        return this.transactionsService.findOne({
-            userId: req.user.id,
-            id,
-        });
-    }
+  ) {
+    return this.transactionsService.findOne({
+      userId: req.user.id,
+      id,
+    });
+  }
+
+  //Issue #10 - CA5
+  @Patch(':id')
+  update(
+    @Req() req: AuthRequest,
+    @Param('id') id: string,
+    @Body() dto: UpdateTransactionDto,
+  ) {
+    return this.transactionsService.update({
+      userId: req.user.id,
+      id,
+      dto,
+    });
+  }
 }

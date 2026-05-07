@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from "@nestjs/swagger"
 import { IsOptional, IsUUID, IsEnum } from "class-validator"
-import { TransactionType } from "../../../../generated/prisma"
+import { TransactionType } from "../../../../generated/prisma/client"
 export class FilterTransactionsDto {
 
     @ApiPropertyOptional({

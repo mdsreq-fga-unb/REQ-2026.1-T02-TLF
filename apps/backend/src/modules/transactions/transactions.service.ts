@@ -2,6 +2,7 @@ import { Injectable, BadRequestException, NotFoundException } from '@nestjs/comm
 import { PrismaService } from '@common/prisma/prisma.service'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
 import { TransactionType } from '../../../generated/prisma/client';
+import { UpdateTransactionDto } from './dto/update-transaction.dto';
 
 @Injectable()
 export class TransactionsService {
@@ -88,7 +89,7 @@ export class TransactionsService {
             }
           }
         },
-        ...(categoryId && { categoryId: categoryId }),
+        ...(categoryId && { categoryId }),
         ...(type && { type }),
       },
     });
@@ -115,5 +116,33 @@ export class TransactionsService {
     }
 
     return transaction;
+  }
+
+  async update({ userId, id, dto }: { userId: string, id: string, dto: UpdateTransactionDto }) {
+    const transaction = await this.prisma.transaction.findFirst({
+      where: {
+        id,
+        account: {
+          is: {
+            institution: {
+              is: {
+                userId,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!transaction) {
+      throw new NotFoundException('Transação não encontrada');
+    }
+
+    return this.prisma.transaction.update({
+      where: { id },
+      data: {
+        ...dto,
+      },
+    });
   }
 }

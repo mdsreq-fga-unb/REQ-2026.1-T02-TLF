@@ -11,7 +11,7 @@ import {
     IsUUID,
     Min
 } from "class-validator";
-import { TransactionType, TransactionStatus } from "../../../../generated/prisma";
+import { TransactionType, TransactionStatus } from "../../../../generated/prisma/client";
 
 export class CreateTransactionDto {
 
@@ -72,7 +72,7 @@ export class CreateTransactionDto {
 
     @ApiPropertyOptional({
         enum: TransactionStatus,
-        example: TransactionStatus.CONFIRMED,
+        example: TransactionStatus.COMPLETED,
         description: 'Estados possíveis da transação'
     })
     @IsOptional()

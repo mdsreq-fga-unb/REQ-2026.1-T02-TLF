@@ -24,12 +24,12 @@ export class TransactionsController {
     return this.transactionsService.create(userId, dto)
   }
 
-  //Issue #10 - CA1, CA2
+  //Issue #10 - CA1, CA2, CA3
   @Get()
-  findAll(@Req() req: AuthRequest, @Query('category') category?: string) {
+  findAll(@Req() req: AuthRequest, @Query() query: FilterTransactionsDto) {
         return this.transactionsService.findAll({
             userId: req.user.id,
-            category,
+            ...query,
         });
     }
 }

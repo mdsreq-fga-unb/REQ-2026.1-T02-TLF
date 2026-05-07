@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '@common/prisma/prisma.service'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
+import {TransactionType} from '../../../generated/prisma/client';
 
 @Injectable()
 export class TransactionsService {
@@ -67,20 +68,29 @@ export class TransactionsService {
     return transaction
   }
 
-  findAll({ userId, category }: { userId: string, category?: string }) {
-        return this.prisma.transaction.findMany({
-            where: {
-                account: {
-                    is: {
-                        institution: {
-                            is: {
-                                userId,
-                            },
-                        }
-                    }
-                },
-                ...(category && { categoryId: category }),
-            },
-        });
-    }
+  findAll({
+    userId, 
+    categoryId, 
+    type, 
+  }: { 
+    userId: string, 
+    categoryId?: string, 
+    type?: TransactionType,
+    }) {
+    return this.prisma.transaction.findMany({
+      where: {
+        account: {
+          is: {
+            institution: {
+              is: {
+                userId,
+              },
+            }
+          }
+        },
+        ...(categoryId && { categoryId: categoryId }),
+        ...(type && { type }),
+      },
+    });
+  }
 }

@@ -66,4 +66,16 @@ export class TransactionsService {
 
     return transaction
   }
+
+  findAll(userId: string) {
+        return this.prisma.transaction.findMany({
+            where: {
+                account: {
+                    institution: {
+                        userId,
+                    },
+                },
+            },
+        });
+    }
 }

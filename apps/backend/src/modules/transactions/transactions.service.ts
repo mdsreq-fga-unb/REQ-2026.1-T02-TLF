@@ -86,8 +86,8 @@ export class TransactionsService {
               is: {
                 userId,
               },
-            }
-          }
+            },
+          },
         },
         ...(categoryId && { categoryId }),
         ...(type && { type }),
@@ -143,6 +143,31 @@ export class TransactionsService {
       data: {
         ...dto,
       },
+    });
+  }
+
+  async remove({ userId, id }: { userId: string, id: string }) {
+    const transaction = await this.prisma.transaction.findFirst({
+      where: {
+        id,
+        account: {
+          is: {
+            institution: {
+              is: {
+                userId,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!transaction) {
+      throw new NotFoundException("Transação não encontrada");
+    }
+
+    return this.prisma.transaction.delete({
+      where: { id }
     });
   }
 }

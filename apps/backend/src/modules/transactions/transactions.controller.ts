@@ -1,4 +1,4 @@
-import { Body, Controller, Post, HttpCode, HttpStatus, Get, Req, Query, Param, Patch } from '@nestjs/common'
+import { Body, Controller, Post, HttpCode, HttpStatus, Get, Req, Query, Param, Patch, Delete } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { TransactionsService } from './transactions.service'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
@@ -59,6 +59,18 @@ export class TransactionsController {
       userId: req.user.id,
       id,
       dto,
+    });
+  }
+
+  //Issue #10 - CA6
+  @Delete(':id')
+  remove(
+    @Req() req: AuthRequest,
+    @Param('id') id: string,
+  ) {
+    return this.transactionsService.remove({
+      userId: req.user.id,
+      id,
     });
   }
 }

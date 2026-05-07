@@ -118,5 +118,4 @@ export class CreateTransactionDto {
     @IsOptional()
     @IsInt()
     installmentTotal?: number;
-
 }

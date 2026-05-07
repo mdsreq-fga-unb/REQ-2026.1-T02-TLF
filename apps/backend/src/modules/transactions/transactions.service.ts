@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common'
+import { Injectable, BadRequestException, NotFoundException, ForbiddenException } from '@nestjs/common'
 import { PrismaService } from '@common/prisma/prisma.service'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
 import { TransactionType } from '../../../generated/prisma/client';
@@ -69,6 +69,29 @@ export class TransactionsService {
     return transaction
   }
 
+  private async getTransactionOrThrow(userId: string, id: string) {
+    const transaction = await this.prisma.transaction.findUnique({
+      where: { id },
+      include: {
+        account: {
+          include: {
+            institution: true
+          },
+        },
+      },
+    });
+
+    if (!transaction) {
+      throw new NotFoundException('Transação não encontrada');
+    }
+
+    if (transaction.account.institution.userId !== userId) {
+      throw new ForbiddenException('Você não tem acesso a esta transação');
+    }
+
+    return transaction;
+  }
+
   findAll({
     userId,
     categoryId,
@@ -96,75 +119,20 @@ export class TransactionsService {
   }
 
   async findOne({ userId, id }: { userId: string, id: string }) {
-    const transaction = await this.prisma.transaction.findFirst({
-      where: {
-        id,
-        account: {
-          is: {
-            institution: {
-              is: {
-                userId,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    if (!transaction) {
-      throw new NotFoundException('Transação não encontrada');
-    }
-
-    return transaction;
+    return this.getTransactionOrThrow(userId, id);
   }
 
   async update({ userId, id, dto }: { userId: string, id: string, dto: UpdateTransactionDto }) {
-    const transaction = await this.prisma.transaction.findFirst({
-      where: {
-        id,
-        account: {
-          is: {
-            institution: {
-              is: {
-                userId,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    if (!transaction) {
-      throw new NotFoundException('Transação não encontrada');
-    }
+    await this.getTransactionOrThrow(userId, id);
 
     return this.prisma.transaction.update({
       where: { id },
-      data: {
-        ...dto,
-      },
+      data: dto
     });
   }
 
   async remove({ userId, id }: { userId: string, id: string }) {
-    const transaction = await this.prisma.transaction.findFirst({
-      where: {
-        id,
-        account: {
-          is: {
-            institution: {
-              is: {
-                userId,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    if (!transaction) {
-      throw new NotFoundException("Transação não encontrada");
-    }
+    await this.getTransactionOrThrow(userId, id);
 
     return this.prisma.transaction.delete({
       where: { id }

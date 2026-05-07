@@ -1,11 +1,11 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '@common/prisma/prisma.service'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
-import {TransactionType} from '../../../generated/prisma/client';
+import { TransactionType } from '../../../generated/prisma/client';
 
 @Injectable()
 export class TransactionsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(userId: string, dto: CreateTransactionDto) {
     // CA2: valida se a categoria existe e pertence ao usuário
@@ -69,14 +69,14 @@ export class TransactionsService {
   }
 
   findAll({
-    userId, 
-    categoryId, 
-    type, 
-  }: { 
-    userId: string, 
-    categoryId?: string, 
+    userId,
+    categoryId,
+    type,
+  }: {
+    userId: string,
+    categoryId?: string,
     type?: TransactionType,
-    }) {
+  }) {
     return this.prisma.transaction.findMany({
       where: {
         account: {
@@ -92,5 +92,28 @@ export class TransactionsService {
         ...(type && { type }),
       },
     });
+  }
+
+  async findOne({ userId, id }: { userId: string, id: string }) {
+    const transaction = await this.prisma.transaction.findFirst({
+      where: {
+        id,
+        account: {
+          is: {
+            institution: {
+              is: {
+                userId,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!transaction) {
+      throw new NotFoundException('Transação não encontrada');
+    }
+
+    return transaction;
   }
 }

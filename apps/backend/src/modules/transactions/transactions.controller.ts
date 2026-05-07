@@ -1,8 +1,9 @@
-import { Body, Controller, Post, HttpCode, HttpStatus, Get, Req, Query } from '@nestjs/common'
+import { Body, Controller, Post, HttpCode, HttpStatus, Get, Req, Query, Param } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { TransactionsService } from './transactions.service'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
 import { Request } from 'express';
+import {FilterTransactionsDto} from './dto/filter-transactions.dto';
 
 interface AuthRequest extends Request {
   user: {
@@ -26,10 +27,23 @@ export class TransactionsController {
 
   //Issue #10 - CA1, CA2, CA3
   @Get()
-  findAll(@Req() req: AuthRequest, @Query() query: FilterTransactionsDto) {
+    findAll(@Req() req: AuthRequest,
+    @Query() query: FilterTransactionsDto) {
         return this.transactionsService.findAll({
             userId: req.user.id,
             ...query,
+        });
+    }
+
+    //Issue #10 - CA4
+    @Get(':id')
+    findOne(
+    @Req() req: AuthRequest,
+    @Param('id') id: string,
+    ) {
+        return this.transactionsService.findOne({
+            userId: req.user.id,
+            id,
         });
     }
 }

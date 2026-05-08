@@ -63,13 +63,11 @@ export class AuthController {
     return await this.authService.logout(req.accessToken!)
   }
 
-  @UseGuards(AuthGuard)
   @HttpCode(200)
   @Post('refresh')
-  @ApiBearerAuth('supabase-jwt')
   @ApiOperation({
     summary: 'Renovar sessão',
-    description: 'Troca o refresh token por um novo par de access e refresh tokens.',
+    description: 'Troca o refresh token (body) por um novo par de access e refresh tokens.',
   })
   @ApiOkResponse({ type: RefreshResponseDto, description: 'Nova sessão emitida' })
   @ApiUnauthorizedResponse({ description: 'Refresh token inválido ou expirado' })

@@ -1,7 +1,6 @@
-import { IsEmail, IsNotEmpty, IsString, IsStrongPassword } from 'class-validator'
+import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 import { Transform } from 'class-transformer'
-import { Length } from 'class-validator'
 
 export class LoginRequestDto {
   @ApiProperty({
@@ -15,25 +14,11 @@ export class LoginRequestDto {
   email!: string
 
   @ApiProperty({
-    description:
-      'Senha do usuário deve conter pelo menos 8 caracteres, 1 letra maiúscula, 1 letra minúscula e 1 número',
+    description: 'Senha do usuário',
     example: 'Password123',
   })
   @IsString()
   @IsNotEmpty()
-  @IsStrongPassword(
-    {
-      minLength: 8,
-      minLowercase: 1,
-      minUppercase: 1,
-      minNumbers: 1,
-      minSymbols: 0,
-    },
-    {
-      message:
-        'A senha deve ter no mínimo 8 caracteres, com pelo menos 1 letra maiúscula, 1 letra minúscula e 1 número.',
-    },
-  )
   @Length(8, 100)
   password!: string
 }
@@ -41,12 +26,13 @@ export class LoginRequestDto {
 export class LoginResponseDto {
   @ApiProperty({
     description: 'Access token',
-    example: '1234567890',
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
   })
   accessToken!: string
+
   @ApiProperty({
     description: 'Refresh token',
-    example: '1234567890',
+    example: 'v1.refresh_token_value',
   })
   refreshToken!: string
 }

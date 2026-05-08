@@ -76,11 +76,12 @@ export class AuthService {
     const refreshToken = data.session?.refresh_token
 
     if (!accessToken || !refreshToken) {
-      throw new BadRequestException('Invalid refresh token')
+      throw new BadRequestException('Sessão retornada pelo provedor está incompleta')
     }
 
     return { accessToken, refreshToken }
   }
+
   async logout(accessToken: string): Promise<LogoutResponseDto> {
     const { error } = await this.supabase.auth.admin.signOut(accessToken)
 

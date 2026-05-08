@@ -1,8 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
-import { SupabaseService } from './supabase.service'
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common'
+import { SupabaseService } from '../supabase/supabase.service'
 import { PrismaService } from '@common/prisma/prisma.service'
-import { RegisterDto } from './dto/register.dto'
+import { RegisterRequestDto, RegisterResponseDto } from './dto/register.dto'
 import { SeedService } from 'prisma/seed'
+import { LoginRequestDto, LoginResponseDto } from './dto/login.dto'
+import { LogoutResponseDto } from './dto/logout.dto'
+import { RefreshRequestDto, RefreshResponseDto } from './dto/refresh.dto'
 
 @Injectable()
 export class AuthService {
@@ -12,7 +15,7 @@ export class AuthService {
     private seed: SeedService,
   ) {}
 
-  async register(dto: RegisterDto): Promise<Record<string, string>> {
+  async register(dto: RegisterRequestDto): Promise<RegisterResponseDto> {
     const { name, email, password } = dto
 
     const { data, error } = await this.supabase.auth.admin.createUser({
@@ -22,21 +25,92 @@ export class AuthService {
     })
 
     if (error) {
+      console.error(error.message) //TODO:improve logging
+      throw new BadRequestException(error.message)
+    }
+
+    try {
+      const user = await this.prisma.user.create({
+        data: {
+          id: data.user.id,
+          email,
+          name,
+          createdAt: new Date(data.user.created_at),
+        },
+      })
+
+      await this.seed.seedDefaultCategories(user.id)
+
+      return { userId: user.id }
+    } catch (error) {
+      await this.supabase.auth.admin.deleteUser(data.user.id)
+      console.error((error as Error).message)
+      throw new BadRequestException((error as Error).message)
+    }
+  }
+
+  async login(dto: LoginRequestDto): Promise<LoginResponseDto> {
+    const { email, password } = dto
+
+    const { data, error } = await this.supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+
+    if (error) {
+      console.error(error.message)
+      throw new UnauthorizedException('Credenciais inválidas')
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: data.user.id,
+      },
+    })
+
+    if (!user) {
+      throw new UnauthorizedException('Usuário não encontrado')
+    }
+
+    const accessToken = data.session?.access_token
+    const refreshToken = data.session?.refresh_token
+
+    if (!accessToken || !refreshToken) {
+      throw new BadRequestException('Invalid refresh token')
+    }
+
+    return { accessToken, refreshToken }
+  }
+  async logout(accessToken: string): Promise<LogoutResponseDto> {
+    const { error } = await this.supabase.auth.admin.signOut(accessToken)
+
+    if (error) {
       console.error(error.message)
       throw new BadRequestException(error.message)
     }
 
-    const user = await this.prisma.user.create({
-      data: {
-        id: data.user.id,
-        email,
-        name,
-        createdAt: new Date(data.user.created_at),
-      },
+    return { success: true }
+  }
+
+  async refreshToken(dto: RefreshRequestDto): Promise<RefreshResponseDto> {
+    const { refreshToken: currentRefreshToken } = dto
+
+    const { data, error } = await this.supabase.auth.refreshSession({
+      refresh_token: currentRefreshToken,
     })
 
-    await this.seed.seedDefaultCategories(user.id)
+    if (error) {
+      console.error(error.message)
+      throw new UnauthorizedException('Token de refresh inválido')
+    }
 
-    return { userId: user.id }
+    const accessToken = data.session?.access_token
+    const refreshToken = data.session?.refresh_token
+
+    if (!accessToken || !refreshToken) {
+      throw new BadRequestException('Invalid refresh token')
+    }
+
+    return { accessToken, refreshToken }
   }
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Image } from 'react-native'
-import NamedLogo from '../../assets/imgs/hat.png'
+import NamedLogo from '../../assets/imgs/tlt-icon.png'
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
 import { ThemedButton } from '@/components/ui/ThemedButton'
 import { ThemedContainer } from '@/components/ui/ThemedContainer'
@@ -91,7 +91,7 @@ export default function RegisterScreen() {
     <ThemedBackground>
       <ThemedScrollArea>
         <SafeAreaView />
-        <ThemedContainer variant="transparent">
+        <ThemedContainer variant="transparent" style={{ gap: 0 }}>
           <Image
             source={NamedLogo}
             style={{ width: layout.authLogoSize, height: layout.authLogoSize }}

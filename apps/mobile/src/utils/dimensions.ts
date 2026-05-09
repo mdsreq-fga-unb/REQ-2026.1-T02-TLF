@@ -28,7 +28,7 @@ export const component = {
 export const layout = {
   separatorHeight: 2,
   maxFormWidthPct: '100%' as const,
-  authLogoSize: 150,
+  authLogoSize: 200,
   minTouchTarget: 48,
 } as const
 

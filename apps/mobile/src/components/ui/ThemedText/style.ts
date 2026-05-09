@@ -3,9 +3,11 @@ import { StyleSheet } from 'react-native'
 export const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
-    fontSize: 20,
+    flexWrap: 'wrap',
   },
-  container: {
-    flex: 1,
+  headline: {
+    alignSelf: 'stretch',
+    textAlign: 'center',
+    flexWrap: 'wrap',
   },
 })

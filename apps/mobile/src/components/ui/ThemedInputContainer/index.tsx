@@ -1,5 +1,4 @@
 import { styles } from './style'
-import { useThemeColor } from '@/hooks/useThemeColor'
 import { ReactNode } from 'react'
 import { View, ViewProps } from 'react-native'
 import { ThemedText } from '../ThemedText'
@@ -9,10 +8,10 @@ type props = ViewProps & {
   text: string
 }
 
-export function InputContainer({ text, children, style, ...rest }: props) {
+export function ThemedInputContainer({ text, children, style, ...rest }: props) {
   return (
     <View style={[styles.inputContainer, { backgroundColor: 'transparent' }, style]} {...rest}>
-      <ThemedText text={text} children style={{ color: useThemeColor().text }} />
+      <ThemedText variant="label" text={text.trimStart()} style={styles.fieldLabel} />
       {children}
     </View>
   )

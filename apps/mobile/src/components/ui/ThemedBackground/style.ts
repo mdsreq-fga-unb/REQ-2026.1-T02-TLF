@@ -1,3 +1,4 @@
+import { spacing } from '@/utils/dimensions'
 import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
@@ -5,6 +6,6 @@ export const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    gap: 15,
+    gap: spacing.md,
   },
 })

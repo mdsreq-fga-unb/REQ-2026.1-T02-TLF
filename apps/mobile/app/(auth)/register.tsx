@@ -1,22 +1,22 @@
 import { useState, useEffect } from 'react'
 import { Image } from 'react-native'
 import NamedLogo from '../../assets/imgs/hat.png'
-import { ButtonPrimary } from '@/components/ui/ButtonPrimary'
-import { Background } from '@/components/ui/Background'
-import { Container } from '@/components/ui/Container'
-import { InputForm } from '@/components/ui/InputForm'
-import { useThemeColor } from '@/hooks/useThemeColor'
-import { Separator } from '@/components/ui/Separator'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { ThemedTittle } from '@/components/ui/ThemedTittle'
+import { ThemedBackground } from '@/components/ui/ThemedBackground'
+import { ThemedButton } from '@/components/ui/ThemedButton'
+import { ThemedContainer } from '@/components/ui/ThemedContainer'
+import { ThemedInputForm } from '@/components/ui/ThemedInputForm'
+import { ThemedInputContainer } from '@/components/ui/ThemedInputContainer'
+import { ThemedLink } from '@/components/ui/ThemedLink'
+import { ThemedScrollArea } from '@/components/ui/ThemedScrollArea'
+import { ThemedSeparator } from '@/components/ui/ThemedSeparator'
 import { ThemedText } from '@/components/ui/ThemedText'
-import { InputContainer } from '@/components/ui/InputContainer'
-import { ThemedLink } from '@/components/ui/ThemedlLink'
-import { ScrollView } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { useThemeColor } from '@/hooks/useThemeColor'
+import { layout, spacing } from '@/utils/dimensions'
+import { AlertCircle, Lock, Mail, User } from 'lucide-react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
-export default function LoginScreen() {
-  const themeColor = useThemeColor()
+export default function RegisterScreen() {
+  const colors = useThemeColor()
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -32,11 +32,7 @@ export default function LoginScreen() {
   const [passwordConfirmError, setPasswordConfirmError] = useState('')
 
   useEffect(() => {
-    // Pelo menos duas palavras separadas por espaço
-    // pelo menos uma letra por palavras
     const fullNameRegex = /\S+\s+\S+/
-
-    // somente caracteres de A-Z, sem número ou caracteres estranhos
     const lettersRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/
 
     if (name === '') {
@@ -63,7 +59,6 @@ export default function LoginScreen() {
   }, [email])
 
   useEffect(() => {
-    // Mínimo 6 caracteres, pelo menos 1 letra e 1 número
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/
 
     if (password === '') {
@@ -83,7 +78,6 @@ export default function LoginScreen() {
     }
   }, [passwordConfirm, password])
 
-  // Nome, E-mail, senha n podem ser vazios,e nenhum erro está presente
   const isFormValid =
     name !== '' &&
     email !== '' &&
@@ -94,49 +88,60 @@ export default function LoginScreen() {
     passwordConfirmError === ''
 
   return (
-    <Background>
-      <ScrollView>
+    <ThemedBackground>
+      <ThemedScrollArea>
         <SafeAreaView />
-        <Container style={{ backgroundColor: 'transparent' }}>
-          <Image source={NamedLogo} style={{ width: 150, height: 150 }} />
-          <Container style={{ marginBottom: 20 }}>
-            <Container style={{ backgroundColor: 'transparent', gap: 0, padding: 0 }}>
-              <ThemedTittle text="Criar uma conta," />
+        <ThemedContainer variant="transparent">
+          <Image
+            source={NamedLogo}
+            style={{ width: layout.authLogoSize, height: layout.authLogoSize }}
+          />
+          <ThemedContainer variant="transparent" style={{ marginBottom: spacing.lg }}>
+            <ThemedContainer variant="transparent" style={{ gap: 0, padding: 0 }}>
+              <ThemedText variant="headline" text="Criar uma conta," />
               <ThemedText
+                variant="body"
+                tone="muted"
                 text="Junte-se ao nosso ecossistema financeiro para começar a sua jornada"
-                children
               />
-            </Container>
+            </ThemedContainer>
 
-            <InputContainer text=" Nome Completo">
-              <InputForm
-                icon="person-outline"
+            <ThemedInputContainer text="Nome Completo">
+              <ThemedInputForm
+                icon={User}
                 placeholder="Rodrigo Átila Tavares"
-                placeholderTextColor={themeColor.graySecondary}
                 onChangeText={setName}
-                keyboardType="email-address"
+                autoCapitalize="words"
                 value={name}
                 onBlur={() => {
                   setNameTouched(true)
                 }}
               />
               {nameError && nameTouched && (
-                <Container style={{ flexDirection: 'row', padding: 0, gap: 10 }}>
-                  <MaterialIcons size={20} name="error" color={themeColor.warning} />
+                <ThemedContainer
+                  variant="transparent"
+                  style={{
+                    flexDirection: 'row',
+                    padding: 0,
+                    gap: spacing.sm,
+                    alignItems: 'center',
+                  }}
+                >
+                  <AlertCircle size={20} color={colors.destructive} strokeWidth={2} />
                   <ThemedText
+                    variant="caption"
+                    tone="destructive"
                     text={nameError}
-                    children
-                    style={{ color: themeColor.warning, textAlign: 'left' }}
+                    style={{ textAlign: 'left', flex: 1 }}
                   />
-                </Container>
+                </ThemedContainer>
               )}
-            </InputContainer>
+            </ThemedInputContainer>
 
-            <InputContainer text=" E-mail">
-              <InputForm
-                icon="mail-outline"
+            <ThemedInputContainer text="E-mail">
+              <ThemedInputForm
+                icon={Mail}
                 placeholder="exemplo@email.com"
-                placeholderTextColor={themeColor.graySecondary}
                 onChangeText={setEmail}
                 keyboardType="email-address"
                 value={email}
@@ -145,22 +150,30 @@ export default function LoginScreen() {
                 }}
               />
               {emailError && emailTouched && (
-                <Container style={{ flexDirection: 'row', padding: 0, gap: 10 }}>
-                  <MaterialIcons size={20} name="error" color={themeColor.warning} />
+                <ThemedContainer
+                  variant="transparent"
+                  style={{
+                    flexDirection: 'row',
+                    padding: 0,
+                    gap: spacing.sm,
+                    alignItems: 'center',
+                  }}
+                >
+                  <AlertCircle size={20} color={colors.destructive} strokeWidth={2} />
                   <ThemedText
+                    variant="caption"
+                    tone="destructive"
                     text={emailError}
-                    children
-                    style={{ color: themeColor.warning, textAlign: 'left' }}
+                    style={{ textAlign: 'left', flex: 1 }}
                   />
-                </Container>
+                </ThemedContainer>
               )}
-            </InputContainer>
+            </ThemedInputContainer>
 
-            <InputContainer text=" Senha">
-              <InputForm
-                icon="lock-closed-outline"
+            <ThemedInputContainer text="Senha">
+              <ThemedInputForm
+                icon={Lock}
                 placeholder="******"
-                placeholderTextColor={themeColor.graySecondary}
                 onChangeText={setPassword}
                 secureTextEntry
                 value={password}
@@ -169,22 +182,30 @@ export default function LoginScreen() {
                 }}
               />
               {passwordError && passwordTouched && (
-                <Container style={{ flexDirection: 'row', padding: 0, gap: 10 }}>
-                  <MaterialIcons size={20} name="error" color={themeColor.warning} />
+                <ThemedContainer
+                  variant="transparent"
+                  style={{
+                    flexDirection: 'row',
+                    padding: 0,
+                    gap: spacing.sm,
+                    alignItems: 'center',
+                  }}
+                >
+                  <AlertCircle size={20} color={colors.destructive} strokeWidth={2} />
                   <ThemedText
+                    variant="caption"
+                    tone="destructive"
                     text={passwordError}
-                    children
-                    style={{ color: themeColor.warning, textAlign: 'left' }}
+                    style={{ textAlign: 'left', flex: 1 }}
                   />
-                </Container>
+                </ThemedContainer>
               )}
-            </InputContainer>
+            </ThemedInputContainer>
 
-            <InputContainer text=" Confirme a senha">
-              <InputForm
-                icon="lock-closed-outline"
+            <ThemedInputContainer text="Confirme a senha">
+              <ThemedInputForm
+                icon={Lock}
                 placeholder="******"
-                placeholderTextColor={themeColor.graySecondary}
                 onChangeText={setPasswordConfirm}
                 secureTextEntry
                 value={passwordConfirm}
@@ -193,28 +214,49 @@ export default function LoginScreen() {
                 }}
               />
               {passwordConfirmError && passwordConfirmTouched && (
-                <Container style={{ flexDirection: 'row', padding: 0, gap: 10 }}>
-                  <MaterialIcons size={20} name="error" color={themeColor.warning} />
+                <ThemedContainer
+                  variant="transparent"
+                  style={{
+                    flexDirection: 'row',
+                    padding: 0,
+                    gap: spacing.sm,
+                    alignItems: 'center',
+                  }}
+                >
+                  <AlertCircle size={20} color={colors.destructive} strokeWidth={2} />
                   <ThemedText
+                    variant="caption"
+                    tone="destructive"
                     text={passwordConfirmError}
-                    children
-                    style={{ color: themeColor.warning, textAlign: 'left' }}
+                    style={{ textAlign: 'left', flex: 1 }}
                   />
-                </Container>
+                </ThemedContainer>
               )}
-            </InputContainer>
+            </ThemedInputContainer>
 
-            <ButtonPrimary title="Entrar" disabled={!isFormValid} />
-            <Separator />
-            <ThemedText
-              text="Já possui uma conta? "
-              style={{ color: themeColor.text, textAlign: 'center' }}
+            <ThemedButton title="Cadastrar" disabled={!isFormValid} />
+            <ThemedSeparator />
+            <ThemedContainer
+              variant="transparent"
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: spacing.xs,
+                padding: 0,
+              }}
             >
+              <ThemedText
+                variant="body"
+                text="Já possui uma conta? "
+                style={{ textAlign: 'center' }}
+              />
               <ThemedLink href={'/login'} text="Entre aqui" />
-            </ThemedText>
-          </Container>
-        </Container>
-      </ScrollView>
-    </Background>
+            </ThemedContainer>
+          </ThemedContainer>
+        </ThemedContainer>
+      </ThemedScrollArea>
+    </ThemedBackground>
   )
 }

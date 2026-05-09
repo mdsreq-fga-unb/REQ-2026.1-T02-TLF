@@ -4,6 +4,5 @@ export const styles = StyleSheet.create({
   link: {
     textAlign: 'center',
     textDecorationLine: 'underline',
-    fontSize: 20,
   },
 })

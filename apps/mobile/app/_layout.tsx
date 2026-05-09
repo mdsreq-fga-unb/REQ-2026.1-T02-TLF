@@ -4,12 +4,14 @@ import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { useFonts } from 'expo-font'
 import { useEffect } from 'react'
-import { useColorScheme } from 'react-native'
+import { ActivityIndicator, useColorScheme } from 'react-native'
+import { useThemeColor } from '@/hooks/useThemeColor'
 
 void SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
   const isDark = useColorScheme() === 'dark'
+  const colors = useThemeColor()
 
   const [fontsLoaded] = useFonts(fonts.Manrope.files)
 
@@ -20,7 +22,11 @@ export default function RootLayout() {
   }, [fontsLoaded])
 
   if (!fontsLoaded) {
-    return null
+    return (
+      <>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </>
+    )
   }
 
   return (

@@ -155,7 +155,7 @@ export default function LoginScreen() {
                 text="Não possui uma conta? "
                 style={{ textAlign: 'center' }}
               />
-              <ThemedLink href={'/register'} text="Crie uma conta aqui" />
+              <ThemedLink replace href="/(auth)/register" text="Crie uma conta aqui" />
             </ThemedContainer>
           </ThemedContainer>
         </ThemedContainer>

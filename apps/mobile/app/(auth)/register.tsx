@@ -252,7 +252,7 @@ export default function RegisterScreen() {
                 text="Já possui uma conta? "
                 style={{ textAlign: 'center' }}
               />
-              <ThemedLink href={'/login'} text="Entre aqui" />
+              <ThemedLink replace href="/(auth)/login" text="Entre aqui" />
             </ThemedContainer>
           </ThemedContainer>
         </ThemedContainer>

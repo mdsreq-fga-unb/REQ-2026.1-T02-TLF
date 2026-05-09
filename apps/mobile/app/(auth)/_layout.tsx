@@ -1,18 +1,21 @@
 import { useThemeColor } from '@/hooks/useThemeColor'
+import { iconSize } from '@/utils/dimensions'
 import { Tabs } from 'expo-router'
-import Ionicons from '@expo/vector-icons/Ionicons'
+import { BookOpen, LogIn } from 'lucide-react-native'
 
 export default function TabsLayout() {
+  const colors = useThemeColor()
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: useThemeColor().background,
-          borderTopColor: useThemeColor().gray,
+          backgroundColor: colors.background,
+          borderTopColor: colors.tabBarBorder,
         },
-        tabBarActiveTintColor: useThemeColor().graySecondary,
-        tabBarInactiveTintColor: useThemeColor().gray,
+        tabBarActiveTintColor: colors.tabActive,
+        tabBarInactiveTintColor: colors.tabInactive,
       }}
     >
       <Tabs.Screen
@@ -20,10 +23,10 @@ export default function TabsLayout() {
         options={{
           title: 'Entrar',
           tabBarIcon: ({ focused }) => (
-            <Ionicons
-              size={30}
-              name={focused ? 'log-in' : 'log-in-outline'}
-              color={focused ? useThemeColor().graySecondary : useThemeColor().gray}
+            <LogIn
+              size={iconSize.tab}
+              strokeWidth={2}
+              color={focused ? colors.tabActive : colors.tabInactive}
             />
           ),
         }}
@@ -33,10 +36,10 @@ export default function TabsLayout() {
         options={{
           title: 'Cadastro',
           tabBarIcon: ({ focused }) => (
-            <Ionicons
-              size={30}
-              name={focused ? 'book' : 'book-outline'}
-              color={focused ? useThemeColor().graySecondary : useThemeColor().gray}
+            <BookOpen
+              size={iconSize.tab}
+              strokeWidth={2}
+              color={focused ? colors.tabActive : colors.tabInactive}
             />
           ),
         }}

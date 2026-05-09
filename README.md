@@ -8,7 +8,7 @@
   <img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow" />
   <img src="https://img.shields.io/badge/version-0.1.0-blue" />
   <img src="https://img.shields.io/badge/license-academic-lightgrey" />
-  <img src="https://img.shields.io/badge/node-%3E%3D18-green" />
+  <img src="https://img.shields.io/badge/node-%3E%3D20-green" />
 </p>
 
 ---
@@ -92,24 +92,25 @@ Uma aplicação que centraliza o controle financeiro do usuário, permitindo:
 
 ### Pré-requisitos
 
-- Node.js (>= 18)
+- Node.js (>= 20)
 - npm ou yarn
-- Expo CLI
+- Xcode / Android Studio (para emuladores) — desenvolvimento do app Expo
 
 ### 🔧 Instalação
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/tlt-financas.git
+git clone https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF.git
 
-# Acesse o projeto
-cd tlt-financas
+# Acesse o projeto (o nome da pasta segue o repositório)
+cd REQ-2026.1-T02-TLF
 ```
 
 ### ▶️ Rodando o frontend (mobile)
 
 ```bash
-🚧 Em desenvolvimento
+cd apps/mobile
+npm start
 ```
 
 ### ▶️ Rodando o backend
@@ -164,14 +165,14 @@ A aplicação pode ser publicada via **GitHub Pages** para a landing page.
 
 ---
 
-# tlt — Monorepo
+# Monorepo (TLT Finanças)
 
-Stack de gestão financeira pessoal com backend NestJS e app mobile React Native.
+Stack de gestão financeira pessoal com backend NestJS e app mobile React Native (Expo).
 
 ## Estrutura do repositório
 
 ```
-tlt/
+REQ-2026.1-T02-TLF/
 ├── apps/
 │   ├── backend/          → NestJS + Prisma + PostgreSQL
 │   └── mobile/           → React Native + Expo + WatermelonDB
@@ -208,29 +209,28 @@ Cada app tem seu próprio `package.json` com suas dependências — o monorepo s
 
 ```bash
 git clone <repo-url>
-cd tlt
+cd <pasta-do-repositório>
 npm install
 ```
-
-O `postinstall` do backend roda `prisma generate` automaticamente — o PrismaClient já estará disponível após o install.
 
 ### 2. Configure as variáveis de ambiente
 
 ```bash
 cp apps/backend/env/.env.example apps/backend/env/.env
-cp apps/mobile/.env.example apps/mobile/.env
+cp apps/mobile/env/.env.example apps/mobile/.env
 ```
 
 Preencha os valores no `apps/backend/env/.env`:
 
-| Variável               | Onde encontrar                                               |
-| ---------------------- | ------------------------------------------------------------ |
-| `DATABASE_URL`         | Monta com as credenciais do Postgres local                   |
-| `SUPABASE_URL`         | Supabase Dashboard → Project Settings → API                  |
-| `SUPABASE_JWT_SECRET`  | Supabase Dashboard → Settings → JWT Keys → Legacy JWT Secret |
-| `SUPABASE_SERVICE_KEY` | Supabase Dashboard → Settings → API → Secret keys            |
+| Variável               | Onde encontrar                                                                                                    |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`         | Monte com os mesmos usuário/senha/banco/porta que o Postgres local (Compose publica **`5433` → Postgres `5432`**) |
+| `SUPABASE_URL`         | Supabase Dashboard → Project Settings → API                                                                       |
+| `SUPABASE_ANON_KEY`    | Supabase Dashboard → Settings → API → Public anon key (`anon`)                                                    |
+| `SUPABASE_SERVICE_KEY` | Supabase Dashboard → Settings → API → Secret keys (`service_role`)                                                |
+| `SUPABASE_JWT_SECRET`  | Supabase Dashboard → Settings → JWT Keys → Legacy JWT Secret                                                      |
 
-Preencha o `apps/mobile/.env`:
+Preencha o `apps/mobile/.env` (na raiz do app Expo — o arquivo de exemplo está em `apps/mobile/env/.env.example`):
 
 | Variável              | Valor em desenvolvimento          |
 | --------------------- | --------------------------------- |
@@ -239,6 +239,12 @@ Preencha o `apps/mobile/.env`:
 > **Atenção:** use o IP da sua máquina na rede local, não `localhost`.
 > Para descobrir: `ipconfig` (Windows) ou `ifconfig` (Mac/Linux).
 > `localhost` no celular aponta para o próprio celular, não para o seu computador.
+
+Depois dos `cp` acima, gere o Prisma Client para o `@prisma/client` existir (usa `DATABASE_URL` de `apps/backend/env/.env`):
+
+```bash
+cd apps/backend && npm run db:generate
+```
 
 ### 3. Suba o banco de dados
 
@@ -257,7 +263,7 @@ docker compose ps
 npm run db:migrate
 ```
 
-Isso cria todas as tabelas no banco e gera o PrismaClient tipado.
+Isso cria todas as tabelas no banco — o comando também invoca `prisma generate` e mantém o PrismaClient atualizado junto ao schema.
 
 ### 5. Suba o backend
 
@@ -268,6 +274,8 @@ npm run dev
 ```
 
 ### 6. Configure o mobile (primeira vez)
+
+No terminal com **cwd na raiz do monorepo** (mesmo nível de `turbo.json`/`package.json`; se você ainda está em `apps/backend`, use `cd ../..` primeiro):
 
 ```bash
 cd apps/mobile
@@ -377,13 +385,16 @@ Logout
 
 ```bash
 # Raiz — roda backend e mobile juntos
-turbo dev
+npm run dev
 
 # Só o backend
 cd apps/backend && npm run dev
 
 # Só o mobile
 cd apps/mobile && npx expo start --dev-client
+
+# Regenerar o Prisma Client após mudanças em schema.prisma (sem nova migration)
+cd apps/backend && npm run db:generate
 
 # Nova migration após alterar o schema.prisma
 cd apps/backend && npm run db:migrate
@@ -392,10 +403,10 @@ cd apps/backend && npm run db:migrate
 cd apps/backend && npm run db:studio
 
 # Lint em tudo
-turbo lint
+npm run lint
 
 # Testes em tudo
-turbo test
+npm run test
 ```
 
 ---
@@ -405,18 +416,18 @@ turbo test
 O app usa **EAS Build** para gerar os binários. O código nativo (WatermelonDB) exige um build real — o Expo Go não funciona neste projeto.
 
 ```bash
-# Instala o EAS CLI (só uma vez)
+# Repositório: pasta do app (onde está eas.json / app.json)
+cd apps/mobile
+
+# Instala o EAS CLI (só uma vez no seu ambiente global)
 npm install -g eas-cli
 eas login
 
 # Dev Client — Android (para desenvolvimento)
 eas build --profile development --platform android
 
-# Dev Client — iOS (para desenvolvimento, só Mac ou com conta Apple)
+# Dev Client — iOS (para desenvolvimento; exige projeto Apple configurado na EAS)
 eas build --profile development --platform ios
-
-# Simulador iOS (sem conta Apple)
-eas build --profile development:simulator --platform ios
 
 # Preview — testar versão de produção antes de publicar
 eas build --profile preview --platform android
@@ -443,7 +454,7 @@ npx expo start --dev-client
 POSTGRES_USER=tlt
 POSTGRES_PASSWORD=tlt_dev
 POSTGRES_DB=tlt_db
-DATABASE_URL="postgresql://tlt:tlt_dev@localhost:5432/tlt_db?schema=public"
+DATABASE_URL="postgresql://tlt:tlt_dev@localhost:5433/tlt_db?schema=public"
 
 # App
 NODE_ENV=development
@@ -451,11 +462,14 @@ PORT=3000
 
 # Supabase
 SUPABASE_URL=https://xxxx.supabase.co
-SUPABASE_JWT_SECRET=seu-legacy-jwt-secret
+SUPABASE_ANON_KEY=eyJ...
 SUPABASE_SERVICE_KEY=sb_secret_...
+SUPABASE_JWT_SECRET=seu-legacy-jwt-secret
 ```
 
 ### Mobile (`apps/mobile/.env`)
+
+Arquivo criado a partir de `apps/mobile/env/.env.example`; o Expo carrega variáveis `EXPO_PUBLIC_*` da raiz do app (`apps/mobile/.env`), ao lado de `app.json`.
 
 ```bash
 # Use o IP da sua máquina, não localhost

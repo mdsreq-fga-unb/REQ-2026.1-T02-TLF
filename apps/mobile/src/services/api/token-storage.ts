@@ -9,11 +9,11 @@ export async function saveTokens(accessToken: string, refreshToken: string) {
 }
 
 export async function getAccessToken() {
-  await SecureStore.getItemAsync(ACCESS_TOKEN_KEY)
+  return await SecureStore.getItemAsync(ACCESS_TOKEN_KEY)
 }
 
 export async function getRefreshToken() {
-  await SecureStore.getItemAsync(REFRESH_TOKEN_KEY)
+  return await SecureStore.getItemAsync(REFRESH_TOKEN_KEY)
 }
 
 export async function clearTokens() {

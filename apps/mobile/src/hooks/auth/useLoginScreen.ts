@@ -2,7 +2,6 @@ import { login } from '@/services/api/auth'
 import { useAuthStore } from '@/stores/auth'
 import { router } from 'expo-router'
 import { useCallback, useMemo, useState } from 'react'
-import { Alert } from 'react-native'
 import { getEmailError, getPasswordRequiredError } from '@/utils/authValidation'
 
 export function useLoginScreen() {
@@ -13,6 +12,7 @@ export function useLoginScreen() {
   const [emailTouched, setEmailTouched] = useState(false)
   const [passwordTouched, setPasswordTouched] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null)
 
   const emailErrorMessage = useMemo(() => getEmailError(email), [email])
   const passwordErrorMessage = useMemo(() => getPasswordRequiredError(password), [password])
@@ -32,11 +32,13 @@ export function useLoginScreen() {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Não foi possível entrar. Tente novamente.'
-      Alert.alert('Erro ao entrar', message)
+      setFeedbackMessage(message)
     } finally {
       setIsSubmitting(false)
     }
   }, [email, password, isFormValid, isSubmitting, setSession])
+
+  const dismissFeedback = useCallback(() => setFeedbackMessage(null), [])
 
   return {
     email,
@@ -52,5 +54,7 @@ export function useLoginScreen() {
     isFormValid,
     isSubmitting,
     submit,
+    feedbackMessage,
+    dismissFeedback,
   }
 }

@@ -2,7 +2,6 @@ import { renderHook, act } from '@testing-library/react-native'
 import { login } from '@/services/api/auth'
 import { useAuthStore } from '@/stores/auth'
 import { router } from 'expo-router'
-import { Alert } from 'react-native'
 import { useLoginScreen } from './useLoginScreen'
 
 jest.mock('@/services/api/auth')
@@ -87,7 +86,7 @@ describe('useLoginScreen', () => {
       await result.current.submit()
     })
 
-    expect(Alert.alert).toHaveBeenCalledWith('Erro ao entrar', 'Credenciais inválidas')
+    expect(result.current.feedbackMessage).toBe('Credenciais inválidas')
     expect(mockedReplace).not.toHaveBeenCalled()
     expect(useAuthStore.getState().isAuthenticated).toBe(false)
   })

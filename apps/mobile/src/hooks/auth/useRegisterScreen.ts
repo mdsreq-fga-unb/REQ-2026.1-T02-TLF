@@ -2,7 +2,6 @@ import { register as registerUser } from '@/services/api/auth'
 import { useAuthStore } from '@/stores/auth'
 import { router } from 'expo-router'
 import { useCallback, useMemo, useState } from 'react'
-import { Alert } from 'react-native'
 import {
   getEmailError,
   getNameError,
@@ -21,6 +20,7 @@ export function useRegisterScreen() {
   const [passwordTouched, setPasswordTouched] = useState(false)
   const [passwordConfirmTouched, setPasswordConfirmTouched] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null)
 
   const nameErrorMessage = useMemo(() => getNameError(name), [name])
   const emailErrorMessage = useMemo(() => getEmailError(email), [email])
@@ -51,11 +51,13 @@ export function useRegisterScreen() {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Não foi possível cadastrar. Tente novamente.'
-      Alert.alert('Erro ao cadastrar', message)
+      setFeedbackMessage(message)
     } finally {
       setIsSubmitting(false)
     }
   }, [name, email, password, isFormValid, isSubmitting, setSession])
+
+  const dismissFeedback = useCallback(() => setFeedbackMessage(null), [])
 
   return {
     name,
@@ -81,5 +83,7 @@ export function useRegisterScreen() {
     isFormValid,
     isSubmitting,
     submit,
+    feedbackMessage,
+    dismissFeedback,
   }
 }

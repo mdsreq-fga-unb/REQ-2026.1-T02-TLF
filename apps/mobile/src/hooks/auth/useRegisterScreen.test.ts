@@ -2,7 +2,6 @@ import { renderHook, act } from '@testing-library/react-native'
 import { register as registerUser } from '@/services/api/auth'
 import { useAuthStore } from '@/stores/auth'
 import { router } from 'expo-router'
-import { Alert } from 'react-native'
 import { useRegisterScreen } from './useRegisterScreen'
 
 jest.mock('@/services/api/auth')
@@ -94,7 +93,7 @@ describe('useRegisterScreen', () => {
       await result.current.submit()
     })
 
-    expect(Alert.alert).toHaveBeenCalledWith('Erro ao cadastrar', 'E-mail já cadastrado')
+    expect(result.current.feedbackMessage).toBe('E-mail já cadastrado')
     expect(mockedReplace).not.toHaveBeenCalled()
   })
 })

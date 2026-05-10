@@ -1,4 +1,6 @@
-import { saveTokens, clearTokens } from './token-storage'
+import { getApiErrorMessage } from '@/utils/apiErrorMessage'
+import { api } from './axios-client'
+import { clearTokens, saveTokens } from './token-storage'
 
 export type AuthSessionResponse = {
   user: { id: string; name: string; email: string }
@@ -11,14 +13,13 @@ export async function login(email: string, password: string): Promise<AuthSessio
     throw new Error('Preencha e-mail e senha')
   }
 
-  const response: AuthSessionResponse = {
-    user: { id: '1', name: 'TESTE', email: email },
-    accessToken: 'string',
-    refreshToken: 'string',
+  try {
+    const response = await api.post<AuthSessionResponse>('/auth/login', { email, password })
+    await saveTokens(response.data.accessToken, response.data.refreshToken)
+    return response.data
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, 'Não foi possível entrar. Tente novamente.'))
   }
-
-  await saveTokens(response.accessToken, response.refreshToken)
-  return response
 }
 
 export type RegisterPayload = {
@@ -36,14 +37,17 @@ export async function register({
     throw new Error('Preencha todos os campos')
   }
 
-  const response: AuthSessionResponse = {
-    user: { id: '1', name, email },
-    accessToken: 'string',
-    refreshToken: 'string',
+  try {
+    const response = await api.post<AuthSessionResponse>('/auth/register', {
+      name,
+      email,
+      password,
+    })
+    await saveTokens(response.data.accessToken, response.data.refreshToken)
+    return response.data
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, 'Não foi possível cadastrar. Tente novamente.'))
   }
-
-  await saveTokens(response.accessToken, response.refreshToken)
-  return response
 }
 
 export async function logout(): Promise<void> {

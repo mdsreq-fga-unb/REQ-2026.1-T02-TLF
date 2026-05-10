@@ -5,6 +5,7 @@ import { ThemedFieldError } from '@/components/ui/ThemedFieldError'
 import { ThemedInputForm } from '@/components/ui/ThemedInputForm'
 import { ThemedInputContainer } from '@/components/ui/ThemedInputContainer'
 import { ThemedLink } from '@/components/ui/ThemedLink'
+import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
 import { ThemedScrollArea } from '@/components/ui/ThemedScrollArea'
 import { ThemedSeparator } from '@/components/ui/ThemedSeparator'
 import { ThemedText } from '@/components/ui/ThemedText'
@@ -40,6 +41,8 @@ export default function RegisterScreen() {
     isFormValid,
     isSubmitting,
     submit,
+    feedbackMessage,
+    dismissFeedback,
   } = useRegisterScreen()
 
   const ctaDisabled = !isFormValid || isSubmitting
@@ -145,6 +148,18 @@ export default function RegisterScreen() {
           </ThemedContainer>
         </ThemedContainer>
       </ThemedScrollArea>
+      <ThemedOverlayAlert
+        visible={feedbackMessage != null}
+        onRequestClose={dismissFeedback}
+        message={feedbackMessage ?? ''}
+        actions={[{ label: 'Entendi', onPress: dismissFeedback }]}
+      >
+        <ThemedText
+          variant="headline"
+          text="Erro ao cadastrar"
+          style={{ textAlign: 'center', width: '100%' }}
+        />
+      </ThemedOverlayAlert>
     </ThemedBackground>
   )
 }

@@ -29,7 +29,7 @@ export const layout = {
   separatorHeight: 2,
   maxFormWidthPct: '100%' as const,
   authLogoSize: 200,
-  minTouchTarget: 48,
+  minTouchTarget: 40,
 } as const
 
 export const iconSize = {

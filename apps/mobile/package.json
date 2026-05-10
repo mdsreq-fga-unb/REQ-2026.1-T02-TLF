@@ -9,6 +9,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "lint": "eslint \"{app,src}/**/*.{ts,tsx}\" --fix",
+    "test": "jest",
     "web": "expo start --web"
   },
   "dependencies": {
@@ -44,7 +45,12 @@
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.29.0",
     "@morrowdigital/watermelondb-expo-plugin": "^2.3.3",
+    "@testing-library/react-native": "^13.3.3",
+    "@types/jest": "^29.5.14",
     "@types/react": "~19.1.0",
+    "jest": "^29.7.0",
+    "jest-expo": "^55.0.17",
+    "react-test-renderer": "^19.1.0",
     "typescript": "~5.9.2"
   },
   "private": true

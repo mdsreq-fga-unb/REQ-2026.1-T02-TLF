@@ -1,6 +1,14 @@
 import { AuthService } from './auth.service'
 import { RegisterRequestDto, RegisterResponseDto } from './dto/register.dto'
-import { Controller, Post, Body, HttpCode, Req, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  HttpCode,
+  InternalServerErrorException,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common'
 import { LoginRequestDto, LoginResponseDto } from './dto/login.dto'
 import { LogoutResponseDto } from './dto/logout.dto'
 import { RefreshRequestDto, RefreshResponseDto } from './dto/refresh.dto'
@@ -25,19 +33,30 @@ export class AuthController {
   @ApiOperation({
     summary: 'Registrar usuário',
     description:
-      'Cria conta no provedor de autenticação, persiste o usuário localmente e inicializa dados padrão.',
+      'Cria conta no provedor, persiste usuário local, semeia categorias padrão e abre sessão (mesmo contrato que login: usuário + tokens).',
   })
   @ApiCreatedResponse({ type: RegisterResponseDto, description: 'Usuário criado' })
   @ApiBadRequestResponse({ description: 'Dados inválidos ou e-mail já em uso no provedor' })
   async register(@Body() registerDto: RegisterRequestDto): Promise<RegisterResponseDto> {
-    return await this.authService.register(registerDto)
+    const { userId } = await this.authService.register(registerDto)
+    const { user, accessToken, refreshToken } = await this.authService.login({
+      email: registerDto.email,
+      password: registerDto.password,
+    })
+
+    if (user.id !== userId) {
+      throw new InternalServerErrorException('Sessão inconsistente após o cadastro')
+    }
+
+    return { user, accessToken, refreshToken }
   }
 
   @HttpCode(200)
   @Post('login')
   @ApiOperation({
     summary: 'Login',
-    description: 'Autentica por e-mail e senha retornando tokens de acesso.',
+    description:
+      'Autentica por e-mail e senha. Retorna o perfil do usuário (para dispositivos sem cache local) e os tokens de acesso.',
   })
   @ApiOkResponse({ type: LoginResponseDto, description: 'Sessão criada com sucesso' })
   @ApiUnauthorizedResponse({

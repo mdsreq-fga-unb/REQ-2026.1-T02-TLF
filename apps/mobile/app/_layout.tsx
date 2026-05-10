@@ -1,3 +1,4 @@
+import { AndroidHardwareBackPortal } from '@/components/AndroidHardwareBackPortal'
 import { fonts } from '@/utils/fonts'
 import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
@@ -32,6 +33,7 @@ export default function RootLayout() {
   return (
     <>
       <StatusBar style={isDark ? 'light' : 'dark'} />
+      <AndroidHardwareBackPortal />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(tabs)" />

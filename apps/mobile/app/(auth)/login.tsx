@@ -1,63 +1,38 @@
-import { useEffect, useState } from 'react'
-import { Image } from 'react-native'
-import NamedLogo from '../../assets/imgs/tlt-icon.png'
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
 import { ThemedButton } from '@/components/ui/ThemedButton'
 import { ThemedContainer } from '@/components/ui/ThemedContainer'
+import { ThemedFieldError } from '@/components/ui/ThemedFieldError'
 import { ThemedInputForm } from '@/components/ui/ThemedInputForm'
 import { ThemedInputContainer } from '@/components/ui/ThemedInputContainer'
 import { ThemedLink } from '@/components/ui/ThemedLink'
 import { ThemedScrollArea } from '@/components/ui/ThemedScrollArea'
 import { ThemedSeparator } from '@/components/ui/ThemedSeparator'
 import { ThemedText } from '@/components/ui/ThemedText'
-import { useThemeColor } from '@/hooks/useThemeColor'
+import { useLoginScreen } from '@/hooks/auth/useLoginScreen'
 import { layout, spacing } from '@/utils/dimensions'
-import { login } from '@/services/api/auth'
-import { useAuthStore } from '@/stores/auth'
-import { router } from 'expo-router'
-import { AlertCircle, Lock, Mail } from 'lucide-react-native'
+import { Lock, Mail } from 'lucide-react-native'
+import { Image } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import NamedLogo from '../../assets/imgs/tlt-icon.png'
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [emailTouched, setEmailTouched] = useState(false)
-  const [passwordTouched, setPasswordTouched] = useState(false)
-  const [emailError, setEmailError] = useState('')
-  const [passwordError, setPasswordError] = useState('')
-  const colors = useThemeColor()
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    emailTouched,
+    setEmailTouched,
+    passwordTouched,
+    setPasswordTouched,
+    emailErrorMessage,
+    passwordErrorMessage,
+    isFormValid,
+    isSubmitting,
+    submit,
+  } = useLoginScreen()
 
-  const handleLogin = async () => {
-    try {
-      const response = await login(email, password)
-      useAuthStore.getState().setSession(response.user, response.accessToken, response.refreshToken)
-      router.replace('/(tabs)')
-    } catch (error) {
-      throw new Error(`${error}`)
-    }
-  }
-
-  useEffect(() => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-    if (email === '') {
-      setEmailError('Por favor insira um E-mail')
-    } else if (!emailRegex.test(email)) {
-      setEmailError('E-mail invalido')
-    } else {
-      setEmailError('')
-    }
-  }, [email])
-
-  useEffect(() => {
-    if (password === '') {
-      setPasswordError('Por favor insira uma senha')
-    } else {
-      setPasswordError('')
-    }
-  }, [password])
-
-  const isFormValid = email !== '' && password !== '' && emailError === '' && passwordError === ''
+  const ctaDisabled = !isFormValid || isSubmitting
 
   return (
     <ThemedBackground>
@@ -84,25 +59,7 @@ export default function LoginScreen() {
                   setEmailTouched(true)
                 }}
               />
-              {emailError && emailTouched && (
-                <ThemedContainer
-                  variant="transparent"
-                  style={{
-                    flexDirection: 'row',
-                    padding: 0,
-                    gap: spacing.sm,
-                    alignItems: 'center',
-                  }}
-                >
-                  <AlertCircle size={20} color={colors.destructive} strokeWidth={2} />
-                  <ThemedText
-                    variant="caption"
-                    tone="destructive"
-                    text={emailError}
-                    style={{ textAlign: 'left', flex: 1 }}
-                  />
-                </ThemedContainer>
-              )}
+              <ThemedFieldError message={emailErrorMessage} visible={emailTouched} />
             </ThemedInputContainer>
 
             <ThemedInputContainer text="Senha">
@@ -117,27 +74,9 @@ export default function LoginScreen() {
                   setPasswordTouched(true)
                 }}
               />
-              {passwordError && passwordTouched && (
-                <ThemedContainer
-                  variant="transparent"
-                  style={{
-                    flexDirection: 'row',
-                    padding: 0,
-                    gap: spacing.sm,
-                    alignItems: 'center',
-                  }}
-                >
-                  <AlertCircle size={20} color={colors.destructive} strokeWidth={2} />
-                  <ThemedText
-                    variant="caption"
-                    tone="destructive"
-                    text={passwordError}
-                    style={{ textAlign: 'left', flex: 1 }}
-                  />
-                </ThemedContainer>
-              )}
+              <ThemedFieldError message={passwordErrorMessage} visible={passwordTouched} />
             </ThemedInputContainer>
-            <ThemedButton title="Entrar" onPress={handleLogin} disabled={!isFormValid} />
+            <ThemedButton title="Entrar" onPress={submit} disabled={ctaDisabled} />
             <ThemedSeparator />
             <ThemedContainer
               variant="transparent"

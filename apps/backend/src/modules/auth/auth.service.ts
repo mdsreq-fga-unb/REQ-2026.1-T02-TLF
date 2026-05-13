@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common'
 import { SupabaseService } from '../supabase/supabase.service'
 import { PrismaService } from '@common/prisma/prisma.service'
-import { RegisterRequestDto, RegisterResponseDto } from './dto/register.dto'
+import { RegisterRequestDto, RegisterServiceResponseDto } from './dto/register.dto'
 import { SeedService } from 'prisma/seed'
 import { LoginRequestDto, LoginResponseDto } from './dto/login.dto'
 import { LogoutResponseDto } from './dto/logout.dto'
@@ -15,7 +15,7 @@ export class AuthService {
     private seed: SeedService,
   ) {}
 
-  async register(dto: RegisterRequestDto): Promise<RegisterResponseDto> {
+  async register(dto: RegisterRequestDto): Promise<RegisterServiceResponseDto> {
     const { name, email, password } = dto
 
     const { data, error } = await this.supabase.auth.admin.createUser({
@@ -79,7 +79,11 @@ export class AuthService {
       throw new BadRequestException('Sessão retornada pelo provedor está incompleta')
     }
 
-    return { accessToken, refreshToken }
+    return {
+      user: { id: user.id, name: user.name, email: user.email },
+      accessToken,
+      refreshToken,
+    }
   }
 
   async logout(accessToken: string): Promise<LogoutResponseDto> {

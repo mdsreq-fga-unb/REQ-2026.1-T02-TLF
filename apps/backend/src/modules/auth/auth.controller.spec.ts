@@ -1,3 +1,4 @@
+import { InternalServerErrorException } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
@@ -27,19 +28,46 @@ describe('AuthController', () => {
     controller = module.get(AuthController)
   })
 
-  it('should delegate register to AuthService', async () => {
+  it('should register, then login returning user and tokens', async () => {
     const dto = { name: 'A', email: 'a@test.com', password: 'Pass123!' }
+    const prismaUser = { id: 'u1', name: 'A', email: 'a@test.com' }
+
     authService.register.mockResolvedValue({ userId: 'u1' })
+    authService.login.mockResolvedValue({
+      user: prismaUser,
+      accessToken: 'at',
+      refreshToken: 'rt',
+    })
 
     const result = await controller.register(dto)
 
     expect(authService.register).toHaveBeenCalledWith(dto)
-    expect(result).toEqual({ userId: 'u1' })
+    expect(authService.login).toHaveBeenCalledWith({ email: dto.email, password: dto.password })
+    expect(result).toEqual({
+      user: prismaUser,
+      accessToken: 'at',
+      refreshToken: 'rt',
+    })
+  })
+
+  it('should throw when login user id mismatches register userId', async () => {
+    const dto = { name: 'A', email: 'a@test.com', password: 'Pass123!' }
+    authService.register.mockResolvedValue({ userId: 'u1' })
+    authService.login.mockResolvedValue({
+      user: { id: 'other', name: 'A', email: dto.email },
+      accessToken: 'at',
+      refreshToken: 'rt',
+    })
+
+    await expect(controller.register(dto)).rejects.toThrow(InternalServerErrorException)
+    expect(authService.login).toHaveBeenCalled()
   })
 
   it('should delegate login to AuthService', async () => {
     const dto = { email: 'a@test.com', password: 'Pass123' }
+    const user = { id: 'uid', name: 'N', email: 'a@test.com' }
     authService.login.mockResolvedValue({
+      user,
       accessToken: 'a',
       refreshToken: 'r',
     })
@@ -47,7 +75,11 @@ describe('AuthController', () => {
     const result = await controller.login(dto)
 
     expect(authService.login).toHaveBeenCalledWith(dto)
-    expect(result).toEqual({ accessToken: 'a', refreshToken: 'r' })
+    expect(result).toEqual({
+      user,
+      accessToken: 'a',
+      refreshToken: 'r',
+    })
   })
 
   it('should delegate logout using accessToken from request', async () => {

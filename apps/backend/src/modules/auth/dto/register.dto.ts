@@ -1,3 +1,4 @@
+import { AuthUserDto } from './auth-user.dto'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsEmail, IsNotEmpty, IsString, IsStrongPassword, Length } from 'class-validator'
 import { Transform } from 'class-transformer'
@@ -47,10 +48,31 @@ export class RegisterRequestDto {
   password!: string
 }
 
-export class RegisterResponseDto {
+export class RegisterServiceResponseDto {
   @ApiProperty({
     description: 'ID do usuário',
     example: '1234567890',
   })
   userId!: string
+}
+
+export class RegisterResponseDto {
+  @ApiProperty({
+    description: 'Mesmo payload de usuário do login, obtido ao abrir sessão após o cadastro.',
+    type: AuthUserDto,
+  })
+  user!: AuthUserDto
+
+  @ApiProperty({
+    description: 'Token de acesso',
+    example: '1234567890',
+  })
+  @IsString()
+  accessToken!: string
+
+  @ApiProperty({
+    description: 'Token de atualização',
+    example: '1234567890',
+  })
+  refreshToken!: string
 }

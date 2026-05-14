@@ -76,7 +76,7 @@
   "moduleNameMapper": {
     "@common/(.*)": ["<rootDir>/common/$1"],
     "@modules/(.*)": ["<rootDir>/modules/$1"],
-    "@config/(.*)": ["<rootDir>/config/$1"]
+    "@config/(.*)": ["<rootDir>/config/$1"],
     "prisma/seed": ["<rootDir>/../prisma/seed.ts"]
   },
   "testPathIgnorePatterns": ["/node_modules/"],

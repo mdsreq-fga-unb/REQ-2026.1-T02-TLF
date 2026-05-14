@@ -40,6 +40,18 @@ export const formatDateShort = (value: Date | number | string) => {
   }).format(date)
 }
 
+export const formatDateTimeShort = (value: Date | number | string) => {
+  const date = toDate(value)
+
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date)
+}
+
 export const formatTransactionType = (type: TransactionType) => {
   switch (type) {
     case 'INCOME':

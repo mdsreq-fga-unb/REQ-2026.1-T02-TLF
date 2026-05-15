@@ -1,9 +1,25 @@
-import { Text, View } from 'react-native'
+import { Text, View, StyleSheet } from 'react-native'
 
-export default function HomeScreen() {
+const app = () => {
   return (
-    <View>
-      <Text>Dashboard</Text>
+    //TODO: add a logout button and make the logout function
+    <View style={styles.container}>
+      <Text style={styles.text}>testagem foda</Text>
     </View>
   )
 }
+
+export default app
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  text: {
+    color: 'brown',
+    fontSize: 42,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+})

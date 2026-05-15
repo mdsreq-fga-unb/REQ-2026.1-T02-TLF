@@ -109,7 +109,8 @@ cd REQ-2026.1-T02-TLF
 ### ▶️ Rodando o frontend (mobile)
 
 ```bash
-🚧 Em desenvolvimento
+cd apps/mobile
+npm start
 ```
 
 ### ▶️ Rodando o backend

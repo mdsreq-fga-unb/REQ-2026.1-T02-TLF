@@ -1,14 +1,22 @@
 import axios from 'axios'
-import * as SecureStore from 'expo-secure-store'
+import { clearTokens, getAccessToken, getRefreshToken, saveTokens } from './token-storage'
+
+const baseURL = process.env.EXPO_PUBLIC_API_URL
+
+if (__DEV__ && (!baseURL || baseURL.includes(':8081'))) {
+  console.warn(
+    `[api] EXPO_PUBLIC_API_URL seems invalid (${baseURL ?? 'undefined'}). Expected something like http://<LAN-IP>:3000/api/v1`,
+  )
+}
 
 export const api = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_API_URL,
+  baseURL,
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
 })
 
 api.interceptors.request.use(async (config) => {
-  const token = await SecureStore.getItemAsync('accessToken')
+  const token = await getAccessToken()
   if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 })
@@ -22,17 +30,15 @@ api.interceptors.response.use(
       original._retry = true
 
       try {
-        const refreshToken = await SecureStore.getItemAsync('refreshToken')
+        const refreshToken = await getRefreshToken()
         const { data } = await api.post('/auth/refresh', { refreshToken })
 
-        await SecureStore.setItemAsync('accessToken', data.accessToken)
-        await SecureStore.setItemAsync('refreshToken', data.refreshToken)
+        await saveTokens(data.accessToken, data.refreshToken)
 
         original.headers.Authorization = `Bearer ${data.accessToken}`
         return api(original)
       } catch {
-        await SecureStore.deleteItemAsync('accessToken')
-        await SecureStore.deleteItemAsync('refreshToken')
+        await clearTokens()
         /* useAuthStore.getState().logout()*/ // avisa o Zustand (precisa ser implementado)
       }
     }

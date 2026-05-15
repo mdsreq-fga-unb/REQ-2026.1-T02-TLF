@@ -7,5 +7,11 @@ export const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    flexWrap: 'wrap',
+  },
+  headline: {
+    alignSelf: 'stretch',
+    textAlign: 'center',
+    flexWrap: 'wrap',
   },
 })

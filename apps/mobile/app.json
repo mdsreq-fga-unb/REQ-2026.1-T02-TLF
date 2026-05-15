@@ -4,12 +4,12 @@
     "slug": "TLTFinanas",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/imgs/tlt-icon.png",
+    "icon": "./assets/imgs/hat.png",
     "userInterfaceStyle": "dark",
     "scheme": "tltfinancas",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/imgs/tlt-icon.png",
+      "image": "./assets/imgs/hat.png",
       "resizeMode": "contain",
       "backgroundColor": "#121418FA"
     },
@@ -20,14 +20,14 @@
     "android": {
       "package": "com.tltfinancas.app",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/imgs/tlt-icon.png",
+        "foregroundImage": "./assets/imgs/hat.png",
         "backgroundColor": "#121418FA"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/imgs/tlt-icon.png"
+      "favicon": "./assets/imgs/hat.png"
     },
     "plugins": [
       "expo-router",

@@ -17,6 +17,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   refreshToken: null,
   isAuthenticated: false,
   setSession: (user, accessToken, refreshToken) =>
+    //TODO: Should we save refresh token and access token in the store? Considering that we already save it in the secure store?
     set({ user, accessToken, refreshToken, isAuthenticated: true }),
   logout: () => {
     set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false })

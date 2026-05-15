@@ -171,6 +171,11 @@ describe('AuthService', () => {
       const result = await service.login(loginDto)
 
       expect(result).toEqual({
+        user: {
+          id: authUserId,
+          email: loginDto.email,
+          name: 'N',
+        },
         accessToken: 'access-jwt',
         refreshToken: 'refresh-jwt',
       })

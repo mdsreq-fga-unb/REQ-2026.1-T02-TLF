@@ -1,3 +1,4 @@
+import { AuthUserDto } from './auth-user.dto'
 import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 import { Transform } from 'class-transformer'
@@ -24,6 +25,12 @@ export class LoginRequestDto {
 }
 
 export class LoginResponseDto {
+  @ApiProperty({
+    description: 'Perfil persistido localmente (para dispositivos novos sem cache)',
+    type: AuthUserDto,
+  })
+  user!: AuthUserDto
+
   @ApiProperty({
     description: 'Access token',
     example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',

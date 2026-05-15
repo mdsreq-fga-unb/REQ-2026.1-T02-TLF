@@ -2,6 +2,7 @@ import { Text, View, StyleSheet } from 'react-native'
 
 const app = () => {
   return (
+    //TODO: add a logout button and make the logout function
     <View style={styles.container}>
       <Text style={styles.text}>testagem foda</Text>
     </View>

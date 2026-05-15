@@ -218,3 +218,4 @@ export default function LoginScreen() {
     </Background>
   )
 }
+//TODO: resolve the problem related with keyboard and the scroll area

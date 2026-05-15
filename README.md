@@ -8,11 +8,13 @@
   <img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow" />
   <img src="https://img.shields.io/badge/version-0.1.0-blue" />
   <img src="https://img.shields.io/badge/license-academic-lightgrey" />
-  <img src="https://img.shields.io/badge/node-%3E%3D18-green" />
+  <img src="https://img.shields.io/badge/node-%3E%3D20-green" />
 </p>
 
 ---
+
 ## 🌐 Documentação Oficial
+
 Nosso portal de documentação, está disponível em: 👉 https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/
 
 ---
@@ -66,16 +68,19 @@ Uma aplicação que centraliza o controle financeiro do usuário, permitindo:
 ## 🛠️ Tecnologias
 
 ### Frontend
+
 - React Native (Expo)
 - Victory Native
 
 ### Backend
+
 - Node.js
 - NestJS
 - PostgreSQL
 - Prisma
 
 ### Outros
+
 - Supabase Auth
 - Jest
 - Swagger
@@ -87,18 +92,18 @@ Uma aplicação que centraliza o controle financeiro do usuário, permitindo:
 
 ### Pré-requisitos
 
-- Node.js (>= 18)
+- Node.js (>= 20)
 - npm ou yarn
-- Expo CLI
+- Xcode / Android Studio (para emuladores) — desenvolvimento do app Expo
 
 ### 🔧 Instalação
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/tlt-financas.git
+git clone https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF.git
 
-# Acesse o projeto
-cd tlt-financas
+# Acesse o projeto (o nome da pasta segue o repositório)
+cd REQ-2026.1-T02-TLF
 ```
 
 ### ▶️ Rodando o frontend (mobile)
@@ -130,14 +135,14 @@ O projeto foi dividido em **13 iterações**:
 
 ## 👥 Equipe
 
-| Nome | Função |
-|------|--------|
-| Gabriel Mota | Gerente de Projeto / DevOps |
-| Lucas Fujimoto | Frontend |
-| Guilherme Ventura | Frontend |
-| Danilo de Melo | Backend |
-| Daniel Lira | Backend / Requisitos |
-| Tiago Lyra | Backend |
+| Nome              | Função                      |
+| ----------------- | --------------------------- |
+| Gabriel Mota      | Gerente de Projeto / DevOps |
+| Lucas Fujimoto    | Frontend                    |
+| Guilherme Ventura | Frontend                    |
+| Danilo de Melo    | Backend                     |
+| Daniel Lira       | Backend / Requisitos        |
+| Tiago Lyra        | Backend                     |
 
 ---
 
@@ -158,3 +163,358 @@ Projeto acadêmico sem fins comerciais.
 A aplicação pode ser publicada via **GitHub Pages** para a landing page.
 
 ---
+
+# Monorepo (TLT Finanças)
+
+Stack de gestão financeira pessoal com backend NestJS e app mobile React Native (Expo).
+
+## Estrutura do repositório
+
+```
+REQ-2026.1-T02-TLF/
+├── apps/
+│   ├── backend/          → NestJS + Prisma + PostgreSQL
+│   └── mobile/           → React Native + Expo + WatermelonDB
+├── package.json          → Turborepo (orquestrador do monorepo)
+├── turbo.json            → Configuração de tasks paralelas
+├── .eslintrc.js          → ESLint compartilhado entre os dois apps
+└── .prettierrc           → Prettier compartilhado
+```
+
+### Por que monorepo?
+
+Um único `npm install` na raiz instala as dependências dos dois projetos. Lint, testes e build rodam em paralelo com um único comando via Turborepo. Colegas novos clonam o repo e sobem tudo com poucos passos.
+
+Cada app tem seu próprio `package.json` com suas dependências — o monorepo só orquestra, não mistura.
+
+---
+
+## Pré-requisitos
+
+| Ferramenta       | Versão mínima    | Para que serve          |
+| ---------------- | ---------------- | ----------------------- |
+| Node.js          | 20               | Rodar backend e tooling |
+| npm              | 10               | Gerenciador de pacotes  |
+| Docker + Compose | qualquer recente | Banco de dados local    |
+| EAS CLI          | 12+              | Build do app mobile     |
+| Android Studio   | qualquer recente | Emulador Android        |
+| Xcode            | 15+              | Emulador iOS (só Mac)   |
+
+---
+
+## Setup inicial — faça isso uma vez
+
+### 1. Clone e instale tudo
+
+```bash
+git clone <repo-url>
+cd <pasta-do-repositório>
+npm install
+```
+
+### 2. Configure as variáveis de ambiente
+
+```bash
+cp apps/backend/env/.env.example apps/backend/env/.env
+cp apps/mobile/env/.env.example apps/mobile/.env
+```
+
+Preencha os valores no `apps/backend/env/.env`:
+
+| Variável               | Onde encontrar                                                                                                    |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`         | Monte com os mesmos usuário/senha/banco/porta que o Postgres local (Compose publica **`5433` → Postgres `5432`**) |
+| `SUPABASE_URL`         | Supabase Dashboard → Project Settings → API                                                                       |
+| `SUPABASE_ANON_KEY`    | Supabase Dashboard → Settings → API → Public anon key (`anon`)                                                    |
+| `SUPABASE_SERVICE_KEY` | Supabase Dashboard → Settings → API → Secret keys (`service_role`)                                                |
+| `SUPABASE_JWT_SECRET`  | Supabase Dashboard → Settings → JWT Keys → Legacy JWT Secret                                                      |
+
+Preencha o `apps/mobile/.env` (na raiz do app Expo — o arquivo de exemplo está em `apps/mobile/env/.env.example`):
+
+| Variável              | Valor em desenvolvimento          |
+| --------------------- | --------------------------------- |
+| `EXPO_PUBLIC_API_URL` | `http://SEU_IP_LOCAL:3000/api/v1` |
+
+> **Atenção:** use o IP da sua máquina na rede local, não `localhost`.
+> Para descobrir: `ipconfig` (Windows) ou `ifconfig` (Mac/Linux).
+> `localhost` no celular aponta para o próprio celular, não para o seu computador.
+
+Depois dos `cp` acima, gere o Prisma Client para o `@prisma/client` existir (usa `DATABASE_URL` de `apps/backend/env/.env`):
+
+```bash
+cd apps/backend && npm run db:generate
+```
+
+### 3. Suba o banco de dados
+
+```bash
+cd apps/backend
+docker compose up -d
+
+# Confirma que subiu
+docker compose ps
+```
+
+### 4. Rode as migrations
+
+```bash
+# Ainda dentro de apps/backend
+npm run db:migrate
+```
+
+Isso cria todas as tabelas no banco — o comando também invoca `prisma generate` e mantém o PrismaClient atualizado junto ao schema.
+
+### 5. Suba o backend
+
+```bash
+npm run dev
+# API disponível em http://localhost:3000/api/v1
+# Swagger em     http://localhost:3000/api/v1/docs
+```
+
+### 6. Configure o mobile (primeira vez)
+
+No terminal com **cwd na raiz do monorepo** (mesmo nível de `turbo.json`/`package.json`; se você ainda está em `apps/backend`, use `cd ../..` primeiro):
+
+```bash
+cd apps/mobile
+
+# Instala o Dev Client no emulador Android
+npx expo run:android
+
+# ou iOS (só no Mac)
+npx expo run:ios
+```
+
+Isso faz o prebuild, compila o código nativo e instala o Dev Client no emulador. Precisa fazer isso apenas quando:
+
+- É a primeira vez no projeto
+- Uma nova biblioteca nativa foi adicionada
+- A versão do Expo foi atualizada
+
+Para os dias seguintes, apenas:
+
+```bash
+npx expo start --dev-client
+```
+
+---
+
+## Fluxo offline-first
+
+O app é **offline-first** — toda ação do usuário é salva localmente primeiro e sincronizada com o servidor depois.
+
+```
+Ação do usuário (ex: nova transação)
+        ↓
+WatermelonDB (SQLite local)
+  - Salva imediatamente
+  - UI atualiza na hora — sem esperar rede
+        ↓
+Sync Engine (background)
+  - Detecta registros pendentes
+  - Envia para o backend via POST /sync/push
+  - Recebe atualizações do servidor via GET /sync/pull
+        ↓
+NestJS Backend
+        ↓
+PostgreSQL
+```
+
+**O usuário nunca espera a rede para ver o resultado de uma ação.**
+Se estiver sem internet, os dados ficam no WatermelonDB até a conexão voltar.
+
+---
+
+## Fluxo de primeiro uso
+
+```
+1. Abre o app pela primeira vez
+        ↓
+2. Tela de registro (email, senha, nome)
+        ↓
+3. Backend cria usuário no Supabase Auth
+   + espelha na tabela users do Postgres
+   + cria categorias padrão vinculadas ao usuário
+        ↓
+4. Backend retorna accessToken + refreshToken
+        ↓
+5. Mobile salva tokens no SecureStore (keychain do SO)
+        ↓
+6. Zustand marca isAuthenticated: true
+        ↓
+7. App redireciona para a Home
+        ↓
+8. Sync inicial: puxa dados do servidor para o WatermelonDB
+        ↓
+9. App pronto para uso — funciona offline a partir daqui
+```
+
+---
+
+## Fluxo de autenticação
+
+```
+Login
+  Mobile → POST /auth/login { email, password }
+  Backend → Supabase valida credenciais
+  Backend → retorna { accessToken, refreshToken }
+  Mobile → salva no SecureStore
+
+Requests autenticados
+  Axios interceptor injeta automaticamente:
+  Authorization: Bearer <accessToken>
+
+Token expirado (após 1 hora)
+  Request retorna 401
+  Axios interceptor chama POST /auth/refresh
+  Backend → Supabase emite novo accessToken
+  Axios retenta o request original
+  Usuário não percebe nada
+
+Logout
+  Mobile deleta tokens do SecureStore
+  Backend invalida sessão no Supabase
+  App redireciona para login
+```
+
+---
+
+## Comandos do dia a dia
+
+```bash
+# Raiz — roda backend e mobile juntos
+npm run dev
+
+# Só o backend
+cd apps/backend && npm run dev
+
+# Só o mobile
+cd apps/mobile && npx expo start --dev-client
+
+# Regenerar o Prisma Client após mudanças em schema.prisma (sem nova migration)
+cd apps/backend && npm run db:generate
+
+# Nova migration após alterar o schema.prisma
+cd apps/backend && npm run db:migrate
+
+# Visualizar o banco graficamente
+cd apps/backend && npm run db:studio
+
+# Lint em tudo
+npm run lint
+
+# Testes em tudo
+npm run test
+```
+
+---
+
+## Build do app mobile
+
+O app usa **EAS Build** para gerar os binários. O código nativo (WatermelonDB) exige um build real — o Expo Go não funciona neste projeto.
+
+```bash
+# Repositório: pasta do app (onde está eas.json / app.json)
+cd apps/mobile
+
+# Instala o EAS CLI (só uma vez no seu ambiente global)
+npm install -g eas-cli
+eas login
+
+# Dev Client — Android (para desenvolvimento)
+eas build --profile development --platform android
+
+# Dev Client — iOS (para desenvolvimento; exige projeto Apple configurado na EAS)
+eas build --profile development --platform ios
+
+# Preview — testar versão de produção antes de publicar
+eas build --profile preview --platform android
+
+# Produção — build final para a store
+eas build --profile production --platform all
+```
+
+Após o build de desenvolvimento, instale o `.apk` gerado no celular/emulador. A partir daí, para atualizar o app durante o desenvolvimento:
+
+```bash
+npx expo start --dev-client
+# Escaneia o QR com o Dev Client instalado (não o Expo Go)
+```
+
+---
+
+## Variáveis de ambiente — resumo completo
+
+### Backend (`apps/backend/env/.env`)
+
+```bash
+# Banco de dados
+POSTGRES_USER=tlt
+POSTGRES_PASSWORD=tlt_dev
+POSTGRES_DB=tlt_db
+DATABASE_URL="postgresql://tlt:tlt_dev@localhost:5433/tlt_db?schema=public"
+
+# App
+NODE_ENV=development
+PORT=3000
+
+# Supabase
+SUPABASE_URL=https://xxxx.supabase.co
+SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_KEY=sb_secret_...
+SUPABASE_JWT_SECRET=seu-legacy-jwt-secret
+```
+
+### Mobile (`apps/mobile/.env`)
+
+Arquivo criado a partir de `apps/mobile/env/.env.example`; o Expo carrega variáveis `EXPO_PUBLIC_*` da raiz do app (`apps/mobile/.env`), ao lado de `app.json`.
+
+```bash
+# Use o IP da sua máquina, não localhost
+EXPO_PUBLIC_API_URL=http://192.168.1.X:3000/api/v1
+```
+
+---
+
+## Convenções do projeto
+
+- **Valores monetários** são sempre **centavos (int)**. `R$500,00 = 50000`. A conversão para exibição acontece na camada de apresentação com o utilitário `fromCents()`.
+- **Todos os IDs** são UUID.
+- **Datas** são ISO 8601 nos DTOs, `DateTime` no Prisma e `number` (timestamp) no WatermelonDB.
+- **Rotas protegidas** no backend usam `@UseGuards(AuthGuard)` no controller. Rotas públicas são apenas `/auth/register`, `/auth/login` e `/auth/refresh`.
+- **Commits** seguem Conventional Commits: `feat:`, `fix:`, `chore:`, `docs:`.
+
+---
+
+## Arquitetura
+
+### Backend
+
+```
+Request HTTP
+    ↓
+DTO (valida, tipifica e documenta via Swagger)
+    ↓
+Controller (recebe HTTP, chama Service)
+    ↓
+Service (regras de negócio, chama Prisma)
+    ↓
+Prisma ORM
+    ↓
+PostgreSQL
+```
+
+### Mobile
+
+```
+Screen (só TSX, usa hooks e components)
+    ↓
+Hook (lógica da tela, estado local)
+    ↓
+Service (DatabaseService ou ApiService)
+    ↓
+WatermelonDB (local) ←→ Sync ←→ Backend
+```
+
+**Zustand** gerencia apenas estado verdadeiramente global: autenticação (`useAuthStore`) e tema (`useThemeStore`). Estado de tela fica nos hooks locais.

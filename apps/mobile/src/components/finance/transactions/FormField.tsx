@@ -8,6 +8,7 @@ const OUTLINE_VARIANT = '#464554'
 const SURFACE_CONTAINER_HIGH = '#292932'
 const ON_SURFACE_VARIANT = '#c7c4d7'
 const ON_SURFACE = '#e4e1ed'
+const ERROR = '#f2685a'
 
 type MaterialIconName = ComponentProps<typeof MaterialIcons>['name']
 
@@ -15,6 +16,7 @@ type BaseProps = {
   icon: MaterialIconName
   label: string
   isLast?: boolean
+  error?: string
 }
 
 type PressableProps = BaseProps & {
@@ -33,46 +35,60 @@ type InputProps = BaseProps & {
 type Props = PressableProps | InputProps
 
 export function FormField(props: Props) {
+  const hasError = !!props.error
   const borderStyle = !props.isLast
     ? { borderBottomWidth: 1, borderBottomColor: `${OUTLINE_VARIANT}28` }
     : undefined
 
   if (props.isInput) {
     return (
-      <View style={[styles.container, borderStyle]}>
-        <View style={styles.content}>
-          <Text style={styles.label}>{props.label}</Text>
-          <TextInput
-            value={props.value}
-            onChangeText={props.onChangeText}
-            placeholder={props.placeholder ?? ''}
-            placeholderTextColor={`${OUTLINE}88`}
-            style={styles.input}
-            multiline
-          />
+      <>
+        <View style={[styles.container, borderStyle]}>
+          <View style={styles.content}>
+            <Text style={styles.label}>{props.label}</Text>
+            <TextInput
+              value={props.value}
+              onChangeText={props.onChangeText}
+              placeholder={props.placeholder ?? ''}
+              placeholderTextColor={`${OUTLINE}88`}
+              style={styles.input}
+              multiline
+            />
+          </View>
+          <View style={styles.iconWrap}>
+            <MaterialIcons name={props.icon} size={20} color={ON_SURFACE_VARIANT} />
+          </View>
         </View>
-        <View style={styles.iconWrap}>
-          <MaterialIcons name={props.icon} size={20} color={ON_SURFACE_VARIANT} />
-        </View>
-      </View>
+        {hasError && <Text style={styles.error}>{props.error}</Text>}
+      </>
     )
   }
 
   return (
-    <Pressable style={[styles.container, borderStyle]} onPress={props.onPress}>
-      <View style={styles.content}>
-        <Text style={styles.label}>{props.label}</Text>
-        <Text
-          style={[styles.value, { color: props.value ? ON_SURFACE : `${OUTLINE}88` }]}
-          numberOfLines={1}
-        >
-          {props.value || 'Selecionar...'}
-        </Text>
-      </View>
-      <View style={styles.iconWrap}>
-        <MaterialIcons name={props.icon} size={20} color={ON_SURFACE_VARIANT} />
-      </View>
-    </Pressable>
+    <>
+      <Pressable style={[styles.container, borderStyle]} onPress={props.onPress}>
+        <View style={styles.content}>
+          <Text style={styles.label}>{props.label}</Text>
+          <Text
+            style={[
+              styles.value,
+              { color: props.value ? ON_SURFACE : hasError ? ERROR : `${OUTLINE}88` },
+            ]}
+            numberOfLines={1}
+          >
+            {props.value || 'Selecionar...'}
+          </Text>
+        </View>
+        <View style={styles.iconWrap}>
+          <MaterialIcons
+            name={props.icon}
+            size={20}
+            color={hasError ? ERROR : ON_SURFACE_VARIANT}
+          />
+        </View>
+      </Pressable>
+      {hasError && <Text style={styles.error}>{props.error}</Text>}
+    </>
   )
 }
 
@@ -112,5 +128,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: SURFACE_CONTAINER_HIGH,
+  },
+  error: {
+    fontSize: 12,
+    color: ERROR,
+    paddingBottom: 8,
+    paddingHorizontal: 2,
   },
 })

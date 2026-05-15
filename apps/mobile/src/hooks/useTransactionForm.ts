@@ -24,6 +24,7 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
   const [notes, setNotes] = useState(initialValues?.notes ?? '')
   const [submitting, setSubmitting] = useState(false)
   const [showKeypad, setShowKeypad] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const handleKeypad = useCallback((key: string) => {
     setAmountCents((prev) => {
@@ -41,8 +42,20 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
     setSubcategoryId('')
   }
 
+  const [submitAttempted, setSubmitAttempted] = useState(false)
+
   const amount = amountCents / 100
-  const isValid = amount > 0
+
+  const errors = {
+    amount: amountCents === 0 ? 'Informe o valor da transação' : undefined,
+    category: type !== 'TRANSFER' && categoryId === '' ? 'Selecione uma categoria' : undefined,
+    destinationAccount:
+      type === 'TRANSFER' && destinationAccountId === accountId
+        ? 'Selecione uma conta de destino diferente da origem'
+        : undefined,
+  }
+
+  const isValid = !errors.amount && !errors.category && !errors.destinationAccount
 
   const reset = () => {
     setAmountCents(0)
@@ -51,10 +64,14 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
     setCategoryId('')
     setSubcategoryId('')
     setNotes('')
+    setSubmitAttempted(false)
+    setSubmitError(null)
   }
 
   const submit = async (onSuccess?: () => void) => {
+    setSubmitAttempted(true)
     if (!isValid || submitting) return
+    setSubmitError(null)
     setSubmitting(true)
     try {
       await createTransaction({
@@ -70,6 +87,12 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
       })
       reset()
       onSuccess?.()
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Não foi possível salvar a transação. Tente novamente.'
+      setSubmitError(message)
     } finally {
       setSubmitting(false)
     }
@@ -93,6 +116,9 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
     handleKeypad,
     showKeypad,
     setShowKeypad,
+    errors,
+    submitAttempted,
+    submitError,
     isValid,
     submitting,
     submit,

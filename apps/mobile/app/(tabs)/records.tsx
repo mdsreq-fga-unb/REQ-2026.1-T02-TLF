@@ -15,6 +15,7 @@ import {
   transactionCategoryOptions,
   transactionTypeOptions,
 } from '@/components/finance/records/records-data'
+import { router } from 'expo-router'
 import {
   deleteTransaction,
   listTransactions,
@@ -119,6 +120,19 @@ export default function RecordsScreen() {
       isActive = false
     }
   }, [categoryFilter, typeFilter])
+
+  const handleEdit = (transaction: TransactionListItem) => {
+    router.push({
+      pathname: '/edit-record/[id]',
+      params: {
+        id: transaction.id,
+        type: transaction.type,
+        amount: transaction.amount.toString(),
+        categoryId: transaction.category,
+        description: transaction.description,
+      },
+    })
+  }
 
   const handleDelete = (transactionId: string) => {
     Alert.alert('Confirmar exclusao', 'Deseja excluir esta transacao?', [
@@ -238,6 +252,7 @@ export default function RecordsScreen() {
           isLoading={isLoading}
           error={error}
           onDeleteTransaction={handleDelete}
+          onEditTransaction={handleEdit}
         />
         <SectionDivider />
         <CategoryDistribution categories={categoryData} />

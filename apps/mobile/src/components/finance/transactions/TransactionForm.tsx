@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Alert, ScrollView, StyleSheet, Text, TextStyle, View } from 'react-native'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { useTransactionForm, type TransactionInitialValues } from '@/hooks/useTransactionForm'
 import { ButtonPrimary } from '@/components/ui/ButtonPrimary'
@@ -21,6 +22,15 @@ type Props = {
 export function TransactionForm({ title = 'Adicionar Registro', initialValues, onSuccess }: Props) {
   const theme = useThemeColor()
   const form = useTransactionForm(initialValues)
+
+  const handleSubmit = () => {
+    form.submit(() => {
+      // CA10: confirmação de sucesso
+      Alert.alert('Registro salvo!', 'Sua transação foi registrada com sucesso.', [
+        { text: 'OK', onPress: onSuccess },
+      ])
+    })
+  }
   const [showAccountPicker, setShowAccountPicker] = useState(false)
   const [showDestinationPicker, setShowDestinationPicker] = useState(false)
   const [showCategoryPicker, setShowCategoryPicker] = useState(false)
@@ -50,6 +60,9 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
           type={form.type}
           onPress={() => form.setShowKeypad(true)}
         />
+        {form.submitAttempted && form.errors.amount && (
+          <Text style={styles.amountError}>{form.errors.amount}</Text>
+        )}
 
         <View style={[styles.fields, { backgroundColor: theme.gray }]}>
           <FormField
@@ -65,6 +78,7 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
               label="Para Conta"
               value={selectedDestination?.label ?? ''}
               onPress={() => setShowDestinationPicker(true)}
+              error={form.submitAttempted ? form.errors.destinationAccount : undefined}
             />
           )}
 
@@ -74,6 +88,7 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
               label="Categoria"
               value={selectedCategory?.label ?? ''}
               onPress={() => setShowCategoryPicker(true)}
+              error={form.submitAttempted ? form.errors.category : undefined}
             />
           )}
 
@@ -106,10 +121,16 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
       </ScrollView>
 
       <View style={[styles.footer, { borderTopColor: `${theme.graySecondary}25` }]}>
+        {form.submitError && (
+          <View style={styles.errorRow}>
+            <MaterialIcons name="error-outline" size={18} color="#f2685a" />
+            <Text style={styles.errorText}>{form.submitError}</Text>
+          </View>
+        )}
         <ButtonPrimary
           title={form.submitting ? 'Salvando...' : 'Adicionar Registro'}
-          disabled={!form.isValid || form.submitting}
-          onPress={() => form.submit(onSuccess)}
+          disabled={form.submitting}
+          onPress={handleSubmit}
         />
       </View>
 
@@ -172,6 +193,13 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 24,
   },
+  amountError: {
+    fontSize: 12,
+    color: '#f2685a',
+    textAlign: 'center',
+    marginTop: -16,
+    marginBottom: 8,
+  } as TextStyle,
   fields: {
     marginHorizontal: 24,
     borderRadius: 16,
@@ -182,5 +210,17 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderTopWidth: 1,
     alignItems: 'center',
+    gap: 10,
+  },
+  errorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    alignSelf: 'stretch',
+  },
+  errorText: {
+    flex: 1,
+    fontSize: 13,
+    color: '#f2685a',
   },
 })

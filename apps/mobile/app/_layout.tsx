@@ -3,6 +3,7 @@ import { fonts } from '@/utils/fonts'
 import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useFonts } from 'expo-font'
 import { useEffect } from 'react'
 import { ActivityIndicator, useColorScheme } from 'react-native'
@@ -31,13 +32,14 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       <AndroidHardwareBackPortal />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="edit-record/[id]" options={{ presentation: 'modal' }} />
       </Stack>
-    </>
+    </GestureHandlerRootView>
   )
 }

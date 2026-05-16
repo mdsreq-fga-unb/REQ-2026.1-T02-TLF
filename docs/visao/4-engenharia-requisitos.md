@@ -115,3 +115,4 @@
 |                   | Organização e Atualização| Encerramento de Ciclo         | Encerramento da Work Item List               | Work Item List consolidada e ciclo de desenvolvimento encerrado |
 
 ---
+

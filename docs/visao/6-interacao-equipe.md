@@ -2,13 +2,13 @@
 
 ## 6.1 Composição da Equipe
 
-| Papel | Descrição | Responsável | Participantes |
-|-------|-----------|-------------|----------------|
-| Gerente de Projeto | Coordena o projeto, garante a comunicação entre cliente e equipe, controla prazos e entregas. | Gabriel Mota | - |
-| DevOps | Gerencia a infraestrutura como código e monitorar sistemas, aumentando a eficiência e a confiabilidade | Gabriel Mota | Danilo de Melo |
-| Desenvolvedor Frontend | Responsável pela interface do usuário, design e implementação das funcionalidades no lado do cliente. | Lucas Fujimoto | Guilherme Ventura, Gabriel Mota |
-| Desenvolvedor Backend | Implementa a lógica de negócios, integração com banco de dados e APIs. | Danilo de Melo | Daniel Lira, Tiago Lyra |
-| Analista de Requisitos | Define os requisitos funcionais e não funcionais do sistema e garante que eles sejam atendidos. | Daniel Lira | - |
+| Papel                   | Descrição                                                                      | Responsável      | Participantes                                      |
+|-------------------------|--------------------------------------------------------------------------------|------------------|----------------------------------------------------|
+| Gerente de Projeto      | Coordena o projeto, garante a comunicação entre cliente e equipe, controla prazos e entregas. | Gabriel Mota     | -                                                  |
+| DevOps                  | Gerencia a infraestrutura como código e monitorar sistemas, aumentando a eficiência e a confiabilidade | Gabriel Mota     | Danilo de Melo                                     |
+| Desenvolvedor Frontend  | Responsável pela interface do usuário, design e implementação das funcionalidades no lado do cliente. | Lucas Fujimoto   | Guilherme Ventura, Gabriel Mota                    |
+| Desenvolvedor Backend   | Implementa a lógica de negócios, integração com banco de dados e APIs.         | Danilo de Melo   | Daniel Lira, Tiago Lyra                            |
+| Analista de Requisitos  | Define os requisitos funcionais e não funcionais do sistema e garante que eles sejam atendidos. | Daniel Lira      | Gabriel Mota, Danilo de Melo, Lucas Fujimoto, Guilherme Ventura, Tiago Lyra |
 
 ## 6.2 Comunicação
 
@@ -28,17 +28,14 @@ A validação ocorrerá principalmente ao final de cada iteração, por meio de 
 
 Durante a execução das iterações, serão utilizadas técnicas de verificação e validação para assegurar a qualidade das funcionalidades desenvolvidas. Entre essas técnicas, destacam-se:
 
-- **Checklist de funcionalidades**: utilizado para garantir que cada requisito implementado atende aos pontos essenciais definidos previamente.
+- **Checklist de funcionalidades:** utilizado para garantir que cada requisito implementado atende aos pontos essenciais definidos previamente.
+- **Critérios de aceitação:** definidos de forma detalhada para facilitar a validação objetiva dos casos de uso e garantir que estejam prontos para desenvolvimento.
+- **Protótipos:** utilizados para validar previamente o entendimento das funcionalidades com os stakeholders antes da implementação.
+- **Feedback contínuo do cliente:** utilizado para validar se as funcionalidades desenvolvidas estão corretas e alinhadas às necessidades reais do usuário final.
 
-- **Critérios de aceitação**: definidos de forma detalhada para facilitar a validação objetiva dos casos de uso e garantir que estejam prontos para desenvolvimento.
+Além disso, a validação também será reforçada por meio de discussões com stakeholders ao longo do projeto, especialmente no planejamento de novas releases, garantindo que os requisitos evoluam conforme as necessidades identificadas.
 
-- **Protótipos**: utilizados para validar previamente o entendimento das funcionalidades com os stakeholders antes da implementação.
-
-- **Feedback contínuo do cliente**: utilizado para validar se as funcionalidades desenvolvidas estão corretas e alinhadas às necessidades reais do usuário final.
-
-Além disso, a validação também será reforçada por meio de workshops e discussões com stakeholders ao longo do projeto, especialmente no planejamento de novas releases, garantindo que os requisitos evoluam conforme as necessidades identificadas.
-
-Ao final do ciclo de desenvolvimento, será realizada uma validação global do sistema, na qual o cliente avaliará o produto como um todo, verificando se os objetivos definidos foram atingidos, especialmente no que se refere à organização financeira, usabilidade e confiabilidade da solução.
+Ao final do ciclo de desenvolvimento, será realizada uma validação global do sistema, na qual o cliente avaliará o produto como um todo, verificando se os objetivos definidos foram atingidos, especialmente no que se refere aos requisitos funcionais de controle financeiro e requisitos não-funcionais de usabilidade e confiabilidade estabelecidos, assegurando que os critérios de aceitação foram satisfeitos para o lançamento do MVP.
 
 Esse processo garante que o produto final seja construído com base em feedback contínuo, reduzindo riscos, aumentando a qualidade das entregas e assegurando maior aderência às necessidades do público-alvo.
 

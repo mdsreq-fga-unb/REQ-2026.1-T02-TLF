@@ -610,64 +610,7 @@
 
 ---
 
-## UC31 - Registrar Fatura
-
-**Descrição:** Permite ao usuário registrar uma fatura de cartão de crédito ou conta a pagar.  
-**Pré-condições:** Usuário autenticado.  
-**Pós-condições:** Fatura registrada e vinculada à conta/instituição correspondente.
-
-**Fluxo Principal:**
-
-1. Acessa "Faturas" e clica em "Nova fatura".
-2. Informa dados: valor total, data de vencimento, instituição/conta associada, e status (aberta/paga).
-3. Confirma e o sistema valida e salva.
-
-**Fluxos Alternativos:**
-
-- Valor inválido ou data de vencimento no passado (para faturas abertas): sistema alerta.
-- Instituição não informada: sistema solicita.
-
----
-
-## UC32 - Editar Fatura
-
-**Descrição:** Permite modificar os dados de uma fatura registrada.  
-**Pré-condições:** Usuário autenticado e fatura existente.  
-**Pós-condições:** Fatura atualizada.
-
-**Fluxo Principal:**
-
-1. Acessa lista de faturas e seleciona a fatura.
-2. Clica em "Editar" e altera campos como valor, vencimento, status.
-3. Confirma e sistema salva.
-
-**Fluxos Alternativos:**
-
-- Alteração de status para "paga" pode impactar saldo: sistema atualiza automaticamente.
-- Usuário cancela: dados mantidos.
-
----
-
-## UC33 - Apagar Fatura
-
-**Descrição:** Permite remover uma fatura do sistema.  
-**Pré-condições:** Usuário autenticado e fatura existente.  
-**Pós-condições:** Fatura removida e eventuais impactos no saldo revertidos.
-
-**Fluxo Principal:**
-
-1. Acessa lista de faturas e seleciona a fatura.
-2. Clica em "Excluir" e sistema solicita confirmação.
-3. Usuário confirma e sistema remove a fatura.
-
-**Fluxos Alternativos:**
-
-- Fatura paga removida pode afetar saldo: sistema recalcula.
-- Usuário cancela: fatura mantida.
-
----
-
-## UC34 - Visualizar Dicas Financeiras
+## UC31 - Visualizar Dicas Financeiras
 
 **Descrição:** Fornecimento de recomendações e dicas financeiras personalizadas com base no comportamento do usuário.  
 **Pré-condições:** Usuário autenticado e dados de uso suficientes para personalização.  
@@ -687,7 +630,7 @@
 
 ---
 
-## UC35 - Acessar Materiais de Educação Financeira
+## UC32 - Acessar Materiais de Educação Financeira
 
 **Descrição:** Permite acessar uma aba com conteúdos educativos recomendados, como cursos e vídeos.  
 **Pré-condições:** Autenticação no sistema e conexão ativa com a internet.  

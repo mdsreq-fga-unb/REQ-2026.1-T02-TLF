@@ -54,7 +54,7 @@ Os requisitos funcionais descrevem as funcionalidades específicas que o sistema
 
 ### Relatórios e Exportação
 
-- **RF28** – Exportar um relatório financeiro. (UC28) XXX
+- **RF28** – Exportar um relatório financeiro. (UC28) 
 
 ### Notificações e Erros
 
@@ -66,8 +66,8 @@ Os requisitos funcionais descrevem as funcionalidades específicas que o sistema
 
 ### Conteúdos Educacionais
 
-- **RF31** – gerar e exibir dica financeira personalizada. (UC34) XXX
-- **RF32** – disponibilizar materiais de educação financeira. (UC35) XXX
+- **RF31** – gerar e exibir dica financeira personalizada. (UC31) 
+- **RF32** – disponibilizar materiais de educação financeira. (UC32) 
 
 ## 7.2 Lista de Requisitos Não Funcionais
 

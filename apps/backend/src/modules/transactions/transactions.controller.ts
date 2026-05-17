@@ -1,17 +1,19 @@
-import { Body, Controller, Post, HttpCode, HttpStatus, Get, Req, Query, Param, Patch, Delete } from '@nestjs/common'
+import { Body, Controller, Post, HttpCode, HttpStatus, Get, Req, Query, Param, Patch, Delete, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiResponse } from '@nestjs/swagger'
 import { TransactionsService } from './transactions.service'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
 import { Request } from 'express';
 import { FilterTransactionsDto } from './dto/filter-transactions.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { AuthGuard } from '../auth/context/auth.guard';
 
 interface AuthRequest extends Request {
-  user: {
+  authUser: {
     id: string;
   };
 }
 
+@UseGuards(AuthGuard)
 @ApiTags('transactions')
 @Controller('transactions')
 export class TransactionsController {
@@ -20,9 +22,9 @@ export class TransactionsController {
   // CA1, CA3, CA4
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() dto: CreateTransactionDto) {
+  create(@Body() dto: CreateTransactionDto, @Req() req: AuthRequest) {
     // CA5: userId fixo por enquanto — substituir por @CurrentUser() quando auth estiver pronto
-    const userId = 'user-teste-001'
+    const userId = req.authUser.id
     return this.transactionsService.create(userId, dto)
   }
 
@@ -32,7 +34,7 @@ export class TransactionsController {
   findAll(@Req() req: AuthRequest,
     @Query() query: FilterTransactionsDto) {
     return this.transactionsService.findAll({
-      userId: req.user.id,
+      userId: req.authUser.id,
       ...query,
     });
   }
@@ -47,7 +49,7 @@ export class TransactionsController {
     @Param('id') id: string,
   ) {
     return this.transactionsService.findOne({
-      userId: req.user.id,
+      userId: req.authUser.id,
       id,
     });
   }
@@ -63,7 +65,7 @@ export class TransactionsController {
     @Body() dto: UpdateTransactionDto,
   ) {
     return this.transactionsService.update({
-      userId: req.user.id,
+      userId: req.authUser.id,
       id,
       dto,
     });
@@ -79,7 +81,7 @@ export class TransactionsController {
     @Param('id') id: string,
   ) {
     return this.transactionsService.remove({
-      userId: req.user.id,
+      userId: req.authUser.id,
       id,
     });
   }

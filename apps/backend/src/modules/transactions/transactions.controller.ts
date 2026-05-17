@@ -6,11 +6,10 @@ import { Request } from 'express';
 import { FilterTransactionsDto } from './dto/filter-transactions.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { AuthGuard } from '../auth/context/auth.guard';
+import { User } from '@supabase/supabase-js'
 
 interface AuthRequest extends Request {
-  authUser: {
-    id: string;
-  };
+  authUser: User
 }
 
 @UseGuards(AuthGuard)

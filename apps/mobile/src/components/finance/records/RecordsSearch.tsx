@@ -16,18 +16,18 @@ export function RecordsSearch({ value, onChangeText, placeholder = 'Search Recor
       style={[
         styles.container,
         {
-          backgroundColor: theme.gray,
-          borderColor: theme.graySecondary,
+          backgroundColor: theme.surfaceMuted,
+          borderColor: theme.mutedForeground,
         },
       ]}
     >
-      <MaterialIcons name="search" size={18} color={theme.graySecondary} />
+      <MaterialIcons name="search" size={18} color={theme.mutedForeground} />
       <TextInput
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor={theme.graySecondary}
-        style={[styles.input, { color: theme.text }]}
+        placeholderTextColor={theme.mutedForeground}
+        style={[styles.input, { color: theme.foreground }]}
       />
     </View>
   )

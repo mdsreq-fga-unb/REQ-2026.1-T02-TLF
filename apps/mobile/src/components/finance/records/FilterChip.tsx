@@ -16,13 +16,13 @@ export function FilterChip({ label, isActive = false, onPress }: props) {
       style={({ pressed }) => [
         styles.chip,
         {
-          borderColor: theme.graySecondary,
-          backgroundColor: isActive ? theme.bluePrimary : 'transparent',
+          borderColor: theme.mutedForeground,
+          backgroundColor: isActive ? theme.primary : 'transparent',
           opacity: pressed ? 0.8 : 1,
         },
       ]}
     >
-      <Text style={[styles.text, { color: isActive ? theme.text : theme.graySecondary }]}>
+      <Text style={[styles.text, { color: isActive ? theme.foreground : theme.mutedForeground }]}>
         {label}
       </Text>
     </Pressable>

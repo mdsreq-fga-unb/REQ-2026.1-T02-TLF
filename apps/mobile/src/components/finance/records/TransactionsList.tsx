@@ -67,15 +67,15 @@ export function TransactionsList({
   return (
     <View style={styles.section}>
       {showTitle ? (
-        <Text style={[styles.title, { color: theme.text }]}>Transacoes cadastradas</Text>
+        <Text style={[styles.title, { color: theme.foreground }]}>Transacoes cadastradas</Text>
       ) : null}
 
       {isLoading ? (
-        <Text style={[styles.stateText, { color: theme.graySecondary }]}>Carregando...</Text>
+        <Text style={[styles.stateText, { color: theme.mutedForeground }]}>Carregando...</Text>
       ) : error ? (
         <Text style={[styles.stateText, { color: theme.warning }]}>{error}</Text>
       ) : transactions.length === 0 ? (
-        <Text style={[styles.stateText, { color: theme.graySecondary }]}>
+        <Text style={[styles.stateText, { color: theme.mutedForeground }]}>
           Nenhuma transacao cadastrada.
         </Text>
       ) : (
@@ -83,9 +83,9 @@ export function TransactionsList({
           {sections.map((section, index) => (
             <View key={section.key} style={styles.group}>
               {index > 0 ? (
-                <View style={[styles.groupDivider, { backgroundColor: theme.graySecondary }]} />
+                <View style={[styles.groupDivider, { backgroundColor: theme.mutedForeground }]} />
               ) : null}
-              <Text style={[styles.groupTitle, { color: theme.graySecondary }]}>
+              <Text style={[styles.groupTitle, { color: theme.mutedForeground }]}>
                 {section.title}
               </Text>
               <View style={styles.groupItems}>

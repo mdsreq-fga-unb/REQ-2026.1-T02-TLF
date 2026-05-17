@@ -10,7 +10,7 @@ type props = {
 export function BalanceHighlight({ value, label = 'Saldo', showDivider = false }: props) {
   const theme = useThemeColor()
   const isPositive = value >= 0
-  const accentColor = isPositive ? (theme.success ?? '#2CB67D') : theme.warning
+  const accentColor = isPositive ? '#2CB67D' : theme.warning
   const sign = value < 0 ? '-' : ''
   const magnitude = new Intl.NumberFormat('pt-BR', {
     minimumFractionDigits: 2,
@@ -19,7 +19,7 @@ export function BalanceHighlight({ value, label = 'Saldo', showDivider = false }
 
   return (
     <View style={styles.card}>
-      <Text style={[styles.label, { color: applyAlpha(theme.text, 0.6) }]}>{label}</Text>
+      <Text style={[styles.label, { color: applyAlpha(theme.foreground, 0.6) }]}>{label}</Text>
       <Text
         style={[
           styles.value,
@@ -33,7 +33,9 @@ export function BalanceHighlight({ value, label = 'Saldo', showDivider = false }
         <Text style={[styles.currency, { color: accentColor }]}>R$</Text> {magnitude}
       </Text>
       {showDivider ? (
-        <View style={[styles.divider, { backgroundColor: applyAlpha(theme.graySecondary, 0.4) }]} />
+        <View
+          style={[styles.divider, { backgroundColor: applyAlpha(theme.mutedForeground, 0.4) }]}
+        />
       ) : null}
     </View>
   )

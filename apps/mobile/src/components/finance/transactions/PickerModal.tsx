@@ -24,11 +24,11 @@ export function PickerModal({ visible, title, options, selectedId, onSelect, onC
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <Pressable style={styles.backdrop} onPress={onClose} />
-      <View style={[styles.sheet, { backgroundColor: theme.gray }]}>
-        <View style={[styles.sheetHeader, { borderBottomColor: `${theme.graySecondary}30` }]}>
-          <Text style={[styles.sheetTitle, { color: theme.text }]}>{title}</Text>
+      <View style={[styles.sheet, { backgroundColor: theme.surfaceMuted }]}>
+        <View style={[styles.sheetHeader, { borderBottomColor: `${theme.mutedForeground}30` }]}>
+          <Text style={[styles.sheetTitle, { color: theme.foreground }]}>{title}</Text>
           <Pressable onPress={onClose} hitSlop={12}>
-            <MaterialIcons name="close" size={22} color={theme.graySecondary} />
+            <MaterialIcons name="close" size={22} color={theme.mutedForeground} />
           </Pressable>
         </View>
         <ScrollView>
@@ -43,23 +43,23 @@ export function PickerModal({ visible, title, options, selectedId, onSelect, onC
                 }}
                 style={({ pressed }) => [
                   styles.option,
-                  selected && { backgroundColor: `${theme.bluePrimary}18` },
+                  selected && { backgroundColor: `${theme.primary}18` },
                   pressed && { opacity: 0.75 },
                 ]}
               >
-                <View style={[styles.optionIcon, { backgroundColor: `${theme.bluePrimary}20` }]}>
+                <View style={[styles.optionIcon, { backgroundColor: `${theme.primary}20` }]}>
                   <MaterialIcons
                     name={item.icon as ComponentProps<typeof MaterialIcons>['name']}
                     size={18}
-                    color={selected ? theme.bluePrimary : theme.graySecondary}
+                    color={selected ? theme.primary : theme.mutedForeground}
                   />
                 </View>
-                <Text style={[styles.optionLabel, { color: theme.text }]}>{item.label}</Text>
+                <Text style={[styles.optionLabel, { color: theme.foreground }]}>{item.label}</Text>
                 {selected && (
                   <MaterialIcons
                     name="check"
                     size={18}
-                    color={theme.bluePrimary}
+                    color={theme.primary}
                     style={styles.checkIcon}
                   />
                 )}

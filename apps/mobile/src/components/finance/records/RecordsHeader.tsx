@@ -30,13 +30,13 @@ export function RecordsHeader({
             style={({ pressed }) => [
               styles.periodButton,
               {
-                backgroundColor: theme.gray,
+                backgroundColor: theme.surfaceMuted,
                 opacity: pressed ? 0.7 : 1,
               },
             ]}
           >
-            <Text style={[styles.periodText, { color: theme.text }]}>{periodLabel}</Text>
-            <MaterialIcons name="keyboard-arrow-down" size={20} color={theme.graySecondary} />
+            <Text style={[styles.periodText, { color: theme.foreground }]}>{periodLabel}</Text>
+            <MaterialIcons name="keyboard-arrow-down" size={20} color={theme.mutedForeground} />
           </Pressable>
         ) : (
           <View style={styles.spacer} />
@@ -46,7 +46,7 @@ export function RecordsHeader({
       </View>
 
       <View style={styles.titleRow}>
-        <Text style={[styles.title, { color: theme.text }]}>{title}</Text>
+        <Text style={[styles.title, { color: theme.foreground }]}>{title}</Text>
       </View>
     </View>
   )

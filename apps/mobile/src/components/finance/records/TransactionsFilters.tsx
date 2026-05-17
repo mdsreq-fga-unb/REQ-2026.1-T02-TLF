@@ -40,8 +40,8 @@ export function TransactionsFilters({
           style={({ pressed }) => [
             styles.iconButton,
             {
-              borderColor: theme.graySecondary,
-              backgroundColor: isOpen ? theme.blueSecondary : 'transparent',
+              borderColor: theme.mutedForeground,
+              backgroundColor: isOpen ? theme.primary : 'transparent',
               opacity: pressed ? 0.8 : 1,
             },
           ]}
@@ -49,17 +49,17 @@ export function TransactionsFilters({
           <MaterialIcons
             name={isOpen ? 'filter-alt-off' : 'filter-alt'}
             size={20}
-            color={theme.text}
+            color={theme.foreground}
           />
         </Pressable>
       </View>
 
       {isOpen ? (
         <Container style={styles.card}>
-          <Text style={[styles.title, { color: theme.text }]}>Filtros</Text>
+          <Text style={[styles.title, { color: theme.foreground }]}>Filtros</Text>
 
           <View style={styles.group}>
-            <Text style={[styles.subtitle, { color: theme.graySecondary }]}>Categoria</Text>
+            <Text style={[styles.subtitle, { color: theme.mutedForeground }]}>Categoria</Text>
             <View style={styles.chips}>
               <FilterChip
                 label={ALL_CATEGORY}
@@ -78,7 +78,7 @@ export function TransactionsFilters({
           </View>
 
           <View style={styles.group}>
-            <Text style={[styles.subtitle, { color: theme.graySecondary }]}>Tipo</Text>
+            <Text style={[styles.subtitle, { color: theme.mutedForeground }]}>Tipo</Text>
             <View style={styles.chips}>
               <FilterChip
                 label="Todos"

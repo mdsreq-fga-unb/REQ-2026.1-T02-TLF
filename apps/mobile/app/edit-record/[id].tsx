@@ -43,7 +43,7 @@ export default function EditRecordScreen() {
           style={({ pressed }) => [styles.backBtn, { opacity: pressed ? 0.6 : 1 }]}
           hitSlop={12}
         >
-          <MaterialIcons name="arrow-back" size={22} color={theme.text} />
+          <MaterialIcons name="arrow-back" size={22} color={theme.foreground} />
         </Pressable>
       </View>
 

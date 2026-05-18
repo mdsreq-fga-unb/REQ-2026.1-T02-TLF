@@ -7,3 +7,5 @@ __pycache__/
 .vscode/
 .idea/
 .python-version
+node_modules
+.venv

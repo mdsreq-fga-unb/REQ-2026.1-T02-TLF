@@ -64,7 +64,9 @@ O número de acessos e utilizações foram adquiridos dividindo o Impacto em Esp
 
 A partir disso, foi gerada a seguinte Matriz de valor e impacto:
 
-![Matriz de valor e impacto](../images/matriz-valor-impacto.png)
+<iframe width="100%" height="500" src="https://miro.com/app/board/uXjVHTBwhKE=/?share_link_id=623549294839" title="Matriz de impacto e esforçp" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+[Matriz de valo e impacto](https://miro.com/app/board/uXjVHTBwhKE=/?share_link_id=623549294839)
+
 
 | RF / RNF | Descrição                                                                                                                                         | Impacto       | Esforço       | Quadrante | Prioridade sugerida |
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------- | --------- | ------------------- |

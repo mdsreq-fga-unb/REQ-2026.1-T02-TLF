@@ -44,7 +44,7 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.text }]}>{title}</Text>
+        <Text style={[styles.title, { color: theme.foreground }]}>{title}</Text>
       </View>
 
       <TransactionTypeTabs value={form.type} onChange={form.handleTypeChange} />
@@ -64,7 +64,7 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
           <Text style={styles.amountError}>{form.errors.amount}</Text>
         )}
 
-        <View style={[styles.fields, { backgroundColor: theme.gray }]}>
+        <View style={[styles.fields, { backgroundColor: theme.surfaceMuted }]}>
           <FormField
             icon="credit-card"
             label={form.type === 'TRANSFER' ? 'De Conta' : 'Conta'}
@@ -120,7 +120,7 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
         </View>
       </ScrollView>
 
-      <View style={[styles.footer, { borderTopColor: `${theme.graySecondary}25` }]}>
+      <View style={[styles.footer, { borderTopColor: `${theme.mutedForeground}25` }]}>
         {form.submitError && (
           <View style={styles.errorRow}>
             <MaterialIcons name="error-outline" size={18} color="#f2685a" />

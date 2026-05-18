@@ -23,13 +23,17 @@ export function CategoryRow({ category, total, minShare = 2 }: props) {
         <View style={[styles.chip, { backgroundColor: category.color }]} />
 
         <View style={styles.nameCol}>
-          <Text style={[styles.name, { color: theme.text }]} numberOfLines={1} ellipsizeMode="tail">
+          <Text
+            style={[styles.name, { color: theme.foreground }]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
             {displayName}
           </Text>
         </View>
 
         <View style={styles.rightCol}>
-          <Text style={[styles.amount, { color: theme.text }]}>
+          <Text style={[styles.amount, { color: theme.foreground }]}>
             {formatCurrency(category.amount)}
           </Text>
           <View style={[styles.badge, { backgroundColor: category.color }]}>
@@ -38,7 +42,7 @@ export function CategoryRow({ category, total, minShare = 2 }: props) {
         </View>
       </View>
 
-      <View style={[styles.barTrack, { backgroundColor: theme.graySecondary }]}>
+      <View style={[styles.barTrack, { backgroundColor: theme.mutedForeground }]}>
         <View style={[styles.barFill, { backgroundColor: category.color, width: barWidth }]} />
       </View>
     </View>

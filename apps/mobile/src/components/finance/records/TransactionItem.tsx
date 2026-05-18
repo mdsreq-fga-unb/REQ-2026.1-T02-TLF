@@ -20,16 +20,12 @@ export function TransactionItem({ transaction, onDelete, onPress, onEdit }: prop
   const [showActions, setShowActions] = useState(false)
   const isExpense = transaction.type === 'EXPENSE'
   const isIncome = transaction.type === 'INCOME'
-  const amountColor = isExpense
-    ? theme.warning
-    : isIncome
-      ? (theme.success ?? '#2CB67D')
-      : theme.text
+  const amountColor = isExpense ? theme.warning : isIncome ? '#2CB67D' : theme.foreground
   const amountSign = isExpense ? '-' : isIncome ? '+' : ''
   const amountText = `${amountSign}${formatCurrency(Math.abs(transaction.amount))}`
   const visuals = getTransactionVisuals(transaction)
   const iconBackground = applyAlpha(visuals.color, 0.2)
-  const cardLine = { borderBottomColor: applyAlpha(theme.graySecondary, 0.18) }
+  const cardLine = { borderBottomColor: applyAlpha(theme.mutedForeground, 0.18) }
 
   return (
     <Pressable
@@ -47,10 +43,10 @@ export function TransactionItem({ transaction, onDelete, onPress, onEdit }: prop
         </View>
 
         <View style={styles.details}>
-          <Text style={[styles.description, { color: theme.text }]} numberOfLines={1}>
+          <Text style={[styles.description, { color: theme.foreground }]} numberOfLines={1}>
             {transaction.description}
           </Text>
-          <Text style={[styles.subtitle, { color: theme.graySecondary }]} numberOfLines={1}>
+          <Text style={[styles.subtitle, { color: theme.mutedForeground }]} numberOfLines={1}>
             {transaction.category}
           </Text>
         </View>
@@ -65,7 +61,7 @@ export function TransactionItem({ transaction, onDelete, onPress, onEdit }: prop
                 style={({ pressed }) => [
                   styles.editButton,
                   {
-                    backgroundColor: theme.bluePrimary,
+                    backgroundColor: theme.primary,
                     opacity: pressed ? 0.85 : 1,
                   },
                 ]}

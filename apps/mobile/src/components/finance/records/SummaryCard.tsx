@@ -31,10 +31,12 @@ export function SummaryCard({
 
   return (
     <Container style={[styles.card, alignmentStyle, style]}>
-      <Text style={[styles.label, { color: theme.graySecondary }, textAlignStyle]}>{label}</Text>
-      <Text style={[valueStyle, { color: valueColor ?? theme.text }, textAlignStyle]}>{value}</Text>
+      <Text style={[styles.label, { color: theme.mutedForeground }, textAlignStyle]}>{label}</Text>
+      <Text style={[valueStyle, { color: valueColor ?? theme.foreground }, textAlignStyle]}>
+        {value}
+      </Text>
       {caption ? (
-        <Text style={[styles.caption, { color: theme.graySecondary }, textAlignStyle]}>
+        <Text style={[styles.caption, { color: theme.mutedForeground }, textAlignStyle]}>
           {caption}
         </Text>
       ) : null}

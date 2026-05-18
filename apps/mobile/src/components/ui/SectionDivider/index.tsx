@@ -5,5 +5,5 @@ import { styles } from './style'
 export function SectionDivider() {
   const theme = useThemeColor()
 
-  return <View style={[styles.divider, { backgroundColor: theme.graySecondary }]} />
+  return <View style={[styles.divider, { backgroundColor: theme.mutedForeground }]} />
 }

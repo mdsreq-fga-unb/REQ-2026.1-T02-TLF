@@ -14,7 +14,7 @@ export function CategoryDistribution({ categories }: props) {
 
   return (
     <Container style={styles.card}>
-      <Text style={[styles.title, { color: theme.text }]}>Distribuição por categoria</Text>
+      <Text style={[styles.title, { color: theme.foreground }]}>Distribuição por categoria</Text>
       {categories.map((category) => (
         <CategoryRow key={category.name} category={category} total={total} />
       ))}

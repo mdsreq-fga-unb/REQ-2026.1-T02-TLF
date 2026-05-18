@@ -136,9 +136,9 @@ export function NumericKeypad({ visible, amountCents, type, onKeyPress, onSave }
                       style={({ pressed }) => [styles.key, pressed && styles.keyPressed]}
                     >
                       {key === 'del' ? (
-                        <MaterialIcons name="backspace" size={22} color={theme.text} />
+                        <MaterialIcons name="backspace" size={22} color={theme.foreground} />
                       ) : (
-                        <Text style={[styles.keyText, { color: theme.text }]}>{key}</Text>
+                        <Text style={[styles.keyText, { color: theme.foreground }]}>{key}</Text>
                       )}
                     </Pressable>
                   ))}

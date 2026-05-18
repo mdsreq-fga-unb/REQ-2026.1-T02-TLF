@@ -113,6 +113,18 @@ cd tlt-financas
 🚧 Em desenvolvimento
 ```
 
+### ▶️ Servindo a documentação MkDocs
+
+Para servir a documentação localmente com o tema Material:
+
+```bash
+cd /home/gabriel/Computaria/Requisitos/REQ-2026.1-T02-TLF
+python3 -m venv .venv
+. .venv/bin/activate
+python3 -m pip install -r requirements.txt
+mkdocs serve
+```
+
 ---
 
 ## 📅 Cronograma

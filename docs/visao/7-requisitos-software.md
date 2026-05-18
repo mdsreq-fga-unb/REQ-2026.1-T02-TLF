@@ -54,7 +54,7 @@ Os requisitos funcionais descrevem as funcionalidades específicas que o sistema
 
 ### Relatórios e Exportação
 
-- **RF28** – Exportar um relatório financeiro. (UC28) 
+- **RF28** – Exportar um relatório financeiro. (UC28)
 
 ### Notificações e Erros
 
@@ -66,8 +66,8 @@ Os requisitos funcionais descrevem as funcionalidades específicas que o sistema
 
 ### Conteúdos Educacionais
 
-- **RF31** – gerar e exibir dica financeira personalizada. (UC31) 
-- **RF32** – disponibilizar materiais de educação financeira. (UC32) 
+- **RF31** – gerar e exibir dica financeira personalizada. (UC31)
+- **RF32** – disponibilizar materiais de educação financeira. (UC32)
 
 ## 7.2 Lista de Requisitos Não Funcionais
 
@@ -94,5 +94,21 @@ Os requisitos funcionais descrevem as funcionalidades específicas que o sistema
 - **RNF10** – Os dados pessoais do usuário devem ser armazenados de forma criptografada no servidor.
 - **RNF11** – O envio de feedback não deve expor, involuntariamente, informações financeiras do usuário.
 - **RNF12** – O sistema deve sincronizar automaticamente com o servidor as transações registradas offline assim que a conexão com a internet for restabelecida.
+
+## 7.3 Matriz-síntese de rastreabilidade
+
+| Contribuição principal | CP   | RFs relacionados                                                       | RNFs relacionados   |
+| ---------------------- | ---- | ---------------------------------------------------------------------- | ------------------- |
+| OE1                    | CP1  | RF04, RF30                                                             | RFN03               |
+| OE3                    | CP2  | RF07, RF08, RF09, RF25, RF26, RF27                                     | -                   |
+| OE4                    | CP3  | RF05                                                                   | RFN10               |
+| OE2                    | CP4  | RF06, RF28                                                             | -                   |
+| OE3                    | CP5  | -                                                                      | RNF08, RNF12        |
+| OE6                    | CP6  | -                                                                      | RNF06, RNF07, RNF09 |
+| OE5                    | CP7  | -                                                                      | RNF01, RNF09        |
+| OE3                    | CP8  | RF19, RF20, RF21, RF22, RF23, RF24, RF10, RF11, RF12, RF13, RF14, RF15 | -                   |
+| OE1                    | CP9  | RF16, RF17, RF18, RF29                                                 | -                   |
+| OE5                    | CP10 | RF01, RF02, RF03                                                       | RNF02               |
+| OE6                    | CP11 | -                                                                      | RNF04, RNF05        |
 
 ---

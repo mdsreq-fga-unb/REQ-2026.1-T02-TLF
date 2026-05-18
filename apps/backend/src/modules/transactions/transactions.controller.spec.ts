@@ -54,7 +54,9 @@ describe('TransactionsController', () => {
     it('deve chamar o service e retornar a transação criada', async () => {
       transactionsServiceMock.create.mockResolvedValue(mockTransaction)
 
-      const result = await controller.create(dto)
+      const req = { user: { id: 'user-teste-001' } } as any; 
+
+      const result = await controller.create(dto, req)
 
       expect(result).toEqual(mockTransaction)
       expect(transactionsServiceMock.create).toHaveBeenCalledWith(
@@ -66,7 +68,9 @@ describe('TransactionsController', () => {
     it('deve passar o userId correto para o service', async () => {
       transactionsServiceMock.create.mockResolvedValue(mockTransaction)
 
-      await controller.create(dto)
+      const req = { user: { id: 'user-teste-001' } } as any; 
+
+      await controller.create(dto, req)
 
       expect(transactionsServiceMock.create).toHaveBeenCalledTimes(1)
     })

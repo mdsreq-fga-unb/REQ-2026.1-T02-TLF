@@ -94,6 +94,10 @@ Reunião com o Cliente
 
 [Assista à reunião com o cliente](https://youtu.be/gUeZrQ4ptOU)
 
+Validação da metrica de Impacto:
+
+![Validação da metrica de impacto](../images/validacao_metrica_impacto.jpeg)
+
 ---
 
 ## Reunião 16/05/26

@@ -58,7 +58,7 @@ Os dias necessários para cada funcionalidade foram calculados decompondo os req
 **Impacto:** É definido como total médio de vezes que um usuário utiliza aquele requisito por abertura do aplicativo ou por semana.
 
 - **Baixo Impacto:** abaixo de 1 vez por acesso e abaixo de 2 vezes por semana;
-- **Alto Impacto:** acima de 1 vez por acesso ou acima de 2 vezes por semana;
+- **Alto Impacto:** acima de 1 vez por acesso ou igual ou acima de 2 vezes por semana;
 
 O número de acessos e utilizações foram adquiridos dividindo o Impacto em Esperado, uma estimativa baseada no quanto equipe espera que um usuário lida com situações que possam ser resolvidas por requisitos definidos anteriormente, e Percebido, uma estimativa feita a partir de uma rápida pesquisa com o cliente em relação a frequência que ele lida com situações que possam ser resolvidas por requisitos definidos anteriormente.
 

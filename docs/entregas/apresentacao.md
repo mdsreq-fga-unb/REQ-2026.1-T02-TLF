@@ -12,6 +12,6 @@
 
 <iframe width="100%" height="500" src="https://www.youtube.com/embed/uJN4MZMNO3I" title="Apresentação da Unidade 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
-[Assista a apresentação da Unidade 1](https://youtu.be/uJN4MZMNO3I)
+[Assista a apresentação da Unidade 2](https://youtu.be/uJN4MZMNO3I)
 
 *Vídeo com a entrega da apresentação da Unidade 2.*

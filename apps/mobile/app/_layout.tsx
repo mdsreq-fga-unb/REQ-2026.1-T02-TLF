@@ -38,6 +38,7 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(budget)" options={{ presentation: 'modal' }} />
         <Stack.Screen name="edit-record/[id]" options={{ presentation: 'modal' }} />
       </Stack>
     </GestureHandlerRootView>

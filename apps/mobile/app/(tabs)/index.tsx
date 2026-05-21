@@ -1,25 +1,17 @@
-import { Text, View, StyleSheet } from 'react-native'
+import { ThemedBackground } from '@/components/ui/ThemedBackground'
+import { ThemedContainer } from '@/components/ui/ThemedContainer'
+import { ThemedButton } from '@/components/ui/ThemedButton'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { router } from 'expo-router'
 
-const app = () => {
+export default function home() {
   return (
     //TODO: add a logout button and make the logout function
-    <View style={styles.container}>
-      <Text style={styles.text}>testagem foda</Text>
-    </View>
+    <ThemedBackground>
+      <SafeAreaView />
+      <ThemedContainer>
+        <ThemedButton title="Estatisticas" onPress={() => router.push('/(budget)/')} />
+      </ThemedContainer>
+    </ThemedBackground>
   )
 }
-
-export default app
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-  },
-  text: {
-    color: 'brown',
-    fontSize: 42,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-})

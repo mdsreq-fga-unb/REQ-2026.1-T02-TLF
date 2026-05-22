@@ -4,6 +4,7 @@ import { appConfig, validate } from './config/app.config'
 import { ExampleModule } from './modules/example/example.module'
 import { PrismaModule } from './common/prisma/prisma.module'
 import { AuthModule } from './modules/auth/auth.module'
+import { CategoryModule } from './modules/category/category.module'
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AuthModule } from './modules/auth/auth.module'
     PrismaModule,
     ExampleModule,
     AuthModule,
+    CategoryModule,
   ],
 })
 export class AppModule {}

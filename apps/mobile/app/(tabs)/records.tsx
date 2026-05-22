@@ -26,7 +26,7 @@ import {
 import { transactionQueries } from '@/services/database/queries/transaction'
 import type { Transaction } from '@/services/database/models/transaction'
 import type { TransactionType } from '@/services/database/queries/transaction'
-import type { TransactionListItem } from '@/components/finance/records/types'
+import type { TransactionListItem } from 'types/types'
 
 const CATEGORY_COLOR_PALETTE = categoryDistribution.map((category) => category.color)
 const CATEGORY_COLOR_MAP = new Map(

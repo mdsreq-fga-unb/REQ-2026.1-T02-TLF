@@ -3,6 +3,8 @@ import { PrismaService } from '@common/prisma/prisma.service'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
 import { TransactionType } from '../../../generated/prisma/client';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { FilterTransactionsDto } from './dto/filter-transactions.dto';
+import { TransactionListResponseDto } from './dto/transaction-list.response.dto';
 
 @Injectable()
 export class TransactionsService {
@@ -53,20 +55,38 @@ export class TransactionsService {
         date: dto.date ? new Date(dto.date) : new Date(),
         status: dto.status,
       },
-      select: {
-        id: true,
-        type: true,
-        amount: true,
-        description: true,
-        date: true,
-        status: true,
-        category: { select: { id: true, name: true } },
-        subCategory: { select: { id: true, name: true } },
-        account: { select: { id: true, name: true } },
+      include: {
+        category: true,
+        subCategory: true,
+        account: true,
       },
     })
 
-    return transaction
+    return {
+      id: transaction.id,
+      type: transaction.type,
+      amount: transaction.amount,
+      description: transaction.description ?? undefined,
+      date: transaction.date.toISOString(),
+      status: transaction.status ?? undefined,
+      
+      category: {
+        id: transaction.category.id,
+        name: transaction.category.name,
+      },
+
+      subCategory: transaction.subCategory
+        ? {
+            id: transaction.subCategory.id,
+            name: transaction.subCategory.name,
+          }
+        : undefined,
+
+      account: {
+        id: transaction.account.id,
+        name: transaction.account.name,
+      },
+    };
   }
 
   private async getTransactionOrThrow(userId: string, id: string) {
@@ -75,9 +95,11 @@ export class TransactionsService {
       include: {
         account: {
           include: {
-            institution: true
+            institution: true,
           },
         },
+        category: true,
+        subCategory: true,
       },
     });
 
@@ -92,76 +114,203 @@ export class TransactionsService {
     return transaction;
   }
 
-  async findAll({
-    userId,
-    categoryId,
-    type,
-    page = 1,
-    limit = 20,
-  }: {
+  async findAll(
     userId: string,
-    categoryId?: string,
-    type?: TransactionType,
-    page?: number,
-    limit?: number,
-  }) {
-    const skip = (page - 1) * limit
-    const [data, total] = await this.prisma.$transaction([
-    this.prisma.transaction.findMany({
-      where: {
-        account: {
-          institution: { userId },
-        },
-        ...(categoryId && { categoryId }),
-        ...(type && { type }),
-      },
-      skip,
-      take: limit,
-      orderBy: {
-        date: 'desc',
-      },
-    }),
+    query: FilterTransactionsDto
+  ): Promise<TransactionListResponseDto> {
+    const {
+      categoryId,
+      type,
+      page = 1,
+      limit = 20,
+    } = query;
 
-    this.prisma.transaction.count({
-      where: {
-        account: {
-          institution: { userId },
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.transaction.findMany({
+        where: {
+          account: {
+            institution: { userId },
+          },
+          ...(categoryId && { categoryId }),
+          ...(type && { type }),
         },
-        ...(categoryId && { categoryId }),
-        ...(type && { type }),
+        skip,
+        take: limit,
+        orderBy: {
+          date: 'desc',
+        },
+        include: {
+          category: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          subCategory: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          account: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      }),
+
+      this.prisma.transaction.count({
+        where: {
+          account: {
+            institution: { userId },
+          },
+          ...(categoryId && { categoryId }),
+          ...(type && { type }),
+        },
+      }),
+    ]);
+
+    const formattedData = data.map((t) => ({
+      id: t.id,
+      type: t.type,
+      amount: t.amount,
+      description: t.description ?? undefined,
+      date: t.date.toISOString(),
+      status: t.status ?? undefined,
+      category: t.category,
+      subCategory: t.subCategory ?? undefined,
+      account: t.account,
+    }));
+
+    return {
+      data: formattedData,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
       },
-    }),
-  ])
+    };
+  }
+
+async findOne({ userId, id }: { userId: string, id: string }) {
+  const transaction = await this.getTransactionOrThrow(userId, id);
 
   return {
-    data,
-    meta: {
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
+    id: transaction.id,
+    type: transaction.type,
+    amount: transaction.amount,
+    description: transaction.description ?? undefined,
+    date: transaction.date.toISOString(),
+    status: transaction.status ?? undefined,
+
+    category: {
+      id: transaction.category.id,
+      name: transaction.category.name,
     },
-  }
+
+    subCategory: transaction.subCategory
+      ? {
+          id: transaction.subCategory.id,
+          name: transaction.subCategory.name,
+        }
+      : undefined,
+
+    account: {
+      id: transaction.account.id,
+      name: transaction.account.name,
+    },
+  };
 }
 
-  async findOne({ userId, id }: { userId: string, id: string }) {
-    return this.getTransactionOrThrow(userId, id);
-  }
-
-  async update({ userId, id, dto }: { userId: string, id: string, dto: UpdateTransactionDto }) {
+  async update({
+    userId,
+    id,
+    dto,
+  }: {
+    userId: string;
+    id: string;
+    dto: UpdateTransactionDto;
+  }) {
     await this.getTransactionOrThrow(userId, id);
 
-    return this.prisma.transaction.update({
+    const updated = await this.prisma.transaction.update({
       where: { id },
-      data: dto
+      data: dto,
+      include: {
+        category: true,
+        subCategory: true,
+        account: true,
+      },
     });
+
+    return {
+      id: updated.id,
+      type: updated.type,
+      amount: updated.amount,
+      description: updated.description ?? undefined,
+      date: updated.date.toISOString(),
+      status: updated.status ?? undefined,
+
+      category: {
+        id: updated.category.id,
+        name: updated.category.name,
+      },
+
+      subCategory: updated.subCategory
+        ? {
+            id: updated.subCategory.id,
+            name: updated.subCategory.name,
+          }
+        : undefined,
+
+      account: {
+        id: updated.account.id,
+        name: updated.account.name,
+      },
+    };
   }
 
-  async remove({ userId, id }: { userId: string, id: string }) {
+  async remove({ userId, id }: { userId: string; id: string }) {
     await this.getTransactionOrThrow(userId, id);
 
-    return this.prisma.transaction.delete({
-      where: { id }
+    const deleted = await this.prisma.transaction.delete({
+      where: { id },
+      include: {
+        category: true,
+        subCategory: true,
+        account: true,
+      },
     });
+
+    return {
+      id: deleted.id,
+      type: deleted.type,
+      amount: deleted.amount,
+      description: deleted.description ?? undefined,
+      date: deleted.date.toISOString(),
+      status: deleted.status ?? undefined,
+
+      category: {
+        id: deleted.category.id,
+        name: deleted.category.name,
+      },
+
+      subCategory: deleted.subCategory
+        ? {
+            id: deleted.subCategory.id,
+            name: deleted.subCategory.name,
+          }
+        : undefined,
+
+      account: {
+        id: deleted.account.id,
+        name: deleted.account.name,
+      },
+    };
   }
 }

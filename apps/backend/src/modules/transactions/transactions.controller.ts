@@ -6,6 +6,8 @@ import { FilterTransactionsDto } from './dto/filter-transactions.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { AuthGuard } from '../auth/context/auth.guard';
 import { CurrentUser } from '../auth/context/current-user.decorator';
+import { TransactionListResponseDto } from './dto/transaction-list.response.dto';
+import { TransactionDetailResponseDto } from './dto/transaction-detail.response.dto';
 
 
 @UseGuards(AuthGuard)
@@ -14,23 +16,28 @@ import { CurrentUser } from '../auth/context/current-user.decorator';
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) { }
 
+  @ApiResponse({
+    status: 201,
+    type: TransactionDetailResponseDto,
+    description: 'Transação criada com sucesso',
+  })
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() dto: CreateTransactionDto, @CurrentUser('id') userId: string) {
     return this.transactionsService.create(userId, dto)
   }
 
-  @ApiResponse({ status: 200, description: 'Lista de transações encontrada com sucesso' })
+  @ApiResponse({ status: 200, type: TransactionListResponseDto, description: 'Lista de transações encontrada com sucesso' })
   @Get()
   findAll(@CurrentUser('id') userId: string,
     @Query() query: FilterTransactionsDto) {
     return this.transactionsService.findAll({
-      userId: userId,
+      userId,
       ...query,
     });
   }
 
-  @ApiResponse({ status: 200, description: 'Transação encontrada' })
+  @ApiResponse({ status: 200, type: TransactionDetailResponseDto, description: 'Transação encontrada' })
   @ApiResponse({ status: 404, description: 'Transação não encontrada' })
   @ApiResponse({ status: 403, description: 'Acesso negado' })
   @Get(':id')
@@ -39,12 +46,12 @@ export class TransactionsController {
     @Param('id') id: string,
   ) {
     return this.transactionsService.findOne({
-      userId: userId,
+      userId,
       id,
     });
   }
 
-  @ApiResponse({ status: 200, description: 'Transação atualizada com sucesso' })
+  @ApiResponse({ status: 200, type: TransactionDetailResponseDto, description: 'Transação atualizada com sucesso' })
   @ApiResponse({ status: 404, description: 'Transação não encontrada' })
   @ApiResponse({ status: 403, description: 'Acesso negado para atualização' })
   @Patch(':id')
@@ -54,7 +61,7 @@ export class TransactionsController {
     @Body() dto: UpdateTransactionDto,
   ) {
     return this.transactionsService.update({
-      userId: userId,
+      userId,
       id,
       dto,
     });
@@ -69,7 +76,7 @@ export class TransactionsController {
     @Param('id') id: string,
   ) {
     return this.transactionsService.remove({
-      userId: userId,
+      userId,
       id,
     });
   }

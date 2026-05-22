@@ -9,7 +9,7 @@ export class TransactionsService {
   constructor(private readonly prisma: PrismaService) { }
 
   async create(userId: string, dto: CreateTransactionDto) {
-    // CA2: valida se a categoria existe e pertence ao usuário
+    // valida se a categoria existe e pertence ao usuário
     const category = await this.prisma.category.findUnique({
       where: { id: dto.categoryId },
     })
@@ -41,7 +41,7 @@ export class TransactionsService {
       throw new NotFoundException('Conta não encontrada')
     }
 
-    // CA1, CA3, CA6: cria a transação
+    // cria a transação
     const transaction = await this.prisma.transaction.create({
       data: {
         accountId: dto.accountId,
@@ -92,31 +92,57 @@ export class TransactionsService {
     return transaction;
   }
 
-  findAll({
+  async findAll({
     userId,
     categoryId,
     type,
+    page = 1,
+    limit = 20,
   }: {
     userId: string,
     categoryId?: string,
     type?: TransactionType,
+    page?: number,
+    limit?: number,
   }) {
-    return this.prisma.transaction.findMany({
+    const skip = (page - 1) * limit
+    const [data, total] = await this.prisma.$transaction([
+    this.prisma.transaction.findMany({
       where: {
         account: {
-          is: {
-            institution: {
-              is: {
-                userId,
-              },
-            },
-          },
+          institution: { userId },
         },
         ...(categoryId && { categoryId }),
         ...(type && { type }),
       },
-    });
+      skip,
+      take: limit,
+      orderBy: {
+        date: 'desc',
+      },
+    }),
+
+    this.prisma.transaction.count({
+      where: {
+        account: {
+          institution: { userId },
+        },
+        ...(categoryId && { categoryId }),
+        ...(type && { type }),
+      },
+    }),
+  ])
+
+  return {
+    data,
+    meta: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    },
   }
+}
 
   async findOne({ userId, id }: { userId: string, id: string }) {
     return this.getTransactionOrThrow(userId, id);

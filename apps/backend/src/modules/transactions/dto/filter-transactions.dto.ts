@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from "@nestjs/swagger"
-import { IsOptional, IsUUID, IsEnum } from "class-validator"
+import { IsOptional, IsUUID, IsEnum, IsInt, Min, } from "class-validator"
 import { TransactionType } from "../../../../generated/prisma/client"
 export class FilterTransactionsDto {
 
@@ -19,4 +19,21 @@ export class FilterTransactionsDto {
     @IsOptional()
     @IsUUID()
     categoryId?: string;
+
+    @ApiPropertyOptional({
+        example: 1,
+        description: 'Número da página'
+    })
+    @IsOptional()
+    @IsInt()
+    @Min(1)
+    page?: number
+
+    @ApiPropertyOptional({
+        example: 20,
+        description: 'Itens por página' })
+    @IsOptional()
+    @IsInt()
+    @Min(1)
+    limit?: number
 }

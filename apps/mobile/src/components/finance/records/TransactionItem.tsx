@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { formatCurrency } from '@/utils/formatters'
-import type { TransactionListItem } from './types'
+import type { TransactionListItem } from '../../../../types/types'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import type { ComponentProps } from 'react'
 

@@ -2,7 +2,7 @@ import { StyleSheet, Text } from 'react-native'
 import { Container } from '@/components/ui/Container'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { CategoryRow } from './CategoryRow'
-import type { CategoryData } from './types'
+import type { CategoryData } from '../../../../types/types'
 
 type props = {
   categories: CategoryData[]

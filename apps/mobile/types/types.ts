@@ -18,3 +18,13 @@ export type TransactionListItem = {
   date: Date | number | string
   amount: number
 }
+
+export type BudgetData = {
+  id: string
+  name: string
+  category: string
+  amountLimit: number
+  month: number
+  year: number
+  createdAt: string
+}

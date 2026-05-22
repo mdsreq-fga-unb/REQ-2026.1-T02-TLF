@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 
 import { formatCurrency } from '@/utils/formatters'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import type { CategoryData } from './types'
+import type { CategoryData } from '../../../../types/types'
 
 type props = {
   category: CategoryData

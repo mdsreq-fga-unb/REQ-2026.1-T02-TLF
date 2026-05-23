@@ -7,6 +7,7 @@ import { BudgetModule } from './modules/budget/budget.module'
 import { TransactionsModule } from './modules/transactions/transactions.module'
 import { SupabaseModule } from './modules/supabase/supabase.module'
 import { UserModule } from './modules/user/user.module'
+import { RecurrenceModule } from './modules/recurrence/recurrence.module'
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UserModule } from './modules/user/user.module'
     TransactionsModule,
     UserModule,
     SupabaseModule,
+    RecurrenceModule,
   ],
 })
 export class AppModule {}

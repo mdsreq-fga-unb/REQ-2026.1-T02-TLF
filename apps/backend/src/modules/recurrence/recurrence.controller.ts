@@ -3,13 +3,8 @@ import { RecurrenceService } from './recurrence.service';
 import { CreateRecurrenceDto } from './dto/create-recurrence.dto';
 import { UpdateRecurrenceDto } from './dto/update-recurrence.dto';
 import { AuthGuard } from '../auth/context/auth.guard';
-import { Request } from 'express';
-import { User } from '@supabase/supabase-js';
 import { ApiTags, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
-
-interface AuthRequest extends Request {
-  authUser: User;
-}
+import { CurrentUser } from '../auth/context/current-user.decorator';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
@@ -23,8 +18,7 @@ export class RecurrenceController {
   @ApiResponse({ status: 201, description: 'Recorrência criada com sucesso' })
   @ApiResponse({ status: 400, description: 'Erro de validação' })
   @ApiResponse({ status: 403, description: 'Acesso negado' })
-  create(@Body() dto: CreateRecurrenceDto, @Req() req: AuthRequest) {
-    const userId = req.authUser.id;
+  create(@Body() dto: CreateRecurrenceDto, @CurrentUser('id') userId: string) {
     return this.recurrenceService.create(userId, dto);
   }
 
@@ -36,16 +30,16 @@ export class RecurrenceController {
     description: 'Filtra recorrências por categoria',
     example: 'c9f3a2b1-xxxx',
   })
-  findAll(@Req() req: AuthRequest, @Query('categoryId') categoryId?: string) {
-    return this.recurrenceService.findAll(req.authUser.id, categoryId);
+  findAll(@CurrentUser('id') userId: string, @Query('categoryId') categoryId?: string) {
+    return this.recurrenceService.findAll(userId, categoryId);
   }
 
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Recorrência encontrada' })
   @ApiResponse({ status: 404, description: 'Recorrência não encontrada' })
   @ApiResponse({ status: 403, description: 'Acesso negado' })
-  findOne(@Param('id') id: string, @Req() req: AuthRequest) {
-    return this.recurrenceService.findOne(req.authUser.id, id);
+  findOne(@Param('id') id: string, @CurrentUser('id') userId: string) {
+    return this.recurrenceService.findOne(userId, id);
   }
 
   @Patch(':id')
@@ -55,15 +49,15 @@ export class RecurrenceController {
   update(
     @Param('id') id: string,
     @Body() dto: UpdateRecurrenceDto, 
-    @Req() req: AuthRequest) {
-      return this.recurrenceService.update(req.authUser.id, id, dto);
+    @CurrentUser('id') userId: string) {
+      return this.recurrenceService.update(userId, id, dto);
     }
 
   @Delete(':id')
   @ApiResponse({ status: 200, description: 'Recorrência removida com sucesso' })
   @ApiResponse({ status: 404, description: 'Recorrência não encontrada' })
   @ApiResponse({ status: 403, description: 'Acesso negado' })
-  remove(@Param('id') id: string, @Req() req: AuthRequest) {
-    return this.recurrenceService.remove(req.authUser.id, id)
+  remove(@Param('id') id: string, @CurrentUser('id') userId: string) {
+    return this.recurrenceService.remove(userId, id)
   }
 }

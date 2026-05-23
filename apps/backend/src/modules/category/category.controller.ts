@@ -25,6 +25,8 @@ export class CategoryController {
   @ApiOperation({ summary: 'Criar nova categoria' })
   @ApiResponse({ status: 201, description: 'Categoria criada com sucesso' })
   @ApiResponse({ status: 400, description: 'Dados inválidos' })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
+  @ApiResponse({ status: 403, description: 'Acesso negado' })
   @ApiResponse({ status: 409, description: 'Categoria com esse nome já existe' })
   create(@Body() dto: CreateCategoryDto) {
     const userId = 'user-teste-001'
@@ -34,6 +36,7 @@ export class CategoryController {
   @Get()
   @ApiOperation({ summary: 'Listar categorias do usuário' })
   @ApiResponse({ status: 200, description: 'Lista de categorias' })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
   findAll() {
     const userId = 'user-teste-001'
     return this.categoryService.findAll(userId)
@@ -43,6 +46,7 @@ export class CategoryController {
   @ApiOperation({ summary: 'Buscar categoria por ID' })
   @ApiParam({ name: 'id', description: 'ID da categoria' })
   @ApiResponse({ status: 200, description: 'Categoria encontrada' })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Acesso negado' })
   @ApiResponse({ status: 404, description: 'Categoria não encontrada' })
   findOne(@Param('id') id: string) {
@@ -54,6 +58,7 @@ export class CategoryController {
   @ApiOperation({ summary: 'Atualizar categoria' })
   @ApiParam({ name: 'id', description: 'ID da categoria' })
   @ApiResponse({ status: 200, description: 'Categoria atualizada' })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Acesso negado ou categoria padrão' })
   @ApiResponse({ status: 404, description: 'Categoria não encontrada' })
   update(@Param('id') id: string, @Body() dto: UpdateCategoryDto) {
@@ -68,6 +73,7 @@ export class CategoryController {
   @ApiQuery({ name: 'newCategoryId', required: false, description: 'ID da categoria destino para reclassificação' })
   @ApiResponse({ status: 200, description: 'Categoria removida com sucesso' })
   @ApiResponse({ status: 400, description: 'Transações vinculadas requerem reclassificação' })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Acesso negado ou categoria padrão' })
   @ApiResponse({ status: 404, description: 'Categoria não encontrada' })
   remove(@Param('id') id: string, @Query('newCategoryId') newCategoryId?: string) {

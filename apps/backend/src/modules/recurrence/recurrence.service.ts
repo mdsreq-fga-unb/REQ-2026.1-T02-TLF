@@ -47,31 +47,59 @@ export class RecurrenceService {
     });
   }
 
-  findAll() {
-    return `This action returns all recurrence`;
+  findAll(userId: string, categoryId?: string) {
+    return this.prisma.recurrence.findMany({
+      where: {
+        account: {
+          institution: {
+            userId,
+          },
+        },
+        ...(categoryId && {categoryId}),
+      },
+      include: {
+        category: true,
+        subCategory: true,
+        account: true,
+      }
+    });
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} recurrence`;
+  async findOne(userId: string, id: string) {
+    return this.getRecurrenceOrThrow(userId, id);
   }
 
-  update(id: string, updateRecurrenceDto: UpdateRecurrenceDto) {
-    return `This action updates a #${id} recurrence`;
+  async update(userId: string, id: string, dto: UpdateRecurrenceDto) {
+    await this.getRecurrenceOrThrow(userId, id);
+
+    return this.prisma.recurrence.update({
+      where: { id },
+      data: dto,
+      include: {
+       account: true,
+       category: true,
+       subCategory: true, 
+      },
+    });
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} recurrence`;
+  async remove(userId: string, id: string) {
+    await this.getRecurrenceOrThrow(userId, id);
+
+    return this.prisma.recurrence.delete({
+      where: { id },
+    });
   }
 
   private async validateAccountOwnership(userId: string, accountId: string) {
     const account = await this.prisma.account.findUnique({
-      where: {id: accountId},
+      where: { id: accountId },
       include: {
         institution: true,
       },
     });
 
-  if (!account) {
+    if (!account) {
       throw new NotFoundException('Conta não encontrada');
     }
 
@@ -135,5 +163,30 @@ export class RecurrenceService {
         'Data final não pode ser menor que a data inicial'
       );
     }
+  }
+
+  private async getRecurrenceOrThrow(userId: string, id: string) {
+    const recurrence = await this.prisma.recurrence.findUnique({
+      where: { id },
+      include: {
+        account: {
+          include: {
+            institution: true,
+          },
+        },
+        category: true,
+        subCategory: true,
+      },
+    });
+
+    if (!recurrence) {
+      throw new NotFoundException('Recorrência não encontrada');
+    }
+
+    if (recurrence.account.institution.userId !== userId) {
+      throw new ForbiddenException('Você não tem acesso a esta recorrência');
+    }
+
+    return recurrence;
   }
 }

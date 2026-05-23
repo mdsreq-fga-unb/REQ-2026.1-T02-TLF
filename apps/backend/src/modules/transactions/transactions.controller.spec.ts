@@ -1,11 +1,15 @@
-import { Test, TestingModule } from '@nestjs/testing'
-import { TransactionsController } from './transactions.controller'
-import { TransactionsService } from './transactions.service'
+import { Test, TestingModule } from '@nestjs/testing';
+import { TransactionsController } from './transactions.controller';
+import { TransactionsService } from './transactions.service';
 import { TransactionType, TransactionStatus } from '../../../generated/prisma/enums'
 
-const mockTransactionsService = {
+const transactionsServiceMock = {
   create: jest.fn(),
-}
+  findAll: jest.fn(),
+  findOne: jest.fn(),
+  update: jest.fn(),
+  remove: jest.fn(),
+};
 
 const mockTransaction = {
   id: 'tx-001',
@@ -20,19 +24,23 @@ const mockTransaction = {
 }
 
 describe('TransactionsController', () => {
-  let controller: TransactionsController
+  let controller: TransactionsController;
 
   beforeEach(async () => {
+    jest.clearAllMocks();
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TransactionsController],
       providers: [
-        { provide: TransactionsService, useValue: mockTransactionsService },
+        {
+          provide: TransactionsService,
+          useValue: transactionsServiceMock,
+        },
       ],
-    }).compile()
+    }).compile();
 
-    controller = module.get<TransactionsController>(TransactionsController)
-    jest.clearAllMocks()
-  })
+    controller = module.get<TransactionsController>(TransactionsController);
+  });
 
   describe('create', () => {
     const dto = {
@@ -44,23 +52,96 @@ describe('TransactionsController', () => {
     }
 
     it('deve chamar o service e retornar a transação criada', async () => {
-      mockTransactionsService.create.mockResolvedValue(mockTransaction)
+      transactionsServiceMock.create.mockResolvedValue(mockTransaction)
 
-      const result = await controller.create(dto)
+      const req = { user: { id: 'user-teste-001' } } as any; 
+
+      const result = await controller.create(dto, req)
 
       expect(result).toEqual(mockTransaction)
-      expect(mockTransactionsService.create).toHaveBeenCalledWith(
+      expect(transactionsServiceMock.create).toHaveBeenCalledWith(
         'user-teste-001',
         dto,
       )
     })
 
     it('deve passar o userId correto para o service', async () => {
-      mockTransactionsService.create.mockResolvedValue(mockTransaction)
+      transactionsServiceMock.create.mockResolvedValue(mockTransaction)
 
-      await controller.create(dto)
+      const req = { user: { id: 'user-teste-001' } } as any; 
 
-      expect(mockTransactionsService.create).toHaveBeenCalledTimes(1)
+      await controller.create(dto, req)
+
+      expect(transactionsServiceMock.create).toHaveBeenCalledTimes(1)
     })
-  })
-})
+  });
+
+  describe('findAll', () => {
+    it('deve chamar findAll com userId e filtros', async () => {
+      transactionsServiceMock.findAll.mockResolvedValue([{ id: '1' }]);
+
+      const req = { user: { id: 'user-1' } } as any;
+
+      const query = {
+        categoryId: 'cat-1',
+        type: 'INCOME',
+      };
+
+      await controller.findAll(req, query as any);
+
+      expect(transactionsServiceMock.findAll).toHaveBeenCalledWith({
+        userId: 'user-1',
+        categoryId: 'cat-1',
+        type: 'INCOME',
+      });
+    });
+  });
+
+  describe('findOne', () => {
+    it('deve chamar service.findOne corretamente', async () => {
+      transactionsServiceMock.findOne.mockResolvedValue({ id: '1' });
+
+      const req = { user: { id: 'user-1' } } as any;
+
+      await controller.findOne(req, '1');
+
+      expect(transactionsServiceMock.findOne).toHaveBeenCalledWith({
+        userId: 'user-1',
+        id: '1',
+      });
+    });
+  });
+
+  describe('update', () => {
+    it('deve chamar service.update com dados corretos', async () => {
+      transactionsServiceMock.update.mockResolvedValue({ id: '1' });
+
+      const req = { user: { id: 'user-1' } } as any;
+
+      const dto = { description: 'novo valor' };
+
+      await controller.update(req, '1', dto as any);
+
+      expect(transactionsServiceMock.update).toHaveBeenCalledWith({
+        userId: 'user-1',
+        id: '1',
+        dto,
+      });
+    });
+  });
+
+  describe('remove', () => {
+    it('deve chamar service.remove com dados corretos', async () => {
+      transactionsServiceMock.remove.mockResolvedValue({ id: '1' });
+
+      const req = { user: { id: 'user-1' } } as any;
+
+      await controller.remove(req, '1');
+
+      expect(transactionsServiceMock.remove).toHaveBeenCalledWith({
+        userId: 'user-1',
+        id: '1',
+      });
+    });
+  });
+});

@@ -1,3 +1,5 @@
+// alterar para interface depois
+
 export type SummaryData = {
   balance: number
   income: number
@@ -6,7 +8,7 @@ export type SummaryData = {
 
 export type CategoryData = {
   name: string
-  amount: number
+  icon: string
   color: string
 }
 
@@ -19,12 +21,13 @@ export type TransactionListItem = {
   amount: number
 }
 
+export type BudgetType = 'BUDGET' | 'GOAL'
+
 export type BudgetData = {
-  id: string
+  id?: string
   name: string
-  category: string
+  categoryId: string
   amountLimit: number
   month: number
   year: number
-  createdAt: string
 }

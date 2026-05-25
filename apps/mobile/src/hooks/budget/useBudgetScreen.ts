@@ -1,8 +1,9 @@
+// TODO: Remover quando sistema de categorias for implementado
+/* eslint-disable no-console */
 import { useCallback, useState } from 'react'
 import { BudgetService } from '@/services/api/budget'
 import { BudgetData, BudgetListItem, BudgetType } from 'types/types'
 import { formatCurrency } from '@/utils/formatters'
-import { Alert } from 'react-native'
 
 const MAX_CENTS = 9_999_999
 
@@ -25,10 +26,12 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
   const [submitting, setSubmitting] = useState(false)
   const [showKeypad, setShowKeypad] = useState(false)
   const [showCategoryPicker, setShowCategoryPicker] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
   const [submitAttempted, setSubmitAttempted] = useState(false)
   const [budgets, setBudgets] = useState<BudgetListItem[]>([])
   const [refreshing, setRefreshing] = useState(false)
+  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null)
+
+  const dismissFeedback = useCallback(() => setFeedbackMessage(null), [])
 
   async function fetchBudgets() {
       try {
@@ -36,7 +39,10 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
   
         setBudgets(response.data)
       } catch (error) {
-        console.error(error)
+        const errorMessage = error instanceof Error 
+          ? error.message 
+          : 'An unexpected error occurred'
+        setFeedbackMessage(errorMessage)
       }
     }
 
@@ -58,7 +64,7 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
   setAmountLimit(
     budget.amountLimit
   )
-  setMonth(budget.month - 1) // API returns 1-12, convert to 0-11 for JavaScript
+  setMonth(budget.month - 1)
   setYear(budget.year)
   setCategoryId(
     budget.categoryId,
@@ -99,13 +105,13 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
     setMonth(new Date().getMonth())
     setYear(new Date().getFullYear())
     setSubmitAttempted(false)
-    setSubmitError(null)
+    setFeedbackMessage(null)
   }
 
   const handleCreateSubmit = async (onSuccess?: () => void) => {
     setSubmitAttempted(true)
     if (!isValid || submitting) return
-    setSubmitError(null)
+    setFeedbackMessage(null)
     setSubmitting(true)
     try {
       const payload: BudgetData = {
@@ -118,12 +124,8 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
       console.log('[BudgetCreateSubmit] payload:', payload)
       await BudgetService.create(payload)
       reset()
-      Alert.alert('Registro salvo!', 'Sua transação foi registrada com sucesso.', [
-        { text: 'OK', onPress: onSuccess },
-      ])
       onSuccess?.()
     } catch (error) {
-      console.error('[BudgetCreateSubmit] error:', error)
       let message = 'Não foi possível salvar a transação. Tente novamente.'
       if (error instanceof Error) {
         message = error.message
@@ -133,7 +135,7 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
         console.error('[BudgetCreateSubmit] response data:', axiosError.response?.data)
         message = axiosError.response?.data?.message || message
       }
-      setSubmitError(message)
+      setFeedbackMessage(message)
     } finally {
       setSubmitting(false)
     }
@@ -142,7 +144,7 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
   const handleEditSubmit = async (id: string, onSuccess?: () => void) => {
     setSubmitAttempted(true)
     if (!isValid || submitting) return
-    setSubmitError(null)
+    setFeedbackMessage(null)
     setSubmitting(true)
     try {
       const payload: BudgetData = {
@@ -154,13 +156,8 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
 
       console.log('[BudgetEditSubmit] payload:', payload)
       await BudgetService.update(id, payload)
-      reset()
-      Alert.alert('Registro salvo!', 'Sua transação foi alterada com sucesso.', [
-        { text: 'OK', onPress: onSuccess },
-      ])
       onSuccess?.()
     } catch (error) {
-      console.error('[BudgetEditSubmit] error:', error)
       let message = 'Não foi possível salvar a transação. Tente novamente.'
       if (error instanceof Error) {
         message = error.message
@@ -170,7 +167,7 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
         console.error('[BudgetEditSubmit] response data:', axiosError.response?.data)
         message = axiosError.response?.data?.message || message
       }
-      setSubmitError(message)
+      setFeedbackMessage(message)
     } finally {
       setSubmitting(false)
     }
@@ -197,7 +194,6 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
     setShowCategoryPicker,
     errors,
     submitAttempted,
-    submitError,
     isValid,
     submitting,
     handleCreateSubmit,
@@ -208,6 +204,9 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
     fetchBudget,
     refreshing,
     setRefreshing,
-    onRefresh
+    onRefresh,
+    feedbackMessage,
+    setFeedbackMessage,
+    dismissFeedback
   }
 }

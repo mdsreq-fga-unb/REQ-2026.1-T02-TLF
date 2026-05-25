@@ -1,3 +1,6 @@
+// TODO: Remover quando sistema de categorias for implementado
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { ThemedContainer } from '@/components/ui/ThemedContainer'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { Alert, Pressable, View } from 'react-native'
@@ -9,8 +12,11 @@ import { resolveTextTone } from '@/utils/textTone'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { ProgressBar } from '../ProgressBar'
 import { formatCurrency } from '@/utils/formatters'
-import { useState } from 'react'
+import { use, useState } from 'react'
 import { BudgetService } from '@/services/api/budget'
+import { Zap } from 'lucide-react-native'
+import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
+import { useBudgetScreen } from '@/hooks/budget/useBudgetScreen'
 
 type props = {
   id: string
@@ -24,7 +30,17 @@ type props = {
   onDelete?: (id: string) => void
 }
 
-export function BudgetItem({ id, categoryId, amountLimit, name, month, year, totalValue = amountLimit / 100, spentValue = 0, onDelete }: props) {
+export function BudgetItem({
+  id,
+  categoryId,
+  amountLimit,
+  name,
+  month,
+  year,
+  totalValue = amountLimit / 100,
+  spentValue = 0,
+  onDelete,
+}: props) {
   const colors = useThemeColor()
   const remainingValue = totalValue - spentValue
   const fillPercentage = Math.round((spentValue / totalValue) * 100)
@@ -33,6 +49,7 @@ export function BudgetItem({ id, categoryId, amountLimit, name, month, year, tot
   const formatedRemainingValue = formatCurrency(remainingValue)
   const safePercentage = Math.min(100, fillPercentage)
   const [showAction, setShowAction] = useState(false)
+  const useBudget = useBudgetScreen()
 
   return (
     <ThemedContainer style={{ padding: 20 }}>
@@ -62,29 +79,7 @@ export function BudgetItem({ id, categoryId, amountLimit, name, month, year, tot
               <SectionDivider />
 
               <Pressable
-                onPress={() => {
-                  Alert.alert('Confirmar exclusão', 'Deseja excluir este orçamento?', [
-                    { text: 'Cancelar', style: 'cancel' },
-                    {
-                      text: 'Excluir',
-                      style: 'destructive',
-                      onPress: async () => {
-                        try {
-                          await BudgetService.delete(id)
-                          onDelete?.(id)
-                          Alert.alert('Orçamento excluído', 'O orçamento foi removido com sucesso.')
-                        } catch (deleteError) {
-                          console.error('Erro ao excluir orçamento:', deleteError)
-                          Alert.alert(
-                            'Erro',
-                            'Não foi possível excluir o orçamento. Tente novamente.',
-                          )
-                        }
-                      },
-                    },
-                  ])
-                  setShowAction(false)
-                }}
+                onPress={() => useBudget.setFeedbackMessage('Você tem certeza que deseja excluir esse item?')}
                 style={styles.menuItem}
               >
                 <ThemedText text="Excluir" />
@@ -109,6 +104,31 @@ export function BudgetItem({ id, categoryId, amountLimit, name, month, year, tot
           text={`${formatedRemainingValue} ${remainingValue > 0 ? 'sobrando' : 'além do limite'}`}
         />
       </View>
+      <ThemedOverlayAlert
+        visible={useBudget.feedbackMessage != null}
+        onRequestClose={useBudget.dismissFeedback}
+        message={useBudget.feedbackMessage ?? ''}
+        actions={[
+          { label: 'Cancelar', onPress: useBudget.dismissFeedback },
+          {
+            label: 'Confirmar',
+            onPress: async () => {
+              try {
+                await BudgetService.delete(id)
+                useBudget.dismissFeedback()
+                onDelete?.(id)
+              } catch (deleteError) {
+                console.error('Erro ao excluir orçamento:', deleteError)
+                useBudget.setFeedbackMessage(
+                  'Não foi possível excluir o orçamento. Tente novamente.',
+                )
+              }
+            },
+          },
+        ]}
+      >
+        <ThemedText children text="" />
+      </ThemedOverlayAlert>
     </ThemedContainer>
   )
 }

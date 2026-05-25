@@ -11,8 +11,9 @@ import { BudgetInitialValues, useBudgetScreen } from '@/hooks/budget/useBudgetSc
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { View, ScrollView } from 'react-native'
 import { StyleSheet } from 'react-native'
-import { useLocalSearchParams } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
 
 type Props = {
   title?: string
@@ -109,11 +110,25 @@ export default function EditBudgetPage({ initialValues }: Props) {
             title={form.submitting ? 'Salvando...' : 'Salvar'}
             disabled={form.submitting || !form.isValid}
             onPress={() => {
-              void form.handleEditSubmit(id)
+              void form.handleEditSubmit(id, () => {
+                router.back()
+              })
             }}
           />
         </View>
       </View>
+      <ThemedOverlayAlert
+        visible={form.feedbackMessage != null}
+        onRequestClose={form.dismissFeedback}
+        message={form.feedbackMessage ?? ''}
+        actions={[{ label: 'Entendi', onPress: form.dismissFeedback }]}
+      >
+        <ThemedText
+          variant="headline"
+          text="Erro ao Editar"
+          style={{ textAlign: 'center', width: '100%' }}
+        />
+      </ThemedOverlayAlert>
     </ThemedBackground>
   )
 }

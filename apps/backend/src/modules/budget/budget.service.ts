@@ -86,6 +86,7 @@ export class BudgetService {
     if (budget.userId !== userId)
       throw new ForbiddenException('Acesso negado')
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { userId: _, ...result } = budget
     return result
   }

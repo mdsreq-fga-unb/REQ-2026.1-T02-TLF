@@ -13,19 +13,19 @@ export class BudgetService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(userId: string, dto: CreateBudgetDto) {
-    const category = await this.prisma.category.findUnique({
-      where: { id: dto.categoryId },
-    })
-
-    if (!category) throw new NotFoundException('Categoria não encontrada')
-    if (category.userId !== userId)
-      throw new ForbiddenException('Categoria não pertence ao usuário')
+    // TODO: Validar categoria quando o módulo de categorias estiver implementado
+    // const category = await this.prisma.category.findUnique({
+    //   where: { id: dto.categoryId },
+    // })
+    // if (!category) throw new NotFoundException('Categoria não encontrada')
+    // if (category.userId !== userId)
+    //   throw new ForbiddenException('Categoria não pertence ao usuário')
 
     const existing = await this.prisma.budget.findUnique({
       where: {
         userId_categoryId_month_year: {
           userId,
-          categoryId: dto.categoryId,
+          categoryId: dto.categoryId ? dto.categoryId : '',
           month: dto.month,
           year: dto.year,
         },
@@ -43,7 +43,9 @@ export class BudgetService {
         amountLimit: true,
         month: true,
         year: true,
-        category: { select: { id: true, name: true } },
+        categoryId: true,
+        // TODO: Retornar category quando o módulo de categorias estiver implementado
+        // category: { select: { id: true, name: true } },
       },
     })
   }
@@ -57,7 +59,9 @@ export class BudgetService {
         amountLimit: true,
         month: true,
         year: true,
-        category: { select: { id: true, name: true } },
+        categoryId: true,
+        // TODO: Retornar category quando o módulo de categorias estiver implementado
+        // category: { select: { id: true, name: true } },
       },
     })
   }
@@ -71,8 +75,10 @@ export class BudgetService {
         amountLimit: true,
         month: true,
         year: true,
+        categoryId: true,
         userId: true,
-        category: { select: { id: true, name: true } },
+        // TODO: Retornar category quando o módulo de categorias estiver implementado
+        // category: { select: { id: true, name: true } },
       },
     })
 
@@ -93,7 +99,9 @@ export class BudgetService {
         amountLimit: true,
         month: true,
         year: true,
-        category: { select: { id: true, name: true } },
+        categoryId: true,
+        // TODO: Retornar category quando o módulo de categorias estiver implementado
+        // category: { select: { id: true, name: true } },
       },
     })
   }
@@ -114,7 +122,9 @@ export class BudgetService {
         amountLimit: true,
         month: true,
         year: true,
-        category: { select: { id: true, name: true } },
+        categoryId: true,
+        // TODO: Retornar category quando o módulo de categorias estiver implementado
+        // category: { select: { id: true, name: true } },
       },
     })
   }

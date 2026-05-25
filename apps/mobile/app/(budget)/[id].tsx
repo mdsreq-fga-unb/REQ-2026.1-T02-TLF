@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
 import { AmountDisplay } from '@/components/finance/transactions/AmountDisplay'
 import { FormField } from '@/components/finance/transactions/FormField'
@@ -7,10 +7,11 @@ import { PickerModal } from '@/components/finance/transactions/PickerModal'
 import { CATEGORIES } from '@/components/finance/transactions/types'
 import { ThemedButton } from '@/components/ui/ThemedButton'
 import { ThemedText } from '@/components/ui/ThemedText'
-import { BudgetInitialValues, useBudgetForm } from '@/hooks/budget/useBudgetScreen'
+import { BudgetInitialValues, useBudgetScreen } from '@/hooks/budget/useBudgetScreen'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { View, ScrollView } from 'react-native'
 import { StyleSheet } from 'react-native'
+import { useLocalSearchParams } from 'expo-router'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 
 type Props = {
@@ -20,10 +21,17 @@ type Props = {
 
 export default function EditBudgetPage({ initialValues }: Props) {
   const theme = useThemeColor()
-  const form = useBudgetForm(initialValues)
-
+  const form = useBudgetScreen(initialValues)
+  const params = useLocalSearchParams<{ id?: string }>()
+  const id = String(params.id ?? '')
   const categories = CATEGORIES['EXPENSE']
   const selectedCategory = categories.find((c) => c.id === form.categoryId)
+
+  useEffect(() => {
+    if (id) {
+      form.fetchBudget(id)
+    }
+  }, [id])
 
   return (
     <ThemedBackground>
@@ -101,7 +109,7 @@ export default function EditBudgetPage({ initialValues }: Props) {
             title={form.submitting ? 'Salvando...' : 'Salvar'}
             disabled={form.submitting || !form.isValid}
             onPress={() => {
-              void form.handleSubmit()
+              void form.handleEditSubmit(id)
             }}
           />
         </View>

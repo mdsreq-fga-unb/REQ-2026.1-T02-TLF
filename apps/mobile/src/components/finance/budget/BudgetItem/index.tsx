@@ -1,6 +1,6 @@
 import { ThemedContainer } from '@/components/ui/ThemedContainer'
 import { ThemedText } from '@/components/ui/ThemedText'
-import { Pressable, View } from 'react-native'
+import { Alert, Pressable, View } from 'react-native'
 import Fontisto from '@expo/vector-icons/Fontisto'
 import { SectionDivider } from '@/components/ui/SectionDivider'
 import { styles } from './style'
@@ -10,14 +10,21 @@ import { useThemeColor } from '@/hooks/useThemeColor'
 import { ProgressBar } from '../ProgressBar'
 import { formatCurrency } from '@/utils/formatters'
 import { useState } from 'react'
+import { BudgetService } from '@/services/api/budget'
 
 type props = {
-  category: string
-  totalValue: number
-  spentValue: number
+  id: string
+  categoryId: string
+  amountLimit: number
+  name: string
+  month: number
+  year: number
+  totalValue?: number
+  spentValue?: number
+  onDelete?: (id: string) => void
 }
 
-export function BudgetItem({ category, totalValue, spentValue }: props) {
+export function BudgetItem({ id, categoryId, amountLimit, name, month, year, totalValue = amountLimit / 100, spentValue = 0, onDelete }: props) {
   const colors = useThemeColor()
   const remainingValue = totalValue - spentValue
   const fillPercentage = Math.round((spentValue / totalValue) * 100)
@@ -30,7 +37,7 @@ export function BudgetItem({ category, totalValue, spentValue }: props) {
   return (
     <ThemedContainer style={{ padding: 20 }}>
       <View style={styles.container}>
-        <ThemedText children text={category} variant="title" />
+        <ThemedText children text={name} variant="title" />
         <View style={styles.actionContainer}>
           <Pressable
             onPress={() => {
@@ -44,7 +51,7 @@ export function BudgetItem({ category, totalValue, spentValue }: props) {
             <View style={[styles.dropdownMenu, { backgroundColor: colors.surfaceMuted }]}>
               <Pressable
                 onPress={() => {
-                  router.push('/(budget)/edit')
+                  router.push(`/(budget)/${id}`)
                   setShowAction(false) // Fecha o menu após a ação
                 }}
                 style={styles.menuItem}
@@ -56,6 +63,26 @@ export function BudgetItem({ category, totalValue, spentValue }: props) {
 
               <Pressable
                 onPress={() => {
+                  Alert.alert('Confirmar exclusão', 'Deseja excluir este orçamento?', [
+                    { text: 'Cancelar', style: 'cancel' },
+                    {
+                      text: 'Excluir',
+                      style: 'destructive',
+                      onPress: async () => {
+                        try {
+                          await BudgetService.delete(id)
+                          onDelete?.(id)
+                          Alert.alert('Orçamento excluído', 'O orçamento foi removido com sucesso.')
+                        } catch (deleteError) {
+                          console.error('Erro ao excluir orçamento:', deleteError)
+                          Alert.alert(
+                            'Erro',
+                            'Não foi possível excluir o orçamento. Tente novamente.',
+                          )
+                        }
+                      },
+                    },
+                  ])
                   setShowAction(false)
                 }}
                 style={styles.menuItem}

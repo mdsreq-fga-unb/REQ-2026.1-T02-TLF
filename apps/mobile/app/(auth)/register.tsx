@@ -98,6 +98,7 @@ export default function RegisterScreen() {
               <ThemedInputForm
                 icon={Lock}
                 placeholder="******"
+                autoCapitalize="none"
                 onChangeText={setPassword}
                 secureTextEntry
                 value={password}
@@ -112,6 +113,7 @@ export default function RegisterScreen() {
               <ThemedInputForm
                 icon={Lock}
                 placeholder="******"
+                autoCapitalize="none"
                 onChangeText={setPasswordConfirm}
                 secureTextEntry
                 value={passwordConfirm}

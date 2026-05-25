@@ -1,17 +1,29 @@
 import { api } from './axios-client'
-import { BudgetData, CategoryData } from 'types/types'
+import { BudgetListItem } from 'types/types'
 
-export const createBudget = async (budgetData: BudgetData): Promise<BudgetData> => {
-  try {
-    const response = await api.post('/budgets', budgetData)
-    return response.data
-  } catch (error) {
-    console.error('Erro ao criar o budget:', error)
-    throw error
-  }
+export interface CreateBudgetDTO {
+  name: string
+  amountLimit: number
+  month: number
+  year: number
+  categoryId?: string
 }
 
-export const getCategories = async (): Promise<CategoryData[]> => {
-  const response = await api.get('/categories')
-  return response.data
+export const BudgetService = {
+  getAll: () => api.get<BudgetListItem[]>('/budget'),
+
+  getById: (id: string) =>
+    api.get(`/budget/${id}`),
+
+  create: (data: CreateBudgetDTO) =>
+    api.post('/budget', data),
+
+  update: (
+    id: string,
+    data: Partial<CreateBudgetDTO>,
+  ) =>
+    api.patch(`/budget/${id}`, data),
+
+  delete: (id: string) =>
+    api.delete(`/budget/${id}`),
 }

@@ -88,7 +88,7 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen name="create" options={{ title: 'Adicionar' }} />
-        <Stack.Screen name="edit" options={{ title: 'Editar' }} />
+        <Stack.Screen name="[id]" options={{ title: 'Editar' }} />
       </Stack>
     </GestureHandlerRootView>
   )

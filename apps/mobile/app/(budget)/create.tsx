@@ -8,7 +8,7 @@ import { PickerModal } from '@/components/finance/transactions/PickerModal'
 import { CATEGORIES } from '@/components/finance/transactions/types'
 import { ThemedButton } from '@/components/ui/ThemedButton'
 import { ThemedText } from '@/components/ui/ThemedText'
-import { BudgetInitialValues, useBudgetForm } from '@/hooks/budget/useBudgetScreen'
+import { BudgetInitialValues, useBudgetScreen } from '@/hooks/budget/useBudgetScreen'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { View, ScrollView } from 'react-native'
 import { StyleSheet } from 'react-native'
@@ -21,7 +21,7 @@ type Props = {
 
 export default function CreateBudgetPage({ initialValues }: Props) {
   const theme = useThemeColor()
-  const form = useBudgetForm(initialValues)
+  const form = useBudgetScreen(initialValues)
 
   const categories = CATEGORIES['EXPENSE']
   const selectedCategory = categories.find((c) => c.id === form.categoryId)
@@ -120,7 +120,7 @@ export default function CreateBudgetPage({ initialValues }: Props) {
             title={form.submitting ? 'Salvando...' : 'Adicionar Registro'}
             disabled={form.submitting || !form.isValid}
             onPress={() => {
-              void form.handleSubmit()
+              void form.handleCreateSubmit()
             }}
           />
         </View>

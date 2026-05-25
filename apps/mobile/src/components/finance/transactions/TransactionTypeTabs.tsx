@@ -1,7 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { TYPE_COLORS, type TransactionType } from './types'
 
-// Design system tokens
 const OUTLINE = '#908fa0'
 const OUTLINE_VARIANT = '#464554'
 

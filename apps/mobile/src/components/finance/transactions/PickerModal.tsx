@@ -55,14 +55,7 @@ export function PickerModal({ visible, title, options, selectedId, onSelect, onC
                   />
                 </View>
                 <Text style={[styles.optionLabel, { color: theme.foreground }]}>{item.label}</Text>
-                {selected && (
-                  <MaterialIcons
-                    name="check"
-                    size={18}
-                    color={theme.primary}
-                    style={styles.checkIcon}
-                  />
-                )}
+                {selected && <MaterialIcons name="check" size={18} style={styles.checkIcon} />}
               </Pressable>
             )
           })}

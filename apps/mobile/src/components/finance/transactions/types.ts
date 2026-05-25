@@ -1,4 +1,5 @@
 import type { TransactionType } from '@/services/database/queries/transaction'
+import { BudgetType } from 'types/types'
 
 export type { TransactionType }
 
@@ -29,10 +30,12 @@ export const TYPE_COLORS: Record<TransactionType, string> = {
 }
 
 // Cor do valor monetário — Transfer é neutro (on-surface)
-export const AMOUNT_COLORS: Record<TransactionType, string> = {
+export const AMOUNT_COLORS: Record<TransactionType | BudgetType, string> = {
   EXPENSE: '#FF4B4B',
   INCOME: '#00E383',
   TRANSFER: '#e4e1ed',
+  BUDGET: '#e4e1ed',
+  GOAL: '#00E383',
 }
 
 // Chips de subcategoria sempre usam secondary-fixed-dim

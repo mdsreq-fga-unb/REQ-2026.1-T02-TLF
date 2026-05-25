@@ -25,7 +25,6 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
 
   const handleSubmit = () => {
     form.submit(() => {
-      // CA10: confirmação de sucesso
       Alert.alert('Registro salvo!', 'Sua transação foi registrada com sucesso.', [
         { text: 'OK', onPress: onSuccess },
       ])

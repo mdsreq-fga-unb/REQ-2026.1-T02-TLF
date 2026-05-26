@@ -3,7 +3,7 @@
 
 import { ThemedContainer } from '@/components/ui/ThemedContainer'
 import { ThemedText } from '@/components/ui/ThemedText'
-import { Alert, Pressable, View } from 'react-native'
+import { Pressable, View } from 'react-native'
 import Fontisto from '@expo/vector-icons/Fontisto'
 import { SectionDivider } from '@/components/ui/SectionDivider'
 import { styles } from './style'
@@ -12,9 +12,8 @@ import { resolveTextTone } from '@/utils/textTone'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { ProgressBar } from '../ProgressBar'
 import { formatCurrency } from '@/utils/formatters'
-import { use, useState } from 'react'
+import { useState } from 'react'
 import { BudgetService } from '@/services/api/budget'
-import { Zap } from 'lucide-react-native'
 import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
 import { useBudgetScreen } from '@/hooks/budget/useBudgetScreen'
 
@@ -79,7 +78,9 @@ export function BudgetItem({
               <SectionDivider />
 
               <Pressable
-                onPress={() => useBudget.setFeedbackMessage('Você tem certeza que deseja excluir esse item?')}
+                onPress={() =>
+                  useBudget.setFeedbackMessage('Você tem certeza que deseja excluir esse item?')
+                }
                 style={styles.menuItem}
               >
                 <ThemedText text="Excluir" />

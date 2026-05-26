@@ -10,7 +10,6 @@ import { ThemedText } from '@/components/ui/ThemedText'
 import { BudgetInitialValues, useBudgetScreen } from '@/hooks/budget/useBudgetScreen'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { View, ScrollView } from 'react-native'
-import { StyleSheet } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
@@ -37,14 +36,6 @@ export default function EditBudgetPage({ initialValues }: Props) {
   return (
     <ThemedBackground>
       <View style={{ width: '100%' }}>
-        {/* <View style={styles.header}>
-          <ThemedText
-            children
-            text={`Editar ${form.type == 'BUDGET' ? 'Orçamento' : 'Meta'}`}
-            variant="title"
-          />
-        </View>
-        <BudgetTypeTabs value={form.type} onChange={form.handleTypeChange} /> */}
         <ScrollView>
           <AmountDisplay
             amountCents={form.amountLimit}
@@ -54,7 +45,15 @@ export default function EditBudgetPage({ initialValues }: Props) {
           {form.submitAttempted && form.errors.amount && (
             <ThemedText children text={form.errors.amount} tone="warning" />
           )}
-          <View style={[styles.fields, { backgroundColor: theme.surfaceMuted }]}>
+          <View
+            style={{
+              backgroundColor: theme.surfaceMuted,
+              width: '100%',
+              borderRadius: 16,
+              padding: 16,
+              marginTop: 15,
+            }}
+          >
             <FormField
               isInput
               icon="bookmark"
@@ -97,9 +96,20 @@ export default function EditBudgetPage({ initialValues }: Props) {
             onClose={() => form.setShowCategoryPicker(false)}
           />
         </ScrollView>
-        <View style={[styles.footer, { borderTopColor: `${theme.mutedForeground}25` }]}>
+        <View
+          style={{
+            borderTopColor: `${theme.mutedForeground}25`,
+            paddingHorizontal: 24,
+            paddingVertical: 16,
+            borderTopWidth: 1,
+            alignItems: 'center',
+            gap: 10,
+          }}
+        >
           {form.submitError && (
-            <View style={styles.errorRow}>
+            <View
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 8, alignSelf: 'stretch' }}
+            >
               <MaterialIcons name="error-outline" size={18} color="#f2685a" />
               {form.submitAttempted && form.errors.category && (
                 <ThemedText children text={form.errors.category} tone="warning" />
@@ -132,57 +142,3 @@ export default function EditBudgetPage({ initialValues }: Props) {
     </ThemedBackground>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    paddingHorizontal: 24,
-    paddingTop: 8,
-    paddingBottom: 16,
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '700',
-  },
-  scroll: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingTop: 8,
-    paddingBottom: 24,
-  },
-  amountError: {
-    fontSize: 12,
-    color: '#f2685a',
-    textAlign: 'center',
-    marginTop: -16,
-    marginBottom: 8,
-  },
-  fields: {
-    width: '100%',
-    borderRadius: 16,
-    padding: 16,
-    marginTop: 15,
-  },
-  footer: {
-    paddingHorizontal: 24,
-    paddingVertical: 16,
-    borderTopWidth: 1,
-    alignItems: 'center',
-    gap: 10,
-  },
-  errorRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    alignSelf: 'stretch',
-  },
-  errorText: {
-    flex: 1,
-    fontSize: 13,
-    color: '#f2685a',
-  },
-})

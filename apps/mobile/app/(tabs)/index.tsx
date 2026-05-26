@@ -13,8 +13,10 @@ export default function home() {
       <SafeAreaView />
       <ThemedContainer>
         <ThemedButton title="Estatisticas" onPress={() => router.push('/(budget)/')} />
-        <ThemedButton title="tokens" onPress={debugStoredTokens} />
-        <ThemedLink replace href="/(auth)/login" text="Crie uma conta aqui" />
+        {/* TODO: Remover caso necessario */}
+        {/* links usados para navegar durante desenvolvimento */}
+        {/* <ThemedButton title="tokens" onPress={debugStoredTokens} />
+        <ThemedLink replace href="/(auth)/login" text="Crie uma conta aqui" /> */}
       </ThemedContainer>
     </ThemedBackground>
   )

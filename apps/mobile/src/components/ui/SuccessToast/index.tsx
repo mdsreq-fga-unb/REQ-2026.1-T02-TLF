@@ -1,20 +1,19 @@
 import { useEffect, useRef } from 'react'
 import { Animated, Text, View } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { useThemeColor } from '@/hooks/useThemeColor'
 import { styles } from './style'
-
-const GREEN = '#00E383'
 
 type Props = {
   visible: boolean
   message: string
-  /** Duração em ms antes de desaparecer. Padrão: 2500 */
   duration?: number
   onHide?: () => void
 }
 
 export function SuccessToast({ visible, message, duration = 2500, onHide }: Props) {
   const opacity = useRef(new Animated.Value(0)).current
+  const { success } = useThemeColor()
 
   useEffect(() => {
     if (!visible) {
@@ -31,12 +30,11 @@ export function SuccessToast({ visible, message, duration = 2500, onHide }: Prop
     })
   }, [visible])
 
-  // Sempre renderiza para evitar addViewAt na Nova Arquitetura do Android
   return (
     <Animated.View style={[styles.container, { opacity }]} pointerEvents="none">
-      <View style={styles.toast}>
+      <View style={[styles.toast, { borderColor: `${success}55`, shadowColor: success }]}>
         <View style={styles.iconWrap}>
-          <MaterialIcons name="check-circle" size={20} color={GREEN} />
+          <MaterialIcons name="check-circle" size={20} color={success} />
         </View>
         <Text style={styles.message} numberOfLines={2}>
           {message}

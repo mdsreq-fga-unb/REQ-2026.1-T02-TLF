@@ -1,176 +1,91 @@
-import { useState } from 'react'
 import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
   ScrollView,
-  StyleSheet,
   Switch,
   Text,
   TextInput,
   View,
 } from 'react-native'
-import { SuccessToast } from '@/components/ui/SuccessToast'
-import { EditScopeModal } from '@/components/finance/recurrences/EditScopeModal'
-import type { EditScope } from '@/components/finance/recurrences/EditScopeModal'
-import { router, useLocalSearchParams } from 'expo-router'
+import { router } from 'expo-router'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-import { useThemeColor } from '@/hooks/useThemeColor'
-import {
-  mockAccounts,
-  mockCategories,
-  getCategory,
-  getSubcategoriesForCategory,
-} from '@/components/finance/recurrences/recurrences-data'
+import { SuccessToast } from '@/components/ui/SuccessToast'
+import { ThemedText } from '@/components/ui/ThemedText'
+import { ThemedFieldError } from '@/components/ui/ThemedFieldError'
+import { ThemedButton } from '@/components/ui/ThemedButton'
+import { EditScopeModal } from '@/components/finance/recurrences/EditScopeModal'
 import { AmountDisplay } from '@/components/finance/transactions/AmountDisplay'
 import { NumericKeypad } from '@/components/finance/transactions/NumericKeypad'
 import { DatePickerModal } from '@/components/ui/DatePickerModal'
-import type { RecurrenceFrequency, RecurrenceType } from '@/components/finance/recurrences/types'
+import { mockAccounts, mockCategories } from '@/components/finance/recurrences/recurrences-data'
+import { useThemeColor } from '@/hooks/useThemeColor'
+import { useNovaRecorrencia, frequencyOptions, formatDateDisplay } from '@/hooks/useNovaRecorrencia'
+import { novaStyles as styles } from '@/styles/recorrencia.style'
 import type { TransactionType } from '@/services/database/queries/transaction'
 import type { ComponentProps } from 'react'
 
 type MaterialIconName = ComponentProps<typeof MaterialIcons>['name']
 
-const GREEN = '#00E383'
-const RED = '#FF4B4B'
-const MAX_CENTS = 9_999_999
-
-const NO_SUBCATEGORY = ''
-
-const parseISODate = (iso?: string): Date | null => {
-  if (!iso) return null
-  const [y, m, d] = iso.split('-').map(Number)
-  if (!y || !m || !d) return null
-  return new Date(y, m - 1, d)
-}
-
-const formatDateDisplay = (date: Date | null): string => {
-  if (!date) return ''
-  const d = String(date.getDate()).padStart(2, '0')
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  return `${d}/${m}/${date.getFullYear()}`
-}
-
-const frequencyOptions = [
-  { label: 'Diária', value: 'DAILY' },
-  { label: 'Semanal', value: 'WEEKLY' },
-  { label: 'Quinzenal', value: 'BIWEEKLY' },
-  { label: 'Mensal', value: 'MONTHLY' },
-  { label: 'Anual', value: 'YEARLY' },
-]
-
-type Errors = Partial<Record<string, string>>
-
 export default function NovaRecorrenciaScreen() {
   const theme = useThemeColor()
-  const params = useLocalSearchParams<{
-    id?: string
-    description?: string
-    amount?: string
-    type?: RecurrenceType
-    frequency?: RecurrenceFrequency
-    dueDay?: string
-    accountId?: string
-    categoryId?: string
-    subcategoryId?: string
-    startDate?: string
-    isActive?: string
-  }>()
-
-  const isEditing = !!params.id
-
-  const [type, setType] = useState<RecurrenceType>(params.type ?? 'EXPENSE')
-  const [amountCents, setAmountCents] = useState<number>(() => {
-    if (params.amount) {
-      const parsed = parseFloat(params.amount.replace(',', '.'))
-      return isNaN(parsed) ? 0 : Math.round(parsed * 100)
-    }
-    return 0
-  })
-  const [keypadVisible, setKeypadVisible] = useState(false)
-  const [description, setDescription] = useState(params.description ?? '')
-  const [frequency, setFrequency] = useState<string>(params.frequency ?? 'MONTHLY')
-  const [dueDay, setDueDay] = useState(params.dueDay ?? '1')
-  const [accountId, setAccountId] = useState(params.accountId ?? mockAccounts[0].id)
-  const [categoryId, setCategoryId] = useState(params.categoryId ?? mockCategories[0].id)
-  const [subcategoryId, setSubcategoryId] = useState<string>(params.subcategoryId ?? NO_SUBCATEGORY)
-  const [startDate, setStartDate] = useState<Date | null>(() => parseISODate(params.startDate))
-  const [endDate, setEndDate] = useState<Date | null>(null)
-  const [isIndeterminate, setIsIndeterminate] = useState(true)
-  const [showStartPicker, setShowStartPicker] = useState(false)
-  const [showEndPicker, setShowEndPicker] = useState(false)
-  const [isActive, setIsActive] = useState(params.isActive !== '0')
-  const [errors, setErrors] = useState<Errors>({})
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [showEditScopeModal, setShowEditScopeModal] = useState(false)
-
-  const [showFrequencyPicker, setShowFrequencyPicker] = useState(false)
-  const [showDayPicker, setShowDayPicker] = useState(false)
-  const [showAccountPicker, setShowAccountPicker] = useState(false)
-  const [showCategoryPicker, setShowCategoryPicker] = useState(false)
-  const [showSubcategoryPicker, setShowSubcategoryPicker] = useState(false)
-
-  const handleKeypad = (key: string) => {
-    setAmountCents((prev) => {
-      if (key === 'del') return Math.floor(prev / 10)
-      const digit = parseInt(key, 10)
-      if (isNaN(digit)) return prev
-      const next = prev * 10 + digit
-      return next > MAX_CENTS ? prev : next
-    })
-  }
-
-  const validate = (): boolean => {
-    const newErrors: Errors = {}
-    if (amountCents <= 0) newErrors.amount = 'Informe um valor maior que zero'
-    if (!description.trim()) newErrors.description = 'Campo obrigatório'
-    if (!dueDay) newErrors.dueDay = 'Campo obrigatório'
-    if (!startDate) newErrors.startDate = 'Campo obrigatório'
-    if (!isIndeterminate && !endDate) newErrors.endDate = 'Campo obrigatório'
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-  const validateField = (field: string, value: string) => {
-    setErrors((prev) => {
-      const next = { ...prev }
-      if (value.trim()) delete next[field]
-      else next[field] = 'Campo obrigatório'
-      return next
-    })
-  }
-
-  const handleSave = () => {
-    if (!validate()) return
-    if (isEditing) {
-      setShowEditScopeModal(true)
-      return
-    }
-    showSuccessAndGoBack()
-  }
-
-  const handleScopeConfirm = (_scope: EditScope) => {
-    setShowEditScopeModal(false)
-    showSuccessAndGoBack()
-  }
-
-  const showSuccessAndGoBack = () => {
-    setShowSuccess(true)
-    globalThis.setTimeout(() => {
-      setShowSuccess(false)
-      router.back()
-    }, 1600)
-  }
-
-  const isFormValid = isEditing || (amountCents > 0 && !!description.trim() && startDate != null)
-
-  const selectedFrequencyLabel =
-    frequencyOptions.find((f) => f.value === frequency)?.label ?? 'Mensal'
-
-  const selectedAccount = mockAccounts.find((a) => a.id === accountId) ?? mockAccounts[0]
-  const selectedCategory = getCategory(categoryId) ?? mockCategories[0]
-  const subcategoryOptions = getSubcategoriesForCategory(categoryId)
-  const selectedSubcategory = subcategoryOptions.find((s) => s.id === subcategoryId)
+  const {
+    isEditing,
+    type,
+    setType,
+    amountCents,
+    keypadVisible,
+    setKeypadVisible,
+    description,
+    setDescription,
+    frequency,
+    setFrequency,
+    dueDay,
+    setDueDay,
+    accountId,
+    setAccountId,
+    categoryId,
+    setCategoryId,
+    subcategoryId,
+    setSubcategoryId,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    isIndeterminate,
+    setIsIndeterminate,
+    showStartPicker,
+    setShowStartPicker,
+    showEndPicker,
+    setShowEndPicker,
+    isActive,
+    setIsActive,
+    errors,
+    showSuccess,
+    showEditScopeModal,
+    setShowEditScopeModal,
+    showFrequencyPicker,
+    setShowFrequencyPicker,
+    showDayPicker,
+    setShowDayPicker,
+    showAccountPicker,
+    setShowAccountPicker,
+    showCategoryPicker,
+    setShowCategoryPicker,
+    showSubcategoryPicker,
+    setShowSubcategoryPicker,
+    isFormValid,
+    selectedFrequencyLabel,
+    selectedAccount,
+    selectedCategory,
+    subcategoryOptions,
+    selectedSubcategory,
+    handleKeypad,
+    handleSave,
+    handleScopeConfirm,
+    validateField,
+    NO_SUBCATEGORY,
+  } = useNovaRecorrencia()
 
   return (
     <KeyboardAvoidingView
@@ -185,27 +100,30 @@ export default function NovaRecorrenciaScreen() {
         >
           <MaterialIcons name="arrow-back" size={22} color={theme.foreground} />
         </Pressable>
-        <Text style={[styles.headerTitle, { color: theme.foreground }]}>Recorrência</Text>
+        <ThemedText text="Recorrência" style={styles.headerTitle} />
         <View style={styles.headerBtn} />
       </View>
 
       <View style={styles.titleBlock}>
-        <Text style={[styles.title, { color: theme.foreground }]}>
-          {isEditing ? 'Editar Recorrência' : 'Nova Recorrência'}
-        </Text>
-        <Text style={[styles.subtitle, { color: theme.mutedForeground }]}>
-          Configure um pagamento ou recebimento automático.
-        </Text>
+        <ThemedText
+          text={isEditing ? 'Editar Recorrência' : 'Nova Recorrência'}
+          style={styles.title}
+        />
+        <ThemedText
+          text="Configure um pagamento ou recebimento automático."
+          tone="muted"
+          style={styles.subtitle}
+        />
       </View>
 
       <View style={[styles.typeTabs, { backgroundColor: theme.surface }]}>
-        {(['EXPENSE', 'INCOME'] as RecurrenceType[]).map((t) => (
+        {(['EXPENSE', 'INCOME'] as const).map((t) => (
           <Pressable
             key={t}
             onPress={() => setType(t)}
             style={[
               styles.typeTab,
-              type === t && { backgroundColor: t === 'EXPENSE' ? RED : GREEN },
+              type === t && { backgroundColor: t === 'EXPENSE' ? theme.expense : theme.success },
             ]}
           >
             <Text
@@ -228,7 +146,12 @@ export default function NovaRecorrenciaScreen() {
       <Text
         style={[
           styles.errorText,
-          { textAlign: 'center', marginTop: -8, display: errors.amount ? 'flex' : 'none' },
+          {
+            color: theme.destructive,
+            textAlign: 'center',
+            marginTop: -8,
+            display: errors.amount ? 'flex' : 'none',
+          },
         ]}
       >
         {errors.amount ?? ''}
@@ -240,7 +163,7 @@ export default function NovaRecorrenciaScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.fieldGroup}>
-          <Text style={[styles.label, { color: theme.mutedForeground }]}>DESCRIÇÃO</Text>
+          <ThemedText tone="muted" style={styles.label} text="DESCRIÇÃO" />
           <TextInput
             value={description}
             onChangeText={setDescription}
@@ -250,16 +173,14 @@ export default function NovaRecorrenciaScreen() {
             style={[
               styles.fieldInput,
               { backgroundColor: theme.surface, color: theme.foreground },
-              errors.description ? styles.fieldError : null,
+              errors.description ? [styles.fieldError, { borderColor: theme.destructive }] : null,
             ]}
           />
-          <Text style={[styles.errorText, { display: errors.description ? 'flex' : 'none' }]}>
-            {errors.description ?? ''}
-          </Text>
+          <ThemedFieldError message={errors.description ?? ''} visible={!!errors.description} />
         </View>
 
         <View style={styles.fieldGroup}>
-          <Text style={[styles.label, { color: theme.mutedForeground }]}>FREQUÊNCIA</Text>
+          <ThemedText tone="muted" style={styles.label} text="FREQUÊNCIA" />
           <Pressable
             onPress={() => setShowFrequencyPicker((v) => !v)}
             style={[styles.dropdownRow, { backgroundColor: theme.surface }]}
@@ -284,19 +205,19 @@ export default function NovaRecorrenciaScreen() {
                   }}
                   style={[
                     styles.pickerItem,
-                    opt.value === frequency && { backgroundColor: `${GREEN}22` },
+                    opt.value === frequency && { backgroundColor: `${theme.success}22` },
                   ]}
                 >
                   <Text
                     style={[
                       styles.pickerItemText,
-                      { color: opt.value === frequency ? GREEN : theme.foreground },
+                      { color: opt.value === frequency ? theme.success : theme.foreground },
                     ]}
                   >
                     {opt.label}
                   </Text>
                   {opt.value === frequency && (
-                    <MaterialIcons name="check" size={18} color={GREEN} />
+                    <MaterialIcons name="check" size={18} color={theme.success} />
                   )}
                 </Pressable>
               ))}
@@ -305,9 +226,11 @@ export default function NovaRecorrenciaScreen() {
         </View>
 
         <View style={styles.fieldGroup}>
-          <Text style={[styles.label, { color: theme.mutedForeground }]}>
-            {frequency === 'WEEKLY' ? 'DIA DA SEMANA' : 'DIA DO VENCIMENTO'}
-          </Text>
+          <ThemedText
+            tone="muted"
+            style={styles.label}
+            text={frequency === 'WEEKLY' ? 'DIA DA SEMANA' : 'DIA DO VENCIMENTO'}
+          />
           <Pressable
             onPress={() => setShowDayPicker((v) => !v)}
             style={[styles.dropdownRow, { backgroundColor: theme.surface }]}
@@ -335,32 +258,34 @@ export default function NovaRecorrenciaScreen() {
                       setDueDay(d)
                       setShowDayPicker(false)
                     }}
-                    style={[styles.pickerItem, d === dueDay && { backgroundColor: `${GREEN}22` }]}
+                    style={[
+                      styles.pickerItem,
+                      d === dueDay && { backgroundColor: `${theme.success}22` },
+                    ]}
                   >
                     <Text
                       style={[
                         styles.pickerItemText,
-                        { color: d === dueDay ? GREEN : theme.foreground },
+                        { color: d === dueDay ? theme.success : theme.foreground },
                       ]}
                     >
                       Dia {d}
                     </Text>
-                    {d === dueDay && <MaterialIcons name="check" size={18} color={GREEN} />}
+                    {d === dueDay && <MaterialIcons name="check" size={18} color={theme.success} />}
                   </Pressable>
                 ))}
               </ScrollView>
             </View>
           )}
-          <Text style={[styles.errorText, { display: errors.dueDay ? 'flex' : 'none' }]}>
-            {errors.dueDay ?? ''}
-          </Text>
+          <ThemedFieldError message={errors.dueDay ?? ''} visible={!!errors.dueDay} />
         </View>
 
-        {/* Conta */}
         <View style={styles.fieldGroup}>
-          <Text style={[styles.label, { color: theme.mutedForeground }]}>
-            {type === 'INCOME' ? 'CONTA DE DESTINO' : 'CONTA DE ORIGEM'}
-          </Text>
+          <ThemedText
+            tone="muted"
+            style={styles.label}
+            text={type === 'INCOME' ? 'CONTA DE DESTINO' : 'CONTA DE ORIGEM'}
+          />
           <Pressable
             onPress={() => setShowAccountPicker((v) => !v)}
             style={[styles.dropdownRow, { backgroundColor: theme.surface }]}
@@ -381,18 +306,20 @@ export default function NovaRecorrenciaScreen() {
                   }}
                   style={[
                     styles.pickerItem,
-                    opt.id === accountId && { backgroundColor: `${GREEN}22` },
+                    opt.id === accountId && { backgroundColor: `${theme.success}22` },
                   ]}
                 >
                   <Text
                     style={[
                       styles.pickerItemText,
-                      { color: opt.id === accountId ? GREEN : theme.foreground },
+                      { color: opt.id === accountId ? theme.success : theme.foreground },
                     ]}
                   >
                     {opt.name}
                   </Text>
-                  {opt.id === accountId && <MaterialIcons name="check" size={18} color={GREEN} />}
+                  {opt.id === accountId && (
+                    <MaterialIcons name="check" size={18} color={theme.success} />
+                  )}
                 </Pressable>
               ))}
             </View>
@@ -400,7 +327,7 @@ export default function NovaRecorrenciaScreen() {
         </View>
 
         <View style={styles.fieldGroup}>
-          <Text style={[styles.label, { color: theme.mutedForeground }]}>CATEGORIA</Text>
+          <ThemedText tone="muted" style={styles.label} text="CATEGORIA" />
           <Pressable
             onPress={() => setShowCategoryPicker((v) => !v)}
             style={[styles.dropdownRow, { backgroundColor: theme.surface }]}
@@ -426,18 +353,18 @@ export default function NovaRecorrenciaScreen() {
                   }}
                   style={[
                     styles.pickerItem,
-                    opt.id === categoryId && { backgroundColor: `${GREEN}22` },
+                    opt.id === categoryId && { backgroundColor: `${theme.success}22` },
                   ]}
                 >
                   <MaterialIcons
                     name={opt.icon as MaterialIconName}
                     size={18}
-                    color={opt.id === categoryId ? GREEN : theme.mutedForeground}
+                    color={opt.id === categoryId ? theme.success : theme.mutedForeground}
                   />
                   <Text
                     style={[
                       styles.pickerItemText,
-                      { color: opt.id === categoryId ? GREEN : theme.foreground },
+                      { color: opt.id === categoryId ? theme.success : theme.foreground },
                     ]}
                   >
                     {opt.name}
@@ -446,7 +373,7 @@ export default function NovaRecorrenciaScreen() {
                     <MaterialIcons
                       name="check"
                       size={18}
-                      color={GREEN}
+                      color={theme.success}
                       style={{ marginLeft: 'auto' }}
                     />
                   )}
@@ -457,9 +384,7 @@ export default function NovaRecorrenciaScreen() {
         </View>
 
         <View style={styles.fieldGroup}>
-          <Text style={[styles.label, { color: theme.mutedForeground }]}>
-            SUBCATEGORIA (OPCIONAL)
-          </Text>
+          <ThemedText tone="muted" style={styles.label} text="SUBCATEGORIA (OPCIONAL)" />
           <Pressable
             onPress={() => setShowSubcategoryPicker((v) => !v)}
             style={[styles.dropdownRow, { backgroundColor: theme.surface }]}
@@ -482,19 +407,22 @@ export default function NovaRecorrenciaScreen() {
                 }}
                 style={[
                   styles.pickerItem,
-                  subcategoryId === NO_SUBCATEGORY && { backgroundColor: `${GREEN}22` },
+                  subcategoryId === NO_SUBCATEGORY && { backgroundColor: `${theme.success}22` },
                 ]}
               >
                 <Text
                   style={[
                     styles.pickerItemText,
-                    { color: subcategoryId === NO_SUBCATEGORY ? GREEN : theme.mutedForeground },
+                    {
+                      color:
+                        subcategoryId === NO_SUBCATEGORY ? theme.success : theme.mutedForeground,
+                    },
                   ]}
                 >
                   Nenhuma
                 </Text>
                 {subcategoryId === NO_SUBCATEGORY && (
-                  <MaterialIcons name="check" size={18} color={GREEN} />
+                  <MaterialIcons name="check" size={18} color={theme.success} />
                 )}
               </Pressable>
               {subcategoryOptions.map((opt) => (
@@ -506,19 +434,19 @@ export default function NovaRecorrenciaScreen() {
                   }}
                   style={[
                     styles.pickerItem,
-                    opt.id === subcategoryId && { backgroundColor: `${GREEN}22` },
+                    opt.id === subcategoryId && { backgroundColor: `${theme.success}22` },
                   ]}
                 >
                   <Text
                     style={[
                       styles.pickerItemText,
-                      { color: opt.id === subcategoryId ? GREEN : theme.foreground },
+                      { color: opt.id === subcategoryId ? theme.success : theme.foreground },
                     ]}
                   >
                     {opt.name}
                   </Text>
                   {opt.id === subcategoryId && (
-                    <MaterialIcons name="check" size={18} color={GREEN} />
+                    <MaterialIcons name="check" size={18} color={theme.success} />
                   )}
                 </Pressable>
               ))}
@@ -527,13 +455,13 @@ export default function NovaRecorrenciaScreen() {
         </View>
 
         <View style={styles.fieldGroup}>
-          <Text style={[styles.label, { color: theme.mutedForeground }]}>DATA DE INÍCIO</Text>
+          <ThemedText tone="muted" style={styles.label} text="DATA DE INÍCIO" />
           <Pressable
             onPress={() => setShowStartPicker(true)}
             style={[
               styles.dropdownRow,
               { backgroundColor: theme.surface },
-              errors.startDate ? styles.fieldError : null,
+              errors.startDate ? [styles.fieldError, { borderColor: theme.destructive }] : null,
             ]}
           >
             <Text
@@ -546,18 +474,16 @@ export default function NovaRecorrenciaScreen() {
             </Text>
             <MaterialIcons name="calendar-month" size={18} color={theme.mutedForeground} />
           </Pressable>
-          <Text style={[styles.errorText, { display: errors.startDate ? 'flex' : 'none' }]}>
-            {errors.startDate ?? ''}
-          </Text>
+          <ThemedFieldError message={errors.startDate ?? ''} visible={!!errors.startDate} />
         </View>
 
         <View style={[styles.toggleRow, { backgroundColor: theme.surface }]}>
           <View style={styles.toggleInfo}>
-            <Text style={[styles.toggleTitle, { color: theme.foreground }]}>DURAÇÃO</Text>
+            <ThemedText style={styles.toggleTitle} text="DURAÇÃO" />
             <Text
               style={[
                 styles.toggleValue,
-                { color: isIndeterminate ? GREEN : theme.mutedForeground },
+                { color: isIndeterminate ? theme.success : theme.mutedForeground },
               ]}
             >
               {isIndeterminate ? 'Indeterminada' : 'Com data de término'}
@@ -566,20 +492,20 @@ export default function NovaRecorrenciaScreen() {
           <Switch
             value={isIndeterminate}
             onValueChange={setIsIndeterminate}
-            trackColor={{ false: theme.border, true: `${GREEN}55` }}
-            thumbColor={isIndeterminate ? GREEN : theme.mutedForeground}
+            trackColor={{ false: theme.border, true: `${theme.success}55` }}
+            thumbColor={isIndeterminate ? theme.success : theme.mutedForeground}
           />
         </View>
 
         {!isIndeterminate && (
           <View style={styles.fieldGroup}>
-            <Text style={[styles.label, { color: theme.mutedForeground }]}>DATA DE TÉRMINO</Text>
+            <ThemedText tone="muted" style={styles.label} text="DATA DE TÉRMINO" />
             <Pressable
               onPress={() => setShowEndPicker(true)}
               style={[
                 styles.dropdownRow,
                 { backgroundColor: theme.surface },
-                errors.endDate ? styles.fieldError : null,
+                errors.endDate ? [styles.fieldError, { borderColor: theme.destructive }] : null,
               ]}
             >
               <Text
@@ -592,18 +518,20 @@ export default function NovaRecorrenciaScreen() {
               </Text>
               <MaterialIcons name="calendar-month" size={18} color={theme.mutedForeground} />
             </Pressable>
-            {errors.endDate ? <Text style={styles.errorText}>{errors.endDate}</Text> : null}
+            <ThemedFieldError message={errors.endDate ?? ''} visible={!!errors.endDate} />
           </View>
         )}
 
         <View style={[styles.toggleRow, { backgroundColor: theme.surface }]}>
           <View style={styles.toggleInfo}>
-            <MaterialIcons name="bolt" size={20} color={isActive ? GREEN : theme.mutedForeground} />
+            <MaterialIcons
+              name="bolt"
+              size={20}
+              color={isActive ? theme.success : theme.mutedForeground}
+            />
             <View style={styles.toggleTextBlock}>
-              <Text style={[styles.toggleTitle, { color: theme.foreground }]}>
-                Recorrência Ativa
-              </Text>
-              <Text style={[styles.toggleSub, { color: GREEN }]}>
+              <ThemedText style={styles.toggleTitle} text="Recorrência Ativa" />
+              <Text style={[styles.toggleSub, { color: theme.success }]}>
                 Lançar automaticamente no calendário.
               </Text>
             </View>
@@ -611,26 +539,17 @@ export default function NovaRecorrenciaScreen() {
           <Switch
             value={isActive}
             onValueChange={setIsActive}
-            trackColor={{ false: theme.border, true: `${GREEN}55` }}
-            thumbColor={isActive ? GREEN : theme.mutedForeground}
+            trackColor={{ false: theme.border, true: `${theme.success}55` }}
+            thumbColor={isActive ? theme.success : theme.mutedForeground}
           />
         </View>
 
-        <Pressable
-          onPress={handleSave}
+        <ThemedButton
+          title={isEditing ? 'Atualizar Recorrência' : 'Salvar Recorrência'}
           disabled={!isFormValid}
-          style={({ pressed }) => [
-            styles.saveBtn,
-            {
-              backgroundColor: isFormValid ? theme.primary : theme.primaryDisabled,
-              opacity: pressed ? 0.85 : 1,
-            },
-          ]}
-        >
-          <Text style={[styles.saveBtnText, { color: theme.onPrimary }]}>
-            {isEditing ? 'Atualizar Recorrência' : 'Salvar Recorrência'}
-          </Text>
-        </Pressable>
+          onPress={handleSave}
+          style={[styles.saveBtn, { width: '100%' }]}
+        />
 
         <View style={styles.bottomSpacer} />
       </ScrollView>
@@ -681,153 +600,3 @@ export default function NovaRecorrenciaScreen() {
     </KeyboardAvoidingView>
   )
 }
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 52,
-    paddingBottom: 12,
-  },
-  headerBtn: {
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: 17,
-    fontWeight: '600',
-    flex: 1,
-    textAlign: 'center',
-  },
-  content: {
-    paddingHorizontal: 20,
-    paddingTop: 4,
-    gap: 16,
-  },
-  titleBlock: {
-    gap: 4,
-    paddingHorizontal: 20,
-    paddingBottom: 8,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: '700',
-  },
-  subtitle: {
-    fontSize: 13,
-  },
-  typeTabs: {
-    flexDirection: 'row',
-    borderRadius: 10,
-    padding: 4,
-    marginHorizontal: 20,
-  },
-  typeTab: {
-    flex: 1,
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  typeTabText: {
-    fontSize: 13,
-    fontWeight: '700',
-    letterSpacing: 0.5,
-  },
-  fieldGroup: {
-    gap: 6,
-  },
-  label: {
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 0.8,
-  },
-  fieldInput: {
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 14,
-    fontSize: 15,
-  },
-  fieldError: {
-    borderWidth: 1,
-    borderColor: '#D14349',
-  },
-  dropdownRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 14,
-    gap: 8,
-  },
-  dropdownText: {
-    fontSize: 15,
-    color: '#fff',
-  },
-  pickerList: {
-    borderRadius: 12,
-    overflow: 'hidden',
-  },
-  pickerItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 13,
-  },
-  pickerItemText: {
-    fontSize: 15,
-    fontWeight: '500',
-  },
-  toggleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-  },
-  toggleInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    flex: 1,
-  },
-  toggleTextBlock: {
-    flex: 1,
-    gap: 3,
-  },
-  toggleTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  toggleValue: {
-    fontSize: 13,
-  },
-  toggleSub: {
-    fontSize: 12,
-  },
-  errorText: {
-    fontSize: 11,
-    color: '#D14349',
-    marginTop: 2,
-  },
-  bottomSpacer: {
-    height: 32,
-  },
-  saveBtn: {
-    borderRadius: 14,
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
-  saveBtnText: {
-    fontSize: 16,
-    fontWeight: '700',
-  },
-})

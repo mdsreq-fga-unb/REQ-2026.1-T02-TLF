@@ -1,7 +1,5 @@
 import { StyleSheet } from 'react-native'
 
-const GREEN = '#00E383'
-
 export const styles = StyleSheet.create({
   container: {
     position: 'absolute',
@@ -17,11 +15,9 @@ export const styles = StyleSheet.create({
     gap: 10,
     backgroundColor: '#1a2e24',
     borderWidth: 1,
-    borderColor: `${GREEN}55`,
     borderRadius: 14,
     paddingHorizontal: 16,
     paddingVertical: 13,
-    shadowColor: GREEN,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.18,
     shadowRadius: 8,

@@ -1,5 +1,6 @@
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { RecurrenceItem } from '../RecurrenceItem'
 import { styles } from './style'
@@ -17,12 +18,12 @@ export function RecurrencesList({ recurrences, onToggleActive }: Props) {
     return (
       <View style={styles.empty}>
         <MaterialIcons name="sync-disabled" size={52} color={theme.border} />
-        <Text style={[styles.emptyTitle, { color: theme.foreground }]}>
-          Nenhuma recorrência ainda
-        </Text>
-        <Text style={[styles.emptySubtitle, { color: theme.mutedForeground }]}>
-          Organize seus pagamentos fixos e nunca mais esqueça de um vencimento.
-        </Text>
+        <ThemedText style={styles.emptyTitle} text="Nenhuma recorrência ainda" />
+        <ThemedText
+          tone="muted"
+          style={styles.emptySubtitle}
+          text="Organize seus pagamentos fixos e nunca mais esqueça de um vencimento."
+        />
       </View>
     )
   }
@@ -33,7 +34,7 @@ export function RecurrencesList({ recurrences, onToggleActive }: Props) {
   return (
     <View style={styles.list}>
       <View style={{ display: active.length > 0 ? 'flex' : 'none' }}>
-        <Text style={styles.sectionTitle}>ATIVAS POR VENCIMENTO</Text>
+        <ThemedText tone="muted" style={styles.sectionTitle} text="ATIVAS POR VENCIMENTO" />
         <View style={styles.group}>
           {active.map((recurrence) => (
             <RecurrenceItem
@@ -46,14 +47,11 @@ export function RecurrencesList({ recurrences, onToggleActive }: Props) {
       </View>
 
       <View style={{ display: inactive.length > 0 ? 'flex' : 'none' }}>
-        <Text
-          style={[
-            styles.sectionTitle,
-            { color: theme.mutedForeground, marginTop: active.length > 0 ? 12 : 0 },
-          ]}
-        >
-          INATIVAS
-        </Text>
+        <ThemedText
+          tone="muted"
+          style={[styles.sectionTitle, { marginTop: active.length > 0 ? 12 : 0 }]}
+          text="INATIVAS"
+        />
         <View style={styles.group}>
           {inactive.map((recurrence) => (
             <RecurrenceItem

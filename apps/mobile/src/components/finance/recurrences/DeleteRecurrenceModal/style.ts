@@ -37,44 +37,6 @@ export const styles = StyleSheet.create({
     gap: 10,
     alignSelf: 'stretch',
   },
-  option: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    borderRadius: 14,
-    borderWidth: 1,
-    padding: 14,
-  },
-  optionLeft: {
-    width: 24,
-    alignItems: 'center',
-  },
-  optionText: {
-    flex: 1,
-    gap: 3,
-  },
-  optionTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  optionDesc: {
-    fontSize: 12,
-    lineHeight: 16,
-  },
-  radio: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  radioDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#fff',
-  },
   buttons: {
     flexDirection: 'row',
     gap: 12,
@@ -93,7 +55,6 @@ export const styles = StyleSheet.create({
   btnCancel: {
     borderWidth: 1,
   },
-  btnDelete: {},
   btnText: {
     fontSize: 15,
     fontWeight: '700',

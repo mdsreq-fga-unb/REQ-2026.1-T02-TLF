@@ -1,23 +1,11 @@
 import { Pressable, Text, View } from 'react-native'
-import { router } from 'expo-router'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
+import { useRecurrenceItem } from '@/hooks/useRecurrenceItem'
 import { formatCurrency } from '@/utils/formatters'
-import {
-  categoryColors,
-  categoryIcons,
-  getAccount,
-  getCategory,
-  getSubcategory,
-} from '../recurrences-data'
 import { styles } from './style'
-import type { ComponentProps } from 'react'
 import type { Recurrence } from '../types'
-
-type MaterialIconName = ComponentProps<typeof MaterialIcons>['name']
-
-const INCOME_COLOR = '#2CB67D'
-const EXPENSE_COLOR = '#FF4B4B'
 
 type Props = {
   recurrence: Recurrence
@@ -26,36 +14,18 @@ type Props = {
 
 export function RecurrenceItem({ recurrence }: Props) {
   const theme = useThemeColor()
+  const {
+    icon,
+    iconColor,
+    accountName,
+    subcategoryName,
+    categoryName,
+    isExpense,
+    amountSign,
+    handlePress,
+  } = useRecurrenceItem(recurrence)
 
-  const icon = (categoryIcons[recurrence.categoryId] ?? 'category') as MaterialIconName
-  const iconColor = categoryColors[recurrence.categoryId] ?? '#4A5060'
-  const accountName = getAccount(recurrence.accountId)?.name ?? recurrence.accountId
-  const subcategoryName = recurrence.subcategoryId
-    ? getSubcategory(recurrence.subcategoryId)?.name
-    : undefined
-  const categoryName = getCategory(recurrence.categoryId)?.name ?? recurrence.categoryId
-  const isExpense = recurrence.type === 'EXPENSE'
-  const amountColor = isExpense ? EXPENSE_COLOR : INCOME_COLOR
-  const amountSign = isExpense ? '−' : '+'
-
-  const handlePress = () => {
-    router.push({
-      pathname: '/recorrencia/[id]',
-      params: {
-        id: recurrence.id,
-        description: recurrence.description,
-        amount: recurrence.amount.toString(),
-        type: recurrence.type,
-        frequency: recurrence.frequency,
-        dueDay: recurrence.dueDay.toString(),
-        accountId: recurrence.accountId,
-        categoryId: recurrence.categoryId,
-        subcategoryId: recurrence.subcategoryId ?? '',
-        startDate: recurrence.startDate,
-        isActive: recurrence.isActive ? '1' : '0',
-      },
-    })
-  }
+  const amountColor = isExpense ? theme.expense : theme.income
 
   return (
     <Pressable
@@ -70,7 +40,7 @@ export function RecurrenceItem({ recurrence }: Props) {
       ]}
     >
       <View style={[styles.dayBadge, { backgroundColor: theme.surfaceMuted }]}>
-        <Text style={[styles.dayText, { color: theme.primary }]}>{recurrence.dueDay}</Text>
+        <ThemedText tone="primary" style={styles.dayText} text={String(recurrence.dueDay)} />
       </View>
 
       <View style={[styles.iconCircle, { backgroundColor: `${iconColor}2E` }]}>
@@ -78,13 +48,14 @@ export function RecurrenceItem({ recurrence }: Props) {
       </View>
 
       <View style={styles.content}>
-        <Text style={[styles.description, { color: theme.foreground }]} numberOfLines={1}>
-          {recurrence.description}
-        </Text>
+        <ThemedText style={styles.description} text={recurrence.description} numberOfLines={1} />
         <View style={styles.metaRow}>
-          <Text style={[styles.subtitle, { color: theme.mutedForeground }]} numberOfLines={1}>
-            {accountName} · {subcategoryName ?? categoryName}
-          </Text>
+          <ThemedText
+            tone="muted"
+            style={styles.subtitle}
+            text={`${accountName} · ${subcategoryName ?? categoryName}`}
+            numberOfLines={1}
+          />
           <Text style={[styles.amount, { color: amountColor }]} numberOfLines={1}>
             {amountSign} {formatCurrency(recurrence.amount)}
           </Text>

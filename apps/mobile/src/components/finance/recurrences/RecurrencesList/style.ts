@@ -10,7 +10,6 @@ export const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 0.8,
-    color: '#9CA3AF',
     marginBottom: 4,
   },
   group: {

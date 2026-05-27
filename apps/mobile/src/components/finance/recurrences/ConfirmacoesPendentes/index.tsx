@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Animated, Pressable, Text, View } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useThemeColor } from '@/hooks/useThemeColor'
@@ -60,12 +60,11 @@ export function ConfirmacoesPendentes({
   const currentMonth = MONTHS_PT[now.getMonth()]
 
   const due = recurrences.filter((r) => r.isActive && r.dueDay <= currentDay)
-  if (due.length === 0) return null
 
   const confirmedCount = due.filter((r) => confirmedIds.includes(r.id)).length
   const actedCount = confirmedCount + skippedIds.filter((id) => due.find((r) => r.id === id)).length
   const progress = due.length > 0 ? confirmedCount / due.length : 0
-  const allDone = actedCount === due.length
+  const allDone = due.length > 0 && actedCount === due.length
 
   const toggleCollapse = () => {
     const toValue = collapsed ? 0 : 1
@@ -77,13 +76,17 @@ export function ConfirmacoesPendentes({
     setCollapsed((prev) => !prev)
   }
 
-  const chevronRotate = rotation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '-180deg'],
-  })
+  const chevronRotate = useMemo(
+    () =>
+      rotation.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0deg', '-180deg'],
+      }),
+    [rotation],
+  )
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { display: due.length === 0 ? 'none' : 'flex' }]}>
       <Pressable
         onPress={toggleCollapse}
         style={({ pressed }) => [styles.header, { opacity: pressed ? 0.75 : 1 }]}
@@ -104,40 +107,37 @@ export function ConfirmacoesPendentes({
       </Pressable>
 
       <View style={[styles.progressTrack, { backgroundColor: theme.surfaceMuted }]}>
-        {progress > 0 && <View style={[styles.progressFill, { flex: progress }]} />}
-        {progress < 1 && <View style={{ flex: 1 - progress }} />}
+        <View style={[styles.progressFill, { flex: progress }]} />
+        <View style={{ flex: 1 - progress }} />
       </View>
 
-      {!collapsed && (
-        <>
-          {due.map((r) => (
-            <ConfirmCard
-              key={r.id}
-              recurrence={r}
-              isConfirmed={confirmedIds.includes(r.id)}
-              isSkipped={skippedIds.includes(r.id)}
-              onConfirm={onConfirm}
-              onSkip={onSkip}
-              onUndo={onUndo}
-              theme={theme}
-            />
-          ))}
+      <View style={{ display: collapsed ? 'none' : 'flex' }}>
+        {due.map((r) => (
+          <ConfirmCard
+            key={r.id}
+            recurrence={r}
+            isConfirmed={confirmedIds.includes(r.id)}
+            isSkipped={skippedIds.includes(r.id)}
+            onConfirm={onConfirm}
+            onSkip={onSkip}
+            onUndo={onUndo}
+            theme={theme}
+          />
+        ))}
 
-          {allDone && due.length > 0 && (
-            <View
-              style={[
-                styles.allDoneBanner,
-                { backgroundColor: `${GREEN}18`, borderColor: `${GREEN}44` },
-              ]}
-            >
-              <MaterialIcons name="check-circle" size={16} color={GREEN} />
-              <Text style={[styles.allDoneText, { color: GREEN }]}>
-                Todas as cobranças de {currentMonth} foram tratadas.
-              </Text>
-            </View>
-          )}
-        </>
-      )}
+        <View
+          style={[
+            styles.allDoneBanner,
+            { backgroundColor: `${GREEN}18`, borderColor: `${GREEN}44` },
+            { display: allDone ? 'flex' : 'none' },
+          ]}
+        >
+          <MaterialIcons name="check-circle" size={16} color={GREEN} />
+          <Text style={[styles.allDoneText, { color: GREEN }]}>
+            Todas as cobranças de {currentMonth} foram tratadas.
+          </Text>
+        </View>
+      </View>
     </View>
   )
 }
@@ -183,18 +183,14 @@ function ConfirmCard({
           <Text style={[styles.cardName, { color: theme.foreground }]} numberOfLines={1}>
             {r.description}
           </Text>
-          {isConfirmed && (
-            <View style={styles.badge}>
-              <MaterialIcons name="check-circle" size={13} color={GREEN} />
-              <Text style={[styles.badgeText, { color: GREEN }]}>Confirmado</Text>
-            </View>
-          )}
-          {isSkipped && (
-            <View style={styles.badge}>
-              <MaterialIcons name="skip-next" size={13} color={theme.mutedForeground} />
-              <Text style={[styles.badgeText, { color: theme.mutedForeground }]}>Pulado</Text>
-            </View>
-          )}
+          <View style={[styles.badge, { display: isConfirmed ? 'flex' : 'none' }]}>
+            <MaterialIcons name="check-circle" size={13} color={GREEN} />
+            <Text style={[styles.badgeText, { color: GREEN }]}>Confirmado</Text>
+          </View>
+          <View style={[styles.badge, { display: isSkipped ? 'flex' : 'none' }]}>
+            <MaterialIcons name="skip-next" size={13} color={theme.mutedForeground} />
+            <Text style={[styles.badgeText, { color: theme.mutedForeground }]}>Pulado</Text>
+          </View>
         </View>
 
         <Text style={[styles.cardMeta, { color: theme.mutedForeground }]}>
@@ -206,46 +202,46 @@ function ConfirmCard({
             {amountSign} {formatCurrency(r.amount)}
           </Text>
 
-          {!acted && (
-            <View style={styles.btnGroup}>
-              <Pressable
-                onPress={() => onSkip(r.id)}
-                style={({ pressed }) => [
-                  styles.btn,
-                  styles.btnSkip,
-                  { borderColor: theme.border, opacity: pressed ? 0.7 : 1 },
-                ]}
-              >
-                <Text style={[styles.btnSkipText, { color: theme.mutedForeground }]}>Pular</Text>
-              </Pressable>
-
-              <Pressable
-                onPress={() => onConfirm(r.id)}
-                style={({ pressed }) => [
-                  styles.btn,
-                  styles.btnConfirm,
-                  { opacity: pressed ? 0.8 : 1 },
-                ]}
-              >
-                <MaterialIcons name="check" size={13} color="#0F0F13" />
-                <Text style={styles.btnConfirmText}>Confirmar</Text>
-              </Pressable>
-            </View>
-          )}
-
-          {acted && (
+          <View style={[styles.btnGroup, { display: acted ? 'none' : 'flex' }]}>
             <Pressable
-              onPress={() => onUndo(r.id)}
+              onPress={() => onSkip(r.id)}
               style={({ pressed }) => [
                 styles.btn,
-                styles.btnUndo,
+                styles.btnSkip,
                 { borderColor: theme.border, opacity: pressed ? 0.7 : 1 },
               ]}
             >
-              <MaterialIcons name="undo" size={13} color={theme.mutedForeground} />
-              <Text style={[styles.btnUndoText, { color: theme.mutedForeground }]}>Desfazer</Text>
+              <Text style={[styles.btnSkipText, { color: theme.mutedForeground }]}>Pular</Text>
             </Pressable>
-          )}
+
+            <Pressable
+              onPress={() => onConfirm(r.id)}
+              style={({ pressed }) => [
+                styles.btn,
+                styles.btnConfirm,
+                { opacity: pressed ? 0.8 : 1 },
+              ]}
+            >
+              <MaterialIcons name="check" size={13} color="#0F0F13" />
+              <Text style={styles.btnConfirmText}>Confirmar</Text>
+            </Pressable>
+          </View>
+
+          <Pressable
+            onPress={() => onUndo(r.id)}
+            style={({ pressed }) => [
+              styles.btn,
+              styles.btnUndo,
+              {
+                borderColor: theme.border,
+                opacity: pressed ? 0.7 : 1,
+                display: acted ? 'flex' : 'none',
+              },
+            ]}
+          >
+            <MaterialIcons name="undo" size={13} color={theme.mutedForeground} />
+            <Text style={[styles.btnUndoText, { color: theme.mutedForeground }]}>Desfazer</Text>
+          </Pressable>
         </View>
       </View>
     </View>

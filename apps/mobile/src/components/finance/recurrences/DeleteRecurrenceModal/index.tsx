@@ -56,7 +56,7 @@ function OptionCard({ selected, onPress, icon, title, description, danger, theme
           },
         ]}
       >
-        {selected && <View style={styles.radioDot} />}
+        <View style={[styles.radioDot, { display: selected ? 'flex' : 'none' }]} />
       </View>
     </Pressable>
   )
@@ -66,12 +66,15 @@ export function DeleteRecurrenceModal({ visible, recurrence, onConfirm, onCancel
   const theme = useThemeColor()
   const [scope, setScope] = useState<DeleteScope>('keep')
 
-  if (!recurrence) return null
-
-  const amountLabel = formatCurrency(recurrence.amount)
+  const amountLabel = recurrence ? formatCurrency(recurrence.amount) : ''
 
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
+    <Modal
+      visible={visible && recurrence !== null}
+      transparent
+      animationType="fade"
+      onRequestClose={onCancel}
+    >
       <Pressable style={styles.backdrop} onPress={onCancel}>
         <Pressable
           style={[styles.sheet, { backgroundColor: theme.surface, borderColor: theme.border }]}
@@ -85,7 +88,7 @@ export function DeleteRecurrenceModal({ visible, recurrence, onConfirm, onCancel
           <Text style={[styles.description, { color: theme.mutedForeground }]}>
             Deseja excluir a recorrência{' '}
             <Text style={{ color: theme.foreground, fontWeight: '600' }}>
-              "{recurrence.description}"
+              "{recurrence?.description ?? ''}"
             </Text>{' '}
             no valor de <Text style={{ color: RED, fontWeight: '600' }}>{amountLabel}</Text>?
           </Text>

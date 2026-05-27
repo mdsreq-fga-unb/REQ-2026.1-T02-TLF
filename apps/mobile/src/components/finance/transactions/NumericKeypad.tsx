@@ -26,6 +26,7 @@ type Props = {
   type: TransactionType
   onKeyPress: (key: string) => void
   onSave: () => void
+  asOverlay?: boolean
 }
 
 const KEYPAD_ROWS = [
@@ -41,7 +42,14 @@ const TYPE_SIGN: Record<TransactionType, string> = {
   TRANSFER: '',
 }
 
-export function NumericKeypad({ visible, amountCents, type, onKeyPress, onSave }: Props) {
+export function NumericKeypad({
+  visible,
+  amountCents,
+  type,
+  onKeyPress,
+  onSave,
+  asOverlay = false,
+}: Props) {
   const theme = useThemeColor()
   const amountColor = AMOUNT_COLORS[type]
   const buttonColor = TYPE_COLORS[type]
@@ -101,63 +109,78 @@ export function NumericKeypad({ visible, amountCents, type, onKeyPress, onSave }
     width: interpolate(dragProgress.value, [0, 1], [40, 52]),
   }))
 
-  return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onSave}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <View style={styles.container}>
-          <Animated.View style={[StyleSheet.absoluteFill, styles.backdropOverlay, backdropStyle]} />
-          <Animated.View
-            style={[styles.sheet, { backgroundColor: theme.background }, sheetStyle]}
-            onLayout={(e) => {
-              sheetHeight.value = e.nativeEvent.layout.height
-            }}
-          >
-            <GestureDetector gesture={handlePan}>
-              <View style={styles.handleArea}>
-                <Animated.View style={[styles.handle, handleBarStyle]} />
-              </View>
-            </GestureDetector>
+  const sheet = (
+    <View style={styles.container}>
+      <Animated.View style={[StyleSheet.absoluteFill, styles.backdropOverlay, backdropStyle]} />
+      <Animated.View
+        style={[styles.sheet, { backgroundColor: theme.background }, sheetStyle]}
+        onLayout={(e) => {
+          sheetHeight.value = e.nativeEvent.layout.height
+        }}
+      >
+        <GestureDetector gesture={handlePan}>
+          <View style={styles.handleArea}>
+            <Animated.View style={[styles.handle, handleBarStyle]} />
+          </View>
+        </GestureDetector>
 
-            <View style={styles.amountSection}>
-              <Text style={styles.valueLabel}>VALOR</Text>
-              <Text style={[styles.amountText, { color: amountColor }]}>
-                {sign ? `${sign} ` : ''}
-                {formatCurrency(amount)}
-              </Text>
-            </View>
+        <View style={styles.amountSection}>
+          <Text style={styles.valueLabel}>VALOR</Text>
+          <Text style={[styles.amountText, { color: amountColor }]}>
+            {sign ? `${sign} ` : ''}
+            {formatCurrency(amount)}
+          </Text>
+        </View>
 
-            <View style={styles.grid}>
-              {KEYPAD_ROWS.map((row, rowIndex) => (
-                <View key={rowIndex} style={styles.keyRow}>
-                  {row.map((key) => (
-                    <Pressable
-                      key={key}
-                      onPress={() => onKeyPress(key)}
-                      style={({ pressed }) => [styles.key, pressed && styles.keyPressed]}
-                    >
-                      {key === 'del' ? (
-                        <MaterialIcons name="backspace" size={22} color={theme.foreground} />
-                      ) : (
-                        <Text style={[styles.keyText, { color: theme.foreground }]}>{key}</Text>
-                      )}
-                    </Pressable>
-                  ))}
-                </View>
+        <View style={styles.grid}>
+          {KEYPAD_ROWS.map((row, rowIndex) => (
+            <View key={rowIndex} style={styles.keyRow}>
+              {row.map((key) => (
+                <Pressable
+                  key={key}
+                  onPress={() => onKeyPress(key)}
+                  style={({ pressed }) => [styles.key, pressed && styles.keyPressed]}
+                >
+                  {key === 'del' ? (
+                    <MaterialIcons name="backspace" size={22} color={theme.foreground} />
+                  ) : (
+                    <Text style={[styles.keyText, { color: theme.foreground }]}>{key}</Text>
+                  )}
+                </Pressable>
               ))}
             </View>
-
-            <Pressable
-              onPress={onSave}
-              style={({ pressed }) => [
-                styles.saveButton,
-                { backgroundColor: buttonColor, opacity: pressed ? 0.85 : 1 },
-              ]}
-            >
-              <Text style={styles.saveText}>Salvar</Text>
-            </Pressable>
-          </Animated.View>
+          ))}
         </View>
-      </GestureHandlerRootView>
+
+        <Pressable
+          onPress={onSave}
+          style={({ pressed }) => [
+            styles.saveButton,
+            { backgroundColor: buttonColor, opacity: pressed ? 0.85 : 1 },
+          ]}
+        >
+          <Text style={styles.saveText}>Salvar</Text>
+        </Pressable>
+      </Animated.View>
+    </View>
+  )
+
+  if (asOverlay) {
+    return (
+      <View
+        style={[
+          StyleSheet.absoluteFill,
+          { zIndex: 999, elevation: 24, display: visible ? 'flex' : 'none' },
+        ]}
+      >
+        {sheet}
+      </View>
+    )
+  }
+
+  return (
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onSave}>
+      <GestureHandlerRootView style={{ flex: 1 }}>{sheet}</GestureHandlerRootView>
     </Modal>
   )
 }

@@ -8,6 +8,7 @@ const OUTLINE_VARIANT = '#464554'
 type Props = {
   value: TransactionType
   onChange: (type: TransactionType) => void
+  onRecorrencias?: () => void
 }
 
 const TABS: { value: TransactionType; label: string }[] = [
@@ -16,7 +17,7 @@ const TABS: { value: TransactionType; label: string }[] = [
   { value: 'TRANSFER', label: 'Transferência' },
 ]
 
-export function TransactionTypeTabs({ value, onChange }: Props) {
+export function TransactionTypeTabs({ value, onChange, onRecorrencias }: Props) {
   return (
     <View style={[styles.row, { borderBottomColor: OUTLINE_VARIANT }]}>
       {TABS.map((tab) => {
@@ -42,6 +43,15 @@ export function TransactionTypeTabs({ value, onChange }: Props) {
           </Pressable>
         )
       })}
+
+      {onRecorrencias && (
+        <Pressable
+          onPress={onRecorrencias}
+          style={[styles.tab, { borderBottomColor: 'transparent' }]}
+        >
+          <Text style={[styles.label, { color: OUTLINE }]}>Recorrências</Text>
+        </Pressable>
+      )}
     </View>
   )
 }

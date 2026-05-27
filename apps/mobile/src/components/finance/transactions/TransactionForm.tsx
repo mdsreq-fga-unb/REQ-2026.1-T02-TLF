@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Alert, ScrollView, StyleSheet, Text, TextStyle, View } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { router } from 'expo-router'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { useTransactionForm, type TransactionInitialValues } from '@/hooks/useTransactionForm'
 import { ButtonPrimary } from '@/components/ui/ButtonPrimary'
@@ -47,7 +48,11 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
         <Text style={[styles.title, { color: theme.foreground }]}>{title}</Text>
       </View>
 
-      <TransactionTypeTabs value={form.type} onChange={form.handleTypeChange} />
+      <TransactionTypeTabs
+        value={form.type}
+        onChange={form.handleTypeChange}
+        onRecorrencias={() => router.push('/recorrencia')}
+      />
 
       <ScrollView
         style={styles.scroll}

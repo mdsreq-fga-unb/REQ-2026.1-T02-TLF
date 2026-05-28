@@ -8,11 +8,7 @@ import { RecurrenceListResponseDto } from './dto/recurrence-list.response.dto';
 import { RecurrenceDetailResponseDto } from './dto/recurrence-detail.response.dto';
 
 type RecurrenceWithRelations = Prisma.RecurrenceGetPayload<{
-  include: {
-    account: true;
-    category: true;
-    subCategory: true;
-  };
+  include: typeof recurrenceInclude;
 }>;
 
 const recurrenceInclude = {
@@ -23,7 +19,7 @@ const recurrenceInclude = {
   },
   category: true,
   subCategory: true,
-} satisfies Prisma.RecurrenceInclude;
+} as const satisfies Prisma.RecurrenceInclude;
 
 @Injectable()
 export class RecurrenceService {
@@ -50,7 +46,7 @@ export class RecurrenceService {
     };
   }
 
-  private toDetail(recurrence: RecurrenceWithRelations) {
+  private toDetail(recurrence: RecurrenceWithRelations): RecurrenceDetailResponseDto {
   return {
     ...this.mapBase(recurrence),
     subCategory: recurrence.subCategory
@@ -155,7 +151,7 @@ export class RecurrenceService {
     return this.toDetail(recurrence);
   }
 
-  async update(userId: string, id: string, dto: UpdateRecurrenceDto) {
+  async update(userId: string, id: string, dto: UpdateRecurrenceDto): Promise<RecurrenceDetailResponseDto> {
     const recurrence = await this.getRecurrenceOrThrow(userId, id);
 
     const categoryId = dto.categoryId ?? recurrence.categoryId;
@@ -257,24 +253,35 @@ export class RecurrenceService {
     const startOfMonth = new Date(year, month, 1);
     const startOfNextMonth = new Date(year, month + 1, 1);
 
-    for (const recurrence of recurrences) {
-      const exists = await this.prisma.transaction.findFirst({
-        where: {
-          recurrenceId: recurrence.id,
-          date: {
-            gte: startOfMonth,
-            lt: startOfNextMonth,
-          },
+    const existingTransactions = await this.prisma.transaction.findMany({
+      where: {
+        recurrenceId: {
+          in: recurrences.map(r => r.id),
         },
-      });
+        date: {
+          gte: startOfMonth,
+          lt: startOfNextMonth,
+        },
+      },
+      select: {
+        recurrenceId: true,
+      },
+    });
 
-      if (exists) continue;
+    const existingSet = new Set(
+      existingTransactions.map(t => t.recurrenceId)
+    );
 
-      const lastDay = new Date(year, month + 1, 0).getDate();
-      const day = Math.min(recurrence.chargeDate, lastDay);
-      const date = new Date(year, month, day);
-      await this.prisma.transaction.create({
-        data: {
+    const toCreate = recurrences.filter(
+      r => !existingSet.has(r.id),
+    );
+
+    await this.prisma.transaction.createMany({
+      data: toCreate.map(recurrence => {
+        const lastDay = new Date(year, month + 1, 0).getDate();
+        const day = Math.min(recurrence.chargeDate, lastDay);
+
+        return {
           accountId: recurrence.accountId,
           categoryId: recurrence.categoryId,
           subCategoryId: recurrence.subCategoryId,
@@ -282,11 +289,11 @@ export class RecurrenceService {
           description: recurrence.description,
           type: TransactionType.EXPENSE,
           status: TransactionStatus.COMPLETED,
-          date,
+          date: new Date(year, month, day),
           recurrenceId: recurrence.id,
-        },
-      });
-    }
+        };
+      }),
+    });
   }
 
   private async validateAccountOwnership(userId: string, accountId: string) {

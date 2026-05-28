@@ -3,6 +3,9 @@ import { PrismaService } from '@common/prisma/prisma.service';
 import { CreateRecurrenceDto } from './dto/create-recurrence.dto';
 import { UpdateRecurrenceDto } from './dto/update-recurrence.dto';
 import { Prisma, TransactionType, TransactionStatus } from '../../../generated/prisma/client';
+import { FilterRecurrenceDto } from './dto/filter-recurrence.dto';
+import { RecurrenceListResponseDto } from './dto/recurrence-list.response.dto';
+import { RecurrenceDetailResponseDto } from './dto/recurrence-detail.response.dto';
 
 type RecurrenceWithRelations = Prisma.RecurrenceGetPayload<{
   include: {
@@ -22,7 +25,8 @@ const recurrenceInclude = {
 export class RecurrenceService {
   constructor(private readonly prisma: PrismaService) { }
 
-  private formatRecurrence(recurrence: RecurrenceWithRelations) {
+
+  private mapBase(recurrence: RecurrenceWithRelations) {
     return {
       id: recurrence.id,
       description: recurrence.description ?? undefined,
@@ -31,19 +35,10 @@ export class RecurrenceService {
       startDate: recurrence.startDate.toISOString(),
       endDate: recurrence.endDate?.toISOString(),
       isActive: recurrence.isActive,
-
       category: {
         id: recurrence.category.id,
         name: recurrence.category.name,
       },
-
-      subCategory: recurrence.subCategory
-        ? {
-          id: recurrence.subCategory.id,
-          name: recurrence.subCategory.name,
-        }
-        : undefined,
-
       account: {
         id: recurrence.account.id,
         name: recurrence.account.name,
@@ -51,7 +46,19 @@ export class RecurrenceService {
     };
   }
 
-  async create(userId: string, dto: CreateRecurrenceDto) {
+  private toDetail(recurrence: RecurrenceWithRelations) {
+  return {
+    ...this.mapBase(recurrence),
+    subCategory: recurrence.subCategory
+      ? {
+          id: recurrence.subCategory.id,
+          name: recurrence.subCategory.name,
+        }
+      : undefined,
+  };
+}
+
+  async create(userId: string, dto: CreateRecurrenceDto): Promise<RecurrenceDetailResponseDto> {
 
     await this.validateAccountOwnership(
       userId,
@@ -86,43 +93,84 @@ export class RecurrenceService {
       include: recurrenceInclude,
     });
 
-    return this.formatRecurrence(recurrence);
+    return this.toDetail(recurrence);
   }
 
-  async findAll(userId: string, categoryId?: string) {
-    const recurrences = await this.prisma.recurrence.findMany({
-      where: {
-        account: {
-          institution: {
-            userId,
+  async findAll(userId: string, query: FilterRecurrenceDto): Promise<RecurrenceListResponseDto> {
+    const {
+      categoryId,
+      page = 1,
+      limit = 20,
+    } = query;
+
+    const skip = (page - 1) * limit;
+
+    const [recurrences, total] = await this.prisma.$transaction([
+      this.prisma.recurrence.findMany({
+        where: {
+          account: {
+            institution: {
+              userId,
+            },
           },
+          ...(categoryId && { categoryId }),
         },
-        ...(categoryId && { categoryId }),
+        include: recurrenceInclude,
+        skip,
+        take: limit,
+        orderBy: {
+          createdAt: 'desc',
+        },
+      }),
+
+      this.prisma.recurrence.count({
+        where: {
+          account: {
+            institution: {
+              userId,
+            },
+          },
+          ...(categoryId && { categoryId }),
+        },
+      }),
+    ]);
+
+    return {
+      data: recurrences.map((r) => this.mapBase(r)),
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
       },
-      include: recurrenceInclude,
-    });
-
-    return recurrences.map((r) => this.formatRecurrence(r));
+    };
   }
 
-  async findOne(userId: string, id: string) {
+  async findOne(userId: string, id: string): Promise<RecurrenceDetailResponseDto> {
     const recurrence = await this.getRecurrenceOrThrow(userId, id);
-    return this.formatRecurrence(recurrence);
+    return this.toDetail(recurrence);
   }
 
-  async update(userId: string, id: string, dto: UpdateRecurrenceDto) {
+  async update(userId: string, id: string, dto: UpdateRecurrenceDto): Promise<RecurrenceDetailResponseDto> {
     await this.getRecurrenceOrThrow(userId, id);
 
     const updated = await this.prisma.recurrence.update({
       where: { id },
-      data: dto,
+      data: {
+      description: dto.description,
+      amount: dto.amount,
+      chargeDate: dto.chargeDate,
+      startDate: dto.startDate ? new Date(dto.startDate) : undefined,
+      endDate: dto.endDate ? new Date(dto.endDate) : undefined,
+      isActive: dto.isActive,
+    },
       include: recurrenceInclude,
     });
 
-    return this.formatRecurrence(updated);
+    return this.toDetail(updated);
   }
 
-  async remove(userId: string, id: string) {
+  async remove(userId: string, id: string): Promise<RecurrenceDetailResponseDto> {
     await this.getRecurrenceOrThrow(userId, id);
 
     const deleted = await this.prisma.recurrence.delete({
@@ -130,7 +178,7 @@ export class RecurrenceService {
       include: recurrenceInclude,
     });
 
-    return this.formatRecurrence(deleted);
+    return this.toDetail(deleted);
   }
 
   async generateTransactionsFromRecurrences(userId: string) {

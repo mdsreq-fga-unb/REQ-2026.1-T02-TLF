@@ -16,7 +16,11 @@ type RecurrenceWithRelations = Prisma.RecurrenceGetPayload<{
 }>;
 
 const recurrenceInclude = {
-  account: true,
+  account: {
+    include: {
+      institution: true,
+    },
+  },
   category: true,
   subCategory: true,
 } satisfies Prisma.RecurrenceInclude;
@@ -151,19 +155,65 @@ export class RecurrenceService {
     return this.toDetail(recurrence);
   }
 
-  async update(userId: string, id: string, dto: UpdateRecurrenceDto): Promise<RecurrenceDetailResponseDto> {
-    await this.getRecurrenceOrThrow(userId, id);
+  async update(userId: string, id: string, dto: UpdateRecurrenceDto) {
+    const recurrence = await this.getRecurrenceOrThrow(userId, id);
+
+    const categoryId = dto.categoryId ?? recurrence.categoryId;
+
+    if (dto.accountId !== undefined) {
+      await this.validateAccountOwnership(userId, dto.accountId);
+    }
+
+    if (dto.categoryId !== undefined) {
+      await this.validateCategoryOwnership(userId, dto.categoryId);
+    }
+
+    if (dto.subCategoryId !== undefined) {
+      await this.validateSubCategory(
+        userId,
+        categoryId,
+        dto.subCategoryId,
+      );
+    }
+
+    if (dto.startDate || dto.endDate) {
+      this.validateDates(
+        dto.startDate ?? recurrence.startDate.toISOString(),
+        dto.endDate ?? recurrence.endDate?.toISOString(),
+      );
+    }
 
     const updated = await this.prisma.recurrence.update({
       where: { id },
       data: {
-      description: dto.description,
-      amount: dto.amount,
-      chargeDate: dto.chargeDate,
-      startDate: dto.startDate ? new Date(dto.startDate) : undefined,
-      endDate: dto.endDate ? new Date(dto.endDate) : undefined,
-      isActive: dto.isActive,
-    },
+        account: dto.accountId
+          ? { connect: { id: dto.accountId } }
+          : undefined,
+
+        category: dto.categoryId
+          ? { connect: { id: dto.categoryId } }
+          : undefined,
+
+        subCategory: dto.subCategoryId !== undefined
+          ? (dto.subCategoryId
+              ? { connect: { id: dto.subCategoryId } }
+              : { disconnect: true })
+          : undefined,
+
+        description: dto.description,
+        amount: dto.amount,
+        chargeDate: dto.chargeDate,
+
+        startDate: dto.startDate
+          ? new Date(dto.startDate)
+          : undefined,
+
+        endDate: dto.endDate !== undefined
+          ? (dto.endDate ? new Date(dto.endDate) : null)
+          : undefined,
+
+        isActive: dto.isActive,
+      },
       include: recurrenceInclude,
     });
 
@@ -316,15 +366,7 @@ export class RecurrenceService {
   private async getRecurrenceOrThrow(userId: string, id: string) {
     const recurrence = await this.prisma.recurrence.findUnique({
       where: { id },
-      include: {
-        account: {
-          include: {
-            institution: true,
-          },
-        },
-        category: true,
-        subCategory: true,
-      },
+      include: recurrenceInclude,
     });
 
     if (!recurrence) {

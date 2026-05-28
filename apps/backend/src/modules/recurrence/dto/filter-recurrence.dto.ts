@@ -1,5 +1,6 @@
 import { ApiPropertyOptional } from "@nestjs/swagger"
 import { IsOptional, IsUUID, IsInt, Min } from "class-validator";
+import { Type } from 'class-transformer';
 
 export class FilterRecurrenceDto {
 
@@ -16,6 +17,7 @@ export class FilterRecurrenceDto {
         description: 'Número da página'
     })
     @IsOptional()
+    @Type(() => Number)
     @IsInt()
     @Min(1)
     page?: number
@@ -24,6 +26,7 @@ export class FilterRecurrenceDto {
         example: 20,
         description: 'Itens por página' })
     @IsOptional()
+    @Type(() => Number)
     @IsInt()
     @Min(1)
     limit?: number

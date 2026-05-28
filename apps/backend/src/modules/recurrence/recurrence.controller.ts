@@ -9,7 +9,7 @@ import { FilterRecurrenceDto } from './dto/filter-recurrence.dto';
 import { RecurrenceListResponseDto } from './dto/recurrence-list.response.dto';
 import { RecurrenceDetailResponseDto } from './dto/recurrence-detail.response.dto';
 
-@ApiBearerAuth()
+@ApiBearerAuth('supabase-jwt')
 @UseGuards(AuthGuard)
 @ApiTags('recurrence')
 @Controller('recurrences')

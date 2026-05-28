@@ -29,7 +29,7 @@ export class RecurrenceService {
   private mapBase(recurrence: RecurrenceWithRelations) {
     return {
       id: recurrence.id,
-      description: recurrence.description ?? undefined,
+      description: recurrence.description,
       amount: recurrence.amount,
       chargeDate: recurrence.chargeDate,
       startDate: recurrence.startDate.toISOString(),

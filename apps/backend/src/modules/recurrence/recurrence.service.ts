@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '@common/prisma/prisma.service';
 import { CreateRecurrenceDto } from './dto/create-recurrence.dto';
-import { UpdateRecurrenceDto } from './dto/update-recurrence.dto';
+import { RecurrenceApplyScope, UpdateRecurrenceDto } from './dto/update-recurrence.dto';
 import { Prisma, TransactionType, TransactionStatus } from '../../../generated/prisma/client';
 import { FilterRecurrenceDto } from './dto/filter-recurrence.dto';
 import { RecurrenceListResponseDto } from './dto/recurrence-list.response.dto';
@@ -151,8 +151,14 @@ export class RecurrenceService {
     return this.toDetail(recurrence);
   }
 
-  async update(userId: string, id: string, dto: UpdateRecurrenceDto): Promise<RecurrenceDetailResponseDto> {
+  async update(
+    userId: string,
+    id: string,
+    dto: UpdateRecurrenceDto,
+  ): Promise<RecurrenceDetailResponseDto> {
+
     const recurrence = await this.getRecurrenceOrThrow(userId, id);
+    const scope = dto.applyScope ?? RecurrenceApplyScope.THIS;
 
     const categoryId = dto.categoryId ?? recurrence.categoryId;
 
@@ -165,11 +171,7 @@ export class RecurrenceService {
     }
 
     if (dto.subCategoryId !== undefined) {
-      await this.validateSubCategory(
-        userId,
-        categoryId,
-        dto.subCategoryId,
-      );
+      await this.validateSubCategory(userId, categoryId, dto.subCategoryId);
     }
 
     if (dto.startDate || dto.endDate) {
@@ -179,41 +181,51 @@ export class RecurrenceService {
       );
     }
 
-    const updated = await this.prisma.recurrence.update({
-      where: { id },
-      data: {
-        account: dto.accountId
-          ? { connect: { id: dto.accountId } }
-          : undefined,
+    const result = await this.prisma.$transaction(async (tx) => {
 
-        category: dto.categoryId
-          ? { connect: { id: dto.categoryId } }
-          : undefined,
+      const updated = await tx.recurrence.update({
+        where: { id },
+        data: {
+          account: dto.accountId ? { connect: { id: dto.accountId } } : undefined,
+          category: dto.categoryId ? { connect: { id: dto.categoryId } } : undefined,
 
-        subCategory: dto.subCategoryId !== undefined
-          ? (dto.subCategoryId
-              ? { connect: { id: dto.subCategoryId } }
-              : { disconnect: true })
-          : undefined,
+          subCategory: dto.subCategoryId !== undefined
+            ? (dto.subCategoryId
+                ? { connect: { id: dto.subCategoryId } }
+                : { disconnect: true })
+            : undefined,
 
-        description: dto.description,
-        amount: dto.amount,
-        chargeDate: dto.chargeDate,
+          description: dto.description,
+          amount: dto.amount,
+          chargeDate: dto.chargeDate,
 
-        startDate: dto.startDate
-          ? new Date(dto.startDate)
-          : undefined,
+          startDate: dto.startDate ? new Date(dto.startDate) : undefined,
 
-        endDate: dto.endDate !== undefined
-          ? (dto.endDate ? new Date(dto.endDate) : null)
-          : undefined,
+          endDate: dto.endDate !== undefined
+            ? (dto.endDate ? new Date(dto.endDate) : null)
+            : undefined,
 
-        isActive: dto.isActive,
-      },
-      include: recurrenceInclude,
+          isActive: dto.isActive,
+        },
+        include: recurrenceInclude,
+      });
+
+      if (scope === RecurrenceApplyScope.ALL) {
+        await tx.transaction.updateMany({
+          where: { recurrenceId: id },
+          data: {
+            amount: dto.amount ?? recurrence.amount,
+            categoryId: dto.categoryId ?? recurrence.categoryId,
+            subCategoryId: dto.subCategoryId ?? recurrence.subCategoryId,
+            description: dto.description ?? recurrence.description,
+          },
+        });
+      }
+
+      return updated;
     });
 
-    return this.toDetail(updated);
+    return this.toDetail(result);
   }
 
   async remove(userId: string, id: string): Promise<RecurrenceDetailResponseDto> {

@@ -1,63 +1,56 @@
-import { Body, Controller, Post, Get, Param, Patch, Delete, Query, HttpCode, HttpStatus, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Get, Param, Patch, Delete, Query, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 import { RecurrenceService } from './recurrence.service';
 import { CreateRecurrenceDto } from './dto/create-recurrence.dto';
 import { UpdateRecurrenceDto } from './dto/update-recurrence.dto';
 import { AuthGuard } from '../auth/context/auth.guard';
-import { ApiTags, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentUser } from '../auth/context/current-user.decorator';
+import { FilterRecurrenceDto } from './dto/filter-recurrence.dto';
+import { RecurrenceListResponseDto } from './dto/recurrence-list.response.dto';
+import { RecurrenceDetailResponseDto } from './dto/recurrence-detail.response.dto';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
 @ApiTags('recurrence')
-@Controller('recurrence')
+@Controller('recurrences')
 export class RecurrenceController {
   constructor(private readonly recurrenceService: RecurrenceService) {}
 
+  @ApiResponse({ status: 201, type: RecurrenceDetailResponseDto, description: 'Recorrência criada com sucesso' })
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @ApiResponse({ status: 201, description: 'Recorrência criada com sucesso' })
-  @ApiResponse({ status: 400, description: 'Erro de validação' })
-  @ApiResponse({ status: 403, description: 'Acesso negado' })
-  create(@Body() dto: CreateRecurrenceDto, @CurrentUser('id') userId: string) {
+  create(@CurrentUser('id') userId: string, @Body() dto: CreateRecurrenceDto) {
     return this.recurrenceService.create(userId, dto);
   }
 
+  @ApiResponse({ status: 200, type: RecurrenceListResponseDto, description: 'Lista de recorrências retornada com sucesso' })
   @Get()
-  @ApiResponse({ status: 200, description: 'Lista de recorrências retornada com sucesso' })
-  @ApiQuery({
-    name: 'categoryId',
-    required: false,
-    description: 'Filtra recorrências por categoria',
-    example: 'c9f3a2b1-xxxx',
-  })
-  findAll(@CurrentUser('id') userId: string, @Query('categoryId') categoryId?: string) {
-    return this.recurrenceService.findAll(userId, categoryId);
+  findAll(@CurrentUser('id') userId: string, @Query() query: FilterRecurrenceDto) {
+    return this.recurrenceService.findAll(userId, query);
   }
 
-  @Get(':id')
-  @ApiResponse({ status: 200, description: 'Recorrência encontrada' })
+  @ApiResponse({ status: 200, type: RecurrenceDetailResponseDto, description: 'Recorrência encontrada' })
   @ApiResponse({ status: 404, description: 'Recorrência não encontrada' })
   @ApiResponse({ status: 403, description: 'Acesso negado' })
-  findOne(@Param('id') id: string, @CurrentUser('id') userId: string) {
+  @Get(':id')
+  findOne(@CurrentUser('id') userId: string, @Param('id') id: string) {
     return this.recurrenceService.findOne(userId, id);
   }
 
+  @ApiResponse({ status: 200, type: RecurrenceDetailResponseDto, description: 'Recorrência atualizada com sucesso' })
+  @ApiResponse({ status: 404, description: 'Recorrência não encontrada' })
+  @ApiResponse({ status: 403, description: 'Acesso negado' })
   @Patch(':id')
-  @ApiResponse({ status: 200, description: 'Recorrência atualizada com sucesso' })
-  @ApiResponse({ status: 404, description: 'Recorrência não encontrada' })
-  @ApiResponse({ status: 403, description: 'Acesso negado' })
-  update(
-    @Param('id') id: string,
-    @Body() dto: UpdateRecurrenceDto, 
-    @CurrentUser('id') userId: string) {
-      return this.recurrenceService.update(userId, id, dto);
-    }
+  update(@CurrentUser('id') userId: string, @Param('id') id: string, @Body() dto: UpdateRecurrenceDto) {
+    return this.recurrenceService.update(userId, id, dto);
+  }
 
-  @Delete(':id')
-  @ApiResponse({ status: 200, description: 'Recorrência removida com sucesso' })
+  @ApiResponse({ status: 200, type: RecurrenceDetailResponseDto, description: 'Recorrência removida com sucesso' })
   @ApiResponse({ status: 404, description: 'Recorrência não encontrada' })
   @ApiResponse({ status: 403, description: 'Acesso negado' })
-  remove(@Param('id') id: string, @CurrentUser('id') userId: string) {
-    return this.recurrenceService.remove(userId, id)
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  remove(@CurrentUser('id') userId: string, @Param('id') id: string) {
+    return this.recurrenceService.remove(userId, id);
   }
 }

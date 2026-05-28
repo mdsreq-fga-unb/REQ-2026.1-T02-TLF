@@ -6,17 +6,16 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 export enum RecurrenceApplyScope {
   THIS = 'THIS',
   ALL = 'ALL',
+  FUTURE = 'FUTURE',
 }
 
-
 export class UpdateRecurrenceDto extends PartialType(CreateRecurrenceDto) {
-  
   @ApiPropertyOptional({
     enum: RecurrenceApplyScope,
     enumName: 'RecurrenceApplyScope',
     example: RecurrenceApplyScope.THIS,
     description:
-      'Define se a alteração será aplicada apenas nesta recorrência ou em todas as instâncias já geradas',
+      'Define o escopo da alteração: apenas esta ocorrência (THIS), todas as ocorrências (ALL) ou apenas futuras (FUTURE).',
   })
   @IsOptional()
   @IsEnum(RecurrenceApplyScope)

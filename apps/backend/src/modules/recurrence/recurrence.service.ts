@@ -174,20 +174,32 @@ export class RecurrenceService {
       await this.validateSubCategory(userId, categoryId, dto.subCategoryId);
     }
 
-    if (dto.startDate || dto.endDate) {
-      this.validateDates(
-        dto.startDate ?? recurrence.startDate.toISOString(),
-        dto.endDate ?? recurrence.endDate?.toISOString(),
-      );
-    }
+    const nextStartDate = dto.startDate
+      ? new Date(dto.startDate)
+      : recurrence.startDate;
+
+    const nextEndDate =
+      dto.endDate !== undefined
+        ? (dto.endDate ? new Date(dto.endDate) : null)
+        : recurrence.endDate;
+
+    this.validateDates(
+      nextStartDate.toISOString(),
+      nextEndDate?.toISOString(),
+    );
 
     const result = await this.prisma.$transaction(async (tx) => {
 
       const updated = await tx.recurrence.update({
         where: { id },
         data: {
-          account: dto.accountId ? { connect: { id: dto.accountId } } : undefined,
-          category: dto.categoryId ? { connect: { id: dto.categoryId } } : undefined,
+          account: dto.accountId
+            ? { connect: { id: dto.accountId } }
+            : undefined,
+
+          category: dto.categoryId
+            ? { connect: { id: dto.categoryId } }
+            : undefined,
 
           subCategory: dto.subCategoryId !== undefined
             ? (dto.subCategoryId
@@ -198,26 +210,126 @@ export class RecurrenceService {
           description: dto.description,
           amount: dto.amount,
           chargeDate: dto.chargeDate,
-
           startDate: dto.startDate ? new Date(dto.startDate) : undefined,
-
           endDate: dto.endDate !== undefined
             ? (dto.endDate ? new Date(dto.endDate) : null)
             : undefined,
-
           isActive: dto.isActive,
         },
         include: recurrenceInclude,
       });
 
       if (scope === RecurrenceApplyScope.ALL) {
+
+        const [transactionCount, hasCompleted] = await Promise.all([
+          tx.transaction.count({
+            where: { recurrenceId: id },
+          }),
+
+          tx.transaction.findFirst({
+            where: {
+              recurrenceId: id,
+              status: TransactionStatus.COMPLETED,
+            },
+            select: { id: true },
+          }),
+        ]);
+
+        if (hasCompleted) {
+          throw new BadRequestException(
+            'Não é possível aplicar alterações globais com transações concluídas',
+          );
+        }
+
+        const changedStart =
+          dto.startDate &&
+          new Date(dto.startDate).getTime() !== recurrence.startDate.getTime();
+
+        const changedEnd =
+          dto.endDate !== undefined &&
+          new Date(dto.endDate ?? null)?.getTime() !== recurrence.endDate?.getTime();
+
+        const changedChargeDate =
+          dto.chargeDate &&
+          dto.chargeDate !== recurrence.chargeDate;
+
+        if ((changedStart || changedEnd) && transactionCount > 0) {
+          throw new BadRequestException(
+            'Não é possível alterar período pois já existem transações geradas',
+          );
+        }
+
+        if (changedChargeDate && transactionCount > 0) {
+          throw new BadRequestException(
+            'Não é possível alterar o dia de cobrança com transações já geradas',
+          );
+        }
+
         await tx.transaction.updateMany({
-          where: { recurrenceId: id },
+          where: {
+            recurrenceId: id,
+            status: {
+              not: TransactionStatus.COMPLETED,
+            },
+          },
           data: {
             amount: dto.amount ?? recurrence.amount,
             categoryId: dto.categoryId ?? recurrence.categoryId,
             subCategoryId: dto.subCategoryId ?? recurrence.subCategoryId,
             description: dto.description ?? recurrence.description,
+          },
+        });
+      }
+
+      if (scope === RecurrenceApplyScope.FUTURE) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const futureTransactions = await tx.transaction.findMany({
+          where: {
+            recurrenceId: id,
+            date: {
+              gte: recurrence.startDate > today ? recurrence.startDate : today,
+            },
+          },
+          orderBy: {
+            date: 'asc',
+          },
+        });
+
+        const hasCompletedFuture = futureTransactions.some(
+          t => t.status === TransactionStatus.COMPLETED,
+        );
+
+        if (hasCompletedFuture) {
+          throw new BadRequestException(
+            'Não é possível alterar recorrência com transações futuras já concluídas',
+          );
+        }
+
+        const hasAnyFuture = futureTransactions.length > 0;
+
+        const changedCriticalFields =
+          dto.startDate ||
+          dto.endDate !== undefined ||
+          dto.chargeDate !== undefined ||
+          dto.categoryId ||
+          dto.subCategoryId;
+
+        if (changedCriticalFields && hasAnyFuture) {
+          throw new BadRequestException(
+            'Alterações estruturais não podem ser aplicadas pois já existem transações futuras geradas',
+          );
+        }
+
+        await tx.recurrence.update({
+          where: { id },
+          data: {
+            categoryId: dto.categoryId ?? undefined,
+            subCategoryId: dto.subCategoryId ?? undefined,
+            description: dto.description ?? undefined,
+            amount: dto.amount ?? undefined,
+            chargeDate: dto.chargeDate ?? undefined,
+            isActive: dto.isActive ?? undefined,
           },
         });
       }

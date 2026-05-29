@@ -8,6 +8,7 @@ import { CurrentUser } from '../auth/context/current-user.decorator';
 import { FilterRecurrenceDto } from './dto/filter-recurrence.dto';
 import { RecurrenceListResponseDto } from './dto/recurrence-list.response.dto';
 import { RecurrenceDetailResponseDto } from './dto/recurrence-detail.response.dto';
+import { DeleteRecurrenceDto } from './dto/delete-recurrence.dto';
 
 @ApiBearerAuth('supabase-jwt')
 @UseGuards(AuthGuard)
@@ -50,7 +51,7 @@ export class RecurrenceController {
   @ApiResponse({ status: 403, description: 'Acesso negado' })
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  remove(@CurrentUser('id') userId: string, @Param('id') id: string) {
-    return this.recurrenceService.remove(userId, id);
+  remove(@CurrentUser('id') userId: string, @Param('id') id: string, @Query() query: DeleteRecurrenceDto) {
+    return this.recurrenceService.remove(userId, id, query);
   }
 }

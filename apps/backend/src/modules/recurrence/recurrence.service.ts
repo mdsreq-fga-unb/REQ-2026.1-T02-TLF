@@ -7,6 +7,8 @@ import { Prisma, TransactionType, TransactionStatus } from '../../../generated/p
 import { FilterRecurrenceDto } from './dto/filter-recurrence.dto';
 import { RecurrenceListResponseDto } from './dto/recurrence-list.response.dto';
 import { RecurrenceDetailResponseDto } from './dto/recurrence-detail.response.dto';
+import { DeleteRecurrenceDto } from './dto/delete-recurrence.dto';
+import { RecurrenceDeleteScope } from './enums/recurrence-delete-scope.enum';
 
 type RecurrenceWithRelations = Prisma.RecurrenceGetPayload<{
   include: typeof recurrenceInclude;
@@ -341,15 +343,67 @@ export class RecurrenceService {
     return this.toDetail(result);
   }
 
-  async remove(userId: string, id: string): Promise<RecurrenceDetailResponseDto> {
+  async remove(
+    userId: string,
+    id: string,
+    dto?: DeleteRecurrenceDto,
+  ): Promise<RecurrenceDetailResponseDto> {
     await this.getRecurrenceOrThrow(userId, id);
+    const scope = dto?.scope ?? RecurrenceDeleteScope.THIS;
 
-    const deleted = await this.prisma.recurrence.delete({
-      where: { id },
-      include: recurrenceInclude,
+    const result = await this.prisma.$transaction(async (tx) => {
+      if (scope === RecurrenceDeleteScope.THIS) {
+        const deleted = await tx.recurrence.delete({
+          where: { id },
+          include: recurrenceInclude,
+        });
+
+        return deleted;
+      }
+
+      if (scope === RecurrenceDeleteScope.FUTURE) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        await tx.transaction.deleteMany({
+          where: {
+            recurrenceId: id,
+            date: {
+              gte: today,
+            },
+            status: {
+              not: TransactionStatus.COMPLETED,
+            },
+          },
+        });
+
+        const deleted = await tx.recurrence.delete({
+          where: { id },
+          include: recurrenceInclude,
+        });
+
+        return deleted;
+      }
+
+      if (scope === RecurrenceDeleteScope.ALL) {
+        await tx.transaction.deleteMany({
+          where: {
+            recurrenceId: id,
+          },
+        });
+
+        const deleted = await tx.recurrence.delete({
+          where: { id },
+          include: recurrenceInclude,
+        });
+
+        return deleted;
+      }
+
+      throw new BadRequestException('Scope inválido para exclusão de recorrência');
     });
 
-    return this.toDetail(deleted);
+    return this.toDetail(result);
   }
 
   async generateTransactionsFromRecurrences(userId: string) {

@@ -79,7 +79,10 @@ export class RecurrenceService {
       dto.subCategoryId,
     );
 
-    this.validateDates(dto.startDate, dto.endDate);
+    this.validateDates(
+      new Date(dto.startDate),
+      dto.endDate ? new Date(dto.endDate) : undefined,
+    );
 
     const recurrence = await this.prisma.recurrence.create({
       data: {
@@ -186,10 +189,7 @@ export class RecurrenceService {
         ? (dto.endDate ? new Date(dto.endDate) : null)
         : recurrence.endDate;
 
-    this.validateDates(
-      nextStartDate.toISOString(),
-      nextEndDate?.toISOString(),
-    );
+    this.validateDates(nextStartDate, nextEndDate ?? undefined);
 
     const result = await this.prisma.$transaction(async (tx) => {
 
@@ -250,7 +250,12 @@ export class RecurrenceService {
 
         const changedEnd =
           dto.endDate !== undefined &&
-          new Date(dto.endDate ?? null)?.getTime() !== recurrence.endDate?.getTime();
+          (dto.endDate
+            ? new Date(dto.endDate).getTime()
+            : null) !==
+          (recurrence.endDate
+            ? recurrence.endDate.getTime()
+            : null);
 
         const changedChargeDate =
           dto.chargeDate &&
@@ -348,7 +353,7 @@ export class RecurrenceService {
     id: string,
     dto?: DeleteRecurrenceDto,
   ): Promise<RecurrenceDetailResponseDto> {
-    await this.getRecurrenceOrThrow(userId, id);
+    const recurrence = await this.getRecurrenceOrThrow(userId, id);
     const scope = dto?.scope ?? RecurrenceDeleteScope.THIS;
 
     const result = await this.prisma.$transaction(async (tx) => {
@@ -369,7 +374,7 @@ export class RecurrenceService {
           where: {
             recurrenceId: id,
             date: {
-              gte: today,
+              gte: recurrence.startDate > today ? recurrence.startDate : today
             },
             status: {
               not: TransactionStatus.COMPLETED,
@@ -377,12 +382,16 @@ export class RecurrenceService {
           },
         });
 
-        const deleted = await tx.recurrence.delete({
+        const updated = await tx.recurrence.update({
           where: { id },
+          data: {
+            endDate: today,
+            isActive: false,
+          },
           include: recurrenceInclude,
         });
 
-        return deleted;
+        return updated;
       }
 
       if (scope === RecurrenceDeleteScope.ALL) {
@@ -467,7 +476,7 @@ export class RecurrenceService {
           amount: recurrence.amount,
           description: recurrence.description,
           type: TransactionType.EXPENSE,
-          status: TransactionStatus.COMPLETED,
+          status: TransactionStatus.PENDING,
           date: new Date(year, month, day),
           recurrenceId: recurrence.id,
         };
@@ -539,10 +548,10 @@ export class RecurrenceService {
   }
 
   private validateDates(
-    startDate: string,
-    endDate?: string,
+    startDate: Date,
+    endDate?: Date,
   ) {
-    if (endDate && new Date(endDate) < new Date(startDate)) {
+    if (endDate && endDate < startDate) {
       throw new BadRequestException(
         'Data final não pode ser menor que a data inicial'
       );

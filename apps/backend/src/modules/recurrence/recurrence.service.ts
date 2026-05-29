@@ -3,7 +3,7 @@ import { PrismaService } from '@common/prisma/prisma.service';
 import { CreateRecurrenceDto } from './dto/create-recurrence.dto';
 import { UpdateRecurrenceDto } from './dto/update-recurrence.dto';
 import { RecurrenceApplyScope } from './enums/recurrence-apply-scope.enum';
-import { Prisma, TransactionType, TransactionStatus } from '../../../generated/prisma/client';
+import { Prisma, TransactionStatus } from '../../../generated/prisma/client';
 import { FilterRecurrenceDto } from './dto/filter-recurrence.dto';
 import { RecurrenceListResponseDto } from './dto/recurrence-list.response.dto';
 import { RecurrenceDetailResponseDto } from './dto/recurrence-detail.response.dto';

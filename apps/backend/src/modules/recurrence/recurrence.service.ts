@@ -385,7 +385,7 @@ export class RecurrenceService {
         const updated = await tx.recurrence.update({
           where: { id },
           data: {
-            endDate: today,
+            endDate: new Date(today.getTime() - 1),
             isActive: false,
           },
           include: recurrenceInclude,

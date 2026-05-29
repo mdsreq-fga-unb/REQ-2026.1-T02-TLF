@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '@common/prisma/prisma.service';
 import { CreateRecurrenceDto } from './dto/create-recurrence.dto';
-import { RecurrenceApplyScope, UpdateRecurrenceDto } from './dto/update-recurrence.dto';
+import { UpdateRecurrenceDto } from './dto/update-recurrence.dto';
+import { RecurrenceApplyScope } from './enums/recurrence-apply-scope.enum';
 import { Prisma, TransactionType, TransactionStatus } from '../../../generated/prisma/client';
 import { FilterRecurrenceDto } from './dto/filter-recurrence.dto';
 import { RecurrenceListResponseDto } from './dto/recurrence-list.response.dto';

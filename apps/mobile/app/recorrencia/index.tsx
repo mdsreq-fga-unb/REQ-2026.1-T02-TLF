@@ -1,17 +1,17 @@
 import { Pressable, View } from 'react-native'
 import { router } from 'expo-router'
 import { ArrowLeft, Bell, Plus } from 'lucide-react-native'
-import { Background } from '@/components/ui/Background'
-import { ScrollArea } from '@/components/ui/ScrollArea'
-import { SectionDivider } from '@/components/ui/SectionDivider'
-import { SuccessToast } from '@/components/ui/SuccessToast'
-import { ThemedText } from '@/components/ui/ThemedText'
-import { useThemeColor } from '@/hooks/useThemeColor'
-import { useRecorrenciasScreen } from '@/hooks/useRecorrenciasScreen'
+import { ConfirmacoesPendentes } from '@/components/finance/recurrences/ConfirmacoesPendentes'
 import { RecurrenceSummaryCard } from '@/components/finance/recurrences/RecurrenceSummaryCard'
 import { RecurrencesList } from '@/components/finance/recurrences/RecurrencesList'
-import { ConfirmacoesPendentes } from '@/components/finance/recurrences/ConfirmacoesPendentes'
-import { indexStyles as styles } from '@/styles/recorrencia.style'
+import { SectionDivider } from '@/components/ui/SectionDivider'
+import { SuccessToast } from '@/components/ui/SuccessToast'
+import { ThemedBackground } from '@/components/ui/ThemedBackground'
+import { ThemedScrollArea } from '@/components/ui/ThemedScrollArea'
+import { ThemedText } from '@/components/ui/ThemedText'
+import { useThemeColor } from '@/hooks/useThemeColor'
+import { useRecorrenciasScreen } from '@/hooks/recurrences/useRecorrenciasScreen'
+import { styles } from './index.style'
 
 export default function RecorrenciasScreen() {
   const theme = useThemeColor()
@@ -30,8 +30,11 @@ export default function RecorrenciasScreen() {
   } = useRecorrenciasScreen()
 
   return (
-    <Background>
-      <ScrollArea style={styles.scroll} contentContainerStyle={styles.content}>
+    <ThemedBackground>
+      <ThemedScrollArea
+        style={styles.scroll}
+        contentContainerStyle={[styles.content, { paddingHorizontal: 8 }]}
+      >
         <View style={styles.header}>
           <Pressable
             onPress={() => router.back()}
@@ -60,7 +63,7 @@ export default function RecorrenciasScreen() {
         <SectionDivider />
 
         <RecurrencesList recurrences={recurrences} onToggleActive={handleToggleActive} />
-      </ScrollArea>
+      </ThemedScrollArea>
 
       <Pressable
         onPress={() => router.push('/recorrencia/nova')}
@@ -73,6 +76,6 @@ export default function RecorrenciasScreen() {
       </Pressable>
 
       <SuccessToast visible={toast !== null} message={toast ?? ''} onHide={() => setToast(null)} />
-    </Background>
+    </ThemedBackground>
   )
 }

@@ -1,13 +1,14 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useFocusEffect } from 'expo-router'
 import { mockRecurrences } from '@/components/finance/recurrences/recurrences-data'
-import { consumePendingDeleteId } from '@/components/finance/recurrences/recurrences-store'
+import { useRecurrencesStore } from '@/stores/recurrences'
 
 export function useRecorrenciasScreen() {
   const [recurrences, setRecurrences] = useState(mockRecurrences)
   const [toast, setToast] = useState<string | null>(null)
   const [confirmedIds, setConfirmedIds] = useState<string[]>([])
   const [skippedIds, setSkippedIds] = useState<string[]>([])
+  const consumePendingDeleteId = useRecurrencesStore((state) => state.consumePendingDeleteId)
 
   useFocusEffect(
     useCallback(() => {
@@ -16,7 +17,7 @@ export function useRecorrenciasScreen() {
         setRecurrences((prev) => prev.filter((r) => r.id !== id))
         setToast('Recorrência excluída com sucesso.')
       }
-    }, []),
+    }, [consumePendingDeleteId]),
   )
 
   const totalMonthly = useMemo(

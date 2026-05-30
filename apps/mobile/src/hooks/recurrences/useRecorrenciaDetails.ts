@@ -7,38 +7,10 @@ import {
   getCategory,
   mockPaymentHistory,
 } from '@/components/finance/recurrences/recurrences-data'
-import { setPendingDeleteId } from '@/components/finance/recurrences/recurrences-store'
 import type { Recurrence } from '@/components/finance/recurrences/types'
+import { useRecurrencesStore } from '@/stores/recurrences'
+import { getNextBillingLabel } from '@/utils/recurrences/dates'
 import type { IconKey } from '@/utils/icons'
-
-const MONTHS_SHORT = [
-  'Jan',
-  'Fev',
-  'Mar',
-  'Abr',
-  'Mai',
-  'Jun',
-  'Jul',
-  'Ago',
-  'Set',
-  'Out',
-  'Nov',
-  'Dez',
-]
-export const MONTHS_FULL = [
-  'Janeiro',
-  'Fevereiro',
-  'Março',
-  'Abril',
-  'Maio',
-  'Junho',
-  'Julho',
-  'Agosto',
-  'Setembro',
-  'Outubro',
-  'Novembro',
-  'Dezembro',
-]
 
 export function useRecorrenciaDetails() {
   const params = useLocalSearchParams<{
@@ -55,6 +27,7 @@ export function useRecorrenciaDetails() {
     isActive: string
   }>()
 
+  const setPendingDeleteId = useRecurrencesStore((state) => state.setPendingDeleteId)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   const id = params.id ?? ''
@@ -81,13 +54,7 @@ export function useRecorrenciaDetails() {
 
   const history = mockPaymentHistory[id] ?? []
   const annualProjection = amount * 12
-
-  const now = new Date()
-  let nextMonth = now.getMonth()
-  if (now.getDate() > dueDay) {
-    nextMonth = (nextMonth + 1) % 12
-  }
-  const nextBillingLabel = `${dueDay} ${MONTHS_SHORT[nextMonth]}`
+  const nextBillingLabel = getNextBillingLabel(dueDay)
 
   const [intPart, decPart] = amount.toFixed(2).split('.')
   const intFormatted = parseInt(intPart).toLocaleString('pt-BR')

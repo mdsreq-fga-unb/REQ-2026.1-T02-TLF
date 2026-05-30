@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, Text, View } from 'react-native'
+import { Pressable, ScrollView, View } from 'react-native'
 import { router } from 'expo-router'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { Background } from '@/components/ui/Background'
@@ -76,20 +76,22 @@ export default function RecorrenciaDetailsScreen() {
           <View style={styles.amountRow}>
             <View style={styles.amountBlock}>
               <ThemedText tone="muted" style={styles.amountCurrency} text="R$" />
-              <Text
+              <ThemedText
+                text={`${intFormatted},${decPart}`}
+                variant="display"
                 style={[styles.amountNumber, { color: amountColor }]}
                 numberOfLines={1}
                 adjustsFontSizeToFit
                 minimumFontScale={0.6}
-              >
-                {intFormatted},{decPart}
-              </Text>
+              />
             </View>
             <View style={[styles.statusBadge, { backgroundColor: `${statusColor}22` }]}>
               <View style={[styles.statusDot, { backgroundColor: statusColor }]} />
-              <Text style={[styles.statusText, { color: statusColor }]}>
-                {isActive ? 'ATIVO' : 'INATIVO'}
-              </Text>
+              <ThemedText
+                text={isActive ? 'ATIVO' : 'INATIVO'}
+                variant="caption"
+                style={[styles.statusText, { color: statusColor }]}
+              />
             </View>
           </View>
 
@@ -186,15 +188,13 @@ export default function RecorrenciaDetailsScreen() {
                   <View style={[styles.paymentCard, { backgroundColor: theme.surface }]}>
                     <View style={styles.paymentCardRow}>
                       <ThemedText style={styles.historyMonth} text={monthLabel} />
-                      <Text
-                        style={[
-                          styles.historyAmount,
-                          { color: isPending ? theme.mutedForeground : theme.foreground },
-                        ]}
+                      <ThemedText
+                        text={formatCurrency(displayAmount)}
+                        variant="label"
+                        tone={isPending ? 'muted' : 'default'}
+                        style={styles.historyAmount}
                         numberOfLines={1}
-                      >
-                        {formatCurrency(displayAmount)}
-                      </Text>
+                      />
                     </View>
                     <View style={[styles.paymentCardRow, { alignItems: 'center' }]}>
                       <ThemedText
@@ -204,9 +204,11 @@ export default function RecorrenciaDetailsScreen() {
                         numberOfLines={1}
                       />
                       <View style={[styles.statusPill, { backgroundColor: statusBg }]}>
-                        <Text style={[styles.statusPillText, { color: dotColor }]}>
-                          {statusLabel}
-                        </Text>
+                        <ThemedText
+                          text={statusLabel}
+                          variant="caption"
+                          style={[styles.statusPillText, { color: dotColor }]}
+                        />
                       </View>
                     </View>
                   </View>
@@ -222,9 +224,11 @@ export default function RecorrenciaDetailsScreen() {
           </View>
           <View style={styles.projectionBody}>
             <ThemedText tone="muted" style={styles.projectionLabel} text="PROJEÇÃO ANUAL" />
-            <Text style={[styles.projectionValue, { color: amountColor }]}>
-              {formatCurrency(annualProjection)}
-            </Text>
+            <ThemedText
+              text={formatCurrency(annualProjection)}
+              variant="title"
+              style={[styles.projectionValue, { color: amountColor }]}
+            />
             <ThemedText
               tone="muted"
               style={styles.projectionSub}

@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { router, useLocalSearchParams } from 'expo-router'
-import type { ComponentProps } from 'react'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import {
   categoryColors,
   categoryIcons,
@@ -11,8 +9,7 @@ import {
 } from '@/components/finance/recurrences/recurrences-data'
 import { setPendingDeleteId } from '@/components/finance/recurrences/recurrences-store'
 import type { Recurrence } from '@/components/finance/recurrences/types'
-
-type IconName = ComponentProps<typeof MaterialIcons>['name']
+import type { IconKey } from '@/utils/icons'
 
 const MONTHS_SHORT = [
   'Jan',
@@ -79,7 +76,7 @@ export function useRecorrenciaDetails() {
     frequency === 'MONTHLY' ? 'Mensal' : frequency === 'WEEKLY' ? 'Semanal' : 'Anual'
   const typeLabel = `${categoryName} ${frequencyLabel}`
 
-  const icon = (categoryIcons[categoryId] ?? 'category') as IconName
+  const icon: IconKey = categoryIcons[categoryId] ?? 'tag'
   const iconColor = categoryColors[categoryId] ?? '#4A5060'
 
   const history = mockPaymentHistory[id] ?? []

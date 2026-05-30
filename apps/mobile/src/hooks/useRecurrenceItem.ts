@@ -1,6 +1,4 @@
 import { router } from 'expo-router'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-import type { ComponentProps } from 'react'
 import {
   categoryColors,
   categoryIcons,
@@ -9,11 +7,10 @@ import {
   getSubcategory,
 } from '@/components/finance/recurrences/recurrences-data'
 import type { Recurrence } from '@/components/finance/recurrences/types'
-
-type MaterialIconName = ComponentProps<typeof MaterialIcons>['name']
+import type { IconKey } from '@/utils/icons'
 
 export function useRecurrenceItem(recurrence: Recurrence) {
-  const icon = (categoryIcons[recurrence.categoryId] ?? 'category') as MaterialIconName
+  const icon: IconKey = categoryIcons[recurrence.categoryId] ?? 'tag'
   const iconColor = categoryColors[recurrence.categoryId] ?? '#4A5060'
   const accountName = getAccount(recurrence.accountId)?.name ?? recurrence.accountId
   const subcategoryName = recurrence.subcategoryId

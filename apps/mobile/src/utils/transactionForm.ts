@@ -1,0 +1,13 @@
+import type { SemanticColors } from '@/utils/colors'
+import type { TransactionType } from '@/services/database/queries/transaction'
+
+export function getTransactionTypeColor(type: TransactionType, colors: SemanticColors): string {
+  switch (type) {
+    case 'EXPENSE':
+      return colors.expense
+    case 'INCOME':
+      return colors.income
+    case 'TRANSFER':
+      return colors.primary
+  }
+}

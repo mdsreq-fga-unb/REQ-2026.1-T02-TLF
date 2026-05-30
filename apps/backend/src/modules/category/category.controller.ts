@@ -57,13 +57,18 @@ export class CategoryController {
   @Patch(':id')
   @ApiOperation({ summary: 'Atualizar categoria' })
   @ApiParam({ name: 'id', description: 'ID da categoria' })
+  @ApiQuery({ name: 'newCategoryId', required: false, description: 'ID da categoria para reclassificar transações' })
   @ApiResponse({ status: 200, description: 'Categoria atualizada' })
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Acesso negado ou categoria padrão' })
   @ApiResponse({ status: 404, description: 'Categoria não encontrada' })
-  update(@Param('id') id: string, @Body() dto: UpdateCategoryDto) {
+  update(
+    @Param('id') id: string,
+    @Body() dto: UpdateCategoryDto,
+    @Query('newCategoryId') newCategoryId?: string,
+  ) {
     const userId = 'user-teste-001'
-    return this.categoryService.update(userId, id, dto)
+    return this.categoryService.update(userId, id, dto, newCategoryId)
   }
 
   @Delete(':id')

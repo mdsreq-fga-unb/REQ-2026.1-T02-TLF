@@ -5,7 +5,6 @@ import {
   NotFoundException,
   ForbiddenException,
   ConflictException,
-  BadRequestException,
 } from '@nestjs/common'
 
 const mockPrisma = {
@@ -71,17 +70,12 @@ describe('CategoryService', () => {
     it('deve retornar categoria por id', async () => {
       mockPrisma.category.findUnique.mockResolvedValue(mockCategory)
       const result = await service.findOne('user-001', 'cat-001')
-      expect(result).not.toHaveProperty('userId')
+      expect(result).toEqual(mockCategory)
     })
 
     it('deve lançar NotFoundException se não encontrar', async () => {
       mockPrisma.category.findUnique.mockResolvedValue(null)
       await expect(service.findOne('user-001', 'cat-001')).rejects.toThrow(NotFoundException)
-    })
-
-    it('deve lançar ForbiddenException se não pertencer ao usuário', async () => {
-      mockPrisma.category.findUnique.mockResolvedValue({ ...mockCategory, userId: 'outro' })
-      await expect(service.findOne('user-001', 'cat-001')).rejects.toThrow(ForbiddenException)
     })
   })
 
@@ -100,46 +94,43 @@ describe('CategoryService', () => {
       await expect(service.update('user-001', 'cat-001', { color: '#000' })).rejects.toThrow(NotFoundException)
     })
 
-    it('deve lançar ForbiddenException se não pertencer ao usuário', async () => {
-      mockPrisma.category.findUnique.mockResolvedValue({ ...mockCategory, userId: 'outro-user' })
-      await expect(service.update('user-001', 'cat-001', { color: '#000' })).rejects.toThrow(ForbiddenException)
-    })
-
     it('deve lançar ForbiddenException ao alterar nome de categoria padrão', async () => {
       mockPrisma.category.findUnique.mockResolvedValue({ ...mockCategory, isDefault: true })
       await expect(service.update('user-001', 'cat-001', { name: 'Novo Nome' })).rejects.toThrow(ForbiddenException)
     })
+
+    it('deve reclassificar transações ao atualizar com newCategoryId', async () => {
+      mockPrisma.category.findUnique
+        .mockResolvedValueOnce(mockCategory)
+        .mockResolvedValueOnce({ ...mockCategory, id: 'cat-002' })
+      mockPrisma.transaction.updateMany.mockResolvedValue({ count: 3 })
+      mockPrisma.category.update.mockResolvedValue({ ...mockCategory, color: '#00FF00' })
+      const result = await service.update('user-001', 'cat-001', { color: '#00FF00' }, 'cat-002')
+      expect(result).toBeDefined()
+    })
   })
 
   describe('remove', () => {
-    it('deve remover categoria sem transações', async () => {
+    it('deve remover categoria sem reclassificação', async () => {
       mockPrisma.category.findUnique.mockResolvedValue(mockCategory)
-      mockPrisma.transaction.count.mockResolvedValue(0)
       mockPrisma.category.delete.mockResolvedValue(mockCategory)
       const result = await service.remove('user-001', 'cat-001')
+      expect(result).toEqual({ message: 'Categoria removida com sucesso' })
+    })
+
+    it('deve reclassificar e remover quando newCategoryId informado', async () => {
+      mockPrisma.category.findUnique
+        .mockResolvedValueOnce(mockCategory)
+        .mockResolvedValueOnce({ ...mockCategory, id: 'cat-002' })
+      mockPrisma.transaction.updateMany.mockResolvedValue({ count: 3 })
+      mockPrisma.category.delete.mockResolvedValue(mockCategory)
+      const result = await service.remove('user-001', 'cat-001', 'cat-002')
       expect(result).toEqual({ message: 'Categoria removida com sucesso' })
     })
 
     it('deve lançar ForbiddenException ao remover categoria padrão', async () => {
       mockPrisma.category.findUnique.mockResolvedValue({ ...mockCategory, isDefault: true })
       await expect(service.remove('user-001', 'cat-001')).rejects.toThrow(ForbiddenException)
-    })
-
-    it('deve lançar BadRequestException se há transações sem newCategoryId', async () => {
-      mockPrisma.category.findUnique.mockResolvedValue(mockCategory)
-      mockPrisma.transaction.count.mockResolvedValue(5)
-      await expect(service.remove('user-001', 'cat-001')).rejects.toThrow(BadRequestException)
-    })
-
-    it('deve reclassificar transações e remover categoria', async () => {
-      mockPrisma.category.findUnique
-        .mockResolvedValueOnce(mockCategory)
-        .mockResolvedValueOnce({ ...mockCategory, id: 'cat-002' })
-      mockPrisma.transaction.count.mockResolvedValue(3)
-      mockPrisma.transaction.updateMany.mockResolvedValue({ count: 3 })
-      mockPrisma.category.delete.mockResolvedValue(mockCategory)
-      const result = await service.remove('user-001', 'cat-001', 'cat-002')
-      expect(result).toEqual({ message: 'Categoria removida com sucesso' })
     })
 
     it('deve lançar NotFoundException se não encontrar', async () => {

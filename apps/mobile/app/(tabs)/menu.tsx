@@ -1,10 +1,10 @@
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
 import { ThemedText } from '@/components/ui/ThemedText'
 
-export default function CardsScreen() {
+export default function BudgetsScreen() {
   return (
     <ThemedBackground>
-      <ThemedText text="Wallet Cards" />
+      <ThemedText text="Orçamentos" />
     </ThemedBackground>
   )
 }

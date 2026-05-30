@@ -4,10 +4,14 @@ import { useColorScheme } from 'react-native'
 
 type Theme = 'light' | 'dark'
 
-export const useThemeColor = () => {
+export function useResolvedTheme(): Theme {
   const { theme } = useThemeStore()
   const systemTheme = useColorScheme()
 
-  const currentTheme = theme === 'system' ? systemTheme : theme
-  return themes[currentTheme as Theme]
+  return theme === 'system' ? (systemTheme === 'dark' ? 'dark' : 'light') : theme
+}
+
+export const useThemeColor = () => {
+  const currentTheme = useResolvedTheme()
+  return themes[currentTheme]
 }

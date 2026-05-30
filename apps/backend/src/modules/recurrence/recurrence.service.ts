@@ -3,7 +3,7 @@ import { PrismaService } from '@common/prisma/prisma.service';
 import { CreateRecurrenceDto } from './dto/create-recurrence.dto';
 import { UpdateRecurrenceDto } from './dto/update-recurrence.dto';
 import { RecurrenceApplyScope } from './enums/recurrence-apply-scope.enum';
-import { Prisma, TransactionStatus } from '../../../generated/prisma/client';
+import { Prisma, TransactionStatus, TransactionType } from '../../../generated/prisma/client';
 import { FilterRecurrenceDto } from './dto/filter-recurrence.dto';
 import { RecurrenceListResponseDto } from './dto/recurrence-list.response.dto';
 import { RecurrenceDetailResponseDto } from './dto/recurrence-detail.response.dto';
@@ -413,6 +413,75 @@ export class RecurrenceService {
     });
 
     return this.toDetail(result);
+  }
+
+    async generateTransactionsFromRecurrences(userId: string) {
+    const recurrences = await this.prisma.recurrence.findMany({
+      where: {
+        isActive: true,
+        account: {
+          institution: {
+            userId,
+          },
+        },
+        startDate: {
+          lte: new Date(),
+        },
+        OR: [
+          { endDate: null },
+          { endDate: { gte: new Date() } },
+        ],
+      },
+      include: recurrenceInclude,
+    });
+
+    const now = new Date();
+    const month = now.getMonth();
+    const year = now.getFullYear();
+    const startOfMonth = new Date(year, month, 1);
+    const startOfNextMonth = new Date(year, month + 1, 1);
+
+    const existingTransactions = await this.prisma.transaction.findMany({
+      where: {
+        recurrenceId: {
+          in: recurrences.map(r => r.id),
+        },
+        date: {
+          gte: startOfMonth,
+          lt: startOfNextMonth,
+        },
+      },
+      select: {
+        recurrenceId: true,
+      },
+    });
+
+    const existingSet = new Set(
+      existingTransactions.map(t => t.recurrenceId)
+    );
+
+    const toCreate = recurrences.filter(
+      r => !existingSet.has(r.id),
+    );
+
+    await this.prisma.transaction.createMany({
+      data: toCreate.map(recurrence => {
+        const lastDay = new Date(year, month + 1, 0).getDate();
+        const day = Math.min(recurrence.chargeDate, lastDay);
+
+        return {
+          accountId: recurrence.accountId,
+          categoryId: recurrence.categoryId,
+          subCategoryId: recurrence.subCategoryId,
+          amount: recurrence.amount,
+          description: recurrence.description,
+          type: TransactionType.EXPENSE,
+          status: TransactionStatus.PENDING,
+          date: new Date(year, month, day),
+          recurrenceId: recurrence.id,
+        };
+      }),
+    });
   }
 
   private async validateAccountOwnership(userId: string, accountId: string) {

@@ -1,13 +1,14 @@
-import { Pressable, Text, View } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { Pressable, View } from 'react-native'
+import { AppIcon } from '@/components/ui/AppIcon'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
+import type { IconKey } from '@/utils/icons'
 import { styles } from './style'
 
 type Props = {
   selected: boolean
   onPress: () => void
-  icon: string
+  icon: IconKey
   title: string
   description: string
   danger?: boolean
@@ -22,16 +23,15 @@ export function OptionCard({ selected, onPress, icon, title, description, danger
   return (
     <Pressable onPress={onPress} style={[styles.option, { backgroundColor: bgColor, borderColor }]}>
       <View style={styles.optionLeft}>
-        <MaterialIcons
-          name={icon as any}
-          size={20}
-          color={selected ? accentColor : theme.mutedForeground}
-        />
+        <AppIcon name={icon} size={20} color={selected ? accentColor : theme.mutedForeground} />
       </View>
       <View style={styles.optionText}>
-        <Text style={[styles.optionTitle, { color: selected ? accentColor : theme.foreground }]}>
-          {title}
-        </Text>
+        <ThemedText
+          text={title}
+          variant="label"
+          tone={selected ? (danger ? 'destructive' : 'primary') : 'default'}
+          style={styles.optionTitle}
+        />
         <ThemedText tone="muted" style={styles.optionDesc} text={description} />
       </View>
       <View

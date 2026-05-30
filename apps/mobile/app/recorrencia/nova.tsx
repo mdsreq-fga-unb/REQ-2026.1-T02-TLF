@@ -8,7 +8,16 @@ import {
   View,
 } from 'react-native'
 import { router } from 'expo-router'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import {
+  ArrowLeft,
+  Calendar,
+  Check,
+  ChevronDown,
+  ChevronUp,
+  ChevronsUpDown,
+  Zap,
+} from 'lucide-react-native'
+import { AppIcon } from '@/components/ui/AppIcon'
 import { SuccessToast } from '@/components/ui/SuccessToast'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { ThemedFieldError } from '@/components/ui/ThemedFieldError'
@@ -22,9 +31,6 @@ import { useThemeColor } from '@/hooks/useThemeColor'
 import { useNovaRecorrencia, frequencyOptions, formatDateDisplay } from '@/hooks/useNovaRecorrencia'
 import { novaStyles as styles } from '@/styles/recorrencia.style'
 import type { TransactionType } from '@/services/database/queries/transaction'
-import type { ComponentProps } from 'react'
-
-type MaterialIconName = ComponentProps<typeof MaterialIcons>['name']
 
 export default function NovaRecorrenciaScreen() {
   const theme = useThemeColor()
@@ -97,7 +103,7 @@ export default function NovaRecorrenciaScreen() {
           hitSlop={8}
           style={({ pressed }) => [styles.headerBtn, { opacity: pressed ? 0.6 : 1 }]}
         >
-          <MaterialIcons name="arrow-back" size={22} color={theme.foreground} />
+          <ArrowLeft size={22} color={theme.foreground} />
         </Pressable>
         <ThemedText text="Recorrência" style={styles.headerTitle} />
         <View style={styles.headerBtn} />
@@ -171,11 +177,11 @@ export default function NovaRecorrenciaScreen() {
             style={[styles.dropdownRow, { backgroundColor: theme.surface }]}
           >
             <ThemedText text={selectedFrequencyLabel} variant="body" style={styles.dropdownText} />
-            <MaterialIcons
-              name={showFrequencyPicker ? 'keyboard-arrow-up' : 'keyboard-arrow-down'}
-              size={22}
-              color={theme.mutedForeground}
-            />
+            {showFrequencyPicker ? (
+              <ChevronUp size={22} color={theme.mutedForeground} />
+            ) : (
+              <ChevronDown size={22} color={theme.mutedForeground} />
+            )}
           </Pressable>
           {showFrequencyPicker && (
             <View style={[styles.pickerList, { backgroundColor: theme.surface }]}>
@@ -199,9 +205,7 @@ export default function NovaRecorrenciaScreen() {
                       { color: opt.value === frequency ? theme.success : theme.foreground },
                     ]}
                   />
-                  {opt.value === frequency && (
-                    <MaterialIcons name="check" size={18} color={theme.success} />
-                  )}
+                  {opt.value === frequency && <Check size={18} color={theme.success} />}
                 </Pressable>
               ))}
             </View>
@@ -223,11 +227,11 @@ export default function NovaRecorrenciaScreen() {
               variant="body"
               style={[styles.dropdownText, { flex: 1 }]}
             />
-            <MaterialIcons
-              name={showDayPicker ? 'keyboard-arrow-up' : 'keyboard-arrow-down'}
-              size={22}
-              color={theme.mutedForeground}
-            />
+            {showDayPicker ? (
+              <ChevronUp size={22} color={theme.mutedForeground} />
+            ) : (
+              <ChevronDown size={22} color={theme.mutedForeground} />
+            )}
           </Pressable>
           {showDayPicker && (
             <View style={[styles.pickerList, { backgroundColor: theme.surface, height: 220 }]}>
@@ -256,7 +260,7 @@ export default function NovaRecorrenciaScreen() {
                         { color: d === dueDay ? theme.success : theme.foreground },
                       ]}
                     />
-                    {d === dueDay && <MaterialIcons name="check" size={18} color={theme.success} />}
+                    {d === dueDay && <Check size={18} color={theme.success} />}
                   </Pressable>
                 ))}
               </ScrollView>
@@ -276,7 +280,7 @@ export default function NovaRecorrenciaScreen() {
             style={[styles.dropdownRow, { backgroundColor: theme.surface }]}
           >
             <ThemedText text={selectedAccount.name} variant="body" style={styles.dropdownText} />
-            <MaterialIcons name="unfold-more" size={20} color={theme.mutedForeground} />
+            <ChevronsUpDown size={20} color={theme.mutedForeground} />
           </Pressable>
           {showAccountPicker && (
             <View style={[styles.pickerList, { backgroundColor: theme.surface }]}>
@@ -300,9 +304,7 @@ export default function NovaRecorrenciaScreen() {
                       { color: opt.id === accountId ? theme.success : theme.foreground },
                     ]}
                   />
-                  {opt.id === accountId && (
-                    <MaterialIcons name="check" size={18} color={theme.success} />
-                  )}
+                  {opt.id === accountId && <Check size={18} color={theme.success} />}
                 </Pressable>
               ))}
             </View>
@@ -316,11 +318,7 @@ export default function NovaRecorrenciaScreen() {
             style={[styles.dropdownRow, { backgroundColor: theme.surface }]}
           >
             <ThemedText text={selectedCategory.name} variant="body" style={styles.dropdownText} />
-            <MaterialIcons
-              name={selectedCategory.icon as MaterialIconName}
-              size={20}
-              color={theme.mutedForeground}
-            />
+            <AppIcon name={selectedCategory.icon} size={20} color={theme.mutedForeground} />
           </Pressable>
           {showCategoryPicker && (
             <View style={[styles.pickerList, { backgroundColor: theme.surface }]}>
@@ -337,8 +335,8 @@ export default function NovaRecorrenciaScreen() {
                     opt.id === categoryId && { backgroundColor: `${theme.success}22` },
                   ]}
                 >
-                  <MaterialIcons
-                    name={opt.icon as MaterialIconName}
+                  <AppIcon
+                    name={opt.icon}
                     size={18}
                     color={opt.id === categoryId ? theme.success : theme.mutedForeground}
                   />
@@ -351,12 +349,9 @@ export default function NovaRecorrenciaScreen() {
                     ]}
                   />
                   {opt.id === categoryId && (
-                    <MaterialIcons
-                      name="check"
-                      size={18}
-                      color={theme.success}
-                      style={{ marginLeft: 'auto' }}
-                    />
+                    <View style={{ marginLeft: 'auto' }}>
+                      <Check size={18} color={theme.success} />
+                    </View>
                   )}
                 </Pressable>
               ))}
@@ -375,11 +370,11 @@ export default function NovaRecorrenciaScreen() {
               variant="body"
               style={[styles.dropdownText, { flex: 1 }]}
             />
-            <MaterialIcons
-              name={showSubcategoryPicker ? 'keyboard-arrow-up' : 'keyboard-arrow-down'}
-              size={22}
-              color={theme.mutedForeground}
-            />
+            {showSubcategoryPicker ? (
+              <ChevronUp size={22} color={theme.mutedForeground} />
+            ) : (
+              <ChevronDown size={22} color={theme.mutedForeground} />
+            )}
           </Pressable>
           {showSubcategoryPicker && (
             <View style={[styles.pickerList, { backgroundColor: theme.surface }]}>
@@ -402,9 +397,7 @@ export default function NovaRecorrenciaScreen() {
                     subcategoryId === NO_SUBCATEGORY && { color: theme.success },
                   ]}
                 />
-                {subcategoryId === NO_SUBCATEGORY && (
-                  <MaterialIcons name="check" size={18} color={theme.success} />
-                )}
+                {subcategoryId === NO_SUBCATEGORY && <Check size={18} color={theme.success} />}
               </Pressable>
               {subcategoryOptions.map((opt) => (
                 <Pressable
@@ -426,9 +419,7 @@ export default function NovaRecorrenciaScreen() {
                       { color: opt.id === subcategoryId ? theme.success : theme.foreground },
                     ]}
                   />
-                  {opt.id === subcategoryId && (
-                    <MaterialIcons name="check" size={18} color={theme.success} />
-                  )}
+                  {opt.id === subcategoryId && <Check size={18} color={theme.success} />}
                 </Pressable>
               ))}
             </View>
@@ -451,7 +442,7 @@ export default function NovaRecorrenciaScreen() {
               tone={startDate ? 'default' : 'muted'}
               style={[styles.dropdownText, { flex: 1 }]}
             />
-            <MaterialIcons name="calendar-month" size={18} color={theme.mutedForeground} />
+            <Calendar size={18} color={theme.mutedForeground} />
           </Pressable>
           <ThemedFieldError message={errors.startDate ?? ''} visible={!!errors.startDate} />
         </View>
@@ -491,7 +482,7 @@ export default function NovaRecorrenciaScreen() {
                 tone={endDate ? 'default' : 'muted'}
                 style={[styles.dropdownText, { flex: 1 }]}
               />
-              <MaterialIcons name="calendar-month" size={18} color={theme.mutedForeground} />
+              <Calendar size={18} color={theme.mutedForeground} />
             </Pressable>
             <ThemedFieldError message={errors.endDate ?? ''} visible={!!errors.endDate} />
           </View>
@@ -499,11 +490,7 @@ export default function NovaRecorrenciaScreen() {
 
         <View style={[styles.toggleRow, { backgroundColor: theme.surface }]}>
           <View style={styles.toggleInfo}>
-            <MaterialIcons
-              name="bolt"
-              size={20}
-              color={isActive ? theme.success : theme.mutedForeground}
-            />
+            <Zap size={20} color={isActive ? theme.success : theme.mutedForeground} />
             <View style={styles.toggleTextBlock}>
               <ThemedText style={styles.toggleTitle} text="Recorrência Ativa" />
               <ThemedText

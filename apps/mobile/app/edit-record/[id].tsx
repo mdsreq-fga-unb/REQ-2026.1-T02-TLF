@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router, useLocalSearchParams } from 'expo-router'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { ArrowLeft } from 'lucide-react-native'
 import { TransactionForm } from '@/components/finance/transactions/TransactionForm'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import type { TransactionInitialValues } from '@/hooks/useTransactionForm'
@@ -43,7 +43,7 @@ export default function EditRecordScreen() {
           style={({ pressed }) => [styles.backBtn, { opacity: pressed ? 0.6 : 1 }]}
           hitSlop={12}
         >
-          <MaterialIcons name="arrow-back" size={22} color={theme.foreground} />
+          <ArrowLeft size={22} color={theme.foreground} />
         </Pressable>
       </View>
 

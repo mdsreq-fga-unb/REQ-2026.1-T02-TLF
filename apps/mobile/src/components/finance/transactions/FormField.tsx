@@ -1,19 +1,11 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-import type { ComponentProps } from 'react'
-
-// Design system tokens
-const OUTLINE = '#908fa0'
-const OUTLINE_VARIANT = '#464554'
-const SURFACE_CONTAINER_HIGH = '#292932'
-const ON_SURFACE_VARIANT = '#c7c4d7'
-const ON_SURFACE = '#e4e1ed'
-const ERROR = '#f2685a'
-
-type MaterialIconName = ComponentProps<typeof MaterialIcons>['name']
+import { Pressable, StyleSheet, TextInput, View } from 'react-native'
+import { ThemedFieldError } from '@/components/ui/ThemedFieldError'
+import { ThemedText } from '@/components/ui/ThemedText'
+import { useThemeColor } from '@/hooks/useThemeColor'
+import type { AppIcon } from '@/utils/icons'
 
 type BaseProps = {
-  icon: MaterialIconName
+  icon: AppIcon
   label: string
   isLast?: boolean
   error?: string
@@ -35,9 +27,11 @@ type InputProps = BaseProps & {
 type Props = PressableProps | InputProps
 
 export function FormField(props: Props) {
+  const theme = useThemeColor()
+  const Icon = props.icon
   const hasError = !!props.error
   const borderStyle = !props.isLast
-    ? { borderBottomWidth: 1, borderBottomColor: `${OUTLINE_VARIANT}28` }
+    ? { borderBottomWidth: 1, borderBottomColor: `${theme.border}28` }
     : undefined
 
   if (props.isInput) {
@@ -45,21 +39,21 @@ export function FormField(props: Props) {
       <>
         <View style={[styles.container, borderStyle]}>
           <View style={styles.content}>
-            <Text style={styles.label}>{props.label}</Text>
+            <ThemedText text={props.label} variant="caption" tone="muted" style={styles.label} />
             <TextInput
               value={props.value}
               onChangeText={props.onChangeText}
               placeholder={props.placeholder ?? ''}
-              placeholderTextColor={`${OUTLINE}88`}
-              style={styles.input}
+              placeholderTextColor={theme.mutedForeground}
+              style={[styles.input, { color: theme.foreground }]}
               multiline
             />
           </View>
-          <View style={styles.iconWrap}>
-            <MaterialIcons name={props.icon} size={20} color={ON_SURFACE_VARIANT} />
+          <View style={[styles.iconWrap, { backgroundColor: theme.surfaceMuted }]}>
+            <Icon size={20} color={theme.mutedForeground} />
           </View>
         </View>
-        {hasError && <Text style={styles.error}>{props.error}</Text>}
+        {hasError ? <ThemedFieldError message={props.error ?? ''} visible /> : null}
       </>
     )
   }
@@ -68,26 +62,20 @@ export function FormField(props: Props) {
     <>
       <Pressable style={[styles.container, borderStyle]} onPress={props.onPress}>
         <View style={styles.content}>
-          <Text style={styles.label}>{props.label}</Text>
-          <Text
-            style={[
-              styles.value,
-              { color: props.value ? ON_SURFACE : hasError ? ERROR : `${OUTLINE}88` },
-            ]}
+          <ThemedText text={props.label} variant="caption" tone="muted" style={styles.label} />
+          <ThemedText
+            text={props.value || 'Selecionar...'}
+            variant="body"
+            tone={hasError ? 'destructive' : props.value ? 'default' : 'muted'}
+            style={styles.value}
             numberOfLines={1}
-          >
-            {props.value || 'Selecionar...'}
-          </Text>
-        </View>
-        <View style={styles.iconWrap}>
-          <MaterialIcons
-            name={props.icon}
-            size={20}
-            color={hasError ? ERROR : ON_SURFACE_VARIANT}
           />
         </View>
+        <View style={[styles.iconWrap, { backgroundColor: theme.surfaceMuted }]}>
+          <Icon size={20} color={hasError ? theme.destructive : theme.mutedForeground} />
+        </View>
       </Pressable>
-      {hasError && <Text style={styles.error}>{props.error}</Text>}
+      {hasError ? <ThemedFieldError message={props.error ?? ''} visible /> : null}
     </>
   )
 }
@@ -108,7 +96,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textTransform: 'uppercase',
     letterSpacing: 0.6,
-    color: OUTLINE,
   },
   value: {
     fontSize: 15,
@@ -119,7 +106,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     padding: 0,
     minHeight: 22,
-    color: ON_SURFACE,
   },
   iconWrap: {
     width: 38,
@@ -127,12 +113,5 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: SURFACE_CONTAINER_HIGH,
-  },
-  error: {
-    fontSize: 12,
-    color: ERROR,
-    paddingBottom: 8,
-    paddingHorizontal: 2,
   },
 })

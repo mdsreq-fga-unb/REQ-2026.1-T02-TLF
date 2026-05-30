@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { formatCurrency } from '@/utils/formatters'
@@ -20,13 +20,13 @@ export function RecurrenceSummaryCard({ totalMonthly, activeCount }: Props) {
     <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
       <View style={styles.content}>
         <ThemedText tone="muted" style={styles.label} text="TOTAL MENSAL PREVISTO" />
-        <Text
+        <ThemedText
+          text={`${sign} ${formatCurrency(Math.abs(totalMonthly))}`}
+          variant="display"
           style={[styles.amount, { color: amountColor }]}
           numberOfLines={1}
           adjustsFontSizeToFit
-        >
-          {sign} {formatCurrency(Math.abs(totalMonthly))}
-        </Text>
+        />
         <ThemedText
           tone="muted"
           style={[styles.sub, { opacity: activeCount > 0 ? 1 : 0 }]}

@@ -1,5 +1,5 @@
-import { Pressable, Text, View } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { Pressable, View } from 'react-native'
+import { AppIcon } from '@/components/ui/AppIcon'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { useConfirmCard } from '@/hooks/useConfirmCard'
@@ -33,18 +33,23 @@ export function ConfirmCard({
   return (
     <View style={[styles.card, { backgroundColor: theme.surface }, acted && styles.cardActed]}>
       <View style={[styles.iconWrap, { backgroundColor: iconBg }]}>
-        <MaterialIcons name={icon} size={20} color="#fff" />
+        <AppIcon name={icon} size={20} color={theme.onPrimary} />
       </View>
 
       <View style={styles.cardBody}>
         <View style={styles.cardTopRow}>
           <ThemedText style={styles.cardName} text={recurrence.description} numberOfLines={1} />
           <View style={[styles.badge, { display: isConfirmed ? 'flex' : 'none' }]}>
-            <MaterialIcons name="check-circle" size={13} color={theme.success} />
-            <Text style={[styles.badgeText, { color: theme.success }]}>Confirmado</Text>
+            <AppIcon name="circle-check" size={13} color={theme.success} />
+            <ThemedText
+              text="Confirmado"
+              variant="caption"
+              tone="default"
+              style={[styles.badgeText, { color: theme.success }]}
+            />
           </View>
           <View style={[styles.badge, { display: isSkipped ? 'flex' : 'none' }]}>
-            <MaterialIcons name="skip-next" size={13} color={theme.mutedForeground} />
+            <AppIcon name="skip-forward" size={13} color={theme.mutedForeground} />
             <ThemedText tone="muted" style={styles.badgeText} text="Pulado" />
           </View>
         </View>
@@ -56,9 +61,11 @@ export function ConfirmCard({
         />
 
         <View style={styles.cardBottomRow}>
-          <Text style={[styles.cardAmount, { color: amountColor }]}>
-            {amountSign} {formatCurrency(recurrence.amount)}
-          </Text>
+          <ThemedText
+            text={`${amountSign} ${formatCurrency(recurrence.amount)}`}
+            variant="title"
+            style={[styles.cardAmount, { color: amountColor }]}
+          />
 
           <View style={[styles.btnGroup, { display: acted ? 'none' : 'flex' }]}>
             <Pressable
@@ -79,8 +86,13 @@ export function ConfirmCard({
                 { backgroundColor: theme.success, opacity: pressed ? 0.8 : 1 },
               ]}
             >
-              <MaterialIcons name="check" size={13} color="#0F0F13" />
-              <Text style={styles.btnConfirmText}>Confirmar</Text>
+              <AppIcon name="check" size={13} color={theme.onPrimary} />
+              <ThemedText
+                text="Confirmar"
+                variant="button"
+                tone="onPrimary"
+                style={styles.btnConfirmText}
+              />
             </Pressable>
           </View>
 
@@ -96,7 +108,7 @@ export function ConfirmCard({
               },
             ]}
           >
-            <MaterialIcons name="undo" size={13} color={theme.mutedForeground} />
+            <AppIcon name="undo" size={13} color={theme.mutedForeground} />
             <ThemedText tone="muted" style={styles.btnUndoText} text="Desfazer" />
           </Pressable>
         </View>

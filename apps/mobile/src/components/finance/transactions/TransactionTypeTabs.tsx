@@ -1,9 +1,8 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { TYPE_COLORS, type TransactionType } from './types'
-
-// Design system tokens
-const OUTLINE = '#908fa0'
-const OUTLINE_VARIANT = '#464554'
+import { Pressable, StyleSheet, View } from 'react-native'
+import { ThemedText } from '@/components/ui/ThemedText'
+import { useThemeColor } from '@/hooks/useThemeColor'
+import { getTransactionTypeColor } from '@/utils/transactionForm'
+import type { TransactionType } from './types'
 
 type Props = {
   value: TransactionType
@@ -18,8 +17,10 @@ const TABS: { value: TransactionType; label: string }[] = [
 ]
 
 export function TransactionTypeTabs({ value, onChange, onRecorrencias }: Props) {
+  const theme = useThemeColor()
+
   return (
-    <View style={[styles.row, { borderBottomColor: OUTLINE_VARIANT }]}>
+    <View style={[styles.row, { borderBottomColor: theme.border }]}>
       {TABS.map((tab) => {
         const active = tab.value === value
         return (
@@ -28,18 +29,19 @@ export function TransactionTypeTabs({ value, onChange, onRecorrencias }: Props) 
             onPress={() => onChange(tab.value)}
             style={[
               styles.tab,
-              { borderBottomColor: active ? TYPE_COLORS[tab.value] : 'transparent' },
+              {
+                borderBottomColor: active
+                  ? getTransactionTypeColor(tab.value, theme)
+                  : 'transparent',
+              },
             ]}
           >
-            <Text
-              style={[
-                styles.label,
-                { color: active ? '#e4e1ed' : OUTLINE },
-                active && styles.labelActive,
-              ]}
-            >
-              {tab.label}
-            </Text>
+            <ThemedText
+              text={tab.label}
+              variant="label"
+              tone={active ? 'default' : 'muted'}
+              style={[styles.label, active && styles.labelActive]}
+            />
           </Pressable>
         )
       })}
@@ -49,7 +51,7 @@ export function TransactionTypeTabs({ value, onChange, onRecorrencias }: Props) 
           onPress={onRecorrencias}
           style={[styles.tab, { borderBottomColor: 'transparent' }]}
         >
-          <Text style={[styles.label, { color: OUTLINE }]}>Recorrências</Text>
+          <ThemedText text="Recorrências" variant="label" tone="muted" style={styles.label} />
         </Pressable>
       )}
     </View>

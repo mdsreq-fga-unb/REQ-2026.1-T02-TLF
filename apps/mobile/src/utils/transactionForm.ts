@@ -11,3 +11,14 @@ export function getTransactionTypeColor(type: TransactionType, colors: SemanticC
       return colors.primary
   }
 }
+
+export function getTransactionAmountColor(type: TransactionType, colors: SemanticColors): string {
+  switch (type) {
+    case 'EXPENSE':
+      return colors.expense
+    case 'INCOME':
+      return colors.income
+    case 'TRANSFER':
+      return colors.foreground
+  }
+}

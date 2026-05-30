@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { formatDateHeading } from '@/utils/formatters'
 import { TransactionItem } from './TransactionItem'
@@ -67,17 +68,20 @@ export function TransactionsList({
   return (
     <View style={styles.section}>
       {showTitle ? (
-        <Text style={[styles.title, { color: theme.foreground }]}>Transacoes cadastradas</Text>
+        <ThemedText text="Transacoes cadastradas" variant="title" style={styles.title} />
       ) : null}
 
       {isLoading ? (
-        <Text style={[styles.stateText, { color: theme.mutedForeground }]}>Carregando...</Text>
+        <ThemedText text="Carregando..." variant="caption" tone="muted" style={styles.stateText} />
       ) : error ? (
-        <Text style={[styles.stateText, { color: theme.warning }]}>{error}</Text>
+        <ThemedText text={error} variant="caption" tone="warning" style={styles.stateText} />
       ) : transactions.length === 0 ? (
-        <Text style={[styles.stateText, { color: theme.mutedForeground }]}>
-          Nenhuma transacao cadastrada.
-        </Text>
+        <ThemedText
+          text="Nenhuma transacao cadastrada."
+          variant="caption"
+          tone="muted"
+          style={styles.stateText}
+        />
       ) : (
         <View style={styles.list}>
           {sections.map((section, index) => (
@@ -85,9 +89,12 @@ export function TransactionsList({
               {index > 0 ? (
                 <View style={[styles.groupDivider, { backgroundColor: theme.mutedForeground }]} />
               ) : null}
-              <Text style={[styles.groupTitle, { color: theme.mutedForeground }]}>
-                {section.title}
-              </Text>
+              <ThemedText
+                text={section.title}
+                variant="caption"
+                tone="muted"
+                style={styles.groupTitle}
+              />
               <View style={styles.groupItems}>
                 {section.items.map((transaction) => (
                   <TransactionItem

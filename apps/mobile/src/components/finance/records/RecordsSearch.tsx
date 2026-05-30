@@ -1,6 +1,6 @@
 import { StyleSheet, TextInput, View } from 'react-native'
+import { Search } from 'lucide-react-native'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 
 type props = {
   value: string
@@ -21,7 +21,7 @@ export function RecordsSearch({ value, onChangeText, placeholder = 'Search Recor
         },
       ]}
     >
-      <MaterialIcons name="search" size={18} color={theme.mutedForeground} />
+      <Search size={18} color={theme.mutedForeground} />
       <TextInput
         value={value}
         onChangeText={onChangeText}

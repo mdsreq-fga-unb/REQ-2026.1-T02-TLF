@@ -1,6 +1,7 @@
 import { Pressable, ScrollView, View } from 'react-native'
 import { router } from 'expo-router'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { ArrowLeft, BarChart3, Pencil, Trash2 } from 'lucide-react-native'
+import { AppIcon } from '@/components/ui/AppIcon'
 import { Background } from '@/components/ui/Background'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
@@ -8,10 +9,8 @@ import { useRecorrenciaDetails, MONTHS_FULL } from '@/hooks/useRecorrenciaDetail
 import { InfoRow } from '@/components/finance/recurrences/InfoRow'
 import { DeleteRecurrenceModal } from '@/components/finance/recurrences/DeleteRecurrenceModal'
 import { formatCurrency } from '@/utils/formatters'
+import type { IconKey } from '@/utils/icons'
 import { detailsStyles as styles } from '@/styles/recorrencia.style'
-import type { ComponentProps } from 'react'
-
-type IconName = ComponentProps<typeof MaterialIcons>['name']
 
 export default function RecorrenciaDetailsScreen() {
   const theme = useThemeColor()
@@ -49,7 +48,7 @@ export default function RecorrenciaDetailsScreen() {
           style={({ pressed }) => [styles.headerBtn, { opacity: pressed ? 0.6 : 1 }]}
           hitSlop={8}
         >
-          <MaterialIcons name="arrow-back" size={24} color={theme.foreground} />
+          <ArrowLeft size={24} color={theme.foreground} />
         </Pressable>
         <ThemedText style={styles.headerTitle} text="Detalhes da Recorrência" />
         <View style={styles.headerBtn} />
@@ -63,7 +62,7 @@ export default function RecorrenciaDetailsScreen() {
         <View style={[styles.mainCard, { backgroundColor: theme.surface }]}>
           <View style={styles.cardTop}>
             <View style={[styles.iconCircle, { backgroundColor: `${iconColor}28` }]}>
-              <MaterialIcons name={icon} size={28} color={iconColor} />
+              <AppIcon name={icon} size={28} color={iconColor} />
             </View>
             <View style={styles.cardTopText}>
               <ThemedText tone="muted" style={styles.typeLabel} text={typeLabel.toUpperCase()} />
@@ -98,13 +97,13 @@ export default function RecorrenciaDetailsScreen() {
           <View style={[styles.divider, { backgroundColor: theme.border }]} />
 
           <View style={styles.infoBlock}>
-            <InfoRow icon="account-balance" label={accountName} />
+            <InfoRow icon="landmark" label={accountName} />
             <InfoRow
-              icon="event"
+              icon="calendar"
               label={`Próxima cobrança: ${nextBillingLabel}`}
               color={theme.primary}
             />
-            <InfoRow icon="sync" label={frequencyLabel} />
+            <InfoRow icon="refresh-cw" label={frequencyLabel} />
           </View>
 
           <View style={[styles.divider, { backgroundColor: theme.border }]} />
@@ -117,7 +116,7 @@ export default function RecorrenciaDetailsScreen() {
                 { backgroundColor: theme.primary, opacity: pressed ? 0.85 : 1 },
               ]}
             >
-              <MaterialIcons name="edit" size={18} color={theme.onPrimary} />
+              <Pencil size={18} color={theme.onPrimary} />
               <ThemedText tone="onPrimary" style={styles.btnText} text="Editar" />
             </Pressable>
             <Pressable
@@ -127,7 +126,7 @@ export default function RecorrenciaDetailsScreen() {
                 { backgroundColor: theme.destructive, opacity: pressed ? 0.75 : 1 },
               ]}
             >
-              <MaterialIcons name="delete" size={18} color="#fff" />
+              <Trash2 size={18} color={theme.onPrimary} />
               <ThemedText tone="onPrimary" style={styles.btnText} text="Excluir" />
             </Pressable>
           </View>
@@ -146,11 +145,11 @@ export default function RecorrenciaDetailsScreen() {
                 : isConfirmed
                   ? theme.income
                   : theme.mutedForeground
-              const statusIcon: IconName = isPending
-                ? 'schedule'
+              const statusIcon: IconKey = isPending
+                ? 'clock'
                 : isConfirmed
-                  ? 'check-circle'
-                  : 'skip-next'
+                  ? 'circle-check'
+                  : 'skip-forward'
               const statusLabel = isPending ? 'PENDENTE' : isConfirmed ? 'LIQUIDADO' : 'IGNORADO'
               const statusBg = isPending
                 ? `${theme.pending}28`
@@ -175,7 +174,7 @@ export default function RecorrenciaDetailsScreen() {
                       ]}
                     />
                     <View style={[styles.timelineDot, { backgroundColor: dotColor }]}>
-                      <MaterialIcons name={statusIcon} size={14} color="#fff" />
+                      <AppIcon name={statusIcon} size={14} color={theme.onPrimary} />
                     </View>
                     <View
                       style={[
@@ -220,7 +219,7 @@ export default function RecorrenciaDetailsScreen() {
 
         <View style={[styles.projectionCard, { backgroundColor: theme.surface }]}>
           <View style={[styles.projectionIconWrap, { backgroundColor: `${theme.primary}22` }]}>
-            <MaterialIcons name="analytics" size={26} color={theme.primary} />
+            <BarChart3 size={26} color={theme.primary} />
           </View>
           <View style={styles.projectionBody}>
             <ThemedText tone="muted" style={styles.projectionLabel} text="PROJEÇÃO ANUAL" />

@@ -1,9 +1,9 @@
-import { Pressable, StyleSheet, Text } from 'react-native'
+import { Pressable, StyleSheet } from 'react-native'
+import { ThemedText } from '@/components/ui/ThemedText'
+import { useThemeColor } from '@/hooks/useThemeColor'
 import { formatCurrency } from '@/utils/formatters'
-import { AMOUNT_COLORS, type TransactionType } from './types'
-
-// Design system token
-const OUTLINE = '#908fa0'
+import { getTransactionAmountColor } from '@/utils/transactionForm'
+import type { TransactionType } from './types'
 
 type Props = {
   amountCents: number
@@ -24,17 +24,19 @@ const TYPE_SIGN: Record<TransactionType, string> = {
 }
 
 export function AmountDisplay({ amountCents, type, onPress }: Props) {
-  const color = AMOUNT_COLORS[type]
+  const theme = useThemeColor()
+  const color = getTransactionAmountColor(type, theme)
   const amount = amountCents / 100
   const sign = TYPE_SIGN[type]
 
   return (
     <Pressable onPress={onPress} style={styles.container}>
-      <Text style={styles.label}>{TYPE_LABELS[type]}</Text>
-      <Text style={[styles.amount, { color }]}>
-        {sign ? `${sign} ` : ''}
-        {formatCurrency(amount)}
-      </Text>
+      <ThemedText text={TYPE_LABELS[type]} variant="caption" tone="muted" style={styles.label} />
+      <ThemedText
+        text={`${sign ? `${sign} ` : ''}${formatCurrency(amount)}`}
+        variant="display"
+        style={[styles.amount, { color }]}
+      />
     </Pressable>
   )
 }
@@ -50,7 +52,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textTransform: 'uppercase',
     letterSpacing: 0.6,
-    color: OUTLINE,
   },
   amount: {
     fontSize: 36,

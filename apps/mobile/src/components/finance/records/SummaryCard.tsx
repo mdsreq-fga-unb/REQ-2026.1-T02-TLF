@@ -1,6 +1,6 @@
-import { StyleSheet, Text, ViewStyle, StyleProp } from 'react-native'
-import { Container } from '@/components/ui/Container'
-import { useThemeColor } from '@/hooks/useThemeColor'
+import { StyleSheet, ViewStyle, StyleProp } from 'react-native'
+import { ThemedContainer } from '@/components/ui/ThemedContainer'
+import { ThemedText } from '@/components/ui/ThemedText'
 
 type CardSize = 'lg' | 'md'
 type CardAlign = 'left' | 'center'
@@ -24,23 +24,32 @@ export function SummaryCard({
   align = 'left',
   style,
 }: props) {
-  const theme = useThemeColor()
   const valueStyle = size === 'lg' ? styles.valueLarge : styles.valueSmall
   const alignmentStyle = align === 'center' ? styles.centered : null
   const textAlignStyle = align === 'center' ? styles.textCentered : null
 
   return (
-    <Container style={[styles.card, alignmentStyle, style]}>
-      <Text style={[styles.label, { color: theme.mutedForeground }, textAlignStyle]}>{label}</Text>
-      <Text style={[valueStyle, { color: valueColor ?? theme.foreground }, textAlignStyle]}>
-        {value}
-      </Text>
+    <ThemedContainer style={[styles.card, alignmentStyle, style]}>
+      <ThemedText
+        text={label}
+        variant="caption"
+        tone="muted"
+        style={[styles.label, textAlignStyle]}
+      />
+      <ThemedText
+        text={value}
+        variant="title"
+        style={[valueStyle, valueColor ? { color: valueColor } : null, textAlignStyle]}
+      />
       {caption ? (
-        <Text style={[styles.caption, { color: theme.mutedForeground }, textAlignStyle]}>
-          {caption}
-        </Text>
+        <ThemedText
+          text={caption}
+          variant="caption"
+          tone="muted"
+          style={[styles.caption, textAlignStyle]}
+        />
       ) : null}
-    </Container>
+    </ThemedContainer>
   )
 }
 

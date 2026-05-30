@@ -1,5 +1,5 @@
-import { Animated, Pressable, Text, View } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { Animated, Pressable, View } from 'react-native'
+import { AppIcon } from '@/components/ui/AppIcon'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { useConfirmacoesPendentes } from '@/hooks/useConfirmacoesPendentes'
@@ -43,8 +43,12 @@ export function ConfirmacoesPendentes({
         style={({ pressed }) => [styles.header, { opacity: pressed ? 0.75 : 1 }]}
       >
         <View style={styles.headerLeft}>
-          <MaterialIcons name="event-available" size={15} color={theme.success} />
-          <Text style={[styles.sectionTitle, { color: theme.success }]}>CONFIRMAÇÕES DO MÊS</Text>
+          <AppIcon name="calendar-check" size={15} color={theme.success} />
+          <ThemedText
+            text="CONFIRMAÇÕES DO MÊS"
+            variant="caption"
+            style={[styles.sectionTitle, { color: theme.success }]}
+          />
         </View>
 
         <View style={styles.headerRight}>
@@ -54,7 +58,7 @@ export function ConfirmacoesPendentes({
             text={`${confirmedCount}/${due.length} · ${currentMonth}`}
           />
           <Animated.View style={{ transform: [{ rotate: chevronRotate }] }}>
-            <MaterialIcons name="keyboard-arrow-down" size={18} color={theme.mutedForeground} />
+            <AppIcon name="chevron-down" size={18} color={theme.mutedForeground} />
           </Animated.View>
         </View>
       </Pressable>
@@ -84,10 +88,12 @@ export function ConfirmacoesPendentes({
             { display: allDone ? 'flex' : 'none' },
           ]}
         >
-          <MaterialIcons name="check-circle" size={16} color={theme.success} />
-          <Text style={[styles.allDoneText, { color: theme.success }]}>
-            Todas as cobranças de {currentMonth} foram tratadas.
-          </Text>
+          <AppIcon name="circle-check" size={16} color={theme.success} />
+          <ThemedText
+            text={`Todas as cobranças de ${currentMonth} foram tratadas.`}
+            variant="caption"
+            style={[styles.allDoneText, { color: theme.success }]}
+          />
         </View>
       </View>
     </View>

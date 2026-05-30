@@ -1,5 +1,5 @@
 import { View } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { AppIcon } from '@/components/ui/AppIcon'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { RecurrenceItem } from '../RecurrenceItem'
@@ -17,7 +17,7 @@ export function RecurrencesList({ recurrences, onToggleActive }: Props) {
   if (recurrences.length === 0) {
     return (
       <View style={styles.empty}>
-        <MaterialIcons name="sync-disabled" size={52} color={theme.border} />
+        <AppIcon name="refresh-cw-off" size={52} color={theme.border} />
         <ThemedText style={styles.emptyTitle} text="Nenhuma recorrência ainda" />
         <ThemedText
           tone="muted"

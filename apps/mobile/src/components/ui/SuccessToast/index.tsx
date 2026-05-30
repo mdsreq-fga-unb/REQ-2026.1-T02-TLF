@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
-import { Animated, Text, View } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { Animated, View } from 'react-native'
+import { CircleCheck } from 'lucide-react-native'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { styles } from './style'
 
@@ -34,11 +35,9 @@ export function SuccessToast({ visible, message, duration = 2500, onHide }: Prop
     <Animated.View style={[styles.container, { opacity }]} pointerEvents="none">
       <View style={[styles.toast, { borderColor: `${success}55`, shadowColor: success }]}>
         <View style={styles.iconWrap}>
-          <MaterialIcons name="check-circle" size={20} color={success} />
+          <CircleCheck size={20} color={success} />
         </View>
-        <Text style={styles.message} numberOfLines={2}>
-          {message}
-        </Text>
+        <ThemedText text={message} variant="body" style={styles.message} numberOfLines={2} />
       </View>
     </Animated.View>
   )

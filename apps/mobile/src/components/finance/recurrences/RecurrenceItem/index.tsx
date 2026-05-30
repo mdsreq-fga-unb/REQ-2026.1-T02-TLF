@@ -1,5 +1,5 @@
-import { Pressable, Text, View } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { Pressable, View } from 'react-native'
+import { AppIcon } from '@/components/ui/AppIcon'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { useRecurrenceItem } from '@/hooks/useRecurrenceItem'
@@ -44,7 +44,7 @@ export function RecurrenceItem({ recurrence }: Props) {
       </View>
 
       <View style={[styles.iconCircle, { backgroundColor: `${iconColor}2E` }]}>
-        <MaterialIcons name={icon} size={18} color={iconColor} />
+        <AppIcon name={icon} size={18} color={iconColor} />
       </View>
 
       <View style={styles.content}>
@@ -56,9 +56,12 @@ export function RecurrenceItem({ recurrence }: Props) {
             text={`${accountName} · ${subcategoryName ?? categoryName}`}
             numberOfLines={1}
           />
-          <Text style={[styles.amount, { color: amountColor }]} numberOfLines={1}>
-            {amountSign} {formatCurrency(recurrence.amount)}
-          </Text>
+          <ThemedText
+            text={`${amountSign} ${formatCurrency(recurrence.amount)}`}
+            variant="label"
+            style={[styles.amount, { color: amountColor }]}
+            numberOfLines={1}
+          />
         </View>
       </View>
     </Pressable>

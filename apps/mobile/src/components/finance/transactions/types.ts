@@ -1,46 +1,30 @@
 import type { TransactionType } from '@/services/database/queries/transaction'
+import type { IconKey } from '@/utils/icons'
 
 export type { TransactionType }
 
 export type FormAccount = {
   id: string
   label: string
-  icon: string
+  icon: IconKey
 }
 
 export type FormCategory = {
   id: string
   label: string
-  icon: string
+  icon: IconKey
   subcategories: FormSubcategory[]
 }
 
 export type FormSubcategory = {
   id: string
   label: string
-  icon: string
+  icon: IconKey
 }
-
-// Tab underline e botão Salvar do keypad
-export const TYPE_COLORS: Record<TransactionType, string> = {
-  EXPENSE: '#FF4B4B',
-  INCOME: '#00E383',
-  TRANSFER: '#8083FF',
-}
-
-// Cor do valor monetário — Transfer é neutro (on-surface)
-export const AMOUNT_COLORS: Record<TransactionType, string> = {
-  EXPENSE: '#FF4B4B',
-  INCOME: '#00E383',
-  TRANSFER: '#e4e1ed',
-}
-
-// Chips de subcategoria sempre usam secondary-fixed-dim
-export const CHIP_ACCENT = '#00e383'
 
 export const ACCOUNTS: FormAccount[] = [
-  { id: 'cash', label: 'Dinheiro', icon: 'payments' },
-  { id: 'checking', label: 'Conta Corrente', icon: 'account-balance' },
+  { id: 'cash', label: 'Dinheiro', icon: 'banknote' },
+  { id: 'checking', label: 'Conta Corrente', icon: 'landmark' },
   { id: 'credit', label: 'Cartão de Crédito', icon: 'credit-card' },
 ]
 
@@ -49,48 +33,48 @@ export const CATEGORIES: Record<TransactionType, FormCategory[]> = {
     {
       id: 'food',
       label: 'Alimentação',
-      icon: 'restaurant',
+      icon: 'utensils',
       subcategories: [
-        { id: 'restaurant', label: 'Restaurante', icon: 'restaurant' },
+        { id: 'restaurant', label: 'Restaurante', icon: 'utensils' },
         { id: 'market', label: 'Mercado', icon: 'shopping-cart' },
-        { id: 'delivery', label: 'Delivery', icon: 'fastfood' },
+        { id: 'delivery', label: 'Delivery', icon: 'utensils-crossed' },
       ],
     },
     {
       id: 'transport',
       label: 'Transporte',
-      icon: 'directions-bus',
+      icon: 'bus',
       subcategories: [
-        { id: 'taxi', label: 'Táxi', icon: 'local-taxi' },
-        { id: 'ride', label: 'App', icon: 'directions-car' },
-        { id: 'flight', label: 'Avião', icon: 'flight' },
+        { id: 'taxi', label: 'Táxi', icon: 'car' },
+        { id: 'ride', label: 'App', icon: 'car' },
+        { id: 'flight', label: 'Avião', icon: 'plane' },
       ],
     },
     {
       id: 'home',
       label: 'Moradia',
-      icon: 'home',
+      icon: 'house',
       subcategories: [
-        { id: 'rent', label: 'Aluguel', icon: 'home' },
-        { id: 'utilities', label: 'Contas', icon: 'power' },
+        { id: 'rent', label: 'Aluguel', icon: 'house' },
+        { id: 'utilities', label: 'Contas', icon: 'zap' },
       ],
     },
     {
       id: 'health',
       label: 'Saúde',
-      icon: 'local-hospital',
+      icon: 'hospital',
       subcategories: [
-        { id: 'pharmacy', label: 'Farmácia', icon: 'healing' },
-        { id: 'doctor', label: 'Médico', icon: 'local-hospital' },
+        { id: 'pharmacy', label: 'Farmácia', icon: 'pill' },
+        { id: 'doctor', label: 'Médico', icon: 'hospital' },
       ],
     },
     {
       id: 'leisure',
       label: 'Lazer',
-      icon: 'movie',
+      icon: 'clapperboard',
       subcategories: [
-        { id: 'games', label: 'Jogos', icon: 'games' },
-        { id: 'movies', label: 'Cinema', icon: 'movie' },
+        { id: 'games', label: 'Jogos', icon: 'gamepad' },
+        { id: 'movies', label: 'Cinema', icon: 'clapperboard' },
       ],
     },
   ],
@@ -98,16 +82,16 @@ export const CATEGORIES: Record<TransactionType, FormCategory[]> = {
     {
       id: 'salary',
       label: 'Salário',
-      icon: 'attach-money',
+      icon: 'dollar-sign',
       subcategories: [
-        { id: 'monthly', label: 'Mensal', icon: 'autorenew' },
-        { id: 'bonus', label: 'Bônus', icon: 'card-giftcard' },
+        { id: 'monthly', label: 'Mensal', icon: 'refresh-cw' },
+        { id: 'bonus', label: 'Bônus', icon: 'gift' },
       ],
     },
     {
       id: 'freelance',
       label: 'Freelance',
-      icon: 'work',
+      icon: 'briefcase',
       subcategories: [{ id: 'project', label: 'Projeto', icon: 'folder' }],
     },
     {
@@ -115,14 +99,14 @@ export const CATEGORIES: Record<TransactionType, FormCategory[]> = {
       label: 'Investimento',
       icon: 'trending-up',
       subcategories: [
-        { id: 'dividends', label: 'Dividendos', icon: 'show-chart' },
+        { id: 'dividends', label: 'Dividendos', icon: 'chart-line' },
         { id: 'interest', label: 'Juros', icon: 'trending-up' },
       ],
     },
     {
       id: 'other',
       label: 'Outros',
-      icon: 'more-horiz',
+      icon: 'ellipsis',
       subcategories: [],
     },
   ],
@@ -130,7 +114,7 @@ export const CATEGORIES: Record<TransactionType, FormCategory[]> = {
     {
       id: 'transfer',
       label: 'Transferência',
-      icon: 'swap-horiz',
+      icon: 'arrow-left-right',
       subcategories: [],
     },
   ],

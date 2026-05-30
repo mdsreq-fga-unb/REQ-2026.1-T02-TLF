@@ -1,5 +1,6 @@
 import { Pressable, View } from 'react-native'
 import { router } from 'expo-router'
+import { ArrowLeft, Bell, Plus } from 'lucide-react-native'
 import { Background } from '@/components/ui/Background'
 import { ScrollArea } from '@/components/ui/ScrollArea'
 import { SectionDivider } from '@/components/ui/SectionDivider'
@@ -10,7 +11,6 @@ import { useRecorrenciasScreen } from '@/hooks/useRecorrenciasScreen'
 import { RecurrenceSummaryCard } from '@/components/finance/recurrences/RecurrenceSummaryCard'
 import { RecurrencesList } from '@/components/finance/recurrences/RecurrencesList'
 import { ConfirmacoesPendentes } from '@/components/finance/recurrences/ConfirmacoesPendentes'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { indexStyles as styles } from '@/styles/recorrencia.style'
 
 export default function RecorrenciasScreen() {
@@ -38,11 +38,11 @@ export default function RecorrenciasScreen() {
             hitSlop={8}
             style={({ pressed }) => [styles.iconBtn, { opacity: pressed ? 0.6 : 1 }]}
           >
-            <MaterialIcons name="arrow-back" size={22} color={theme.foreground} />
+            <ArrowLeft size={22} color={theme.foreground} />
           </Pressable>
           <ThemedText text="Recorrências" style={styles.title} />
           <View style={[styles.iconBtn, { backgroundColor: theme.surfaceMuted }]}>
-            <MaterialIcons name="notifications-none" size={22} color={theme.foreground} />
+            <Bell size={22} color={theme.foreground} />
           </View>
         </View>
 
@@ -69,7 +69,7 @@ export default function RecorrenciasScreen() {
           { backgroundColor: theme.primary, opacity: pressed ? 0.85 : 1 },
         ]}
       >
-        <MaterialIcons name="add" size={28} color={theme.onPrimary} />
+        <Plus size={28} color={theme.onPrimary} />
       </Pressable>
 
       <SuccessToast visible={toast !== null} message={toast ?? ''} onHide={() => setToast(null)} />

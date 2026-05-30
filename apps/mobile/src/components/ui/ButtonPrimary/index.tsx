@@ -1,4 +1,5 @@
-import { TouchableOpacity, TouchableOpacityProps, Text } from 'react-native'
+import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { styles } from './style'
 import { useThemeColor } from '@/hooks/useThemeColor'
 
@@ -17,11 +18,11 @@ export function ButtonPrimary({ title, disabled, onPress }: props) {
       style={[
         styles.button,
         disabled && styles.buttonDisabled,
-        { backgroundColor: themeColor.bluePrimary },
-        disabled && { backgroundColor: themeColor.graySecondary },
+        { backgroundColor: themeColor.primary },
+        disabled && { backgroundColor: themeColor.primaryDisabled },
       ]}
     >
-      <Text style={[styles.text, { color: useThemeColor().text }]}>{title}</Text>
+      <ThemedText text={title} variant="button" tone="onPrimary" style={styles.text} />
     </TouchableOpacity>
   )
 }

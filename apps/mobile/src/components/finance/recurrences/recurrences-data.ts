@@ -1,4 +1,5 @@
 import type { Recurrence } from './types'
+import type { IconKey } from '@/utils/icons'
 
 export type PaymentHistoryEntry = {
   month: number
@@ -17,7 +18,7 @@ export type MockAccount = {
 export type MockCategory = {
   id: string
   name: string
-  icon: string
+  icon: IconKey
 }
 
 export type MockSubcategory = {
@@ -36,14 +37,14 @@ export const mockAccounts: MockAccount[] = [
 ]
 
 export const mockCategories: MockCategory[] = [
-  { id: 'cat-moradia', name: 'Moradia', icon: 'home' },
-  { id: 'cat-assinaturas', name: 'Assinaturas', icon: 'subscriptions' },
-  { id: 'cat-alimentacao', name: 'Alimentação', icon: 'restaurant' },
-  { id: 'cat-transporte', name: 'Transporte', icon: 'directions-car' },
-  { id: 'cat-saude', name: 'Saúde', icon: 'fitness-center' },
-  { id: 'cat-educacao', name: 'Educação', icon: 'school' },
-  { id: 'cat-lazer', name: 'Lazer', icon: 'movie' },
-  { id: 'cat-outros', name: 'Outros', icon: 'category' },
+  { id: 'cat-moradia', name: 'Moradia', icon: 'house' },
+  { id: 'cat-assinaturas', name: 'Assinaturas', icon: 'repeat' },
+  { id: 'cat-alimentacao', name: 'Alimentação', icon: 'utensils' },
+  { id: 'cat-transporte', name: 'Transporte', icon: 'car' },
+  { id: 'cat-saude', name: 'Saúde', icon: 'dumbbell' },
+  { id: 'cat-educacao', name: 'Educação', icon: 'graduation-cap' },
+  { id: 'cat-lazer', name: 'Lazer', icon: 'clapperboard' },
+  { id: 'cat-outros', name: 'Outros', icon: 'tag' },
 ]
 
 export const mockSubcategories: MockSubcategory[] = [
@@ -176,15 +177,15 @@ export const mockPaymentHistory: Record<string, PaymentHistoryEntry[]> = {
   ],
 }
 
-export const categoryIcons: Record<string, string> = {
-  'cat-moradia': 'home',
-  'cat-assinaturas': 'subscriptions',
-  'cat-alimentacao': 'restaurant',
-  'cat-transporte': 'directions-car',
-  'cat-saude': 'fitness-center',
-  'cat-educacao': 'school',
-  'cat-lazer': 'movie',
-  'cat-outros': 'category',
+export const categoryIcons: Record<string, IconKey> = {
+  'cat-moradia': 'house',
+  'cat-assinaturas': 'repeat',
+  'cat-alimentacao': 'utensils',
+  'cat-transporte': 'car',
+  'cat-saude': 'dumbbell',
+  'cat-educacao': 'graduation-cap',
+  'cat-lazer': 'clapperboard',
+  'cat-outros': 'tag',
 }
 
 export const categoryColors: Record<string, string> = {

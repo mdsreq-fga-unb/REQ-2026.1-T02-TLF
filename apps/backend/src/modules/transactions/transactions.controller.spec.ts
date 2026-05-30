@@ -54,9 +54,7 @@ describe('TransactionsController', () => {
     it('deve chamar o service e retornar a transação criada', async () => {
       transactionsServiceMock.create.mockResolvedValue(mockTransaction)
 
-      const req = { user: { id: 'user-teste-001' } } as any; 
-
-      const result = await controller.create(dto, req)
+      const result = await controller.create(dto, 'user-teste-001')
 
       expect(result).toEqual(mockTransaction)
       expect(transactionsServiceMock.create).toHaveBeenCalledWith(
@@ -68,9 +66,7 @@ describe('TransactionsController', () => {
     it('deve passar o userId correto para o service', async () => {
       transactionsServiceMock.create.mockResolvedValue(mockTransaction)
 
-      const req = { user: { id: 'user-teste-001' } } as any; 
-
-      await controller.create(dto, req)
+      await controller.create(dto, 'user-teste-001')
 
       expect(transactionsServiceMock.create).toHaveBeenCalledTimes(1)
     })
@@ -80,20 +76,17 @@ describe('TransactionsController', () => {
     it('deve chamar findAll com userId e filtros', async () => {
       transactionsServiceMock.findAll.mockResolvedValue([{ id: '1' }]);
 
-      const req = { user: { id: 'user-1' } } as any;
-
       const query = {
         categoryId: 'cat-1',
         type: 'INCOME',
       };
 
-      await controller.findAll(req, query as any);
+      await controller.findAll('user-1', query as any);
 
-      expect(transactionsServiceMock.findAll).toHaveBeenCalledWith({
-        userId: 'user-1',
-        categoryId: 'cat-1',
-        type: 'INCOME',
-      });
+      expect(transactionsServiceMock.findAll).toHaveBeenCalledWith(
+        'user-1',
+        query,
+      );
     });
   });
 
@@ -101,9 +94,7 @@ describe('TransactionsController', () => {
     it('deve chamar service.findOne corretamente', async () => {
       transactionsServiceMock.findOne.mockResolvedValue({ id: '1' });
 
-      const req = { user: { id: 'user-1' } } as any;
-
-      await controller.findOne(req, '1');
+      await controller.findOne('user-1', '1');
 
       expect(transactionsServiceMock.findOne).toHaveBeenCalledWith({
         userId: 'user-1',
@@ -116,11 +107,9 @@ describe('TransactionsController', () => {
     it('deve chamar service.update com dados corretos', async () => {
       transactionsServiceMock.update.mockResolvedValue({ id: '1' });
 
-      const req = { user: { id: 'user-1' } } as any;
-
       const dto = { description: 'novo valor' };
 
-      await controller.update(req, '1', dto as any);
+      await controller.update('user-1', '1', dto as any);
 
       expect(transactionsServiceMock.update).toHaveBeenCalledWith({
         userId: 'user-1',
@@ -134,9 +123,7 @@ describe('TransactionsController', () => {
     it('deve chamar service.remove com dados corretos', async () => {
       transactionsServiceMock.remove.mockResolvedValue({ id: '1' });
 
-      const req = { user: { id: 'user-1' } } as any;
-
-      await controller.remove(req, '1');
+      await controller.remove('user-1', '1');
 
       expect(transactionsServiceMock.remove).toHaveBeenCalledWith({
         userId: 'user-1',

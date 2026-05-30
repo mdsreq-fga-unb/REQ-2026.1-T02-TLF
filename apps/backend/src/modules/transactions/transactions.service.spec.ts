@@ -140,11 +140,9 @@ describe('TransactionsService', () => {
         { id: '1' },
       ]);
 
-      const result = await service.findAll({
-        userId: 'user-1',
-      });
+      const result = await service.findAll('user-1', {});
 
-      expect(result).toHaveLength(1)
+      expect(result).toEqual([{ id: '1' }]);
     });
 
     it('deve buscar transações do usuário', async () => {
@@ -152,9 +150,7 @@ describe('TransactionsService', () => {
         { id: '1' },
       ]);
 
-      await service.findAll({
-        userId: 'user-1'
-      });
+      await service.findAll('user-1', {});
 
       expect(prismaMock.transaction.findMany).toHaveBeenCalledWith({
         where: {
@@ -166,8 +162,7 @@ describe('TransactionsService', () => {
     it('deve filtrar as transações por categoryId', async () => {
       prismaMock.transaction.findMany.mockResolvedValue([]);
 
-      await service.findAll({
-        userId: 'user-1',
+      await service.findAll('user-1', {
         categoryId: 'cat-1',
       });
 
@@ -183,8 +178,7 @@ describe('TransactionsService', () => {
     it('deve filtrar as transações por type', async () => {
       prismaMock.transaction.findMany.mockResolvedValue([]);
 
-      await service.findAll({
-        userId: 'user-1',
+      await service.findAll('user-1', {
         type: TransactionType.INCOME,
       });
 
@@ -199,8 +193,7 @@ describe('TransactionsService', () => {
     it('deve filtrar as transações por categoryId e type', async () => {
       prismaMock.transaction.findMany.mockResolvedValue([]);
 
-      await service.findAll({
-        userId: 'user-1',
+      await service.findAll('user-1', {
         categoryId: 'cat-1',
         type: TransactionType.INCOME,
       });

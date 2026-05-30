@@ -2,7 +2,7 @@ import { Modal, Pressable, View } from 'react-native'
 import { AppIcon } from '@/components/ui/AppIcon'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import { useEditScopeModal, type EditScope } from '@/hooks/useEditScopeModal'
+import { useEditScopeModal, type EditScope } from '@/hooks/recurrences/useEditScopeModal'
 import { OptionCard } from '../OptionCard'
 import { styles } from './style'
 

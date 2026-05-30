@@ -7,7 +7,7 @@ import {
   getSubcategoriesForCategory,
 } from '@/components/finance/recurrences/recurrences-data'
 import type { RecurrenceFrequency, RecurrenceType } from '@/components/finance/recurrences/types'
-import type { EditScope } from '@/hooks/useEditScopeModal'
+import type { EditScope } from '@/hooks/recurrences/useEditScopeModal'
 
 const MAX_CENTS = 9_999_999
 const NO_SUBCATEGORY = ''

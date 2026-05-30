@@ -1,21 +1,7 @@
 import { useMemo, useRef, useState } from 'react'
 import { Animated } from 'react-native'
 import type { Recurrence } from '@/components/finance/recurrences/types'
-
-const MONTHS_PT = [
-  'Janeiro',
-  'Fevereiro',
-  'Março',
-  'Abril',
-  'Maio',
-  'Junho',
-  'Julho',
-  'Agosto',
-  'Setembro',
-  'Outubro',
-  'Novembro',
-  'Dezembro',
-]
+import { MONTHS_FULL } from '@/utils/recurrences/dates'
 
 export function useConfirmacoesPendentes(
   recurrences: Recurrence[],
@@ -27,11 +13,15 @@ export function useConfirmacoesPendentes(
 
   const now = new Date()
   const currentDay = now.getDate()
-  const currentMonth = MONTHS_PT[now.getMonth()]
+  const currentMonth = MONTHS_FULL[now.getMonth()]
 
-  const due = recurrences.filter((r) => r.isActive && r.dueDay <= currentDay)
-  const confirmedCount = due.filter((r) => confirmedIds.includes(r.id)).length
-  const actedCount = confirmedCount + skippedIds.filter((id) => due.find((r) => r.id === id)).length
+  const due = recurrences.filter(
+    (recurrence) => recurrence.isActive && recurrence.dueDay <= currentDay,
+  )
+  const confirmedCount = due.filter((recurrence) => confirmedIds.includes(recurrence.id)).length
+  const actedCount =
+    confirmedCount +
+    skippedIds.filter((id) => due.find((recurrence) => recurrence.id === id)).length
   const progress = due.length > 0 ? confirmedCount / due.length : 0
   const allDone = due.length > 0 && actedCount === due.length
 

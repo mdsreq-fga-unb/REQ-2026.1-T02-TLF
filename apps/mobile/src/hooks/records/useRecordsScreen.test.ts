@@ -1,5 +1,5 @@
 import { renderHook, act, waitFor } from '@testing-library/react-native'
-import { mockTransactions } from '@/components/finance/records/records-data'
+import { mockTransactions } from '@/utils/fixtures/records'
 import { router } from 'expo-router'
 import { useRecordsScreen } from './useRecordsScreen'
 

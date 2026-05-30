@@ -2,7 +2,10 @@ import { Modal, Pressable, View } from 'react-native'
 import { AppIcon } from '@/components/ui/AppIcon'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import { useDeleteRecurrenceModal, type DeleteScope } from '@/hooks/useDeleteRecurrenceModal'
+import {
+  useDeleteRecurrenceModal,
+  type DeleteScope,
+} from '@/hooks/recurrences/useDeleteRecurrenceModal'
 import { OptionCard } from '../OptionCard'
 import { styles } from './style'
 import type { Recurrence } from '../types'

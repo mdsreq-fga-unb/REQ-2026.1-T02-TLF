@@ -1,4 +1,4 @@
-import { categoryDistribution } from '@/components/finance/records/records-data'
+import { categoryDistribution } from '@/utils/fixtures/records'
 
 export const CATEGORY_COLOR_PALETTE = categoryDistribution.map((category) => category.color)
 

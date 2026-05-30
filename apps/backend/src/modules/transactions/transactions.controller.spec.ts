@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TransactionsController } from './transactions.controller';
 import { TransactionsService } from './transactions.service';
 import { TransactionType, TransactionStatus } from '../../../generated/prisma/enums'
+import { AuthGuard } from '@modules/auth/context/auth.guard';
 
 const transactionsServiceMock = {
   create: jest.fn(),
@@ -37,7 +38,10 @@ describe('TransactionsController', () => {
           useValue: transactionsServiceMock,
         },
       ],
-    }).compile();
+    })
+      .overrideGuard(AuthGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     controller = module.get<TransactionsController>(TransactionsController);
   });

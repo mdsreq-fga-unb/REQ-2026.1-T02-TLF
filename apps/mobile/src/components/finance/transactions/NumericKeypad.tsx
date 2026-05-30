@@ -14,7 +14,11 @@ import { Delete } from 'lucide-react-native'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { formatCurrency } from '@/utils/formatters'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import { getTransactionAmountColor, getTransactionTypeColor } from '@/utils/transactionForm'
+import {
+  getTransactionAmountColor,
+  getTransactionTypeColor,
+  TYPE_SIGN,
+} from '@/utils/transactionForm'
 import type { TransactionType } from './types'
 const VELOCITY_THRESHOLD = 1000
 const DISMISS_RATIO = 0.3
@@ -34,12 +38,6 @@ const KEYPAD_ROWS = [
   ['7', '8', '9'],
   ['.', '0', 'del'],
 ] as const
-
-const TYPE_SIGN: Record<TransactionType, string> = {
-  EXPENSE: '−',
-  INCOME: '+',
-  TRANSFER: '',
-}
 
 export function NumericKeypad({
   visible,

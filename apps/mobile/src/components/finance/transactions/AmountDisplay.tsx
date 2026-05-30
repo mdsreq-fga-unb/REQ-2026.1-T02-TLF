@@ -2,25 +2,13 @@ import { Pressable, StyleSheet } from 'react-native'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { formatCurrency } from '@/utils/formatters'
-import { getTransactionAmountColor } from '@/utils/transactionForm'
+import { getTransactionAmountColor, TYPE_LABELS, TYPE_SIGN } from '@/utils/transactionForm'
 import type { TransactionType } from './types'
 
 type Props = {
   amountCents: number
   type: TransactionType
   onPress: () => void
-}
-
-const TYPE_LABELS: Record<TransactionType, string> = {
-  EXPENSE: 'Despesa',
-  INCOME: 'Receita',
-  TRANSFER: 'Transferência',
-}
-
-const TYPE_SIGN: Record<TransactionType, string> = {
-  EXPENSE: '−',
-  INCOME: '+',
-  TRANSFER: '',
 }
 
 export function AmountDisplay({ amountCents, type, onPress }: Props) {

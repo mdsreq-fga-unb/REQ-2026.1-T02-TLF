@@ -1,8 +1,6 @@
 import { useCallback, useState } from 'react'
 import { createTransaction, type TransactionType } from '@/services/database/queries/transaction'
-import { ACCOUNTS } from '@/components/finance/transactions/types'
-
-const MAX_CENTS = 9_999_999
+import { ACCOUNTS, MAX_AMOUNT_CENTS, TRANSACTION_FORM_ERRORS } from '@/utils/transactionForm'
 
 export type TransactionInitialValues = {
   type?: TransactionType
@@ -25,6 +23,7 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
   const [submitting, setSubmitting] = useState(false)
   const [showKeypad, setShowKeypad] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [submitAttempted, setSubmitAttempted] = useState(false)
 
   const handleKeypad = useCallback((key: string) => {
     setAmountCents((prev) => {
@@ -32,7 +31,7 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
       const digit = parseInt(key, 10)
       if (isNaN(digit)) return prev
       const next = prev * 10 + digit
-      return next > MAX_CENTS ? prev : next
+      return next > MAX_AMOUNT_CENTS ? prev : next
     })
   }, [])
 
@@ -42,16 +41,15 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
     setSubcategoryId('')
   }
 
-  const [submitAttempted, setSubmitAttempted] = useState(false)
-
   const amount = amountCents / 100
 
   const errors = {
-    amount: amountCents === 0 ? 'Informe o valor da transação' : undefined,
-    category: type !== 'TRANSFER' && categoryId === '' ? 'Selecione uma categoria' : undefined,
+    amount: amountCents === 0 ? TRANSACTION_FORM_ERRORS.amount : undefined,
+    category:
+      type !== 'TRANSFER' && categoryId === '' ? TRANSACTION_FORM_ERRORS.category : undefined,
     destinationAccount:
       type === 'TRANSFER' && destinationAccountId === accountId
-        ? 'Selecione uma conta de destino diferente da origem'
+        ? TRANSACTION_FORM_ERRORS.destinationAccount
         : undefined,
   }
 
@@ -88,10 +86,7 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
       reset()
       onSuccess?.()
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : 'Não foi possível salvar a transação. Tente novamente.'
+      const message = error instanceof Error ? error.message : TRANSACTION_FORM_ERRORS.submit
       setSubmitError(message)
     } finally {
       setSubmitting(false)

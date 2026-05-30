@@ -1,15 +1,18 @@
-import { useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
 import { AlertCircle, Calendar, CreditCard, Landmark, Pencil, Tag } from 'lucide-react-native'
-import { router } from 'expo-router'
+import { ThemedButton } from '@/components/ui/ThemedButton'
 import { ThemedFieldError } from '@/components/ui/ThemedFieldError'
 import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import { useTransactionForm, type TransactionInitialValues } from '@/hooks/useTransactionForm'
-import { ButtonPrimary } from '@/components/ui/ButtonPrimary'
+import {
+  useTransactionFormScreen,
+  type TransactionFormMode,
+  type TransactionInitialValues,
+} from '@/hooks/transactions/useTransactionFormScreen'
+import { TRANSACTION_FORM_COPY } from '@/utils/transactionForm'
 import { formatDateTimeShort } from '@/utils/formatters'
-import { ACCOUNTS, CATEGORIES } from './types'
+import { ACCOUNTS } from './types'
 import { TransactionTypeTabs } from './TransactionTypeTabs'
 import { AmountDisplay } from './AmountDisplay'
 import { NumericKeypad } from './NumericKeypad'
@@ -19,45 +22,46 @@ import { PickerModal } from './PickerModal'
 
 type Props = {
   title?: string
+  mode?: TransactionFormMode
   initialValues?: TransactionInitialValues
   onSuccess?: () => void
 }
 
-export function TransactionForm({ title = 'Adicionar Registro', initialValues, onSuccess }: Props) {
+export function TransactionForm({ title, mode, initialValues, onSuccess }: Props) {
   const theme = useThemeColor()
-  const form = useTransactionForm(initialValues)
-  const [successAlertVisible, setSuccessAlertVisible] = useState(false)
-
-  const dismissSuccessAlert = () => {
-    setSuccessAlertVisible(false)
-    onSuccess?.()
-  }
-
-  const handleSubmit = () => {
-    form.submit(() => {
-      setSuccessAlertVisible(true)
-    })
-  }
-  const [showAccountPicker, setShowAccountPicker] = useState(false)
-  const [showDestinationPicker, setShowDestinationPicker] = useState(false)
-  const [showCategoryPicker, setShowCategoryPicker] = useState(false)
-
-  const categories = CATEGORIES[form.type]
-  const selectedAccount = ACCOUNTS.find((a) => a.id === form.accountId)
-  const selectedDestination = ACCOUNTS.find((a) => a.id === form.destinationAccountId)
-  const selectedCategory = categories.find((c) => c.id === form.categoryId)
-  const destinationOptions = ACCOUNTS.filter((a) => a.id !== form.accountId)
+  const {
+    form,
+    title: resolvedTitle,
+    submitLabel,
+    successTitle,
+    successMessage,
+    categories,
+    selectedAccount,
+    selectedDestination,
+    selectedCategory,
+    destinationOptions,
+    showAccountPicker,
+    setShowAccountPicker,
+    showDestinationPicker,
+    setShowDestinationPicker,
+    showCategoryPicker,
+    setShowCategoryPicker,
+    successAlertVisible,
+    dismissSuccessAlert,
+    handleSubmit,
+    openRecorrencias,
+  } = useTransactionFormScreen({ title, mode, initialValues, onSuccess })
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.header}>
-        <ThemedText text={title} variant="headline" style={styles.title} />
+        <ThemedText text={resolvedTitle} variant="headline" style={styles.title} />
       </View>
 
       <TransactionTypeTabs
         value={form.type}
         onChange={form.handleTypeChange}
-        onRecorrencias={() => router.push('/recorrencia')}
+        onRecorrencias={openRecorrencias}
       />
 
       <ScrollView
@@ -126,7 +130,7 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
             isInput
             isLast
             onChangeText={form.setNotes}
-            placeholder="Adicionar nota..."
+            placeholder={TRANSACTION_FORM_COPY.notesPlaceholder}
           />
         </View>
       </ScrollView>
@@ -143,10 +147,11 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
             />
           </View>
         )}
-        <ButtonPrimary
-          title={form.submitting ? 'Salvando...' : 'Adicionar Registro'}
+        <ThemedButton
+          title={submitLabel}
           disabled={form.submitting}
           onPress={handleSubmit}
+          style={styles.submitButton}
         />
       </View>
 
@@ -188,12 +193,12 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
       <ThemedOverlayAlert
         visible={successAlertVisible}
         onRequestClose={dismissSuccessAlert}
-        message="Sua transação foi registrada com sucesso."
+        message={successMessage}
         actions={[{ label: 'OK', onPress: dismissSuccessAlert }]}
       >
         <ThemedText
           variant="headline"
-          text="Registro salvo!"
+          text={successTitle}
           style={{ textAlign: 'center', width: '100%' }}
         />
       </ThemedOverlayAlert>
@@ -233,6 +238,9 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     alignItems: 'center',
     gap: 10,
+  },
+  submitButton: {
+    width: '100%',
   },
   errorRow: {
     flexDirection: 'row',

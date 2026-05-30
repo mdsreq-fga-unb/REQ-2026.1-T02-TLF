@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import { getTransactionTypeColor } from '@/utils/transactionForm'
+import { getTransactionTypeColor, TRANSACTION_FORM_COPY, TYPE_TABS } from '@/utils/transactionForm'
 import type { TransactionType } from './types'
 
 type Props = {
@@ -10,18 +10,12 @@ type Props = {
   onRecorrencias?: () => void
 }
 
-const TABS: { value: TransactionType; label: string }[] = [
-  { value: 'EXPENSE', label: 'Despesa' },
-  { value: 'INCOME', label: 'Receita' },
-  { value: 'TRANSFER', label: 'Transferência' },
-]
-
 export function TransactionTypeTabs({ value, onChange, onRecorrencias }: Props) {
   const theme = useThemeColor()
 
   return (
     <View style={[styles.row, { borderBottomColor: theme.border }]}>
-      {TABS.map((tab) => {
+      {TYPE_TABS.map((tab) => {
         const active = tab.value === value
         return (
           <Pressable
@@ -51,7 +45,12 @@ export function TransactionTypeTabs({ value, onChange, onRecorrencias }: Props) 
           onPress={onRecorrencias}
           style={[styles.tab, { borderBottomColor: 'transparent' }]}
         >
-          <ThemedText text="Recorrências" variant="label" tone="muted" style={styles.label} />
+          <ThemedText
+            text={TRANSACTION_FORM_COPY.recorrenciasTab}
+            variant="label"
+            tone="muted"
+            style={styles.label}
+          />
         </Pressable>
       )}
     </View>

@@ -1,45 +1,19 @@
 import { Pressable, StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { router, useLocalSearchParams } from 'expo-router'
 import { ArrowLeft } from 'lucide-react-native'
 import { TransactionForm } from '@/components/finance/transactions/TransactionForm'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import type { TransactionInitialValues } from '@/hooks/useTransactionForm'
-import type { TransactionType } from '@/services/database/queries/transaction'
-
-const VALID_TYPES = new Set<TransactionType>(['EXPENSE', 'INCOME', 'TRANSFER'])
-
-function parseType(raw: string | string[] | undefined): TransactionType {
-  const value = Array.isArray(raw) ? raw[0] : raw
-  return VALID_TYPES.has(value as TransactionType) ? (value as TransactionType) : 'EXPENSE'
-}
-
-function parseAmountCents(raw: string | string[] | undefined): number {
-  const value = Array.isArray(raw) ? raw[0] : raw
-  const parsed = parseFloat(value ?? '0')
-  return Number.isFinite(parsed) ? Math.round(Math.abs(parsed) * 100) : 0
-}
-
-function parseString(raw: string | string[] | undefined): string {
-  return (Array.isArray(raw) ? raw[0] : raw) ?? ''
-}
+import { useEditRecordScreen } from '@/hooks/records/useEditRecordScreen'
 
 export default function EditRecordScreen() {
   const theme = useThemeColor()
-  const params = useLocalSearchParams()
-
-  const initialValues: TransactionInitialValues = {
-    type: parseType(params.type),
-    amountCents: parseAmountCents(params.amount),
-    categoryId: parseString(params.categoryId),
-    notes: parseString(params.description),
-  }
+  const { title, mode, initialValues, handleBack, handleSuccess } = useEditRecordScreen()
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.backRow}>
         <Pressable
-          onPress={() => router.back()}
+          onPress={handleBack}
           style={({ pressed }) => [styles.backBtn, { opacity: pressed ? 0.6 : 1 }]}
           hitSlop={12}
         >
@@ -48,9 +22,10 @@ export default function EditRecordScreen() {
       </View>
 
       <TransactionForm
-        title="Editar Registro"
+        title={title}
+        mode={mode}
         initialValues={initialValues}
-        onSuccess={() => router.back()}
+        onSuccess={handleSuccess}
       />
     </SafeAreaView>
   )

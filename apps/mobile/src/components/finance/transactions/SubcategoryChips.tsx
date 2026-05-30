@@ -9,7 +9,8 @@ import Animated, {
 import { AppIcon } from '@/components/ui/AppIcon'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import { CATEGORIES, type TransactionType } from './types'
+import { CATEGORIES } from '@/utils/transactionForm'
+import type { TransactionType } from './types'
 
 const SPRING_SELECT = { damping: 18, stiffness: 280 } as const
 const SPRING_PRESS = { damping: 22, stiffness: 420 } as const

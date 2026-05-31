@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     gap: 4,
+    alignItems: 'flex-start',
   },
   label: {
     fontSize: 11,

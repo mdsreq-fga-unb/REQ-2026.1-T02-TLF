@@ -4,13 +4,13 @@ import { RecordsSearch } from '@/components/finance/records/RecordsSearch'
 import { RecordsSummary } from '@/components/finance/records/RecordsSummary'
 import { TransactionsFilters } from '@/components/finance/records/TransactionsFilters'
 import { TransactionsList } from '@/components/finance/records/TransactionsList'
-import { SectionDivider } from '@/components/ui/SectionDivider'
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
 import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
 import { ThemedScrollArea } from '@/components/ui/ThemedScrollArea'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useRecordsScreen } from '@/hooks/records/useRecordsScreen'
-import { styles } from './records.style'
+import { spacing } from '@/utils/dimensions'
+import { StyleSheet } from 'react-native'
 
 export default function RecordsScreen() {
   const {
@@ -39,7 +39,6 @@ export default function RecordsScreen() {
         <RecordsHeader title="Histórico" showPeriod={false} />
         <RecordsSearch value={searchQuery} onChangeText={setSearchQuery} />
         <RecordsSummary summary={summaryData} />
-        <SectionDivider />
         <TransactionsFilters
           categories={categoryOptions}
           selectedCategory={categoryFilter}
@@ -48,7 +47,6 @@ export default function RecordsScreen() {
           selectedType={typeFilter}
           onSelectType={setTypeFilter}
         />
-        <SectionDivider />
         <TransactionsList
           transactions={filteredTransactions}
           isLoading={isLoading}
@@ -56,7 +54,6 @@ export default function RecordsScreen() {
           onDeleteTransaction={handleDelete}
           onEditTransaction={handleEdit}
         />
-        <SectionDivider />
         <CategoryDistribution categories={categoryData} />
       </ThemedScrollArea>
       <ThemedOverlayAlert
@@ -76,3 +73,12 @@ export default function RecordsScreen() {
     </ThemedBackground>
   )
 }
+
+const styles = StyleSheet.create({
+  content: {
+    paddingTop: 18,
+    paddingBottom: 28,
+    gap: spacing.sm + 2,
+    alignItems: 'stretch',
+  },
+})

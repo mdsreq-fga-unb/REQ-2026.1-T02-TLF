@@ -1,4 +1,4 @@
-import { Pressable, View } from 'react-native'
+import { Pressable, StyleSheet, View } from 'react-native'
 import { router } from 'expo-router'
 import { ArrowLeft, Bell, Plus } from 'lucide-react-native'
 import { ConfirmacoesPendentes } from '@/components/finance/recurrences/ConfirmacoesPendentes'
@@ -11,7 +11,6 @@ import { ThemedScrollArea } from '@/components/ui/ThemedScrollArea'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { useRecorrenciasScreen } from '@/hooks/recurrences/useRecorrenciasScreen'
-import { styles } from './index.style'
 
 export default function RecorrenciasScreen() {
   const theme = useThemeColor()
@@ -79,3 +78,52 @@ export default function RecorrenciasScreen() {
     </ThemedBackground>
   )
 }
+
+const styles = StyleSheet.create({
+  scroll: {
+    alignSelf: 'stretch',
+    width: '100%',
+  },
+  content: {
+    paddingHorizontal: 8,
+    paddingTop: 48,
+    paddingBottom: 100,
+    gap: 14,
+    alignItems: 'stretch',
+    width: '100%',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    alignSelf: 'stretch',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '700',
+    flex: 1,
+    textAlign: 'center',
+  },
+  iconBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fab: {
+    position: 'absolute',
+    bottom: 28,
+    right: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+  },
+})

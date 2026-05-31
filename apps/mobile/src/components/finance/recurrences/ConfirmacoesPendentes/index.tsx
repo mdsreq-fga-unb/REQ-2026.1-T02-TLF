@@ -68,7 +68,7 @@ export function ConfirmacoesPendentes({
         <View style={{ flex: 1 - progress }} />
       </View>
 
-      <View style={{ display: collapsed ? 'none' : 'flex' }}>
+      <View style={[styles.cardsList, { display: collapsed ? 'none' : 'flex' }]}>
         {due.map((r) => (
           <ConfirmCard
             key={r.id}

@@ -39,30 +39,39 @@ export function RecurrenceItem({ recurrence }: Props) {
         },
       ]}
     >
-      <View style={[styles.dayBadge, { backgroundColor: theme.surfaceMuted }]}>
-        <ThemedText tone="primary" style={styles.dayText} text={String(recurrence.dueDay)} />
-      </View>
-
-      <View style={[styles.iconCircle, { backgroundColor: `${iconColor}2E` }]}>
-        <AppIcon name={icon} size={18} color={iconColor} />
-      </View>
-
-      <View style={styles.content}>
-        <ThemedText style={styles.description} text={recurrence.description} numberOfLines={1} />
-        <View style={styles.metaRow}>
-          <ThemedText
-            tone="muted"
-            style={styles.subtitle}
-            text={`${accountName} · ${subcategoryName ?? categoryName}`}
-            numberOfLines={1}
-          />
-          <ThemedText
-            text={`${amountSign} ${formatCurrency(recurrence.amount)}`}
-            variant="label"
-            style={[styles.amount, { color: amountColor }]}
-            numberOfLines={1}
-          />
+      <View style={styles.dayRow}>
+        <View style={[styles.dayBadge, { backgroundColor: theme.surfaceMuted }]}>
+          <ThemedText tone="primary" style={styles.dayText} text={String(recurrence.dueDay)} />
         </View>
+      </View>
+
+      <View style={styles.mainRow}>
+        <View style={styles.leftContent}>
+          <View style={[styles.iconCircle, { backgroundColor: `${iconColor}2E` }]}>
+            <AppIcon name={icon} size={18} color={iconColor} />
+          </View>
+
+          <View style={styles.content}>
+            <ThemedText
+              style={styles.description}
+              text={recurrence.description}
+              numberOfLines={1}
+            />
+            <ThemedText
+              tone="muted"
+              style={styles.subtitle}
+              text={`${accountName} · ${subcategoryName ?? categoryName}`}
+              numberOfLines={1}
+            />
+          </View>
+        </View>
+
+        <ThemedText
+          text={`${amountSign} ${formatCurrency(recurrence.amount)}`}
+          variant="label"
+          style={[styles.amount, { color: amountColor }]}
+          numberOfLines={1}
+        />
       </View>
     </Pressable>
   )

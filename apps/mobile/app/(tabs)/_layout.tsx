@@ -1,6 +1,6 @@
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { Tabs } from 'expo-router'
-import { FileText, Home, Menu, Plus, WalletCards } from 'lucide-react-native'
+import { FileText, Home, Landmark, Menu, Plus } from 'lucide-react-native'
 
 export default function TabsLayout() {
   const colors = useThemeColor()
@@ -30,12 +30,12 @@ export default function TabsLayout() {
         options={{ title: 'Histórico', tabBarIcon: ({ color }) => <FileText color={color} /> }}
       />
       <Tabs.Screen
-        name="registro"
+        name="register"
         options={{ title: 'Registrar', tabBarIcon: ({ color }) => <Plus color={color} /> }}
       />
       <Tabs.Screen
-        name="cards"
-        options={{ title: 'Cards', tabBarIcon: ({ color }) => <WalletCards color={color} /> }}
+        name="institutions"
+        options={{ title: 'Instituições', tabBarIcon: ({ color }) => <Landmark color={color} /> }}
       />
       <Tabs.Screen
         name="menu"

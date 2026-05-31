@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, View } from 'react-native'
+import { Pressable, ScrollView, StyleSheet } from 'react-native'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { getTransactionTypeColor, TRANSACTION_FORM_COPY, TYPE_TABS } from '@/utils/transactionForm'
@@ -14,7 +14,12 @@ export function TransactionTypeTabs({ value, onChange, onRecorrencias }: Props) 
   const theme = useThemeColor()
 
   return (
-    <View style={[styles.row, { borderBottomColor: theme.border }]}>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={[styles.scroll, { borderBottomColor: theme.border }]}
+      contentContainerStyle={styles.row}
+    >
       {TYPE_TABS.map((tab) => {
         const active = tab.value === value
         return (
@@ -40,7 +45,7 @@ export function TransactionTypeTabs({ value, onChange, onRecorrencias }: Props) 
         )
       })}
 
-      {onRecorrencias && (
+      {onRecorrencias ? (
         <Pressable
           onPress={onRecorrencias}
           style={[styles.tab, { borderBottomColor: 'transparent' }]}
@@ -52,24 +57,30 @@ export function TransactionTypeTabs({ value, onChange, onRecorrencias }: Props) 
             style={styles.label}
           />
         </Pressable>
-      )}
-    </View>
+      ) : null}
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    marginHorizontal: 24,
+  scroll: {
+    flexGrow: 0,
     marginBottom: 8,
     borderBottomWidth: 1,
   },
+  row: {
+    flexDirection: 'row',
+    paddingHorizontal: 24,
+    gap: 4,
+  },
   tab: {
-    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 12,
+    paddingHorizontal: 14,
     borderBottomWidth: 2,
     marginBottom: -1,
+    flexShrink: 0,
   },
   label: {
     fontSize: 13,

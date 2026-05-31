@@ -1,6 +1,5 @@
 import { StyleSheet, View } from 'react-native'
 import { ThemedText } from '@/components/ui/ThemedText'
-import { useThemeColor } from '@/hooks/useThemeColor'
 import { formatDateHeading } from '@/utils/formatters'
 import { TransactionItem } from './TransactionItem'
 import type { TransactionListItem } from './types'
@@ -62,7 +61,6 @@ export function TransactionsList({
   onEditTransaction,
   showTitle = false,
 }: props) {
-  const theme = useThemeColor()
   const sections = buildSections(transactions)
 
   return (
@@ -74,7 +72,7 @@ export function TransactionsList({
       {isLoading ? (
         <ThemedText text="Carregando..." variant="caption" tone="muted" style={styles.stateText} />
       ) : error ? (
-        <ThemedText text={error} variant="caption" tone="warning" style={styles.stateText} />
+        <ThemedText text={error} variant="caption" tone="destructive" style={styles.stateText} />
       ) : transactions.length === 0 ? (
         <ThemedText
           text="Nenhuma transacao cadastrada."
@@ -84,11 +82,8 @@ export function TransactionsList({
         />
       ) : (
         <View style={styles.list}>
-          {sections.map((section, index) => (
+          {sections.map((section) => (
             <View key={section.key} style={styles.group}>
-              {index > 0 ? (
-                <View style={[styles.groupDivider, { backgroundColor: theme.mutedForeground }]} />
-              ) : null}
               <ThemedText
                 text={section.title}
                 variant="caption"
@@ -134,13 +129,6 @@ const styles = StyleSheet.create({
   group: {
     width: '100%',
     gap: 10,
-  },
-  groupDivider: {
-    width: '100%',
-    height: 1,
-    borderRadius: 999,
-    opacity: 0.25,
-    marginTop: 6,
   },
   groupTitle: {
     fontSize: 12,

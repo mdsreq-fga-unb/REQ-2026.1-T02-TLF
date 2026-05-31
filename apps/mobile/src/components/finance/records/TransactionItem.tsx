@@ -36,34 +36,37 @@ export function TransactionItem({ transaction, onDelete, onPress, onEdit }: prop
       style={({ pressed }) => [styles.card, cardLine, pressed ? styles.cardPressed : null]}
     >
       <View style={styles.row}>
-        <View style={styles.iconBlock}>
-          <View style={[styles.iconWrap, { backgroundColor: iconBackground }]}>
-            <AppIcon name={visuals.icon} size={18} color={visuals.color} />
+        <View style={styles.leftContent}>
+          <View style={styles.iconBlock}>
+            <View style={[styles.iconWrap, { backgroundColor: iconBackground }]}>
+              <AppIcon name={visuals.icon} size={18} color={visuals.color} />
+            </View>
           </View>
-        </View>
 
-        <View style={styles.details}>
-          <ThemedText
-            text={transaction.description}
-            variant="label"
-            style={styles.description}
-            numberOfLines={1}
-          />
-          <ThemedText
-            text={transaction.category}
-            variant="caption"
-            tone="muted"
-            style={styles.subtitle}
-            numberOfLines={1}
-          />
+          <View style={styles.details}>
+            <ThemedText
+              text={transaction.description}
+              variant="label"
+              style={styles.description}
+              numberOfLines={1}
+            />
+            <ThemedText
+              text={transaction.category}
+              variant="caption"
+              tone="muted"
+              style={styles.subtitle}
+              numberOfLines={1}
+            />
+          </View>
         </View>
 
         <View style={styles.rightColumn}>
           <ThemedText
             text={amountText}
             variant="label"
-            tone={isExpense ? 'warning' : 'default'}
+            tone={isExpense ? 'destructive' : 'default'}
             style={[styles.amount, !isExpense && isIncome ? { color: theme.income } : null]}
+            numberOfLines={1}
           />
 
           {showActions ? (
@@ -85,7 +88,7 @@ export function TransactionItem({ transaction, onDelete, onPress, onEdit }: prop
                 style={({ pressed }) => [
                   styles.deleteButton,
                   {
-                    backgroundColor: theme.warning,
+                    backgroundColor: theme.destructive,
                     opacity: pressed ? 0.8 : 1,
                   },
                 ]}
@@ -120,7 +123,7 @@ const getTransactionVisuals = (transaction: TransactionListItem, theme: Semantic
   if (normalized.includes('vacation') || normalized.includes('viagem')) {
     return {
       icon: 'luggage' as IconKey,
-      color: theme.warning,
+      color: theme.destructive,
     }
   }
 
@@ -152,6 +155,13 @@ const styles = StyleSheet.create({
     gap: 12,
     width: '100%',
   },
+  leftContent: {
+    flex: 1,
+    minWidth: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
   iconWrap: {
     width: 36,
     height: 36,
@@ -166,6 +176,8 @@ const styles = StyleSheet.create({
   details: {
     flex: 1,
     gap: 4,
+    minWidth: 0,
+    alignItems: 'flex-start',
   },
   description: {
     fontSize: 15,
@@ -179,7 +191,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
     gap: 10,
-    marginLeft: 'auto',
+    flexShrink: 0,
   },
   actions: {
     flexDirection: 'row',
@@ -196,6 +208,7 @@ const styles = StyleSheet.create({
   amount: {
     fontSize: 14,
     fontWeight: '700',
+    flexShrink: 0,
   },
   deleteButton: {
     width: 32,

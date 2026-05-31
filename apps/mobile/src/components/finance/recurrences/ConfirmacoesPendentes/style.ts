@@ -39,6 +39,9 @@ export const styles = StyleSheet.create({
   progressFill: {
     borderRadius: 2,
   },
+  cardsList: {
+    gap: 10,
+  },
   allDoneBanner: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -2,17 +2,28 @@ import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
   card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
     borderRadius: 16,
     paddingHorizontal: 14,
     paddingVertical: 14,
     width: '100%',
     alignSelf: 'stretch',
+    gap: 24,
   },
   cardActed: {
     opacity: 0.55,
+  },
+  mainRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  leftContent: {
+    flex: 1,
+    minWidth: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
   },
   iconWrap: {
     width: 42,
@@ -22,21 +33,14 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     flexShrink: 0,
   },
-  cardBody: {
+  textBlock: {
     flex: 1,
-    gap: 5,
     minWidth: 0,
-  },
-  cardTopRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 8,
+    alignItems: 'flex-start',
   },
   cardName: {
     fontSize: 15,
     fontWeight: '700',
-    flex: 1,
   },
   badge: {
     flexDirection: 'row',
@@ -52,27 +56,28 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '400',
   },
-  cardBottomRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 2,
-  },
   cardAmount: {
     fontSize: 14,
     fontWeight: '700',
+    flexShrink: 0,
+    textAlign: 'right',
   },
   btnGroup: {
     flexDirection: 'row',
     gap: 8,
+    alignSelf: 'stretch',
   },
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 4,
     paddingHorizontal: 12,
     paddingVertical: 7,
     borderRadius: 10,
+  },
+  btnFill: {
+    flex: 1,
   },
   btnConfirmText: {
     fontSize: 12,
@@ -88,6 +93,7 @@ export const styles = StyleSheet.create({
   },
   btnUndo: {
     borderWidth: 1,
+    alignSelf: 'stretch',
   },
   btnUndoText: {
     fontSize: 12,

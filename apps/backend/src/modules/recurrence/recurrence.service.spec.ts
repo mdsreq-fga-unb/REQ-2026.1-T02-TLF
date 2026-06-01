@@ -1,44 +1,71 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RecurrenceService } from './recurrence.service';
 import { PrismaService } from '@common/prisma/prisma.service';
-import { ForbiddenException, NotFoundException, BadRequestException } from '@nestjs/common';
-import { RecurrenceDeleteScope } from './enums/recurrence-delete-scope.enum';
+import {
+  NotFoundException,
+  ForbiddenException,
+  BadRequestException,
+} from '@nestjs/common';
 import { RecurrenceApplyScope } from './enums/recurrence-apply-scope.enum';
+import { RecurrenceDeleteScope } from './enums/recurrence-delete-scope.enum';
 
-const prismaMock: Partial<Record<keyof PrismaService, any>> = {
-  recurrence: {
-    create: jest.fn(),
-    findMany: jest.fn(),
-    findUnique: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-  },
-  transaction: {
-    findMany: jest.fn(),
-    findFirst: jest.fn(),
-    createMany: jest.fn(),
-    updateMany: jest.fn(),
-    deleteMany: jest.fn(),
-    count: jest.fn(),
-  },
+const prismaMock: any = {
+  $transaction: jest.fn(async (arg: any) => {
+    if (Array.isArray(arg)) {
+      return Promise.all(arg);
+    }
+
+    if (typeof arg === 'function') {
+      return arg({
+        ...prismaMock,
+        transaction: {
+          ...prismaMock.transaction,
+          deleteMany: jest.fn(),
+        },
+      });
+    }
+
+    return arg;
+  }),
+
   account: {
     findUnique: jest.fn(),
   },
+
   category: {
     findUnique: jest.fn(),
   },
+
   subCategory: {
     findUnique: jest.fn(),
   },
-  $transaction: jest.fn(async (cb: any) => cb(prismaMock)),
+
+  transaction: {
+    findMany: jest.fn(),
+    findUnique: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+    count: jest.fn(),
+    findFirst: jest.fn(),
+  },
+
+  recurrence: {
+    findMany: jest.fn(),
+    findUnique: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+    count: jest.fn(),
+  },
 };
 
 const mockRecurrence = {
   id: 'rec-1',
   description: 'Netflix',
-  amount: 39.9,
+  amount: 2990,
   chargeDate: 10,
-  startDate: new Date(),
+  startDate: new Date('2026-01-01T00:00:00.000Z'),
   endDate: null,
   isActive: true,
   category: { id: 'cat-1', name: 'Assinaturas' },
@@ -66,7 +93,7 @@ describe('RecurrenceService', () => {
       ],
     }).compile();
 
-    service = module.get(RecurrenceService);
+    service = module.get<RecurrenceService>(RecurrenceService);
   });
 
   it('deve existir o service', () => {
@@ -78,51 +105,55 @@ describe('RecurrenceService', () => {
       accountId: 'acc-1',
       categoryId: 'cat-1',
       description: 'Netflix',
-      amount: 39.9,
+      amount: 2990,
       chargeDate: 10,
       startDate: new Date().toISOString(),
       isActive: true,
     };
 
     it('deve criar recorrência com sucesso', async () => {
-      prismaMock.account!.findUnique.mockResolvedValue({
+      prismaMock.account.findUnique.mockResolvedValue({
         id: 'acc-1',
         institution: { userId: 'user-1' },
       });
 
-      prismaMock.category!.findUnique.mockResolvedValue({
+      prismaMock.category.findUnique.mockResolvedValue({
         id: 'cat-1',
         userId: 'user-1',
       });
 
-      prismaMock.subCategory!.findUnique.mockResolvedValue(null);
+      prismaMock.subCategory.findUnique.mockResolvedValue(null);
 
-      prismaMock.recurrence!.create.mockResolvedValue(mockRecurrence);
+      prismaMock.recurrence.create.mockResolvedValue(mockRecurrence);
 
       const result = await service.create('user-1', dto as any);
 
-      expect(result).toHaveProperty('id');
-      expect(prismaMock.recurrence!.create).toHaveBeenCalled();
+      expect(result.id).toBe('rec-1');
+      expect(prismaMock.recurrence.create).toHaveBeenCalledTimes(1);
     });
 
     it('deve lançar NotFoundException se conta não existir', async () => {
-      prismaMock.account!.findUnique.mockResolvedValue(null);
+      prismaMock.account.findUnique.mockResolvedValue(null);
 
-      await expect(service.create('user-1', dto as any)).rejects.toThrow(NotFoundException);
+      await expect(service.create('user-1', dto as any)).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
-    it('deve lançar ForbiddenException se categoria não for do usuário', async () => {
-      prismaMock.account!.findUnique.mockResolvedValue({
+    it('deve lançar ForbiddenException se categoria não pertencer ao usuário', async () => {
+      prismaMock.account.findUnique.mockResolvedValue({
         id: 'acc-1',
         institution: { userId: 'user-1' },
       });
 
-      prismaMock.category!.findUnique.mockResolvedValue({
+      prismaMock.category.findUnique.mockResolvedValue({
         id: 'cat-1',
         userId: 'other-user',
       });
 
-      await expect(service.create('user-1', dto as any)).rejects.toThrow(ForbiddenException);
+      await expect(service.create('user-1', dto as any)).rejects.toThrow(
+        ForbiddenException,
+      );
     });
   });
 
@@ -134,7 +165,7 @@ describe('RecurrenceService', () => {
       const result = await service.findAll('user-1', {});
 
       expect(result.data.length).toBe(1);
-      expect(prismaMock.recurrence.findMany).toHaveBeenCalled();
+      expect(prismaMock.recurrence.findMany).toHaveBeenCalledTimes(1);
     });
 
     it('deve filtrar por categoryId', async () => {
@@ -159,13 +190,15 @@ describe('RecurrenceService', () => {
 
       const result = await service.findOne('user-1', 'rec-1');
 
-      expect(result).toHaveProperty('id', 'rec-1');
+      expect(result.id).toBe('rec-1');
     });
 
     it('deve lançar NotFoundException', async () => {
       prismaMock.recurrence.findUnique.mockResolvedValue(null);
 
-      await expect(service.findOne('user-1', 'rec-1')).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('user-1', 'rec-1')).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('deve lançar ForbiddenException se não for dono', async () => {
@@ -176,31 +209,34 @@ describe('RecurrenceService', () => {
         },
       });
 
-      await expect(service.findOne('user-1', 'rec-1')).rejects.toThrow(ForbiddenException);
+      await expect(service.findOne('user-1', 'rec-1')).rejects.toThrow(
+        ForbiddenException,
+      );
     });
   });
 
   describe('update', () => {
-    it('deve atualizar recorrência', async () => {
+    it('deve atualizar recorrência com sucesso', async () => {
       prismaMock.recurrence.findUnique.mockResolvedValue(mockRecurrence);
 
       prismaMock.recurrence.update.mockResolvedValue({
         ...mockRecurrence,
-        description: 'Novo nome',
+        description: 'Netflix Premium',
       });
 
       const result = await service.update('user-1', 'rec-1', {
-        description: 'Novo nome',
+        description: 'Netflix Premium',
       } as any);
 
-      expect(result.description).toBe('Novo nome');
+      expect(result.description).toBe('Netflix Premium');
+      expect(prismaMock.recurrence.update).toHaveBeenCalledTimes(1);
     });
 
     it('deve lançar ForbiddenException se não for dono', async () => {
       prismaMock.recurrence.findUnique.mockResolvedValue({
         ...mockRecurrence,
         account: {
-          institution: { userId: 'outro-user' },
+          institution: { userId: 'other-user' },
         },
       });
 
@@ -213,7 +249,7 @@ describe('RecurrenceService', () => {
       prismaMock.recurrence.findUnique.mockResolvedValue(mockRecurrence);
 
       prismaMock.transaction.count.mockResolvedValue(1);
-      prismaMock.transaction.findFirst.mockResolvedValue({ id: 't1' });
+      prismaMock.transaction.findFirst.mockResolvedValue({ id: 't-1' });
 
       await expect(
         service.update('user-1', 'rec-1', {
@@ -224,7 +260,7 @@ describe('RecurrenceService', () => {
   });
 
   describe('remove', () => {
-    it('deve deletar recorrência THIS', async () => {
+    it('deve remover THIS', async () => {
       prismaMock.recurrence.findUnique.mockResolvedValue(mockRecurrence);
       prismaMock.recurrence.delete.mockResolvedValue(mockRecurrence);
 
@@ -232,10 +268,10 @@ describe('RecurrenceService', () => {
         scope: RecurrenceDeleteScope.THIS,
       });
 
-      expect(result).toHaveProperty('id');
+      expect(result.id).toBe('rec-1');
     });
 
-    it('deve deletar ALL recorrência', async () => {
+    it('deve remover ALL', async () => {
       prismaMock.recurrence.findUnique.mockResolvedValue(mockRecurrence);
       prismaMock.recurrence.delete.mockResolvedValue(mockRecurrence);
 
@@ -243,7 +279,7 @@ describe('RecurrenceService', () => {
         scope: RecurrenceDeleteScope.ALL,
       });
 
-      expect(result).toHaveProperty('id');
+      expect(result.id).toBe('rec-1');
     });
 
     it('deve lançar BadRequestException para scope inválido', async () => {

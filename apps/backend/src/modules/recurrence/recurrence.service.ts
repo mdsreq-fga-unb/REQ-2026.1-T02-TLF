@@ -415,15 +415,10 @@ export class RecurrenceService {
     return this.toDetail(result);
   }
 
-    async generateTransactionsFromRecurrences(userId: string) {
+    async generateTransactionsFromRecurrences() {
     const recurrences = await this.prisma.recurrence.findMany({
       where: {
         isActive: true,
-        account: {
-          institution: {
-            userId,
-          },
-        },
         startDate: {
           lte: new Date(),
         },
@@ -432,7 +427,6 @@ export class RecurrenceService {
           { endDate: { gte: new Date() } },
         ],
       },
-      include: recurrenceInclude,
     });
 
     const now = new Date();

@@ -1,13 +1,10 @@
 import { Q } from '@nozbe/watermelondb'
 import { database } from '..'
-import { Transaction } from '../models/transaction'
+import { Transaction, TransactionType, TransactionStatus } from '../models/transaction'
 
 const TRANSACTIONS_TABLE = 'transactions'
 
 const transactionsCollection = () => database.get<Transaction>(TRANSACTIONS_TABLE)
-
-export type TransactionType = 'EXPENSE' | 'INCOME' | 'TRANSFER'
-export type TransactionStatus = 'PENDING' | 'CONFIRMED'
 
 export type TransactionInput = {
   amount: number
@@ -62,7 +59,7 @@ const applyTransactionFields = (
 }
 
 export const getAllTransactions = async () => {
-  return transactionsCollection().query().fetch()
+  return transactionsCollection().query(Q.sortBy('created_at', 'desc')).fetch()
 }
 
 export const getTransactionById = async (id: string) => {

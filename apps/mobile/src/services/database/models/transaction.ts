@@ -1,14 +1,27 @@
 import { Model } from '@nozbe/watermelondb'
 import { field, date, readonly, text } from '@nozbe/watermelondb/decorators'
 
+export const transactionTypes = {
+  EXPENSE: 'EXPENSE',
+  INCOME: 'INCOME',
+  TRANSFER: 'TRANSFER',
+} as const
+export type TransactionType = keyof typeof transactionTypes
+
+export const transactionStatuses = {
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+} as const
+export type TransactionStatus = keyof typeof transactionStatuses
+
 export class Transaction extends Model {
   static table = 'transactions'
 
   @field('amount') amount!: number
   @text('description') description!: string
   @date('date') date!: Date
-  @field('type') type!: 'EXPENSE' | 'INCOME' | 'TRANSFER'
-  @field('status') status!: 'PENDING' | 'CONFIRMED'
+  @field('type') type!: TransactionType
+  @field('status') status!: TransactionStatus
   @field('account_id') accountId!: string
   @field('category_id') categoryId!: string
   @field('subcategory_id') subcategoryId!: string | null

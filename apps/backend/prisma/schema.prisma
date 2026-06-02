@@ -43,6 +43,22 @@ enum TransactionStatus {
   FAILED // wasnt paid
 }
 
+enum NotificationType {
+  BUDGET_WARNING          // 80% do orçamento atingido
+  BUDGET_EXCEEDED         // 100% atingido
+
+  RECURRENCE_DUE_WARNING  // recorrência vence em X dias
+  RECURRENCE_DUE          // recorrência vence hoje
+
+  INVOICE_CLOSING_WARNING // fatura FECHA em X dias 
+  INVOICE_CLOSING         // fatura fecha hoje
+  INVOICE_DUE_WARNING     // fatura VENCE em X dias
+  INVOICE_DUE             // fatura vence hoje
+  INVOICE_OVERDUE         // fatura já passou do vencimento
+  INVOICE_PAID            // fatura paga
+  INVOICE_PARTIALLY_PAID  // fatura parcialmente paga
+}
+
 // --- Core ---
 
 model User {
@@ -55,6 +71,7 @@ model User {
   categories   Category[]
   institutions Institution[]
   budgets      Budget[]
+  notifications Notification[]
 
   @@map("users")
 }
@@ -268,7 +285,36 @@ model Transaction {
   receiptUrl String? @map("receipt_url") // Institution-issued receipt URL — post-MVP
   externalId String? @map("external_id") // Open Finance / bank tx id — post-MVP
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
   @@map("transactions")
+}
+
+model Notification {
+  id          String           @id @default(uuid())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String           @map("user_id")
+
+  type        NotificationType
+  title       String
+  description String
+  isRead      Boolean          @default(false) @map("is_read")
+  
+  primaryActionLabel   String? @map("primary_action_label")
+  primaryAction   String? @map("primary_action")
+  secondaryActionLabel String? @map("secondary_action_label")
+  secondaryAction String? @map("secondary_action")
+  
+  icon  String
+  color String
+  
+  referenceId   String @map("reference_id")   // ex: budget id, recurrence id
+  referenceType String @map("reference_type") // ex: "budget", "recurrence"
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  @@map("notifications")
 }
 
   // ─── POST-MVP: SPLIT TRANSACTIONS ───────────────────────────────────────────

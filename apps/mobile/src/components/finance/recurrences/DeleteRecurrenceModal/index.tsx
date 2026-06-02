@@ -1,8 +1,11 @@
-import { Modal, Pressable, Text, View } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { Modal, Pressable, View } from 'react-native'
+import { AppIcon } from '@/components/ui/AppIcon'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import { useDeleteRecurrenceModal, type DeleteScope } from '@/hooks/useDeleteRecurrenceModal'
+import {
+  useDeleteRecurrenceModal,
+  type DeleteScope,
+} from '@/hooks/recurrences/useDeleteRecurrenceModal'
 import { OptionCard } from '../OptionCard'
 import { styles } from './style'
 import type { Recurrence } from '../types'
@@ -31,31 +34,29 @@ export function DeleteRecurrenceModal({ visible, recurrence, onConfirm, onCancel
           onPress={() => {}}
         >
           <View style={[styles.iconWrap, { backgroundColor: `${theme.destructive}22` }]}>
-            <MaterialIcons name="delete-forever" size={28} color={theme.destructive} />
+            <AppIcon name="trash" size={28} color={theme.destructive} />
           </View>
 
           <ThemedText style={styles.title} text="Excluir recorrência" />
-          <Text style={[styles.description, { color: theme.mutedForeground }]}>
-            Deseja excluir a recorrência{' '}
-            <Text style={{ color: theme.foreground, fontWeight: '600' }}>
-              "{recurrence?.description ?? ''}"
-            </Text>{' '}
-            no valor de{' '}
-            <Text style={{ color: theme.destructive, fontWeight: '600' }}>{amountLabel}</Text>?
-          </Text>
+          <ThemedText
+            text={`Deseja excluir a recorrência "${recurrence?.description ?? ''}" no valor de ${amountLabel}?`}
+            variant="body"
+            tone="muted"
+            style={styles.description}
+          />
 
           <View style={styles.options}>
             <OptionCard
               selected={scope === 'keep'}
               onPress={() => setScope('keep')}
-              icon="event-available"
+              icon="calendar-check"
               title="Manter transações futuras"
               description="As cobranças agendadas para os próximos meses permanecerão no seu extrato."
             />
             <OptionCard
               selected={scope === 'remove'}
               onPress={() => setScope('remove')}
-              icon="event-busy"
+              icon="calendar-x"
               title="Remover também as futuras"
               description="Todas as transações vinculadas a esta recorrência serão removidas permanentemente."
               danger
@@ -81,7 +82,7 @@ export function DeleteRecurrenceModal({ visible, recurrence, onConfirm, onCancel
                 { backgroundColor: theme.destructive, opacity: pressed ? 0.85 : 1 },
               ]}
             >
-              <MaterialIcons name="delete" size={18} color="#fff" />
+              <AppIcon name="trash" size={18} color={theme.onPrimary} />
               <ThemedText tone="onPrimary" style={styles.btnText} text="Excluir" />
             </Pressable>
           </View>

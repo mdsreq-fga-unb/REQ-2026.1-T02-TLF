@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Modal, Pressable, StyleSheet, Text, View } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { Modal, Pressable, StyleSheet, View } from 'react-native'
+import { ChevronLeft, ChevronRight } from 'lucide-react-native'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { styles } from './style'
-
-const GREEN = '#00E383'
 
 const WEEK_DAYS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 
@@ -81,25 +80,25 @@ export function DatePickerModal({ visible, value, onConfirm, onCancel, asOverlay
           hitSlop={8}
           style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
         >
-          <MaterialIcons name="chevron-left" size={26} color={theme.foreground} />
+          <ChevronLeft size={26} color={theme.foreground} />
         </Pressable>
-        <Text style={[styles.monthLabel, { color: theme.foreground }]}>
-          {MONTHS_PT[month]} {year}
-        </Text>
+        <ThemedText
+          text={`${MONTHS_PT[month]} ${year}`}
+          variant="title"
+          style={styles.monthLabel}
+        />
         <Pressable
           onPress={nextMonth}
           hitSlop={8}
           style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
         >
-          <MaterialIcons name="chevron-right" size={26} color={theme.foreground} />
+          <ChevronRight size={26} color={theme.foreground} />
         </Pressable>
       </View>
 
       <View style={styles.weekRow}>
         {WEEK_DAYS.map((d, i) => (
-          <Text key={i} style={[styles.weekDayLabel, { color: theme.mutedForeground }]}>
-            {d}
-          </Text>
+          <ThemedText key={i} text={d} variant="caption" tone="muted" style={styles.weekDayLabel} />
         ))}
       </View>
 
@@ -117,16 +116,18 @@ export function DatePickerModal({ visible, value, onConfirm, onCancel, asOverlay
                   style={[styles.dayCell, sel && styles.dayCellSelected]}
                 >
                   {/* Always render Text and todayDot — use opacity/display to avoid Fabric addViewAt */}
-                  <Text
+                  <ThemedText
+                    text={day != null ? String(day) : ''}
+                    variant="body"
+                    tone={sel ? 'onPrimary' : 'default'}
                     style={[
                       styles.dayText,
-                      { color: sel ? '#0F0F13' : isToday ? GREEN : theme.foreground },
+                      sel && { color: '#0F0F13' },
                       isToday && !sel && styles.dayTextToday,
+                      isToday && !sel && { color: theme.success },
                       { opacity: day != null ? 1 : 0 },
                     ]}
-                  >
-                    {day ?? ''}
-                  </Text>
+                  />
                   <View
                     style={[
                       styles.todayDot,
@@ -142,18 +143,22 @@ export function DatePickerModal({ visible, value, onConfirm, onCancel, asOverlay
 
       <View style={styles.footer}>
         <Pressable onPress={onCancel} style={[styles.cancelBtn, { borderColor: theme.border }]}>
-          <Text style={[styles.cancelText, { color: theme.mutedForeground }]}>Cancelar</Text>
+          <ThemedText text="Cancelar" variant="button" tone="muted" style={styles.cancelText} />
         </Pressable>
         <Pressable
           onPress={() => selected && onConfirm(selected)}
           disabled={!selected}
-          style={[styles.confirmBtn, { backgroundColor: selected ? GREEN : theme.surfaceMuted }]}
+          style={[
+            styles.confirmBtn,
+            { backgroundColor: selected ? theme.success : theme.surfaceMuted },
+          ]}
         >
-          <Text
-            style={[styles.confirmText, { color: selected ? '#0F0F13' : theme.mutedForeground }]}
-          >
-            Confirmar
-          </Text>
+          <ThemedText
+            text="Confirmar"
+            variant="button"
+            tone={selected ? 'onPrimary' : 'muted'}
+            style={[styles.confirmText, selected && { color: '#0F0F13' }]}
+          />
         </Pressable>
       </View>
     </Pressable>

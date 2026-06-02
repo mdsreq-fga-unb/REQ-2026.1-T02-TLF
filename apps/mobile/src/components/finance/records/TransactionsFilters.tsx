@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { Container } from '@/components/ui/Container'
+import { Pressable, StyleSheet, View } from 'react-native'
+import { Filter, FilterX } from 'lucide-react-native'
+import { ThemedContainer } from '@/components/ui/ThemedContainer'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { FilterChip } from './FilterChip'
 import { formatTransactionType } from '@/utils/formatters'
 import type { TransactionType } from '@/services/database/queries/transaction'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 
 type props = {
   categories: string[]
@@ -46,20 +47,20 @@ export function TransactionsFilters({
             },
           ]}
         >
-          <MaterialIcons
-            name={isOpen ? 'filter-alt-off' : 'filter-alt'}
-            size={20}
-            color={theme.foreground}
-          />
+          {isOpen ? (
+            <FilterX size={20} color={theme.foreground} />
+          ) : (
+            <Filter size={20} color={theme.foreground} />
+          )}
         </Pressable>
       </View>
 
       {isOpen ? (
-        <Container style={styles.card}>
-          <Text style={[styles.title, { color: theme.foreground }]}>Filtros</Text>
+        <ThemedContainer style={styles.card}>
+          <ThemedText text="Filtros" variant="title" style={styles.title} />
 
           <View style={styles.group}>
-            <Text style={[styles.subtitle, { color: theme.mutedForeground }]}>Categoria</Text>
+            <ThemedText text="Categoria" variant="caption" tone="muted" style={styles.subtitle} />
             <View style={styles.chips}>
               <FilterChip
                 label={ALL_CATEGORY}
@@ -78,7 +79,7 @@ export function TransactionsFilters({
           </View>
 
           <View style={styles.group}>
-            <Text style={[styles.subtitle, { color: theme.mutedForeground }]}>Tipo</Text>
+            <ThemedText text="Tipo" variant="caption" tone="muted" style={styles.subtitle} />
             <View style={styles.chips}>
               <FilterChip
                 label="Todos"
@@ -95,7 +96,7 @@ export function TransactionsFilters({
               ))}
             </View>
           </View>
-        </Container>
+        </ThemedContainer>
       ) : null}
     </View>
   )

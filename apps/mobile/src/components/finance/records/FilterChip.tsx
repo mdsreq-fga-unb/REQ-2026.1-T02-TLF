@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, Text } from 'react-native'
+import { Pressable, StyleSheet } from 'react-native'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 
 type props = {
@@ -22,9 +23,12 @@ export function FilterChip({ label, isActive = false, onPress }: props) {
         },
       ]}
     >
-      <Text style={[styles.text, { color: isActive ? theme.foreground : theme.mutedForeground }]}>
-        {label}
-      </Text>
+      <ThemedText
+        text={label}
+        variant="caption"
+        tone={isActive ? 'onPrimary' : 'muted'}
+        style={styles.text}
+      />
     </Pressable>
   )
 }

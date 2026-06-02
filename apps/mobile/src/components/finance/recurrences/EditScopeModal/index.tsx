@@ -1,8 +1,8 @@
 import { Modal, Pressable, View } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { AppIcon } from '@/components/ui/AppIcon'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import { useEditScopeModal, type EditScope } from '@/hooks/useEditScopeModal'
+import { useEditScopeModal, type EditScope } from '@/hooks/recurrences/useEditScopeModal'
 import { OptionCard } from '../OptionCard'
 import { styles } from './style'
 
@@ -26,7 +26,7 @@ export function EditScopeModal({ visible, onConfirm, onCancel }: Props) {
           onPress={() => {}}
         >
           <View style={[styles.iconWrap, { backgroundColor: `${theme.primary}22` }]}>
-            <MaterialIcons name="edit" size={28} color={theme.primary} />
+            <AppIcon name="pencil" size={28} color={theme.primary} />
           </View>
 
           <ThemedText style={styles.title} text="Onde aplicar as alterações?" />
@@ -40,7 +40,7 @@ export function EditScopeModal({ visible, onConfirm, onCancel }: Props) {
             <OptionCard
               selected={scope === 'upcoming'}
               onPress={() => setScope('upcoming')}
-              icon="update"
+              icon="refresh-cw"
               title="Apenas próximas ocorrências"
               description="Alterações valem de agora em diante. O histórico permanece intacto."
             />
@@ -72,7 +72,7 @@ export function EditScopeModal({ visible, onConfirm, onCancel }: Props) {
                 { backgroundColor: theme.primary, opacity: pressed ? 0.85 : 1 },
               ]}
             >
-              <MaterialIcons name="check" size={18} color={theme.onPrimary} />
+              <AppIcon name="check" size={18} color={theme.onPrimary} />
               <ThemedText tone="onPrimary" style={styles.btnText} text="Confirmar e Atualizar" />
             </Pressable>
           </View>

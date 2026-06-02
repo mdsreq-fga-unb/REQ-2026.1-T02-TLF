@@ -1,12 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { StyleSheet, View } from 'react-native'
+import { AppIcon } from '@/components/ui/AppIcon'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import type { ComponentProps } from 'react'
-
-type IconName = ComponentProps<typeof MaterialIcons>['name']
+import type { IconKey } from '@/utils/icons'
 
 type Props = {
-  icon: IconName
+  icon: IconKey
   label: string
   color?: string
 }
@@ -15,8 +14,8 @@ export function InfoRow({ icon, label, color }: Props) {
   const theme = useThemeColor()
   return (
     <View style={styles.row}>
-      <MaterialIcons name={icon} size={16} color={color ?? theme.mutedForeground} />
-      <Text style={[styles.label, { color: color ?? theme.foreground }]}>{label}</Text>
+      <AppIcon name={icon} size={16} color={color ?? theme.mutedForeground} />
+      <ThemedText text={label} variant="label" style={[styles.label, color ? { color } : null]} />
     </View>
   )
 }

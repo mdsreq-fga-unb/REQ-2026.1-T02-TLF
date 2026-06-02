@@ -16,20 +16,18 @@ export function RecordsSummary({ summary }: props) {
     <View style={styles.section}>
       <BalanceHighlight value={summary.balance} />
 
-      <View style={styles.row}>
+      <View style={styles.cards}>
         <SummaryCard
           label="Receitas"
           value={formatCurrency(summary.income)}
           caption="Ultimos 30 dias"
-          style={styles.cardHalf}
         />
 
         <SummaryCard
           label="Despesas"
           value={formatCurrency(summary.expense)}
           caption="Ultimos 30 dias"
-          valueColor={theme.warning}
-          style={styles.cardHalf}
+          valueColor={theme.expense}
         />
       </View>
     </View>
@@ -41,12 +39,8 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: 16,
   },
-  row: {
+  cards: {
     width: '100%',
-    flexDirection: 'row',
     gap: 12,
-  },
-  cardHalf: {
-    flex: 1,
   },
 })

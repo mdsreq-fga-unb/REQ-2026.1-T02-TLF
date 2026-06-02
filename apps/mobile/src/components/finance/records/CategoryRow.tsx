@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
-
+import { StyleSheet, View } from 'react-native'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { formatCurrency } from '@/utils/formatters'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import type { CategoryData } from './types'
@@ -23,21 +23,27 @@ export function CategoryRow({ category, total, minShare = 2 }: props) {
         <View style={[styles.chip, { backgroundColor: category.color }]} />
 
         <View style={styles.nameCol}>
-          <Text
-            style={[styles.name, { color: theme.foreground }]}
+          <ThemedText
+            text={displayName}
+            variant="label"
+            style={styles.name}
             numberOfLines={1}
             ellipsizeMode="tail"
-          >
-            {displayName}
-          </Text>
+          />
         </View>
 
         <View style={styles.rightCol}>
-          <Text style={[styles.amount, { color: theme.foreground }]}>
-            {formatCurrency(category.amount)}
-          </Text>
+          <ThemedText
+            text={formatCurrency(category.amount)}
+            variant="caption"
+            style={styles.amount}
+          />
           <View style={[styles.badge, { backgroundColor: category.color }]}>
-            <Text style={[styles.badgeText, { color: theme.background }]}>{shareLabel}</Text>
+            <ThemedText
+              text={shareLabel}
+              variant="caption"
+              style={[styles.badgeText, { color: theme.background }]}
+            />
           </View>
         </View>
       </View>

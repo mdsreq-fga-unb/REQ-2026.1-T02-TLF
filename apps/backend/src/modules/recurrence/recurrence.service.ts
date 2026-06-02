@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '@common/prisma/prisma.service';
 import { CreateRecurrenceDto } from './dto/create-recurrence.dto';
 import { UpdateRecurrenceDto } from './dto/update-recurrence.dto';
@@ -26,6 +26,8 @@ const recurrenceInclude = {
 
 @Injectable()
 export class RecurrenceService {
+  private readonly logger = new Logger(RecurrenceService.name);
+
   constructor(private readonly prisma: PrismaService) { }
 
 
@@ -415,23 +417,24 @@ export class RecurrenceService {
     return this.toDetail(result);
   }
 
-    async generateTransactionsFromRecurrences() {
+  async generateTransactionsFromRecurrences() {
+    this.logger.log(`Recurrence job started at ${new Date().toISOString()}`);
+
     const recurrences = await this.prisma.recurrence.findMany({
       where: {
         isActive: true,
-        startDate: {
-          lte: new Date(),
-        },
-        OR: [
-          { endDate: null },
-          { endDate: { gte: new Date() } },
-        ],
+        startDate: { lte: new Date() },
+        OR: [{ endDate: null }, { endDate: { gte: new Date() } }],
       },
+      include: recurrenceInclude,
     });
+
+    this.logger.log(`Found ${recurrences.length} active recurrences`);
 
     const now = new Date();
     const month = now.getMonth();
     const year = now.getFullYear();
+
     const startOfMonth = new Date(year, month, 1);
     const startOfNextMonth = new Date(year, month + 1, 1);
 
@@ -451,7 +454,7 @@ export class RecurrenceService {
     });
 
     const existingSet = new Set(
-      existingTransactions.map(t => t.recurrenceId)
+      existingTransactions.map(t => t.recurrenceId),
     );
 
     const toCreate = recurrences.filter(
@@ -476,6 +479,9 @@ export class RecurrenceService {
         };
       }),
     });
+
+    this.logger.log(`Created ${toCreate.length} transactions for current month`);
+    this.logger.log('Recurrence job finished successfully');
   }
 
   private async validateAccountOwnership(userId: string, accountId: string) {

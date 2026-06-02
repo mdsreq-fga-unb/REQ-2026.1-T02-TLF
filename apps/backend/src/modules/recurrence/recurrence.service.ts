@@ -418,20 +418,20 @@ export class RecurrenceService {
   }
 
   async generateTransactionsFromRecurrences() {
-    this.logger.log(`Recurrence job started at ${new Date().toISOString()}`);
+    const now = new Date();
+    this.logger.log(`Recurrence job started at ${now.toISOString()}`);
 
     const recurrences = await this.prisma.recurrence.findMany({
       where: {
         isActive: true,
-        startDate: { lte: new Date() },
-        OR: [{ endDate: null }, { endDate: { gte: new Date() } }],
+        startDate: { lte: now },
+        OR: [{ endDate: null }, { endDate: { gte: now } }],
       },
       include: recurrenceInclude,
     });
 
     this.logger.log(`Found ${recurrences.length} active recurrences`);
 
-    const now = new Date();
     const month = now.getMonth();
     const year = now.getFullYear();
 

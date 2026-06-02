@@ -48,6 +48,7 @@ const prismaMock: any = {
     delete: jest.fn(),
     count: jest.fn(),
     findFirst: jest.fn(),
+    createMany: jest.fn(),
   },
 
   recurrence: {
@@ -288,6 +289,73 @@ describe('RecurrenceService', () => {
       await expect(
         service.remove('user-1', 'rec-1', { scope: 'INVALID' } as any),
       ).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe('generateTransactionsFromRecurrences', () => {
+    it('deve criar transações para recorrências ativas do mês', async () => {
+      prismaMock.recurrence.findMany.mockResolvedValue([mockRecurrence]);
+
+      prismaMock.transaction.findMany.mockResolvedValue([]);
+
+      prismaMock.transaction.createMany.mockResolvedValue({ count: 1 });
+
+      await service.generateTransactionsFromRecurrences();
+
+      expect(prismaMock.transaction.createMany).toHaveBeenCalledTimes(1);
+    });
+
+    it('não deve criar transações duplicadas no mesmo mês', async () => {
+      prismaMock.recurrence.findMany.mockResolvedValue([mockRecurrence]);
+
+      prismaMock.transaction.findMany.mockResolvedValue([
+        { recurrenceId: 'rec-1' },
+      ]);
+
+      await service.generateTransactionsFromRecurrences();
+
+      const call = prismaMock.transaction.createMany.mock.calls[0]?.[0];
+
+      expect(call.data.length).toBe(0);
+    });
+
+    it('deve ajustar chargeDate para o último dia do mês', async () => {
+      prismaMock.recurrence.findMany.mockResolvedValue([
+        {
+          ...mockRecurrence,
+          chargeDate: 31,
+        },
+      ]);
+
+      prismaMock.transaction.findMany.mockResolvedValue([]);
+
+      prismaMock.transaction.createMany.mockResolvedValue({ count: 1 });
+
+      await service.generateTransactionsFromRecurrences();
+
+      const call = prismaMock.transaction.createMany.mock.calls[0][0];
+
+      const createdDate = call.data[0].date;
+
+      const lastDayOfMonth = new Date(
+        createdDate.getFullYear(),
+        createdDate.getMonth() + 1,
+        0,
+      ).getDate();
+
+      expect(createdDate.getDate()).toBeLessThanOrEqual(lastDayOfMonth);
+    });
+
+    it('não deve criar transações para recorrências inativas', async () => {
+      prismaMock.recurrence.findMany.mockResolvedValue([]);
+
+      prismaMock.transaction.findMany.mockResolvedValue([]);
+
+      await service.generateTransactionsFromRecurrences();
+
+      const call = prismaMock.transaction.createMany.mock.calls[0]?.[0];
+
+      expect(call?.data?.length ?? 0).toBe(0);
     });
   });
 });

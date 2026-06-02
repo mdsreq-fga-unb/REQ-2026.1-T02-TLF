@@ -1,4 +1,4 @@
-import type { TransactionType } from '@/services/database/queries/transaction'
+import { TransactionType } from '@/services/database/models/transaction'
 import type { IconKey } from '@/utils/icons'
 
 export type { TransactionType }

@@ -1,4 +1,4 @@
-import type { TransactionType } from '@/services/database/queries/transaction'
+import { TransactionType } from '@/services/database/models/transaction'
 import { VALID_TRANSACTION_TYPES } from './constants'
 
 export function parseTransactionType(raw: string | string[] | undefined): TransactionType {

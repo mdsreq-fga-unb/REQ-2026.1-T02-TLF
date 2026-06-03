@@ -1,23 +1,26 @@
+import { StyleSheet } from 'react-native'
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
-import { ThemedContainer } from '@/components/ui/ThemedContainer'
-import { ThemedButton } from '@/components/ui/ThemedButton'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { router } from 'expo-router'
-import { ThemedLink } from '@/components/ui/ThemedLink'
-import { debugStoredTokens } from '@/services/api/token-storage'
+import { ThemedText } from '@/components/ui/ThemedText'
 
 export default function home() {
   return (
     //TODO: add a logout button and make the logout function
     <ThemedBackground>
-      <SafeAreaView />
-      <ThemedContainer>
-        <ThemedButton title="Estatisticas" onPress={() => router.push('/(budget)/')} />
-        {/* TODO: Remover caso necessario */}
-        {/* links usados para navegar durante desenvolvimento */}
-        {/* <ThemedButton title="tokens" onPress={debugStoredTokens} />
-        <ThemedLink replace href="/(auth)/login" text="Crie uma conta aqui" /> */}
-      </ThemedContainer>
+      <ThemedText variant="headline" style={styles.text} text="Test" />
     </ThemedBackground>
   )
 }
+
+export default app
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  text: {
+    color: 'brown',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+})

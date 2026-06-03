@@ -12,6 +12,10 @@ export type SemanticColors = {
   linkMuted: string
   destructive: string
   warning: string
+  success: string
+  expense: string
+  income: string
+  pending: string
   tabBarBorder: string
   tabActive: string
   tabInactive: string
@@ -32,6 +36,10 @@ export const themes: Record<'light' | 'dark', SemanticColors> = {
     linkMuted: '#6A66FF99',
     destructive: '#D14349',
     warning: '#C16000',
+    success: '#00E383',
+    expense: '#FF4B4B',
+    income: '#2CB67D',
+    pending: '#F59E0B',
     tabBarBorder: '#1E232D',
     tabActive: '#6A66FF',
     tabInactive: '#777681',
@@ -50,6 +58,10 @@ export const themes: Record<'light' | 'dark', SemanticColors> = {
     linkMuted: '#6A66FFB3',
     destructive: '#C1272D',
     warning: '#C16000',
+    success: '#00E383',
+    expense: '#FF4B4B',
+    income: '#2CB67D',
+    pending: '#F59E0B',
     tabBarBorder: '#E4E4E7',
     tabActive: '#6A66FF',
     tabInactive: '#8B8C98',

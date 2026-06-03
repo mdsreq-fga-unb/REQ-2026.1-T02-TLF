@@ -1,10 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { TransactionsController } from './transactions.controller'
 import { TransactionsService } from './transactions.service'
+import { AuthGuard } from '../auth/context/auth.guard'
 import { TransactionType, TransactionStatus } from '../../../generated/prisma/enums'
 
-const mockTransactionsService = {
+const transactionsServiceMock = {
   create: jest.fn(),
+  findAll: jest.fn(),
+  findOne: jest.fn(),
+  update: jest.fn(),
+  remove: jest.fn(),
 }
 
 const mockTransaction = {
@@ -23,15 +28,22 @@ describe('TransactionsController', () => {
   let controller: TransactionsController
 
   beforeEach(async () => {
+    jest.clearAllMocks()
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TransactionsController],
       providers: [
-        { provide: TransactionsService, useValue: mockTransactionsService },
+        {
+          provide: TransactionsService,
+          useValue: transactionsServiceMock,
+        },
       ],
-    }).compile()
+    })
+      .overrideGuard(AuthGuard)
+      .useValue({ canActivate: () => true })
+      .compile()
 
     controller = module.get<TransactionsController>(TransactionsController)
-    jest.clearAllMocks()
   })
 
   describe('create', () => {
@@ -44,23 +56,80 @@ describe('TransactionsController', () => {
     }
 
     it('deve chamar o service e retornar a transação criada', async () => {
-      mockTransactionsService.create.mockResolvedValue(mockTransaction)
+      transactionsServiceMock.create.mockResolvedValue(mockTransaction)
 
-      const result = await controller.create(dto)
+      const result = await controller.create(dto, 'user-teste-001')
 
       expect(result).toEqual(mockTransaction)
-      expect(mockTransactionsService.create).toHaveBeenCalledWith(
-        'user-teste-001',
-        dto,
-      )
+      expect(transactionsServiceMock.create).toHaveBeenCalledWith('user-teste-001', dto)
     })
 
     it('deve passar o userId correto para o service', async () => {
-      mockTransactionsService.create.mockResolvedValue(mockTransaction)
+      transactionsServiceMock.create.mockResolvedValue(mockTransaction)
 
-      await controller.create(dto)
+      await controller.create(dto, 'user-teste-001')
 
-      expect(mockTransactionsService.create).toHaveBeenCalledTimes(1)
+      expect(transactionsServiceMock.create).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('findAll', () => {
+    it('deve chamar findAll com userId e filtros', async () => {
+      transactionsServiceMock.findAll.mockResolvedValue({ data: [{ id: '1' }], meta: {} })
+
+      const query = {
+        categoryId: 'cat-1',
+        type: TransactionType.INCOME,
+      }
+
+      await controller.findAll('user-1', query as any)
+
+      expect(transactionsServiceMock.findAll).toHaveBeenCalledWith('user-1', {
+        categoryId: 'cat-1',
+        type: TransactionType.INCOME,
+      })
+    })
+  })
+
+  describe('findOne', () => {
+    it('deve chamar service.findOne corretamente', async () => {
+      transactionsServiceMock.findOne.mockResolvedValue({ id: '1' })
+
+      await controller.findOne('user-1', '1')
+
+      expect(transactionsServiceMock.findOne).toHaveBeenCalledWith({
+        userId: 'user-1',
+        id: '1',
+      })
+    })
+  })
+
+  describe('update', () => {
+    it('deve chamar service.update com dados corretos', async () => {
+      transactionsServiceMock.update.mockResolvedValue({ id: '1' })
+
+      const dto = { description: 'novo valor' }
+
+      await controller.update('user-1', '1', dto as any)
+
+      expect(transactionsServiceMock.update).toHaveBeenCalledWith({
+        userId: 'user-1',
+        id: '1',
+        dto,
+      })
+    })
+  })
+
+  describe('remove', () => {
+    it('deve chamar service.remove com dados corretos', async () => {
+      transactionsServiceMock.remove.mockResolvedValue({ id: '1' })
+
+      await controller.remove('user-1', '1')
+
+      expect(transactionsServiceMock.remove).toHaveBeenCalledWith({
+        userId: 'user-1',
+        id: '1',
+      })
     })
   })
 })

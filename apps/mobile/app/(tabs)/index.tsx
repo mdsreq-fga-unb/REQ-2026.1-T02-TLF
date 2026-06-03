@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native'
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
 import { ThemedText } from '@/components/ui/ThemedText'
 
-const app = () => {
+export default function home() {
   return (
     //TODO: add a logout button and make the logout function
     <ThemedBackground>

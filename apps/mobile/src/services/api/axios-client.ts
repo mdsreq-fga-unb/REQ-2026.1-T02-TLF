@@ -26,20 +26,30 @@ api.interceptors.response.use(
   async (error) => {
     const original = error.config
 
-    if (error.response?.status === 401 && !original._retry) {
+    if (
+      error.response?.status === 401 &&
+      original &&
+      !original._retry &&
+      !original.url?.includes('/auth/refresh')
+    ) {
       original._retry = true
 
-      try {
-        const refreshToken = await getRefreshToken()
-        const { data } = await api.post('/auth/refresh', { refreshToken })
+      const refreshToken = await getRefreshToken()
+      if (!refreshToken) {
+        await clearTokens()
+        return Promise.reject(error)
+      }
 
+      try {
+        const { data } = await api.post('/auth/refresh', { refreshToken })
         await saveTokens(data.accessToken, data.refreshToken)
 
+        original.headers = original.headers ?? {}
         original.headers.Authorization = `Bearer ${data.accessToken}`
         return api(original)
-      } catch {
+      } catch (refreshError) {
         await clearTokens()
-        /* useAuthStore.getState().logout()*/ // avisa o Zustand (precisa ser implementado)
+        return Promise.reject(refreshError)
       }
     }
 

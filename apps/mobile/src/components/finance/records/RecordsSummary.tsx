@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { SummaryCard } from './SummaryCard'
 import { formatCurrency } from '@/utils/formatters'
-import type { SummaryData } from './types'
+import type { SummaryData } from '../../../../types/types'
 import { BalanceHighlight } from './BalanceHighlight'
 
 type props = {

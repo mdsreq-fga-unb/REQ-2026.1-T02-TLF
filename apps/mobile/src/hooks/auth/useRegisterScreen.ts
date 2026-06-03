@@ -7,7 +7,7 @@ import {
   getNameError,
   getPasswordConfirmError,
   getRegisterPasswordError,
-} from '@/utils/authValidation'
+} from '@/utils/validation/authValidation'
 
 export function useRegisterScreen() {
   const setSession = useAuthStore((s) => s.setSession)

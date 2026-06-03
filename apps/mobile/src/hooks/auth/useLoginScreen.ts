@@ -2,7 +2,7 @@ import { login } from '@/services/api/auth'
 import { useAuthStore } from '@/stores/auth'
 import { router } from 'expo-router'
 import { useCallback, useMemo, useState } from 'react'
-import { getEmailError, getPasswordRequiredError } from '@/utils/authValidation'
+import { getEmailError, getPasswordRequiredError } from '@/utils/validation/authValidation'
 
 export function useLoginScreen() {
   const setSession = useAuthStore((s) => s.setSession)

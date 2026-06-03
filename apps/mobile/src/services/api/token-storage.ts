@@ -20,3 +20,23 @@ export async function clearTokens() {
   await SecureStore.deleteItemAsync(ACCESS_TOKEN_KEY)
   await SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY)
 }
+
+export type StoredTokens = {
+  accessToken: string | null
+  refreshToken: string | null
+}
+
+export async function getStoredTokens(): Promise<StoredTokens> {
+  const accessToken = await getAccessToken()
+  const refreshToken = await getRefreshToken()
+
+  return { accessToken, refreshToken }
+}
+
+export async function debugStoredTokens(): Promise<StoredTokens> {
+  const tokens = await getStoredTokens()
+  // TODO: Remover quando sistema de categorias for implementado
+  // eslint-disable-next-line no-console
+  console.log('[debugStoredTokens]', tokens)
+  return tokens
+}

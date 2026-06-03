@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { formatDateHeading } from '@/utils/formatters'
 import { TransactionItem } from './TransactionItem'
-import type { TransactionListItem } from './types'
+import type { TransactionListItem } from '../../../../types/types'
 
 type props = {
   transactions: TransactionListItem[]

@@ -7,5 +7,6 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     gap: spacing.md,
+    padding: 10,
   },
 })

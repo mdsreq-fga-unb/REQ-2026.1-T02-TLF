@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 
 type props = {
@@ -10,7 +11,7 @@ type props = {
 export function BalanceHighlight({ value, label = 'Saldo', showDivider = false }: props) {
   const theme = useThemeColor()
   const isPositive = value >= 0
-  const accentColor = isPositive ? '#2CB67D' : theme.warning
+  const accentColor = isPositive ? '#2CB67D' : theme.expense
   const sign = value < 0 ? '-' : ''
   const magnitude = new Intl.NumberFormat('pt-BR', {
     minimumFractionDigits: 2,
@@ -19,8 +20,11 @@ export function BalanceHighlight({ value, label = 'Saldo', showDivider = false }
 
   return (
     <View style={styles.card}>
-      <Text style={[styles.label, { color: applyAlpha(theme.foreground, 0.6) }]}>{label}</Text>
-      <Text
+      <ThemedText text={label} variant="caption" tone="muted" style={styles.label} />
+      <ThemedText
+        text={`${sign}R$ ${magnitude}`}
+        variant="display"
+        tone={isPositive ? 'default' : 'destructive'}
         style={[
           styles.value,
           {
@@ -28,10 +32,7 @@ export function BalanceHighlight({ value, label = 'Saldo', showDivider = false }
             textShadowColor: applyAlpha(accentColor, 0.7),
           },
         ]}
-      >
-        {sign}
-        <Text style={[styles.currency, { color: accentColor }]}>R$</Text> {magnitude}
-      </Text>
+      />
       {showDivider ? (
         <View
           style={[styles.divider, { backgroundColor: applyAlpha(theme.mutedForeground, 0.4) }]}

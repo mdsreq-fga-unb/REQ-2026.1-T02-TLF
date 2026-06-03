@@ -1,11 +1,18 @@
-import { useState } from 'react'
-import { Alert, ScrollView, StyleSheet, Text, TextStyle, View } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { ScrollView, StyleSheet, View } from 'react-native'
+import { AlertCircle, Calendar, CreditCard, Landmark, Pencil, Tag } from 'lucide-react-native'
+import { ThemedButton } from '@/components/ui/ThemedButton'
+import { ThemedFieldError } from '@/components/ui/ThemedFieldError'
+import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import { useTransactionForm, type TransactionInitialValues } from '@/hooks/useTransactionForm'
-import { ButtonPrimary } from '@/components/ui/ButtonPrimary'
+import {
+  useTransactionFormScreen,
+  type TransactionFormMode,
+  type TransactionInitialValues,
+} from '@/hooks/transactions/useTransactionFormScreen'
+import { TRANSACTION_FORM_COPY } from '@/utils/transactionForm'
 import { formatDateTimeShort } from '@/utils/formatters'
-import { ACCOUNTS, CATEGORIES } from './types'
+import { ACCOUNTS } from './types'
 import { TransactionTypeTabs } from './TransactionTypeTabs'
 import { AmountDisplay } from './AmountDisplay'
 import { NumericKeypad } from './NumericKeypad'
@@ -15,38 +22,47 @@ import { PickerModal } from './PickerModal'
 
 type Props = {
   title?: string
+  mode?: TransactionFormMode
   initialValues?: TransactionInitialValues
   onSuccess?: () => void
 }
 
-export function TransactionForm({ title = 'Adicionar Registro', initialValues, onSuccess }: Props) {
+export function TransactionForm({ title, mode, initialValues, onSuccess }: Props) {
   const theme = useThemeColor()
-  const form = useTransactionForm(initialValues)
-
-  const handleSubmit = () => {
-    form.submit(() => {
-      Alert.alert('Registro salvo!', 'Sua transação foi registrada com sucesso.', [
-        { text: 'OK', onPress: onSuccess },
-      ])
-    })
-  }
-  const [showAccountPicker, setShowAccountPicker] = useState(false)
-  const [showDestinationPicker, setShowDestinationPicker] = useState(false)
-  const [showCategoryPicker, setShowCategoryPicker] = useState(false)
-
-  const categories = CATEGORIES[form.type]
-  const selectedAccount = ACCOUNTS.find((a) => a.id === form.accountId)
-  const selectedDestination = ACCOUNTS.find((a) => a.id === form.destinationAccountId)
-  const selectedCategory = categories.find((c) => c.id === form.categoryId)
-  const destinationOptions = ACCOUNTS.filter((a) => a.id !== form.accountId)
+  const {
+    form,
+    title: resolvedTitle,
+    submitLabel,
+    successTitle,
+    successMessage,
+    categories,
+    selectedAccount,
+    selectedDestination,
+    selectedCategory,
+    destinationOptions,
+    showAccountPicker,
+    setShowAccountPicker,
+    showDestinationPicker,
+    setShowDestinationPicker,
+    showCategoryPicker,
+    setShowCategoryPicker,
+    successAlertVisible,
+    dismissSuccessAlert,
+    handleSubmit,
+    openRecorrencias,
+  } = useTransactionFormScreen({ title, mode, initialValues, onSuccess })
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.foreground }]}>{title}</Text>
+        <ThemedText text={resolvedTitle} variant="headline" style={styles.title} />
       </View>
 
-      <TransactionTypeTabs value={form.type} onChange={form.handleTypeChange} />
+      <TransactionTypeTabs
+        value={form.type}
+        onChange={form.handleTypeChange}
+        onRecorrencias={openRecorrencias}
+      />
 
       <ScrollView
         style={styles.scroll}
@@ -59,13 +75,13 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
           type={form.type}
           onPress={() => form.setShowKeypad(true)}
         />
-        {form.submitAttempted && form.errors.amount && (
-          <Text style={styles.amountError}>{form.errors.amount}</Text>
-        )}
+        {form.submitAttempted && form.errors.amount ? (
+          <ThemedFieldError message={form.errors.amount} visible />
+        ) : null}
 
         <View style={[styles.fields, { backgroundColor: theme.surfaceMuted }]}>
           <FormField
-            icon="credit-card"
+            icon={CreditCard}
             label={form.type === 'TRANSFER' ? 'De Conta' : 'Conta'}
             value={selectedAccount?.label ?? ''}
             onPress={() => setShowAccountPicker(true)}
@@ -73,7 +89,7 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
 
           {form.type === 'TRANSFER' && (
             <FormField
-              icon="account-balance"
+              icon={Landmark}
               label="Para Conta"
               value={selectedDestination?.label ?? ''}
               onPress={() => setShowDestinationPicker(true)}
@@ -83,7 +99,7 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
 
           {form.type !== 'TRANSFER' && (
             <FormField
-              icon="category"
+              icon={Tag}
               label="Categoria"
               value={selectedCategory?.label ?? ''}
               onPress={() => setShowCategoryPicker(true)}
@@ -101,20 +117,20 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
           )}
 
           <FormField
-            icon="calendar-today"
+            icon={Calendar}
             label="Data e Hora"
             value={formatDateTimeShort(new Date())}
             onPress={() => {}}
           />
 
           <FormField
-            icon="edit"
+            icon={Pencil}
             label="Notas"
             value={form.notes}
             isInput
             isLast
             onChangeText={form.setNotes}
-            placeholder="Adicionar nota..."
+            placeholder={TRANSACTION_FORM_COPY.notesPlaceholder}
           />
         </View>
       </ScrollView>
@@ -122,14 +138,20 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
       <View style={[styles.footer, { borderTopColor: `${theme.mutedForeground}25` }]}>
         {form.submitError && (
           <View style={styles.errorRow}>
-            <MaterialIcons name="error-outline" size={18} color="#f2685a" />
-            <Text style={styles.errorText}>{form.submitError}</Text>
+            <AlertCircle size={18} color={theme.destructive} />
+            <ThemedText
+              text={form.submitError}
+              variant="caption"
+              tone="destructive"
+              style={styles.errorText}
+            />
           </View>
         )}
-        <ButtonPrimary
-          title={form.submitting ? 'Salvando...' : 'Adicionar Registro'}
+        <ThemedButton
+          title={submitLabel}
           disabled={form.submitting}
           onPress={handleSubmit}
+          style={styles.submitButton}
         />
       </View>
 
@@ -167,6 +189,19 @@ export function TransactionForm({ title = 'Adicionar Registro', initialValues, o
         onSelect={form.setCategoryId}
         onClose={() => setShowCategoryPicker(false)}
       />
+
+      <ThemedOverlayAlert
+        visible={successAlertVisible}
+        onRequestClose={dismissSuccessAlert}
+        message={successMessage}
+        actions={[{ label: 'OK', onPress: dismissSuccessAlert }]}
+      >
+        <ThemedText
+          variant="headline"
+          text={successTitle}
+          style={{ textAlign: 'center', width: '100%' }}
+        />
+      </ThemedOverlayAlert>
     </View>
   )
 }
@@ -192,13 +227,6 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 24,
   },
-  amountError: {
-    fontSize: 12,
-    color: '#f2685a',
-    textAlign: 'center',
-    marginTop: -16,
-    marginBottom: 8,
-  } as TextStyle,
   fields: {
     marginHorizontal: 24,
     borderRadius: 16,
@@ -211,6 +239,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
+  submitButton: {
+    width: '100%',
+  },
   errorRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -220,6 +251,5 @@ const styles = StyleSheet.create({
   errorText: {
     flex: 1,
     fontSize: 13,
-    color: '#f2685a',
   },
 })

@@ -1,12 +1,13 @@
 import { useState } from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, View } from 'react-native'
+import { AppIcon } from '@/components/ui/AppIcon'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { formatCurrency } from '@/utils/formatters'
-import type { TransactionListItem } from '../../../../types/types'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-import type { ComponentProps } from 'react'
-
-type MaterialIconName = ComponentProps<typeof MaterialIcons>['name']
+import type { SemanticColors } from '@/utils/colors'
+import type { IconKey } from '@/utils/icons'
+import type { TransactionListItem } from './types'
+import { Pencil, Trash2 } from 'lucide-react-native'
 
 type props = {
   transaction: TransactionListItem
@@ -20,10 +21,9 @@ export function TransactionItem({ transaction, onDelete, onPress, onEdit }: prop
   const [showActions, setShowActions] = useState(false)
   const isExpense = transaction.type === 'EXPENSE'
   const isIncome = transaction.type === 'INCOME'
-  const amountColor = isExpense ? theme.warning : isIncome ? '#2CB67D' : theme.foreground
   const amountSign = isExpense ? '-' : isIncome ? '+' : ''
   const amountText = `${amountSign}${formatCurrency(Math.abs(transaction.amount))}`
-  const visuals = getTransactionVisuals(transaction)
+  const visuals = getTransactionVisuals(transaction, theme)
   const iconBackground = applyAlpha(visuals.color, 0.2)
   const cardLine = { borderBottomColor: applyAlpha(theme.mutedForeground, 0.18) }
 
@@ -36,23 +36,38 @@ export function TransactionItem({ transaction, onDelete, onPress, onEdit }: prop
       style={({ pressed }) => [styles.card, cardLine, pressed ? styles.cardPressed : null]}
     >
       <View style={styles.row}>
-        <View style={styles.iconBlock}>
-          <View style={[styles.iconWrap, { backgroundColor: iconBackground }]}>
-            <MaterialIcons name={visuals.icon} size={18} color={visuals.color} />
+        <View style={styles.leftContent}>
+          <View style={styles.iconBlock}>
+            <View style={[styles.iconWrap, { backgroundColor: iconBackground }]}>
+              <AppIcon name={visuals.icon} size={18} color={visuals.color} />
+            </View>
+          </View>
+
+          <View style={styles.details}>
+            <ThemedText
+              text={transaction.description}
+              variant="label"
+              style={styles.description}
+              numberOfLines={1}
+            />
+            <ThemedText
+              text={transaction.category}
+              variant="caption"
+              tone="muted"
+              style={styles.subtitle}
+              numberOfLines={1}
+            />
           </View>
         </View>
 
-        <View style={styles.details}>
-          <Text style={[styles.description, { color: theme.foreground }]} numberOfLines={1}>
-            {transaction.description}
-          </Text>
-          <Text style={[styles.subtitle, { color: theme.mutedForeground }]} numberOfLines={1}>
-            {transaction.category}
-          </Text>
-        </View>
-
         <View style={styles.rightColumn}>
-          <Text style={[styles.amount, { color: amountColor }]}>{amountText}</Text>
+          <ThemedText
+            text={amountText}
+            variant="label"
+            tone={isExpense ? 'destructive' : 'default'}
+            style={[styles.amount, !isExpense && isIncome ? { color: theme.income } : null]}
+            numberOfLines={1}
+          />
 
           {showActions ? (
             <View style={styles.actions}>
@@ -66,19 +81,19 @@ export function TransactionItem({ transaction, onDelete, onPress, onEdit }: prop
                   },
                 ]}
               >
-                <MaterialIcons name="edit" size={16} color="#ffffff" />
+                <Pencil size={16} color={theme.onPrimary} />
               </Pressable>
               <Pressable
                 onPress={() => onDelete?.(transaction.id)}
                 style={({ pressed }) => [
                   styles.deleteButton,
                   {
-                    backgroundColor: theme.warning,
+                    backgroundColor: theme.destructive,
                     opacity: pressed ? 0.8 : 1,
                   },
                 ]}
               >
-                <MaterialIcons name="delete" size={18} color="#ffffff" />
+                <Trash2 size={18} color={theme.onPrimary} />
               </Pressable>
             </View>
           ) : null}
@@ -88,33 +103,33 @@ export function TransactionItem({ transaction, onDelete, onPress, onEdit }: prop
   )
 }
 
-const getTransactionVisuals = (transaction: TransactionListItem) => {
+const getTransactionVisuals = (transaction: TransactionListItem, theme: SemanticColors) => {
   const normalized = `${transaction.category} ${transaction.description}`.toLowerCase()
 
   if (normalized.includes('shopping') || normalized.includes('compra')) {
     return {
-      icon: 'shopping-bag' as MaterialIconName,
-      color: '#F5C542',
+      icon: 'shopping-bag' as IconKey,
+      color: theme.pending,
     }
   }
 
   if (normalized.includes('salary') || normalized.includes('salario')) {
     return {
-      icon: 'paid' as MaterialIconName,
-      color: '#2CB67D',
+      icon: 'circle-dollar' as IconKey,
+      color: theme.income,
     }
   }
 
   if (normalized.includes('vacation') || normalized.includes('viagem')) {
     return {
-      icon: 'card-travel' as MaterialIconName,
-      color: '#F2994A',
+      icon: 'luggage' as IconKey,
+      color: theme.destructive,
     }
   }
 
   return {
-    icon: 'receipt-long' as MaterialIconName,
-    color: '#6A66FF',
+    icon: 'receipt' as IconKey,
+    color: theme.primary,
   }
 }
 
@@ -140,6 +155,13 @@ const styles = StyleSheet.create({
     gap: 12,
     width: '100%',
   },
+  leftContent: {
+    flex: 1,
+    minWidth: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
   iconWrap: {
     width: 36,
     height: 36,
@@ -154,6 +176,8 @@ const styles = StyleSheet.create({
   details: {
     flex: 1,
     gap: 4,
+    minWidth: 0,
+    alignItems: 'flex-start',
   },
   description: {
     fontSize: 15,
@@ -162,16 +186,12 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 12,
   },
-  amountColumn: {
-    alignItems: 'flex-end',
-    gap: 0,
-  },
   rightColumn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
     gap: 10,
-    marginLeft: 'auto',
+    flexShrink: 0,
   },
   actions: {
     flexDirection: 'row',
@@ -188,6 +208,7 @@ const styles = StyleSheet.create({
   amount: {
     fontSize: 14,
     fontWeight: '700',
+    flexShrink: 0,
   },
   deleteButton: {
     width: 32,

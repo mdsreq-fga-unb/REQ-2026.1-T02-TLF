@@ -1,6 +1,7 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, View } from 'react-native'
+import { ChevronDown } from 'lucide-react-native'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 
 type props = {
   title?: string
@@ -35,8 +36,8 @@ export function RecordsHeader({
               },
             ]}
           >
-            <Text style={[styles.periodText, { color: theme.foreground }]}>{periodLabel}</Text>
-            <MaterialIcons name="keyboard-arrow-down" size={20} color={theme.mutedForeground} />
+            <ThemedText text={periodLabel} variant="caption" style={styles.periodText} />
+            <ChevronDown size={20} color={theme.mutedForeground} />
           </Pressable>
         ) : (
           <View style={styles.spacer} />
@@ -46,7 +47,7 @@ export function RecordsHeader({
       </View>
 
       <View style={styles.titleRow}>
-        <Text style={[styles.title, { color: theme.foreground }]}>{title}</Text>
+        <ThemedText text={title} variant="headline" style={styles.title} />
       </View>
     </View>
   )

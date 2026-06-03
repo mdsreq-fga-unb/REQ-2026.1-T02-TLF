@@ -1,12 +1,13 @@
-import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native'
+import { AppIcon } from '@/components/ui/AppIcon'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import type { ComponentProps } from 'react'
+import type { IconKey } from '@/utils/icons'
 
 type Option = {
   id: string
   label: string
-  icon: string
+  icon: IconKey | string
 }
 
 type Props = {
@@ -26,9 +27,9 @@ export function PickerModal({ visible, title, options, selectedId, onSelect, onC
       <Pressable style={styles.backdrop} onPress={onClose} />
       <View style={[styles.sheet, { backgroundColor: theme.surfaceMuted }]}>
         <View style={[styles.sheetHeader, { borderBottomColor: `${theme.mutedForeground}30` }]}>
-          <Text style={[styles.sheetTitle, { color: theme.foreground }]}>{title}</Text>
+          <ThemedText text={title} variant="title" style={styles.sheetTitle} />
           <Pressable onPress={onClose} hitSlop={12}>
-            <MaterialIcons name="close" size={22} color={theme.mutedForeground} />
+            <AppIcon name="x" size={22} color={theme.mutedForeground} />
           </Pressable>
         </View>
         <ScrollView>
@@ -48,14 +49,16 @@ export function PickerModal({ visible, title, options, selectedId, onSelect, onC
                 ]}
               >
                 <View style={[styles.optionIcon, { backgroundColor: `${theme.primary}20` }]}>
-                  <MaterialIcons
-                    name={item.icon as ComponentProps<typeof MaterialIcons>['name']}
+                  <AppIcon
+                    name={item.icon}
                     size={18}
                     color={selected ? theme.primary : theme.mutedForeground}
                   />
                 </View>
-                <Text style={[styles.optionLabel, { color: theme.foreground }]}>{item.label}</Text>
-                {selected && <MaterialIcons name="check" size={18} style={styles.checkIcon} />}
+                <ThemedText text={item.label} variant="body" style={styles.optionLabel} />
+                {selected && (
+                  <AppIcon name="check" size={18} color={theme.primary} strokeWidth={2.5} />
+                )}
               </Pressable>
             )
           })}
@@ -108,8 +111,5 @@ const styles = StyleSheet.create({
   optionLabel: {
     fontSize: 15,
     flex: 1,
-  },
-  checkIcon: {
-    marginLeft: 'auto',
   },
 })

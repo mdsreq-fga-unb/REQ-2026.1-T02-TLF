@@ -19,6 +19,7 @@ import { NumericKeypad } from './NumericKeypad'
 import { FormField } from './FormField'
 import { SubcategoryChips } from './SubcategoryChips'
 import { PickerModal } from './PickerModal'
+import { ThemedButton } from '@/components/ui/ThemedButton'
 
 type Props = {
   title?: string

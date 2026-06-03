@@ -20,7 +20,7 @@ type Props = {
   initialValues?: BudgetInitialValues
 }
 
-export default function CreateBudgetPage({ initialValues }: Props) {
+export default function CreateBudgetScreen({ initialValues }: Props) {
   const theme = useThemeColor()
   const form = useBudgetScreen(initialValues)
 

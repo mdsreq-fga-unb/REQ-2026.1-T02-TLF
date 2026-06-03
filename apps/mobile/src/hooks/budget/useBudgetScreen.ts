@@ -21,8 +21,8 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
   const [type, setType] = useState<BudgetType>(initialValues?.type ?? 'BUDGET')
   const [amountLimit, setAmountLimit] = useState(initialValues?.amountLimit ?? 0)
   const [categoryId, setCategoryId] = useState(initialValues?.categoryId ?? '')
-  const [month, setMonth] = useState(new Date().getMonth())
-  const [year, setYear] = useState(new Date().getFullYear())
+  const [month, setMonth] = useState(initialValues?.month ?? new Date().getMonth())
+  const [year, setYear] = useState(initialValues?.year ?? new Date().getFullYear())
   const [submitting, setSubmitting] = useState(false)
   const [showKeypad, setShowKeypad] = useState(false)
   const [showCategoryPicker, setShowCategoryPicker] = useState(false)
@@ -34,42 +34,35 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
   const dismissFeedback = useCallback(() => setFeedbackMessage(null), [])
 
   async function fetchBudgets() {
-      try {
-        const response = await BudgetService.getAll()
-  
-        setBudgets(response.data)
-      } catch (error) {
-        const errorMessage = error instanceof Error 
-          ? error.message 
-          : 'An unexpected error occurred'
-        setFeedbackMessage(errorMessage)
-      }
+    try {
+      const response = await BudgetService.getAll()
+
+      setBudgets(response.data)
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred'
+      setFeedbackMessage(errorMessage)
     }
+  }
 
   async function onRefresh() {
     setRefreshing(true)
 
-    await fetchBudgets()  
+    await fetchBudgets()
 
     setRefreshing(false)
-  } 
+  }
 
   async function fetchBudget(id: string) {
-  const response =
-    await BudgetService.getById(id)
+    const response = await BudgetService.getById(id)
 
-  const budget = response.data
+    const budget = response.data
 
-  setName(budget.name)
-  setAmountLimit(
-    budget.amountLimit
-  )
-  setMonth(budget.month - 1)
-  setYear(budget.year)
-  setCategoryId(
-    budget.categoryId,
-  )
-}
+    setName(budget.name)
+    setAmountLimit(budget.amountLimit)
+    setMonth(budget.month - 1)
+    setYear(budget.year)
+    setCategoryId(budget.categoryId)
+  }
 
   const handleKeypad = useCallback((key: string) => {
     setAmountLimit((prev) => {
@@ -93,7 +86,7 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
     // TODO: Reativar quando a logica de categorias for implementada
     // category: categoryId === '' ? 'Selecione uma categoria' : undefined,
   }
-  
+
   // TODO: Reativar quando a logica de categorias for implementada
   // const isValid = !errors.amount && !errors.category
   const isValid = !errors.amount
@@ -207,6 +200,6 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
     onRefresh,
     feedbackMessage,
     setFeedbackMessage,
-    dismissFeedback
+    dismissFeedback,
   }
 }

@@ -14,6 +14,7 @@ import { View, ScrollView } from 'react-native'
 import { router } from 'expo-router'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
+import { AlignEndHorizontal, Bookmark } from 'lucide-react-native'
 
 type Props = {
   title?: string
@@ -39,7 +40,7 @@ export default function CreateBudgetPage({ initialValues }: Props) {
             variant="title"
           />
         </View>
-        <BudgetTypeTabs value={form.type} onChange={form.handleTypeChange} />
+        {/* <BudgetTypeTabs value={form.type} onChange={form.handleTypeChange} /> */}
         <ScrollView>
           <AmountDisplay
             amountCents={form.amountLimit}
@@ -60,7 +61,7 @@ export default function CreateBudgetPage({ initialValues }: Props) {
           >
             <FormField
               isInput
-              icon="bookmark"
+              icon={Bookmark}
               value={form.name}
               label="Nome"
               placeholder="Nome"
@@ -68,7 +69,7 @@ export default function CreateBudgetPage({ initialValues }: Props) {
             />
 
             <FormField
-              icon="category"
+              icon={AlignEndHorizontal}
               label="Categoria"
               value={selectedCategory?.label ?? ''}
               onPress={() => form.setShowCategoryPicker(true)}

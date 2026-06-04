@@ -3,7 +3,6 @@ import { ThemedContainer } from '@/components/ui/ThemedContainer'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { CategoryRow } from './CategoryRow'
 import type { CategoryData } from '../../../../types/types'
-import { ThemedContainer } from '@/components/ui/ThemedContainer'
 
 type props = {
   categories: CategoryData[]

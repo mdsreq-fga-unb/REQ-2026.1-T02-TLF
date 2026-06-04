@@ -25,7 +25,6 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
-        w
         name="index"
         options={{
           title: 'Início',
@@ -42,7 +41,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="registro"
+        name="register"
         options={{
           title: '',
           tabBarLabel: () => {
@@ -57,7 +56,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="cards"
+        name="institutions"
         options={{
           title: 'Contas',
           tabBarIcon: ({ color, size }) => (

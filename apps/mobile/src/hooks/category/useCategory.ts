@@ -83,7 +83,7 @@ import {
   WrenchIcon,
   XCircleIcon,
 } from 'phosphor-react-native'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 
 type IconProps = { size?: number; color?: string }
 
@@ -260,6 +260,14 @@ export function useCategory() {
     },
   ]
 
+  const [name, setName] = useState('')
+  const [nameTouched, setNameTouched] = useState(false)
+
+  const isFormValid = name !== ''
+
+  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null)
+  const dismissFeedback = useCallback(() => setFeedbackMessage(null), [])
+
   return {
     ICONS,
     COLORS,
@@ -277,6 +285,14 @@ export function useCategory() {
     setIconPickerVisible,
     icon,
     setIcon,
+    name,
+    setName,
+    nameTouched,
+    setNameTouched,
+    isFormValid,
+    feedbackMessage,
+    setFeedbackMessage,
+    dismissFeedback,
     iconComponent,
   }
 }

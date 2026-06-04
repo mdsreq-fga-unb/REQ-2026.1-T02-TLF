@@ -2,6 +2,10 @@ import { ThemedColorPicker } from '@/components/category/ThemedColorPicker'
 import { ThemedIconPicker } from '@/components/category/ThemedIconPicker'
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
 import { ThemedButton } from '@/components/ui/ThemedButton'
+import { ThemedContainer } from '@/components/ui/ThemedContainer'
+import { ThemedFieldError } from '@/components/ui/ThemedFieldError'
+import { ThemedInputContainer } from '@/components/ui/ThemedInputContainer'
+import { ThemedInputForm } from '@/components/ui/ThemedInputForm'
 import { ThemedListItem } from '@/components/ui/ThemedListItem'
 import { ThemedSeparator } from '@/components/ui/ThemedSeparator'
 import { ThemedText } from '@/components/ui/ThemedText'
@@ -19,6 +23,11 @@ export default function CreateCategoryScreen() {
     setIconPickerVisible,
     setIcon,
     iconComponent,
+    name,
+    setName,
+    nameTouched,
+    setNameTouched,
+    isFormValid,
   } = useCategory()
 
   const { withOpacity } = useColors()
@@ -28,6 +37,23 @@ export default function CreateCategoryScreen() {
   return (
     <ThemedBackground>
       <ThemedText children text="Categoria" style={{ alignSelf: 'flex-start' }} />
+      <ThemedContainer>
+        <ThemedInputContainer text="Nome">
+          <ThemedInputForm
+            placeholder="Nova categoria"
+            onChangeText={setName}
+            autoCapitalize="words"
+            value={name}
+            onBlur={() => {
+              setNameTouched(true)
+            }}
+          />
+          <ThemedFieldError
+            message={isFormValid ? '' : 'Insira um nome unico para a categoria'}
+            visible={nameTouched}
+          />
+        </ThemedInputContainer>
+      </ThemedContainer>
       <ThemedListItem
         text="Cor"
         variant="title"

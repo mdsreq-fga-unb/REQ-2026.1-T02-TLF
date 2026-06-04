@@ -37,6 +37,7 @@ expo-env.d.ts
 /apps/mobile/ios/
 
 # Android / iOS signing and tooling
+android
 .kotlin/
 *.orig.*
 *.jks
@@ -44,6 +45,7 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
+app.json
 
 # Python / MkDocs
 site/

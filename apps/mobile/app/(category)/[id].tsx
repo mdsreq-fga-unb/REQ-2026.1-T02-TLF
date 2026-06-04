@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { ThemedColorPicker } from '@/components/category/ThemedColorPicker'
 import { ThemedIconPicker } from '@/components/category/ThemedIconPicker'
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
@@ -9,6 +10,11 @@ import { useCategory } from '@/hooks/category/useCategory'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useLocalSearchParams } from 'expo-router'
 import { useColors } from '@/hooks/useColors'
+import { ThemedContainer } from '@/components/ui/ThemedContainer'
+import { ThemedFieldError } from '@/components/ui/ThemedFieldError'
+import { ThemedInputContainer } from '@/components/ui/ThemedInputContainer'
+import { ThemedInputForm } from '@/components/ui/ThemedInputForm'
+import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
 
 export default function EditCategoryScreen() {
   const params = useLocalSearchParams()
@@ -21,12 +27,33 @@ export default function EditCategoryScreen() {
     iconPickerVisible,
     setIconPickerVisible,
     setIcon,
+    name,
+    setName,
+    nameTouched,
+    setNameTouched,
+    isFormValid,
+    iconComponent,
+    feedbackMessage,
+    setFeedbackMessage,
+    dismissFeedback,
   } = useCategory()
 
   const { withOpacity } = useColors()
 
   const id = String(params.id ?? '')
   const selectedCategory = CATEGORYS.find((c) => c.id === id)
+
+  const insets = useSafeAreaInsets()
+
+  // Inicializar valores do hook quando a categoria muda
+  useEffect(() => {
+    if (selectedCategory) {
+      setCategoryColor(selectedCategory.color.color)
+      setIcon(selectedCategory.icon.key)
+      setName(selectedCategory.name)
+    }
+  }, [id])
+
   if (!selectedCategory) {
     return (
       <ThemedBackground>
@@ -38,32 +65,48 @@ export default function EditCategoryScreen() {
       </ThemedBackground>
     )
   }
-  const insets = useSafeAreaInsets()
 
   return (
     <ThemedBackground>
       <ThemedText children text="Categoria" style={{ alignSelf: 'flex-start' }} />
+      <ThemedContainer>
+        <ThemedInputContainer text="Nome">
+          <ThemedInputForm
+            placeholder="Nova categoria"
+            onChangeText={setName}
+            autoCapitalize="words"
+            value={name}
+            onBlur={() => {
+              setNameTouched(true)
+            }}
+          />
+          <ThemedFieldError
+            message={isFormValid ? '' : 'Insira um nome unico para a categoria'}
+            visible={nameTouched}
+          />
+        </ThemedInputContainer>
+      </ThemedContainer>
       <ThemedListItem
         text="Cor"
         variant="title"
-        icon={selectedCategory.icon.Icon}
+        icon={iconComponent}
         start="right"
-        iconColor={selectedCategory.color.color}
+        iconColor={categoryColor}
         iconSize="xxlg"
         boxType="round"
-        boxColor={selectedCategory.color.color}
+        boxColor={categoryColor}
         filled="filled"
         onPress={() => setColorPickerVisible(true)}
       />
       <ThemedListItem
         text="Icone"
         variant="title"
-        icon={selectedCategory.icon.Icon}
+        icon={iconComponent}
         start="right"
-        iconColor={selectedCategory.color.color}
+        iconColor={categoryColor}
         iconSize="xxlg"
         boxType="round"
-        boxColor={withOpacity(selectedCategory.color.color, 0.17)}
+        boxColor={withOpacity(categoryColor, 0.17)}
         filled="filled"
         onPress={() => setIconPickerVisible(true)}
       />
@@ -92,6 +135,7 @@ export default function EditCategoryScreen() {
         tone="muted"
         style={{ alignSelf: 'flex-start' }}
       />
+
       <ThemedSeparator />
       <ThemedButton
         title="Salvar mudanças"
@@ -101,6 +145,28 @@ export default function EditCategoryScreen() {
         title="Excluir categoria"
         fillTone="destructive"
         style={{ width: '90%', position: 'absolute', bottom: insets.bottom + 10 }}
+        onPress={() => setFeedbackMessage('Você tem certeza que deseja excluir esse item?')}
+      />
+      <ThemedOverlayAlert
+        visible={feedbackMessage != null}
+        onRequestClose={dismissFeedback}
+        message={feedbackMessage ?? ''}
+        actions={[
+          { label: 'Cancelar', onPress: dismissFeedback },
+          {
+            label: 'Confirmar',
+            onPress: async () => {
+              try {
+                // await CategoryService.delete(id)
+                dismissFeedback()
+                // onDelete?.(id)
+              } catch (deleteError) {
+                console.error('Erro ao excluir orçamento:', deleteError)
+                setFeedbackMessage('Não foi possível excluir o orçamento. Tente novamente.')
+              }
+            },
+          },
+        ]}
       />
     </ThemedBackground>
   )

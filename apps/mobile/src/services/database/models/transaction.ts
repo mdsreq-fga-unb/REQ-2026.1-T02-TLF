@@ -10,7 +10,7 @@ export class Transaction extends Model {
   @field('type') type!: 'EXPENSE' | 'INCOME' | 'TRANSFER'
   @field('status') status!: 'PENDING' | 'CONFIRMED'
   @field('account_id') accountId!: string
-  @field('category_id') categoryId!: string
+  @field('category_id') categoryId!: string | null
   @field('subcategory_id') subcategoryId!: string | null
   @field('invoice_id') invoiceId!: string | null
   @field('recurrence_id') recurrenceId!: string | null

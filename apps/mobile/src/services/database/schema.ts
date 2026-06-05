@@ -1,7 +1,7 @@
 import { appSchema, tableSchema } from '@nozbe/watermelondb'
 
 export const schema = appSchema({
-  version: 1,
+  version: 2,
   tables: [
     tableSchema({
       name: 'transactions',
@@ -12,7 +12,7 @@ export const schema = appSchema({
         { name: 'type', type: 'string' },
         { name: 'status', type: 'string' },
         { name: 'account_id', type: 'string' },
-        { name: 'category_id', type: 'string' },
+        { name: 'category_id', type: 'string', isOptional: true },
         { name: 'subcategory_id', type: 'string', isOptional: true },
         { name: 'invoice_id', type: 'string', isOptional: true },
         { name: 'recurrence_id', type: 'string', isOptional: true },
@@ -22,6 +22,18 @@ export const schema = appSchema({
         { name: 'installment_total', type: 'number', isOptional: true },
         { name: 'receipt_url', type: 'string', isOptional: true },
         { name: 'external_id', type: 'string', isOptional: true },
+        { name: 'created_at', type: 'number' },
+        { name: 'updated_at', type: 'number' },
+      ],
+    }),
+    tableSchema({
+      name: 'accounts',
+      columns: [
+        { name: 'name', type: 'string' },
+        { name: 'type', type: 'string' },
+        { name: 'balance', type: 'number' },
+        { name: 'currency', type: 'string' },
+        { name: 'institution_id', type: 'string' },
         { name: 'created_at', type: 'number' },
         { name: 'updated_at', type: 'number' },
       ],

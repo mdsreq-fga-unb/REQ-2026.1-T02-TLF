@@ -1,30 +1,30 @@
-import { ApiProperty } from "@nestjs/swagger"
+import { ApiProperty } from '@nestjs/swagger'
 
 export class TransactionListResponseDto {
   @ApiProperty({
     example: [
       {
-        id: "ae73db85-6c25-4b8d-91b2-d0cda2830c65",
-        type: "EXPENSE",
+        id: 'ae73db85-6c25-4b8d-91b2-d0cda2830c65',
+        type: 'EXPENSE',
         amount: 5000,
-        description: "Almoço",
-        date: "2026-05-02T00:00:00.000Z",
-        status: "COMPLETED",
+        description: 'Almoço',
+        date: '2026-05-02T00:00:00.000Z',
+        status: 'COMPLETED',
         category: {
-          id: "3cec466a-096d-4016-bb10-bcc9b94a7d36",
-          name: "Alimentação"
+          id: '3cec466a-096d-4016-bb10-bcc9b94a7d36',
+          name: 'Alimentação',
         },
         subCategory: {
-          id: "a55d44df-6f3b-480d-9db4-388235e931bc",
-          name: "Restaurante"
+          id: 'a55d44df-6f3b-480d-9db4-388235e931bc',
+          name: 'Restaurante',
         },
         account: {
-          id: "077e482b-dfd9-48cb-9b79-15a3c25a83a5",
-          name: "Nubank"
-        }
-      }
+          id: '077e482b-dfd9-48cb-9b79-15a3c25a83a5',
+          name: 'Nubank',
+        },
+      },
     ],
-    description: "Lista de transações"
+    description: 'Lista de transações',
   })
   data!: {
     id: string
@@ -33,7 +33,7 @@ export class TransactionListResponseDto {
     description?: string
     date: string
     status?: string
-    category: {
+    category?: {
       id: string
       name: string
     }
@@ -52,9 +52,9 @@ export class TransactionListResponseDto {
       total: 100,
       page: 1,
       limit: 20,
-      totalPages: 5
+      totalPages: 5,
     },
-    description: "Metadados de paginação"
+    description: 'Metadados de paginação',
   })
   meta!: {
     total: number

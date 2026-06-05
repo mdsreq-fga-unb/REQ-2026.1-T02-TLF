@@ -1,6 +1,8 @@
 import { router } from 'expo-router'
-import { useCallback, useMemo, useState } from 'react'
-import { ACCOUNTS, CATEGORIES, TRANSACTION_FORM_COPY } from '@/utils/transactionForm'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { CATEGORIES, TRANSACTION_FORM_COPY } from '@/utils/transactionForm'
+import { useAccounts } from '@/hooks/accounts/useAccounts'
+import { trySync } from '@/services/sync'
 import {
   useTransactionForm,
   type TransactionInitialValues,
@@ -21,11 +23,16 @@ export function useTransactionFormScreen({
   mode = 'create',
   title,
 }: Options = {}) {
-  const form = useTransactionForm(initialValues)
+  const { accounts } = useAccounts()
+  const form = useTransactionForm(initialValues, accounts)
   const [showAccountPicker, setShowAccountPicker] = useState(false)
   const [showDestinationPicker, setShowDestinationPicker] = useState(false)
   const [showCategoryPicker, setShowCategoryPicker] = useState(false)
   const [successAlertVisible, setSuccessAlertVisible] = useState(false)
+
+  useEffect(() => {
+    void trySync()
+  }, [])
 
   const resolvedTitle =
     title ?? (mode === 'edit' ? TRANSACTION_FORM_COPY.editTitle : TRANSACTION_FORM_COPY.createTitle)
@@ -44,13 +51,15 @@ export function useTransactionFormScreen({
       ? TRANSACTION_FORM_COPY.editSuccessMessage
       : TRANSACTION_FORM_COPY.successMessage
 
+  // TODO (categorias): CATEGORIES é mock local. Trocar por uma lista vinda do banco
+  // (ex.: useCategories observando uma tabela sincronizada) quando disponível.
   const categories = CATEGORIES[form.type]
-  const selectedAccount = ACCOUNTS.find((account) => account.id === form.accountId)
-  const selectedDestination = ACCOUNTS.find((account) => account.id === form.destinationAccountId)
+  const selectedAccount = accounts.find((account) => account.id === form.accountId)
+  const selectedDestination = accounts.find((account) => account.id === form.destinationAccountId)
   const selectedCategory = categories.find((category) => category.id === form.categoryId)
   const destinationOptions = useMemo(
-    () => ACCOUNTS.filter((account) => account.id !== form.accountId),
-    [form.accountId],
+    () => accounts.filter((account) => account.id !== form.accountId),
+    [accounts, form.accountId],
   )
 
   const dismissSuccessAlert = useCallback(() => {
@@ -61,6 +70,7 @@ export function useTransactionFormScreen({
   const handleSubmit = useCallback(() => {
     form.submit(() => {
       setSuccessAlertVisible(true)
+      void trySync()
     })
   }, [form])
 
@@ -75,6 +85,7 @@ export function useTransactionFormScreen({
     submitLabel,
     successTitle,
     successMessage,
+    accounts,
     categories,
     selectedAccount,
     selectedDestination,

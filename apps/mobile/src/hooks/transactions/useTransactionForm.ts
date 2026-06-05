@@ -1,29 +1,52 @@
-import { useCallback, useState } from 'react'
-import { createTransaction, type TransactionType } from '@/services/database/queries/transaction'
-import { ACCOUNTS, MAX_AMOUNT_CENTS, TRANSACTION_FORM_ERRORS } from '@/utils/transactionForm'
+import { useCallback, useEffect, useState } from 'react'
+import {
+  createTransaction,
+  updateTransaction,
+  type TransactionStatus,
+  type TransactionType,
+} from '@/services/database/queries/transaction'
+import { MAX_AMOUNT_CENTS, TRANSACTION_FORM_ERRORS } from '@/utils/transactionForm'
+import type { FormAccount } from '@/utils/transactionForm/data'
 
 export type TransactionInitialValues = {
+  id?: string
   type?: TransactionType
   amountCents?: number
   accountId?: string
+  destinationAccountId?: string
   categoryId?: string
   subcategoryId?: string
   notes?: string
+  date?: Date
+  status?: TransactionStatus
 }
 
-export function useTransactionForm(initialValues?: TransactionInitialValues) {
+export function useTransactionForm(
+  initialValues?: TransactionInitialValues,
+  accounts: FormAccount[] = [],
+) {
   const [type, setType] = useState<TransactionType>(initialValues?.type ?? 'EXPENSE')
   const [amountCents, setAmountCents] = useState(initialValues?.amountCents ?? 0)
-  const [accountId, setAccountId] = useState(initialValues?.accountId ?? ACCOUNTS[0].id)
-  const [destinationAccountId, setDestinationAccountId] = useState(ACCOUNTS[1].id)
+  const [accountId, setAccountId] = useState(initialValues?.accountId ?? '')
+  const [destinationAccountId, setDestinationAccountId] = useState(
+    initialValues?.destinationAccountId ?? '',
+  )
   const [categoryId, setCategoryId] = useState(initialValues?.categoryId ?? '')
   const [subcategoryId, setSubcategoryId] = useState(initialValues?.subcategoryId ?? '')
-  const [date] = useState(new Date())
+  const [date] = useState(initialValues?.date ?? new Date())
+  const [status] = useState<TransactionStatus>(initialValues?.status ?? 'CONFIRMED')
   const [notes, setNotes] = useState(initialValues?.notes ?? '')
   const [submitting, setSubmitting] = useState(false)
   const [showKeypad, setShowKeypad] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [submitAttempted, setSubmitAttempted] = useState(false)
+  const editingId = initialValues?.id
+
+  useEffect(() => {
+    if (accounts.length === 0) return
+    setAccountId((current) => current || accounts[0].id)
+    setDestinationAccountId((current) => current || accounts[1]?.id || accounts[0].id)
+  }, [accounts])
 
   const handleKeypad = useCallback((key: string) => {
     setAmountCents((prev) => {
@@ -45,6 +68,7 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
 
   const errors = {
     amount: amountCents === 0 ? TRANSACTION_FORM_ERRORS.amount : undefined,
+    account: accountId === '' ? TRANSACTION_FORM_ERRORS.account : undefined,
     category:
       type !== 'TRANSFER' && categoryId === '' ? TRANSACTION_FORM_ERRORS.category : undefined,
     destinationAccount:
@@ -53,12 +77,13 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
         : undefined,
   }
 
-  const isValid = !errors.amount && !errors.category && !errors.destinationAccount
+  const isValid =
+    !errors.amount && !errors.account && !errors.category && !errors.destinationAccount
 
   const reset = () => {
     setAmountCents(0)
-    setAccountId(ACCOUNTS[0].id)
-    setDestinationAccountId(ACCOUNTS[1].id)
+    setAccountId(accounts[0]?.id ?? '')
+    setDestinationAccountId(accounts[1]?.id ?? accounts[0]?.id ?? '')
     setCategoryId('')
     setSubcategoryId('')
     setNotes('')
@@ -72,18 +97,27 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
     setSubmitError(null)
     setSubmitting(true)
     try {
-      await createTransaction({
+      const payload = {
         amount,
-        description: notes.trim() || categoryId || type,
+        description: notes.trim() || type,
         date,
         type,
-        status: 'CONFIRMED',
+        status,
         accountId,
-        categoryId: categoryId || 'uncategorized',
-        subcategoryId: subcategoryId || null,
+        // TODO (categorias): por enquanto enviamos null. As categorias ainda não
+        // são sincronizadas do backend; quando o sync de categorias existir,
+        // colocar aqui o id real da categoria escolhida (form.categoryId).
+        categoryId: null,
+        subcategoryId: null,
         destinationAccountId: type === 'TRANSFER' ? destinationAccountId : null,
-      })
-      reset()
+      }
+
+      if (editingId) {
+        await updateTransaction(editingId, payload)
+      } else {
+        await createTransaction(payload)
+        reset()
+      }
       onSuccess?.()
     } catch (error) {
       const message = error instanceof Error ? error.message : TRANSACTION_FORM_ERRORS.submit
@@ -98,6 +132,7 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
     handleTypeChange,
     amountCents,
     amount,
+    date,
     accountId,
     setAccountId,
     destinationAccountId,

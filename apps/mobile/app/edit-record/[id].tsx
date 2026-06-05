@@ -1,13 +1,15 @@
-import { Pressable, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ArrowLeft } from 'lucide-react-native'
 import { TransactionForm } from '@/components/finance/transactions/TransactionForm'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { useEditRecordScreen } from '@/hooks/records/useEditRecordScreen'
 
 export default function EditRecordScreen() {
   const theme = useThemeColor()
-  const { title, mode, initialValues, handleBack, handleSuccess } = useEditRecordScreen()
+  const { title, mode, loading, notFound, initialValues, handleBack, handleSuccess } =
+    useEditRecordScreen()
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
@@ -21,12 +23,22 @@ export default function EditRecordScreen() {
         </Pressable>
       </View>
 
-      <TransactionForm
-        title={title}
-        mode={mode}
-        initialValues={initialValues}
-        onSuccess={handleSuccess}
-      />
+      {loading ? (
+        <View style={styles.centered}>
+          <ActivityIndicator color={theme.foreground} />
+        </View>
+      ) : notFound || !initialValues ? (
+        <View style={styles.centered}>
+          <ThemedText text="Registro não encontrado" variant="body" />
+        </View>
+      ) : (
+        <TransactionForm
+          title={title}
+          mode={mode}
+          initialValues={initialValues}
+          onSuccess={handleSuccess}
+        />
+      )}
     </SafeAreaView>
   )
 }
@@ -34,6 +46,11 @@ export default function EditRecordScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  centered: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   backRow: {
     paddingHorizontal: 20,

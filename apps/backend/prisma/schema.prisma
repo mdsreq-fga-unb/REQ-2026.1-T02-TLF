@@ -243,8 +243,11 @@ model Transaction {
   status TransactionStatus @default(COMPLETED)
   type   TransactionType   @default(EXPENSE)
 
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId String   @map("category_id")
+  // TODO (categorias): opcional por enquanto
+  // categoria e o app envia categoryId null no sync. Quando as categorias forem
+  // sincronizadas e o app passar a enviar o id, voltar este campo a obrigatório.
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String?   @map("category_id")
 
   subCategory   SubCategory? @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
   subCategoryId String?      @map("sub_category_id")
@@ -267,6 +270,13 @@ model Transaction {
 
   receiptUrl String? @map("receipt_url") // Institution-issued receipt URL — post-MVP
   externalId String? @map("external_id") // Open Finance / bank tx id — post-MVP
+
+  // Offline-first sync (WatermelonDB): createdAt/updatedAt let the pull endpoint
+  // split records into created/updated since lastPulledAt; deletedAt is a tombstone
+  // so deletions can be propagated to clients without losing the row immediately.
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
 
   @@map("transactions")
 }

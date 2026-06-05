@@ -22,12 +22,19 @@ export type FormSubcategory = {
   icon: IconKey
 }
 
+// TODO (contas): mock legado. As contas reais agora vêm do backend via sync
+// (useAccounts) e têm ids UUID, testes ids fixos ('cash'/'checking'/'credit')
+// não batem com o backend. Manter só enquanto algo ainda referenciar; remover
+// quando nenhum lugar usar mais este mock.
 export const ACCOUNTS: FormAccount[] = [
   { id: 'cash', label: 'Dinheiro', icon: 'banknote' },
   { id: 'checking', label: 'Conta Corrente', icon: 'landmark' },
   { id: 'credit', label: 'Cartão de Crédito', icon: 'credit-card' },
 ]
 
+// TODO (categorias): mock local, estas categorias ainda não existem no backend
+// nem são sincronizadas. Substituir por dados vindos do banco/sync quando a
+// funcionalidade de categorias for implementada.
 export const CATEGORIES: Record<TransactionType, FormCategory[]> = {
   EXPENSE: [
     {

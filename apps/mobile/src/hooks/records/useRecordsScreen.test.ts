@@ -1,20 +1,36 @@
 import { renderHook, act, waitFor } from '@testing-library/react-native'
-import { mockTransactions } from '@/utils/fixtures/records'
 import { router } from 'expo-router'
 import { useRecordsScreen } from './useRecordsScreen'
 
+// Reactive WatermelonDB source: a controllable fake observable. `mockRows` is the
+// current emission; `mockEmit` lets the "delete" mock push a new list, mirroring
+// WatermelonDB re-emitting after a local write.
+let mockRows: Array<{
+  id: string
+  description: string
+  categoryId: string | null
+  type: 'EXPENSE' | 'INCOME' | 'TRANSFER'
+  date: Date
+  amount: number
+}> = []
+let mockEmit: (rows: typeof mockRows) => void = () => {}
+
 jest.mock('@/services/database/queries/transaction', () => ({
-  transactionQueries: {
-    getAll: jest.fn(),
-    delete: jest.fn(),
-  },
+  observeTransactions: jest.fn(() => ({
+    subscribe: (cb: (rows: typeof mockRows) => void) => {
+      mockEmit = cb
+      cb(mockRows)
+      return { unsubscribe: jest.fn() }
+    },
+  })),
+  markTransactionAsDeleted: jest.fn(async (id: string) => {
+    mockRows = mockRows.filter((row) => row.id !== id)
+    mockEmit(mockRows)
+  }),
 }))
 
-jest.mock('@/services/api/transactions', () => ({
-  listTransactions: jest.fn(),
-  listTransactionsByCategory: jest.fn(),
-  listTransactionsByType: jest.fn(),
-  deleteTransaction: jest.fn(),
+jest.mock('@/services/sync', () => ({
+  trySync: jest.fn().mockResolvedValue(true),
 }))
 
 jest.mock('expo-router', () => ({
@@ -23,19 +39,47 @@ jest.mock('expo-router', () => ({
 
 const mockedPush = jest.mocked(router.push)
 
+const buildRows = () => [
+  {
+    id: '1',
+    description: 'Aluguel',
+    categoryId: 'Moradia',
+    type: 'EXPENSE' as const,
+    date: new Date('2026-01-05'),
+    amount: 1500,
+  },
+  {
+    id: '2',
+    description: 'Salário',
+    categoryId: 'Trabalho',
+    type: 'INCOME' as const,
+    date: new Date('2026-01-01'),
+    amount: 5000,
+  },
+  {
+    id: '3',
+    description: 'Mercado',
+    categoryId: 'Alimentação',
+    type: 'EXPENSE' as const,
+    date: new Date('2026-01-03'),
+    amount: 300,
+  },
+]
+
 describe('useRecordsScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    mockRows = buildRows()
   })
 
-  it('loads mock transactions on mount', async () => {
+  it('loads transactions reactively from WatermelonDB on mount', async () => {
     const { result } = renderHook(() => useRecordsScreen())
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false)
     })
 
-    expect(result.current.filteredTransactions).toHaveLength(mockTransactions.length)
+    expect(result.current.filteredTransactions).toHaveLength(mockRows.length)
     expect(result.current.error).toBeNull()
   })
 
@@ -110,7 +154,7 @@ describe('useRecordsScreen', () => {
 
     expect(result.current.alert).not.toBeNull()
 
-    act(() => {
+    await act(async () => {
       const deleteAction = result.current.alert?.actions.find(
         (action) => action.label === 'Excluir',
       )

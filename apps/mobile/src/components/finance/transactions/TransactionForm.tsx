@@ -12,7 +12,6 @@ import {
 } from '@/hooks/transactions/useTransactionFormScreen'
 import { TRANSACTION_FORM_COPY } from '@/utils/transactionForm'
 import { formatDateTimeShort } from '@/utils/formatters'
-import { ACCOUNTS } from './types'
 import { TransactionTypeTabs } from './TransactionTypeTabs'
 import { AmountDisplay } from './AmountDisplay'
 import { NumericKeypad } from './NumericKeypad'
@@ -35,6 +34,7 @@ export function TransactionForm({ title, mode, initialValues, onSuccess }: Props
     submitLabel,
     successTitle,
     successMessage,
+    accounts,
     categories,
     selectedAccount,
     selectedDestination,
@@ -85,6 +85,7 @@ export function TransactionForm({ title, mode, initialValues, onSuccess }: Props
             label={form.type === 'TRANSFER' ? 'De Conta' : 'Conta'}
             value={selectedAccount?.label ?? ''}
             onPress={() => setShowAccountPicker(true)}
+            error={form.submitAttempted ? form.errors.account : undefined}
           />
 
           {form.type === 'TRANSFER' && (
@@ -119,7 +120,7 @@ export function TransactionForm({ title, mode, initialValues, onSuccess }: Props
           <FormField
             icon={Calendar}
             label="Data e Hora"
-            value={formatDateTimeShort(new Date())}
+            value={formatDateTimeShort(form.date)}
             onPress={() => {}}
           />
 
@@ -166,7 +167,7 @@ export function TransactionForm({ title, mode, initialValues, onSuccess }: Props
       <PickerModal
         visible={showAccountPicker}
         title="Selecionar Conta"
-        options={ACCOUNTS}
+        options={accounts}
         selectedId={form.accountId}
         onSelect={form.setAccountId}
         onClose={() => setShowAccountPicker(false)}

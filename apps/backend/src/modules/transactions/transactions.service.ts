@@ -74,10 +74,12 @@ export class TransactionsService {
       date: transaction.date.toISOString(),
       status: transaction.status ?? undefined,
 
-      category: {
-        id: transaction.category.id,
-        name: transaction.category.name,
-      },
+      category: transaction.category
+        ? {
+            id: transaction.category.id,
+            name: transaction.category.name,
+          }
+        : undefined,
 
       subCategory: transaction.subCategory
         ? {
@@ -177,7 +179,7 @@ export class TransactionsService {
       description: t.description ?? undefined,
       date: t.date.toISOString(),
       status: t.status ?? undefined,
-      category: t.category,
+      category: t.category ?? undefined,
       subCategory: t.subCategory ?? undefined,
       account: t.account,
     }))
@@ -204,10 +206,12 @@ export class TransactionsService {
       date: transaction.date.toISOString(),
       status: transaction.status ?? undefined,
 
-      category: {
-        id: transaction.category.id,
-        name: transaction.category.name,
-      },
+      category: transaction.category
+        ? {
+            id: transaction.category.id,
+            name: transaction.category.name,
+          }
+        : undefined,
 
       subCategory: transaction.subCategory
         ? {
@@ -244,10 +248,12 @@ export class TransactionsService {
       date: updated.date.toISOString(),
       status: updated.status ?? undefined,
 
-      category: {
-        id: updated.category.id,
-        name: updated.category.name,
-      },
+      category: updated.category
+        ? {
+            id: updated.category.id,
+            name: updated.category.name,
+          }
+        : undefined,
 
       subCategory: updated.subCategory
         ? {
@@ -283,10 +289,12 @@ export class TransactionsService {
       date: deleted.date.toISOString(),
       status: deleted.status ?? undefined,
 
-      category: {
-        id: deleted.category.id,
-        name: deleted.category.name,
-      },
+      category: deleted.category
+        ? {
+            id: deleted.category.id,
+            name: deleted.category.name,
+          }
+        : undefined,
 
       subCategory: deleted.subCategory
         ? {

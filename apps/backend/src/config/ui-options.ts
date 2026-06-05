@@ -39,6 +39,20 @@ export function isValidColor(value: string): boolean {
   return (CATEGORY_COLORS as readonly string[]).includes(value)
 }
 
+export const DEFAULT_INSTITUTION: { name: string; color: string } = {
+  name: 'Minhas Contas',
+  color: '#6B6BF5',
+}
+
+export const DEFAULT_ACCOUNTS: Array<{
+  name: string
+  type: 'CHECKING' | 'SAVINGS' | 'CREDIT_CARD' | 'CASH'
+}> = [
+  { name: 'Dinheiro', type: 'CASH' },
+  { name: 'Conta Corrente', type: 'CHECKING' },
+  { name: 'Cartão de Crédito', type: 'CREDIT_CARD' },
+]
+
 export const DEFAULT_CATEGORIES: Array<{
   name: string
   icon: CategoryIcon

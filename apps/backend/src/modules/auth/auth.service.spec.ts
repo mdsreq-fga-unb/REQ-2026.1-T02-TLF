@@ -25,7 +25,7 @@ describe('AuthService', () => {
   let prismaMock: {
     user: { create: jest.Mock; findUnique: jest.Mock }
   }
-  let seedMock: { seedDefaultCategories: jest.Mock }
+  let seedMock: { seedDefaultCategories: jest.Mock; seedDefaultAccounts: jest.Mock }
 
   const registerDto = { name: 'Danilo', email: 'danilo@test.com', password: 'Password123!' }
   const loginDto = { email: 'danilo@test.com', password: 'Password123!' }
@@ -39,7 +39,10 @@ describe('AuthService', () => {
         findUnique: jest.fn(),
       },
     }
-    seedMock = { seedDefaultCategories: jest.fn().mockResolvedValue(undefined) }
+    seedMock = {
+      seedDefaultCategories: jest.fn().mockResolvedValue(undefined),
+      seedDefaultAccounts: jest.fn().mockResolvedValue(undefined),
+    }
 
     jest.spyOn(console, 'error').mockImplementation(() => {})
 
@@ -83,6 +86,7 @@ describe('AuthService', () => {
       })
       expect(prismaMock.user.create).toHaveBeenCalled()
       expect(seedMock.seedDefaultCategories).toHaveBeenCalledWith(authUserId)
+      expect(seedMock.seedDefaultAccounts).toHaveBeenCalledWith(authUserId)
     })
 
     it('should throw BadRequestException when Supabase createUser fails', async () => {

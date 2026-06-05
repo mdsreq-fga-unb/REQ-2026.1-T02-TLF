@@ -40,6 +40,7 @@ export class AuthService {
       })
 
       await this.seed.seedDefaultCategories(user.id)
+      await this.seed.seedDefaultAccounts(user.id)
 
       return { userId: user.id }
     } catch (error) {

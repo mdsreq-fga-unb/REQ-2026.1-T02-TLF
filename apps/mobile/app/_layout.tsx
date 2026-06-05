@@ -1,5 +1,6 @@
 import { AndroidHardwareBackPortal } from '@/components/AndroidHardwareBackPortal'
 import { ThemedStatusBar } from '@/components/ui/ThemedStatusBar'
+import { useAutoSync } from '@/hooks/sync/useAutoSync'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { fonts } from '@/utils/fonts'
 import { Stack } from 'expo-router'
@@ -13,6 +14,9 @@ void SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
   const colors = useThemeColor()
+
+  // Para quando voltar internet, conseguir enviar os dados.
+  useAutoSync()
 
   const [fontsLoaded] = useFonts(fonts.Manrope.files)
 

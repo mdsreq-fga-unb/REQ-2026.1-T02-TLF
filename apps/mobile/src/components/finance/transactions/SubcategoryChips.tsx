@@ -1,4 +1,4 @@
-import { useEffect, type ComponentProps } from 'react'
+import { useEffect } from 'react'
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import Animated, {
   interpolateColor,
@@ -6,19 +6,36 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-import { CATEGORIES, CHIP_ACCENT, type TransactionType } from './types'
-
-const OUTLINE = '#908fa0'
-const OUTLINE_VARIANT_50 = '#46455480'
+import { AppIcon } from '@/components/ui/AppIcon'
+import { ThemedText } from '@/components/ui/ThemedText'
+import { useThemeColor } from '@/hooks/useThemeColor'
+import { CATEGORIES } from '@/utils/transactionForm'
+import type { TransactionType } from './types'
 
 const SPRING_SELECT = { damping: 18, stiffness: 280 } as const
 const SPRING_PRESS = { damping: 22, stiffness: 420 } as const
 
 type Sub = { id: string; label: string; icon: string }
-type IconName = ComponentProps<typeof MaterialIcons>['name']
 
-function ChipItem({ sub, active, onPress }: { sub: Sub; active: boolean; onPress: () => void }) {
+function ChipItem({
+  sub,
+  active,
+  onPress,
+  borderIdle,
+  borderActive,
+  iconIdle,
+  iconActive,
+  chipBg,
+}: {
+  sub: Sub
+  active: boolean
+  onPress: () => void
+  borderIdle: string
+  borderActive: string
+  iconIdle: string
+  iconActive: string
+  chipBg: string
+}) {
   const progress = useSharedValue(active ? 1 : 0)
   const scale = useSharedValue(1)
 
@@ -27,16 +44,12 @@ function ChipItem({ sub, active, onPress }: { sub: Sub; active: boolean; onPress
   }, [active, progress])
 
   const chipStyle = useAnimatedStyle(() => ({
-    borderColor: interpolateColor(progress.value, [0, 1], [OUTLINE_VARIANT_50, CHIP_ACCENT]),
+    borderColor: interpolateColor(progress.value, [0, 1], [borderIdle, borderActive]),
     transform: [{ scale: scale.value }],
   }))
 
   const bgStyle = useAnimatedStyle(() => ({
     opacity: progress.value * 0.18,
-  }))
-
-  const textStyle = useAnimatedStyle(() => ({
-    color: interpolateColor(progress.value, [0, 1], [OUTLINE, CHIP_ACCENT]),
   }))
 
   const activeIconStyle = useAnimatedStyle(() => ({
@@ -58,20 +71,25 @@ function ChipItem({ sub, active, onPress }: { sub: Sub; active: boolean; onPress
       }}
     >
       <Animated.View style={[styles.chip, chipStyle]}>
-        {/* green tinted background */}
-        <Animated.View style={[StyleSheet.absoluteFill, styles.chipBg, bgStyle]} />
+        <Animated.View
+          style={[StyleSheet.absoluteFill, styles.chipBg, bgStyle, { backgroundColor: chipBg }]}
+        />
 
-        {/* icon: inactive and active layers crossfade */}
         <View style={styles.iconWrap}>
           <Animated.View style={[StyleSheet.absoluteFill, styles.iconCenter, inactiveIconStyle]}>
-            <MaterialIcons name={sub.icon as IconName} size={14} color={OUTLINE} />
+            <AppIcon name={sub.icon} size={14} color={iconIdle} />
           </Animated.View>
           <Animated.View style={[StyleSheet.absoluteFill, styles.iconCenter, activeIconStyle]}>
-            <MaterialIcons name={sub.icon as IconName} size={14} color={CHIP_ACCENT} />
+            <AppIcon name={sub.icon} size={14} color={iconActive} />
           </Animated.View>
         </View>
 
-        <Animated.Text style={[styles.chipLabel, textStyle]}>{sub.label}</Animated.Text>
+        <ThemedText
+          text={sub.label}
+          variant="label"
+          tone={active ? 'primary' : 'muted'}
+          style={styles.chipLabel}
+        />
       </Animated.View>
     </Pressable>
   )
@@ -85,14 +103,15 @@ type Props = {
 }
 
 export function SubcategoryChips({ type, categoryId, selectedId, onSelect }: Props) {
+  const theme = useThemeColor()
   const category = CATEGORIES[type].find((c) => c.id === categoryId)
   const subcategories = category?.subcategories ?? []
 
   if (subcategories.length === 0) return null
 
   return (
-    <View style={styles.wrapper}>
-      <Animated.Text style={styles.label}>SUBCATEGORIA</Animated.Text>
+    <View style={[styles.wrapper, { borderBottomColor: `${theme.border}28` }]}>
+      <ThemedText text="SUBCATEGORIA" variant="caption" tone="muted" style={styles.label} />
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -105,6 +124,11 @@ export function SubcategoryChips({ type, categoryId, selectedId, onSelect }: Pro
             sub={sub}
             active={sub.id === selectedId}
             onPress={() => onSelect(sub.id === selectedId ? '' : sub.id)}
+            borderIdle={`${theme.border}80`}
+            borderActive={theme.success}
+            iconIdle={theme.mutedForeground}
+            iconActive={theme.success}
+            chipBg={theme.success}
           />
         ))}
       </ScrollView>
@@ -116,7 +140,6 @@ const styles = StyleSheet.create({
   wrapper: {
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#46455428',
     gap: 8,
   },
   label: {
@@ -124,7 +147,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textTransform: 'uppercase',
     letterSpacing: 0.6,
-    color: OUTLINE,
   },
   scroll: {
     gap: 8,
@@ -141,7 +163,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   chipBg: {
-    backgroundColor: CHIP_ACCENT,
     borderRadius: 12,
   },
   iconWrap: {

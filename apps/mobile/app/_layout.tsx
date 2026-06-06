@@ -1,18 +1,17 @@
 import { AndroidHardwareBackPortal } from '@/components/AndroidHardwareBackPortal'
+import { ThemedStatusBar } from '@/components/ui/ThemedStatusBar'
+import { useThemeColor } from '@/hooks/useThemeColor'
 import { fonts } from '@/utils/fonts'
 import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
-import { StatusBar } from 'expo-status-bar'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useFonts } from 'expo-font'
 import { useEffect } from 'react'
-import { ActivityIndicator, useColorScheme } from 'react-native'
-import { useThemeColor } from '@/hooks/useThemeColor'
+import { ActivityIndicator } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 void SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
-  const isDark = useColorScheme() === 'dark'
   const colors = useThemeColor()
 
   const [fontsLoaded] = useFonts(fonts.Manrope.files)
@@ -26,6 +25,7 @@ export default function RootLayout() {
   if (!fontsLoaded) {
     return (
       <>
+        <ThemedStatusBar />
         <ActivityIndicator size="large" color={colors.primary} />
       </>
     )
@@ -33,11 +33,12 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <StatusBar style={isDark ? 'light' : 'dark'} />
+      <ThemedStatusBar />
       <AndroidHardwareBackPortal />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(budget)" options={{ presentation: 'modal' }} />
         <Stack.Screen name="edit-record/[id]" options={{ presentation: 'modal' }} />
       </Stack>
     </GestureHandlerRootView>

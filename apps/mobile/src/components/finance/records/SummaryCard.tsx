@@ -1,8 +1,7 @@
-import { StyleSheet, Text, ViewStyle, StyleProp } from 'react-native'
-import { Container } from '@/components/ui/Container'
-import { useThemeColor } from '@/hooks/useThemeColor'
+import { StyleSheet, View, ViewStyle, StyleProp } from 'react-native'
+import { ThemedContainer } from '@/components/ui/ThemedContainer'
+import { ThemedText } from '@/components/ui/ThemedText'
 
-type CardSize = 'lg' | 'md'
 type CardAlign = 'left' | 'center'
 
 type props = {
@@ -10,64 +9,81 @@ type props = {
   value: string
   caption?: string
   valueColor?: string
-  size?: CardSize
   align?: CardAlign
   style?: StyleProp<ViewStyle>
 }
 
-export function SummaryCard({
-  label,
-  value,
-  caption,
-  valueColor,
-  size = 'md',
-  align = 'left',
-  style,
-}: props) {
-  const theme = useThemeColor()
-  const valueStyle = size === 'lg' ? styles.valueLarge : styles.valueSmall
-  const alignmentStyle = align === 'center' ? styles.centered : null
+export function SummaryCard({ label, value, caption, valueColor, align = 'left', style }: props) {
   const textAlignStyle = align === 'center' ? styles.textCentered : null
 
   return (
-    <Container style={[styles.card, alignmentStyle, style]}>
-      <Text style={[styles.label, { color: theme.mutedForeground }, textAlignStyle]}>{label}</Text>
-      <Text style={[valueStyle, { color: valueColor ?? theme.foreground }, textAlignStyle]}>
-        {value}
-      </Text>
-      {caption ? (
-        <Text style={[styles.caption, { color: theme.mutedForeground }, textAlignStyle]}>
-          {caption}
-        </Text>
-      ) : null}
-    </Container>
+    <ThemedContainer style={[styles.card, style]}>
+      <View style={styles.headerRow}>
+        <ThemedText
+          text={label}
+          variant="caption"
+          tone="muted"
+          style={[styles.label, textAlignStyle, align === 'center' && styles.labelCentered]}
+        />
+        {caption ? (
+          <ThemedText
+            text={caption}
+            variant="caption"
+            tone="muted"
+            style={[styles.caption, textAlignStyle]}
+          />
+        ) : null}
+      </View>
+
+      <ThemedText
+        text={value}
+        variant="title"
+        style={[styles.value, valueColor ? { color: valueColor } : null, textAlignStyle]}
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.75}
+      />
+    </ThemedContainer>
   )
 }
 
 const styles = StyleSheet.create({
   card: {
+    alignSelf: 'stretch',
+    width: '100%',
+    alignItems: 'stretch',
+    gap: 8,
+  },
+  headerRow: {
+    flexDirection: 'row',
     alignItems: 'flex-start',
-  },
-  centered: {
-    alignItems: 'center',
-  },
-  textCentered: {
-    textAlign: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
+    width: '100%',
   },
   label: {
     fontSize: 12,
     letterSpacing: 0.6,
     textTransform: 'uppercase',
+    textAlign: 'left',
+    flex: 1,
   },
-  valueLarge: {
-    fontSize: 32,
-    fontWeight: '700',
+  labelCentered: {
+    flex: 0,
+    textAlign: 'center',
   },
-  valueSmall: {
+  caption: {
+    fontSize: 11,
+    flexShrink: 0,
+    textAlign: 'right',
+  },
+  value: {
+    alignSelf: 'stretch',
+    textAlign: 'left',
     fontSize: 22,
     fontWeight: '700',
   },
-  caption: {
-    fontSize: 12,
+  textCentered: {
+    textAlign: 'center',
   },
 })

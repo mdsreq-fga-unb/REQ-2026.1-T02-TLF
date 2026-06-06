@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native'
-import { useThemeColor } from '@/hooks/useThemeColor'
+import { StyleSheet, View } from 'react-native'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { formatDateHeading } from '@/utils/formatters'
 import { TransactionItem } from './TransactionItem'
-import type { TransactionListItem } from './types'
+import type { TransactionListItem } from '../../../../types/types'
 
 type props = {
   transactions: TransactionListItem[]
@@ -61,33 +61,35 @@ export function TransactionsList({
   onEditTransaction,
   showTitle = false,
 }: props) {
-  const theme = useThemeColor()
   const sections = buildSections(transactions)
 
   return (
     <View style={styles.section}>
       {showTitle ? (
-        <Text style={[styles.title, { color: theme.foreground }]}>Transacoes cadastradas</Text>
+        <ThemedText text="Transacoes cadastradas" variant="title" style={styles.title} />
       ) : null}
 
       {isLoading ? (
-        <Text style={[styles.stateText, { color: theme.mutedForeground }]}>Carregando...</Text>
+        <ThemedText text="Carregando..." variant="caption" tone="muted" style={styles.stateText} />
       ) : error ? (
-        <Text style={[styles.stateText, { color: theme.warning }]}>{error}</Text>
+        <ThemedText text={error} variant="caption" tone="destructive" style={styles.stateText} />
       ) : transactions.length === 0 ? (
-        <Text style={[styles.stateText, { color: theme.mutedForeground }]}>
-          Nenhuma transacao cadastrada.
-        </Text>
+        <ThemedText
+          text="Nenhuma transacao cadastrada."
+          variant="caption"
+          tone="muted"
+          style={styles.stateText}
+        />
       ) : (
         <View style={styles.list}>
-          {sections.map((section, index) => (
+          {sections.map((section) => (
             <View key={section.key} style={styles.group}>
-              {index > 0 ? (
-                <View style={[styles.groupDivider, { backgroundColor: theme.mutedForeground }]} />
-              ) : null}
-              <Text style={[styles.groupTitle, { color: theme.mutedForeground }]}>
-                {section.title}
-              </Text>
+              <ThemedText
+                text={section.title}
+                variant="caption"
+                tone="muted"
+                style={styles.groupTitle}
+              />
               <View style={styles.groupItems}>
                 {section.items.map((transaction) => (
                   <TransactionItem
@@ -127,13 +129,6 @@ const styles = StyleSheet.create({
   group: {
     width: '100%',
     gap: 10,
-  },
-  groupDivider: {
-    width: '100%',
-    height: 1,
-    borderRadius: 999,
-    opacity: 0.25,
-    marginTop: 6,
   },
   groupTitle: {
     fontSize: 12,

@@ -1,25 +1,26 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { TYPE_COLORS, type TransactionType } from './types'
-
-// Design system tokens
-const OUTLINE = '#908fa0'
-const OUTLINE_VARIANT = '#464554'
+import { Pressable, ScrollView, StyleSheet } from 'react-native'
+import { ThemedText } from '@/components/ui/ThemedText'
+import { useThemeColor } from '@/hooks/useThemeColor'
+import { getTransactionTypeColor, TRANSACTION_FORM_COPY, TYPE_TABS } from '@/utils/transactionForm'
+import type { TransactionType } from './types'
 
 type Props = {
   value: TransactionType
   onChange: (type: TransactionType) => void
+  onRecorrencias?: () => void
 }
 
-const TABS: { value: TransactionType; label: string }[] = [
-  { value: 'EXPENSE', label: 'Despesa' },
-  { value: 'INCOME', label: 'Receita' },
-  { value: 'TRANSFER', label: 'Transferência' },
-]
+export function TransactionTypeTabs({ value, onChange, onRecorrencias }: Props) {
+  const theme = useThemeColor()
 
-export function TransactionTypeTabs({ value, onChange }: Props) {
   return (
-    <View style={[styles.row, { borderBottomColor: OUTLINE_VARIANT }]}>
-      {TABS.map((tab) => {
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={[styles.scroll, { borderBottomColor: theme.border }]}
+      contentContainerStyle={styles.row}
+    >
+      {TYPE_TABS.map((tab) => {
         const active = tab.value === value
         return (
           <Pressable
@@ -27,38 +28,59 @@ export function TransactionTypeTabs({ value, onChange }: Props) {
             onPress={() => onChange(tab.value)}
             style={[
               styles.tab,
-              { borderBottomColor: active ? TYPE_COLORS[tab.value] : 'transparent' },
+              {
+                borderBottomColor: active
+                  ? getTransactionTypeColor(tab.value, theme)
+                  : 'transparent',
+              },
             ]}
           >
-            <Text
-              style={[
-                styles.label,
-                { color: active ? '#e4e1ed' : OUTLINE },
-                active && styles.labelActive,
-              ]}
-            >
-              {tab.label}
-            </Text>
+            <ThemedText
+              text={tab.label}
+              variant="label"
+              tone={active ? 'default' : 'muted'}
+              style={[styles.label, active && styles.labelActive]}
+            />
           </Pressable>
         )
       })}
-    </View>
+
+      {onRecorrencias ? (
+        <Pressable
+          onPress={onRecorrencias}
+          style={[styles.tab, { borderBottomColor: 'transparent' }]}
+        >
+          <ThemedText
+            text={TRANSACTION_FORM_COPY.recorrenciasTab}
+            variant="label"
+            tone="muted"
+            style={styles.label}
+          />
+        </Pressable>
+      ) : null}
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    marginHorizontal: 24,
+  scroll: {
+    flexGrow: 0,
     marginBottom: 8,
     borderBottomWidth: 1,
   },
+  row: {
+    flexDirection: 'row',
+    paddingHorizontal: 24,
+    gap: 4,
+  },
   tab: {
-    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 12,
+    paddingHorizontal: 14,
     borderBottomWidth: 2,
     marginBottom: -1,
+    flexShrink: 0,
   },
   label: {
     fontSize: 13,

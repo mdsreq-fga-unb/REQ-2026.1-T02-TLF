@@ -21,6 +21,11 @@ export type TransactionUpdatePayload = Partial<{
   categoryId: string
 }>
 
+export type TransactionFilters = {
+  category?: string
+  type?: TransactionType
+}
+
 const unwrapListResponse = (payload: unknown): TransactionApiItem[] => {
   if (
     payload &&
@@ -34,18 +39,11 @@ const unwrapListResponse = (payload: unknown): TransactionApiItem[] => {
   throw new Error('Invalid API response: expected { data: TransactionApiItem[] }')
 }
 
-export const listTransactions = async () => {
-  const response = await api.get('/transactions')
-  return unwrapListResponse(response.data)
-}
+export const listTransactions = async (filters?: TransactionFilters) => {
+  const response = await api.get('/transactions', {
+    params: filters,
+  })
 
-export const listTransactionsByCategory = async (category: string) => {
-  const response = await api.get(`/transactions/category/${encodeURIComponent(category)}`)
-  return unwrapListResponse(response.data)
-}
-
-export const listTransactionsByType = async (type: TransactionType) => {
-  const response = await api.get(`/transactions/type/${type}`)
   return unwrapListResponse(response.data)
 }
 

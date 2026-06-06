@@ -1,5 +1,7 @@
 import { api } from './axios-client'
-import type { TransactionStatus, TransactionType } from '@/services/database/queries/transaction'
+
+export type TransactionType = 'EXPENSE' | 'INCOME' | 'TRANSFER'
+export type TransactionStatus = 'PENDING' | 'CONFIRMED'
 
 export type TransactionApiItem = {
   id: string

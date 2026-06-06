@@ -26,17 +26,12 @@ export type TransactionFilters = {
   type?: TransactionType
 }
 
-const unwrapListResponse = (payload: unknown): TransactionApiItem[] => {
-  if (
-    payload &&
-    typeof payload === 'object' &&
-    'data' in payload &&
-    Array.isArray((payload as any).data)
-  ) {
-    return (payload as { data: TransactionApiItem[] }).data
-  }
+type ApiResponse<T> = {
+  data: T
+}
 
-  throw new Error('Invalid API response: expected { data: TransactionApiItem[] }')
+const unwrap = <T>(payload: unknown): T => {
+  return (payload as ApiResponse<T>).data
 }
 
 export const listTransactions = async (filters?: TransactionFilters) => {
@@ -44,17 +39,17 @@ export const listTransactions = async (filters?: TransactionFilters) => {
     params: filters,
   })
 
-  return unwrapListResponse(response.data)
+  return unwrap<TransactionApiItem[]>(response.data)
 }
 
 export const getTransactionById = async (id: string) => {
   const response = await api.get(`/transactions/${id}`)
-  return response.data as TransactionApiItem
+  return unwrap<TransactionApiItem>(response.data)
 }
 
 export const updateTransaction = async (id: string, payload: TransactionUpdatePayload) => {
   const response = await api.patch(`/transactions/${id}`, payload)
-  return response.data as TransactionApiItem
+  return unwrap<TransactionApiItem>(response.data)
 }
 
 export const deleteTransaction = async (id: string) => {

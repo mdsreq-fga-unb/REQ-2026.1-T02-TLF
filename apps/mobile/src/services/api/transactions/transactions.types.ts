@@ -26,3 +26,22 @@ export type TransactionFilters = {
   category?: string
   type?: TransactionType
 }
+
+export type CreateTransactionPayload = {
+  accountId: string
+  categoryId: string
+  subCategoryId?: string
+
+  type: TransactionType
+  amount: number // centavos
+
+  description?: string
+  date?: string
+  status?: TransactionStatus
+
+  invoiceId?: string
+  recurrenceId?: string
+  destinationAccountId?: string
+  installmentNumber?: number
+  installmentTotal?: number
+}

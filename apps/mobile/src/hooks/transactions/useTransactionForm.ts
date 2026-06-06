@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
-import { createTransaction, type TransactionType } from '@/services/database/queries/transaction'
+import { listTransactions, createTransaction } from '@/services/api/transactions/transactions.api'
+import type { TransactionType } from '@/services/api/transactions/transactions.types'
 import { ACCOUNTS, MAX_AMOUNT_CENTS, TRANSACTION_FORM_ERRORS } from '@/utils/transactionForm'
 
 export type TransactionInitialValues = {
@@ -18,7 +19,7 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
   const [destinationAccountId, setDestinationAccountId] = useState(ACCOUNTS[1].id)
   const [categoryId, setCategoryId] = useState(initialValues?.categoryId ?? '')
   const [subcategoryId, setSubcategoryId] = useState(initialValues?.subcategoryId ?? '')
-  const [date] = useState(new Date())
+  const [date] = useState(() => Date.now())
   const [notes, setNotes] = useState(initialValues?.notes ?? '')
   const [submitting, setSubmitting] = useState(false)
   const [showKeypad, setShowKeypad] = useState(false)
@@ -73,15 +74,15 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
     setSubmitting(true)
     try {
       await createTransaction({
-        amount,
+        amount: amountCents,
         description: notes.trim() || categoryId || type,
-        date,
+        date: new Date().toISOString(),
         type,
         status: 'CONFIRMED',
         accountId,
-        categoryId: categoryId || 'uncategorized',
-        subcategoryId: subcategoryId || null,
-        destinationAccountId: type === 'TRANSFER' ? destinationAccountId : null,
+        categoryId,
+        subCategoryId: subcategoryId || undefined,
+        destinationAccountId: type === 'TRANSFER' ? destinationAccountId : undefined,
       })
       reset()
       onSuccess?.()

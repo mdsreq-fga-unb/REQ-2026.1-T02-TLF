@@ -4,6 +4,7 @@ import type {
   TransactionApiItem,
   TransactionUpdatePayload,
   TransactionFilters,
+  CreateTransactionPayload,
 } from './transactions.types'
 
 export const listTransactions = async (filters?: TransactionFilters) => {
@@ -12,6 +13,11 @@ export const listTransactions = async (filters?: TransactionFilters) => {
   })
 
   return unwrap<TransactionApiItem[]>(response.data)
+}
+
+export const createTransaction = async (payload: CreateTransactionPayload) => {
+  const response = await api.post('/transactions', payload)
+  return unwrap<TransactionApiItem>(response.data)
 }
 
 export const getTransactionById = async (id: string) => {

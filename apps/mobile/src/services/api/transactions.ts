@@ -22,17 +22,16 @@ export type TransactionUpdatePayload = Partial<{
 }>
 
 const unwrapListResponse = (payload: unknown): TransactionApiItem[] => {
-  if (Array.isArray(payload)) return payload as TransactionApiItem[]
-
-  if (payload && typeof payload === 'object') {
-    const data = (payload as { data?: unknown }).data
-    const transactions = (payload as { transactions?: unknown }).transactions
-
-    if (Array.isArray(data)) return data as TransactionApiItem[]
-    if (Array.isArray(transactions)) return transactions as TransactionApiItem[]
+  if (
+    payload &&
+    typeof payload === 'object' &&
+    'data' in payload &&
+    Array.isArray((payload as any).data)
+  ) {
+    return (payload as { data: TransactionApiItem[] }).data
   }
 
-  return []
+  throw new Error('Invalid API response: expected { data: TransactionApiItem[] }')
 }
 
 export const listTransactions = async () => {

@@ -41,12 +41,12 @@ export const listTransactions = async () => {
 }
 
 export const listTransactionsByCategory = async (category: string) => {
-  const response = await api.get(`/transactions/${encodeURIComponent(category)}`)
+  const response = await api.get(`/transactions/category/${encodeURIComponent(category)}`)
   return unwrapListResponse(response.data)
 }
 
 export const listTransactionsByType = async (type: TransactionType) => {
-  const response = await api.get(`/transactions/${type}`)
+  const response = await api.get(`/transactions/type/${type}`)
   return unwrapListResponse(response.data)
 }
 

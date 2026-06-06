@@ -36,30 +36,30 @@ const unwrapListResponse = (payload: unknown): TransactionApiItem[] => {
 }
 
 export const listTransactions = async () => {
-  const response = await api.get('/transaction')
+  const response = await api.get('/transactions')
   return unwrapListResponse(response.data)
 }
 
 export const listTransactionsByCategory = async (category: string) => {
-  const response = await api.get(`/transaction/${encodeURIComponent(category)}`)
+  const response = await api.get(`/transactions/${encodeURIComponent(category)}`)
   return unwrapListResponse(response.data)
 }
 
 export const listTransactionsByType = async (type: TransactionType) => {
-  const response = await api.get(`/transaction/${type}`)
+  const response = await api.get(`/transactions/${type}`)
   return unwrapListResponse(response.data)
 }
 
 export const getTransactionById = async (id: string) => {
-  const response = await api.get(`/transaction/${id}`)
+  const response = await api.get(`/transactions/${id}`)
   return response.data as TransactionApiItem
 }
 
 export const updateTransaction = async (id: string, payload: TransactionUpdatePayload) => {
-  const response = await api.patch(`/transaction/${id}`, payload)
+  const response = await api.patch(`/transactions/${id}`, payload)
   return response.data as TransactionApiItem
 }
 
 export const deleteTransaction = async (id: string) => {
-  await api.delete(`/transaction/${id}`)
+  await api.delete(`/transactions/${id}`)
 }

@@ -8,12 +8,12 @@ import {
   Param,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common'
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger'
+import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
 import { CategoryService } from './category.service'
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { UpdateCategoryDto } from './dto/update-category.dto'
+import { ReclassifyCategoryDto } from './dto/reclassify-category.dto'
 
 @ApiTags('category')
 @Controller('category')
@@ -57,32 +57,25 @@ export class CategoryController {
   @Patch(':id')
   @ApiOperation({ summary: 'Atualizar categoria' })
   @ApiParam({ name: 'id', description: 'ID da categoria' })
-  @ApiQuery({ name: 'newCategoryId', required: false, description: 'ID da categoria para reclassificar transações' })
   @ApiResponse({ status: 200, description: 'Categoria atualizada' })
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Acesso negado ou categoria padrão' })
   @ApiResponse({ status: 404, description: 'Categoria não encontrada' })
-  update(
-    @Param('id') id: string,
-    @Body() dto: UpdateCategoryDto,
-    @Query('newCategoryId') newCategoryId?: string,
-  ) {
-    const userId = 'user-teste-001'
-    return this.categoryService.update(userId, id, dto, newCategoryId)
+  update(@Param('id') id: string, @Body() dto: UpdateCategoryDto) {
+   const userId = 'user-teste-001'
+    return this.categoryService.update(userId, id, dto, dto.newCategoryId)
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Remover categoria' })
   @ApiParam({ name: 'id', description: 'ID da categoria' })
-  @ApiQuery({ name: 'newCategoryId', required: false, description: 'ID da categoria destino para reclassificação' })
   @ApiResponse({ status: 200, description: 'Categoria removida com sucesso' })
-  @ApiResponse({ status: 400, description: 'Transações vinculadas requerem reclassificação' })
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Acesso negado ou categoria padrão' })
   @ApiResponse({ status: 404, description: 'Categoria não encontrada' })
-  remove(@Param('id') id: string, @Query('newCategoryId') newCategoryId?: string) {
+  remove(@Param('id') id: string, @Body() dto: ReclassifyCategoryDto) {
     const userId = 'user-teste-001'
-    return this.categoryService.remove(userId, id, newCategoryId)
+    return this.categoryService.remove(userId, id, dto?.newCategoryId)
   }
 }

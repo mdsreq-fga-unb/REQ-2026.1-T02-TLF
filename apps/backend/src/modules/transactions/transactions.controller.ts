@@ -31,10 +31,7 @@ export class TransactionsController {
   @Get()
   findAll(@CurrentUser('id') userId: string,
     @Query() query: FilterTransactionsDto) {
-    return this.transactionsService.findAll({
-      userId,
-      ...query,
-    });
+    return this.transactionsService.findAll(userId, query);
   }
 
   @ApiResponse({ status: 200, type: TransactionDetailResponseDto, description: 'Transação encontrada' })

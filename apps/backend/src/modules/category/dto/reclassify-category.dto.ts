@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString, IsNotEmpty } from 'class-validator'
+import { IsOptional, IsString } from 'class-validator'
 
 export class ReclassifyCategoryDto {
-  @ApiProperty({ example: 'uuid-da-nova-categoria', description: 'ID da categoria destino para reclassificação das transações' })
+  @ApiProperty({ required: false, description: 'ID da categoria destino para reclassificação' })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  newCategoryId!: string
+  newCategoryId?: string
 }

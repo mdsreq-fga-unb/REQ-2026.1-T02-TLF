@@ -17,4 +17,9 @@ export class UpdateCategoryDto {
   @IsString()
   @Matches(/^#([A-Fa-f0-9]{6})$/, { message: 'Cor deve ser um hexadecimal válido ex: #FF5733' })
   color?: string
+
+  @ApiProperty({ required: false, description: 'ID da categoria destino para reclassificação' })
+  @IsOptional()
+  @IsString()
+  newCategoryId?: string
 }

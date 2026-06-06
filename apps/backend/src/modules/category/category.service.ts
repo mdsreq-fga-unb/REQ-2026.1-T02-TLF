@@ -22,17 +22,27 @@ export class CategoryService {
   }
 
   private async reclassify(userId: string, fromCategoryId: string, toCategoryId: string) {
-    const newCategory = await this.prisma.category.findUnique({
-      where: { id: toCategoryId },
-    })
-    if (!newCategory) throw new NotFoundException('Categoria destino não encontrada')
-    if (newCategory.userId !== userId) throw new ForbiddenException('Categoria destino não pertence ao usuário')
+  const newCategory = await this.prisma.category.findUnique({
+    where: { id: toCategoryId },
+  })
+  if (!newCategory) throw new NotFoundException('Categoria destino não encontrada')
+  if (newCategory.userId !== userId) throw new ForbiddenException('Categoria destino não pertence ao usuário')
 
-    await this.prisma.transaction.updateMany({
+  await Promise.all([
+    this.prisma.transaction.updateMany({
       where: { categoryId: fromCategoryId },
       data: { categoryId: toCategoryId },
-    })
-  }
+    }),
+    this.prisma.budget.updateMany({
+      where: { categoryId: fromCategoryId },
+      data: { categoryId: toCategoryId },
+    }),
+    this.prisma.recurrence.updateMany({
+      where: { categoryId: fromCategoryId },
+      data: { categoryId: toCategoryId },
+    }),
+  ])
+}
 
   async create(userId: string, dto: CreateCategoryDto) {
     await this.checkDuplicateName(userId, dto.name)

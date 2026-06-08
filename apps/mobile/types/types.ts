@@ -21,6 +21,17 @@ export type TransactionListItem = {
   amount: number
 }
 
+export type InstitutionListItem = {
+  id: string
+  name: string
+  color: string
+  icon?: string
+  iconColor?: string
+  logoUrl?: string | null
+  /** Nº de contas vinculadas. Quando > 0, a exclusão é bloqueada. */
+  accountsCount?: number
+}
+
 export type BudgetType = 'BUDGET' | 'GOAL'
 
 export type BudgetData = {

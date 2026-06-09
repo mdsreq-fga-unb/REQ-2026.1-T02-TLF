@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { listTransactions, createTransaction } from '@/services/api/transactions/transactions.api'
+import { transactionsService } from '@/services/api/transactions/transactions.service'
 import type { TransactionType } from '@/services/api/transactions/transactions.types'
 import { ACCOUNTS, MAX_AMOUNT_CENTS, TRANSACTION_FORM_ERRORS } from '@/utils/transactionForm'
 
@@ -81,7 +81,7 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
     setSubmitError(null)
     setSubmitting(true)
     try {
-      await createTransaction({
+      await transactionsService.create({
         amount: amount,
         description: notes.trim() || categoryId || type,
         date: new Date().toISOString(),

@@ -3,9 +3,11 @@ import {
   getTransactionById,
   updateTransaction,
   deleteTransaction,
+  createTransaction,
 } from './transactions.api'
 
 import type {
+  CreateTransactionPayload,
   TransactionFilters,
   TransactionUpdatePayload,
 } from './transactions.types'
@@ -22,4 +24,7 @@ export const transactionsService = {
 
   delete: (id: string) =>
     deleteTransaction(id),
+
+  create: (payload: CreateTransactionPayload) =>
+    createTransaction(payload),
 }

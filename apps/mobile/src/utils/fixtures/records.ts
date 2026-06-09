@@ -1,8 +1,4 @@
-import type {
-  CategoryData,
-  SummaryData,
-  TransactionListItem,
-} from '@/components/finance/records/types'
+import type { CategoryData, SummaryData, TransactionListItem } from 'types/types'
 import type { TransactionType } from '@/services/database/queries/transaction'
 
 export const recordsSummary: SummaryData = {

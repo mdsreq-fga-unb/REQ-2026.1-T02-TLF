@@ -1,4 +1,4 @@
-import type { TransactionListItem } from '@/components/finance/records/types'
+import type { TransactionListItem } from 'types/types'
 import {
   buildCategoryData,
   buildCategoryOptions,

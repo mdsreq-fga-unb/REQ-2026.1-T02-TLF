@@ -74,6 +74,7 @@ describe('TransactionsService', () => {
 
   // Helper que monta o filtro base por userId no Prisma
   const baseWhere = (userId: string) => ({
+    deletedAt: null,
     account: {
       institution: { userId },
     },

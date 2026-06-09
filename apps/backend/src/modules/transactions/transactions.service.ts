@@ -109,7 +109,7 @@ export class TransactionsService {
       },
     })
 
-    if (!transaction) {
+    if (!transaction || transaction.deletedAt) {
       throw new NotFoundException('Transação não encontrada')
     }
 
@@ -128,6 +128,7 @@ export class TransactionsService {
     const [data, total] = await this.prisma.$transaction([
       this.prisma.transaction.findMany({
         where: {
+          deletedAt: null,
           account: {
             institution: { userId },
           },
@@ -163,6 +164,7 @@ export class TransactionsService {
 
       this.prisma.transaction.count({
         where: {
+          deletedAt: null,
           account: {
             institution: { userId },
           },

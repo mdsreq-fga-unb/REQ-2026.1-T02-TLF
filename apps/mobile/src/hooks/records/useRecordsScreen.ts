@@ -2,11 +2,7 @@ import {
   transactionCategoryOptions,
   transactionTypeOptions,
 } from '@/components/finance/records/records-data'
-import type {
-  CategoryData,
-  SummaryData,
-  TransactionListItem,
-} from '@/components/finance/records/types'
+import type { CategoryData, SummaryData, TransactionListItem } from 'types/types'
 import type { ThemedOverlayAlertAction } from '@/components/ui/ThemedOverlayAlert'
 import {
   observeTransactions,

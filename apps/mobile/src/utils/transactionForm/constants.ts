@@ -1,19 +1,26 @@
 import type { TransactionType } from '@/services/database/queries/transaction'
+import type { BudgetType } from 'types/types'
 
 export const MAX_AMOUNT_CENTS = 9_999_999
 
 export const VALID_TRANSACTION_TYPES = new Set<TransactionType>(['EXPENSE', 'INCOME', 'TRANSFER'])
 
-export const TYPE_LABELS: Record<TransactionType, string> = {
+// AmountDisplay é compartilhado entre transações e budgets, então os mapas
+// cobrem ambos os conjuntos de tipos.
+export const TYPE_LABELS: Record<TransactionType | BudgetType, string> = {
   EXPENSE: 'Despesa',
   INCOME: 'Receita',
   TRANSFER: 'Transferência',
+  BUDGET: 'Orçamento',
+  GOAL: 'Meta',
 }
 
-export const TYPE_SIGN: Record<TransactionType, string> = {
+export const TYPE_SIGN: Record<TransactionType | BudgetType, string> = {
   EXPENSE: '−',
   INCOME: '+',
   TRANSFER: '',
+  BUDGET: '',
+  GOAL: '',
 }
 
 export const TYPE_TABS: { value: TransactionType; label: string }[] = [

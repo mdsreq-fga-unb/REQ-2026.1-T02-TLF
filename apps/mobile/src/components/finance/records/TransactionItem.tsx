@@ -6,7 +6,7 @@ import { useThemeColor } from '@/hooks/useThemeColor'
 import { formatCurrency } from '@/utils/formatters'
 import type { SemanticColors } from '@/utils/colors'
 import type { IconKey } from '@/utils/icons'
-import type { TransactionListItem } from './types'
+import type { TransactionListItem } from 'types/types'
 import { Pencil, Trash2 } from 'lucide-react-native'
 
 type props = {

@@ -4,10 +4,11 @@ import { useThemeColor } from '@/hooks/useThemeColor'
 import { formatCurrency } from '@/utils/formatters'
 import { getTransactionAmountColor, TYPE_LABELS, TYPE_SIGN } from '@/utils/transactionForm'
 import type { TransactionType } from './types'
+import type { BudgetType } from 'types/types'
 
 type Props = {
   amountCents: number
-  type: TransactionType
+  type: TransactionType | BudgetType
   onPress: () => void
 }
 

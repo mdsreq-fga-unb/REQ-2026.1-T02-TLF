@@ -1,4 +1,4 @@
-import type { TransactionListItem } from '@/components/finance/records/types'
+import type { TransactionListItem } from 'types/types'
 import type { TransactionApiItem } from '@/services/api/transactions'
 import type { Transaction } from '@/services/database/models/transaction'
 

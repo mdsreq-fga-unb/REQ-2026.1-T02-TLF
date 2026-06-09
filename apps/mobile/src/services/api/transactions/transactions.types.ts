@@ -4,13 +4,34 @@ export type TransactionStatus = 'PENDING' | 'CONFIRMED'
 
 export type TransactionApiItem = {
   id: string
+
   amount: number
   description: string
-  date: string | number
+
+  date: string
+
   type: TransactionType
-  status?: TransactionStatus
-  categoryId?: string
-  category?: string
+  status: TransactionStatus
+
+  accountId: string
+
+  categoryId: string
+  subcategoryId?: string | null
+
+  invoiceId?: string | null
+  recurrenceId?: string | null
+
+  destinationAccountId?: string | null
+
+  installmentRef?: string | null
+  installmentNumber?: number | null
+  installmentTotal?: number | null
+
+  receiptUrl?: string | null
+  externalId?: string | null
+
+  createdAt?: string
+  updatedAt?: string
 }
 
 export type TransactionUpdatePayload = Partial<{

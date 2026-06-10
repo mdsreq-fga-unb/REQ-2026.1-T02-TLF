@@ -9,12 +9,7 @@ import type {
   TransactionListItem,
 } from '@/components/finance/records/types'
 import type { ThemedOverlayAlertAction } from '@/components/ui/ThemedOverlayAlert'
-import {
-  deleteTransaction,
-  listTransactions,
-  listTransactionsByCategory,
-  listTransactionsByType,
-} from '@/services/api/transactions'
+import { transactionsService } from '@/services/api/transactions/transactions.service'
 import { transactionQueries } from '@/services/database/queries/transaction'
 import type { TransactionType } from '@/services/database/queries/transaction'
 import {
@@ -64,11 +59,11 @@ export function useRecordsScreen() {
         let data
 
         if (categoryFilter !== 'Todas') {
-          data = await listTransactionsByCategory(categoryFilter)
+          data = await transactionsService.list({ category: categoryFilter })
         } else if (typeFilter !== 'ALL') {
-          data = await listTransactionsByType(typeFilter)
+          data = await transactionsService.list({ type: typeFilter })
         } else {
-          data = await listTransactions()
+          data = await transactionsService.list()
         }
 
         if (!isActive) return
@@ -133,7 +128,7 @@ export function useRecordsScreen() {
       }
 
       try {
-        await deleteTransaction(transactionId)
+        await transactionsService.delete(transactionId)
         setTransactions((prev) => prev.filter((item) => item.id !== transactionId))
         try {
           await transactionQueries.delete(transactionId)

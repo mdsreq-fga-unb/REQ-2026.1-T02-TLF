@@ -92,7 +92,7 @@
   
 - *Encerramento da Work Item List*: Revisão final da Work Item List para encerramento do ciclo de desenvolvimento, garantindo que todos os itens do MVP estejam concluídos ou devidamente registrados para evolução futura.
 
-## 4.2 Engenharia de Requisitos e o ScrumOpenUP
+## 4.2 Engenharia de Requisitos e o OpenUP
 
 | Fases do Processo | Atividades ER            | Prática                      | Técnica                                      | Resultado Esperado                                 |
 |-------------------|--------------------------|------------------------------|----------------------------------------------|----------------------------------------------------|

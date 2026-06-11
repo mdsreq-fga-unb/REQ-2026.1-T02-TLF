@@ -32,8 +32,7 @@ export class BudgetService {
       },
     })
 
-    if (existing)
-      throw new ConflictException('Orçamento já existe para essa categoria/mês/ano')
+    if (existing) throw new ConflictException('Orçamento já existe para essa categoria/mês/ano')
 
     return this.prisma.budget.create({
       data: { ...dto, userId },
@@ -77,11 +76,18 @@ export class BudgetService {
     })
 
     if (!budget) throw new NotFoundException('Orçamento não encontrado')
-    if (budget.userId !== userId)
-      throw new ForbiddenException('Acesso negado')
+    if (budget.userId !== userId) throw new ForbiddenException('Acesso negado')
 
-    const { userId: _, ...result } = budget
-    return result
+    return {
+      id: budget.id,
+      name: budget.name,
+      amountLimit: budget.amountLimit,
+      month: budget.month,
+      year: budget.year,
+      category: budget.category
+        ? { id: budget.category.id, name: budget.category.name }
+        : undefined,
+    }
   }
 
   async findByCategory(userId: string, categoryId: string) {
@@ -102,8 +108,7 @@ export class BudgetService {
     const budget = await this.prisma.budget.findUnique({ where: { id } })
 
     if (!budget) throw new NotFoundException('Orçamento não encontrado')
-    if (budget.userId !== userId)
-      throw new ForbiddenException('Acesso negado')
+    if (budget.userId !== userId) throw new ForbiddenException('Acesso negado')
 
     return this.prisma.budget.update({
       where: { id },
@@ -123,8 +128,7 @@ export class BudgetService {
     const budget = await this.prisma.budget.findUnique({ where: { id } })
 
     if (!budget) throw new NotFoundException('Orçamento não encontrado')
-    if (budget.userId !== userId)
-      throw new ForbiddenException('Acesso negado')
+    if (budget.userId !== userId) throw new ForbiddenException('Acesso negado')
 
     await this.prisma.budget.delete({ where: { id } })
     return { message: 'Orçamento removido com sucesso' }

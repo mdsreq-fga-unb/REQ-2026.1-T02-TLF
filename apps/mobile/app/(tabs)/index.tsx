@@ -11,8 +11,6 @@ export default function home() {
   )
 }
 
-export default app
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

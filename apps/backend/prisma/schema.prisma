@@ -72,6 +72,7 @@ model User {
   institutions Institution[]
   budgets      Budget[]
   notifications Notification[]
+  deletedRecords DeletedRecord[]
 
   @@map("users")
 }
@@ -141,7 +142,7 @@ model Budget {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
 
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   categoryId String   @map("category_id")
 
   name        String
@@ -174,6 +175,8 @@ model Account {
   creditLimit Int? @default(0) @map("credit_limit")
 
   currency Currency @default(BRL)
+
+  isActive Boolean @default(true) @map("is_active")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -222,10 +225,10 @@ model Recurrence {
   account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId String  @map("account_id")
 
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId String   @map("category_id")
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId String?   @map("category_id")
 
-  subCategory   SubCategory? @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
+  subCategory   SubCategory? @relation(fields: [subCategoryId], references: [id], onDelete: SetNull)
   subCategoryId String?      @map("sub_category_id")
 
   description String
@@ -253,27 +256,27 @@ model Transaction {
   accountId String  @map("account_id")
 
   // When type is TRANSFER, this is the other account (credit side). Null for non-transfers.
-  destinationAccount   Account? @relation("TransferDestinations", fields: [destinationAccountId], references: [id], onDelete: Cascade)
+  destinationAccount   Account? @relation("TransferDestinations", fields: [destinationAccountId], references: [id], onDelete: SetNull)
   destinationAccountId String?  @map("destination_account_id")
 
   // Recurrences create rows as PENDING until the user (or a job) marks them COMPLETED; one-off tx usually starts COMPLETED.
   status TransactionStatus @default(COMPLETED)
   type   TransactionType   @default(EXPENSE)
+  
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId String?   @map("category_id")
 
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId String   @map("category_id")
-
-  subCategory   SubCategory? @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
+  subCategory   SubCategory? @relation(fields: [subCategoryId], references: [id], onDelete: SetNull)
   subCategoryId String?      @map("sub_category_id")
 
   amount      Int
   date        DateTime @default(now())
   description String?
 
-  recurrence   Recurrence? @relation(fields: [recurrenceId], references: [id])
+  recurrence   Recurrence? @relation(fields: [recurrenceId], references: [id], onDelete: SetNull)
   recurrenceId String?     @map("recurrence_id")
 
-  invoice   Invoice? @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoice   Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
   invoiceId String?  @map("invoice_id")
 
   // Installments: e.g. 1000 in 10x -> 10 rows sharing the same reference, installmentNumber 1..N, installmentTotal N.
@@ -317,6 +320,18 @@ model Notification {
   @@map("notifications")
 }
 
+model DeletedRecord {
+  id         String   @id @default(uuid())
+  recordId   String   @map("record_id")
+  tableName  String   @map("table_name")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  deletedAt  DateTime @default(now()) @map("deleted_at")
+  @@index([userId, deletedAt])
+  @@map("deleted_records")
+}
   // ─── POST-MVP: SPLIT TRANSACTIONS ───────────────────────────────────────────
   // Allows a single purchase to be split across multiple categories.
   //

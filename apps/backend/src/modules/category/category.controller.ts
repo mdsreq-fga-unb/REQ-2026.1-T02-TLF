@@ -8,14 +8,19 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common'
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
+import { AuthGuard } from '../auth/context/auth.guard'
+import { CurrentUser } from '../auth/context/current-user.decorator'
 import { CategoryService } from './category.service'
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { UpdateCategoryDto } from './dto/update-category.dto'
 import { ReclassifyCategoryDto } from './dto/reclassify-category.dto'
 
 @ApiTags('category')
+@ApiBearerAuth('supabase-jwt')
+@UseGuards(AuthGuard)
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
@@ -26,10 +31,8 @@ export class CategoryController {
   @ApiResponse({ status: 201, description: 'Categoria criada com sucesso' })
   @ApiResponse({ status: 400, description: 'Dados inválidos' })
   @ApiResponse({ status: 401, description: 'Não autenticado' })
-  @ApiResponse({ status: 403, description: 'Acesso negado' })
   @ApiResponse({ status: 409, description: 'Categoria com esse nome já existe' })
-  create(@Body() dto: CreateCategoryDto) {
-    const userId = 'user-teste-001'
+  create(@CurrentUser('id') userId: string, @Body() dto: CreateCategoryDto) {
     return this.categoryService.create(userId, dto)
   }
 
@@ -37,8 +40,7 @@ export class CategoryController {
   @ApiOperation({ summary: 'Listar categorias do usuário' })
   @ApiResponse({ status: 200, description: 'Lista de categorias' })
   @ApiResponse({ status: 401, description: 'Não autenticado' })
-  findAll() {
-    const userId = 'user-teste-001'
+  findAll(@CurrentUser('id') userId: string) {
     return this.categoryService.findAll(userId)
   }
 
@@ -49,8 +51,7 @@ export class CategoryController {
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Acesso negado' })
   @ApiResponse({ status: 404, description: 'Categoria não encontrada' })
-  findOne(@Param('id') id: string) {
-    const userId = 'user-teste-001'
+  findOne(@CurrentUser('id') userId: string, @Param('id') id: string) {
     return this.categoryService.findOne(userId, id)
   }
 
@@ -61,8 +62,11 @@ export class CategoryController {
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Acesso negado ou categoria padrão' })
   @ApiResponse({ status: 404, description: 'Categoria não encontrada' })
-  update(@Param('id') id: string, @Body() dto: UpdateCategoryDto) {
-   const userId = 'user-teste-001'
+  update(
+    @CurrentUser('id') userId: string,
+    @Param('id') id: string,
+    @Body() dto: UpdateCategoryDto,
+  ) {
     return this.categoryService.update(userId, id, dto, dto.newCategoryId)
   }
 
@@ -74,8 +78,11 @@ export class CategoryController {
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Acesso negado ou categoria padrão' })
   @ApiResponse({ status: 404, description: 'Categoria não encontrada' })
-  remove(@Param('id') id: string, @Body() dto: ReclassifyCategoryDto) {
-    const userId = 'user-teste-001'
+  remove(
+    @CurrentUser('id') userId: string,
+    @Param('id') id: string,
+    @Body() dto: ReclassifyCategoryDto,
+  ) {
     return this.categoryService.remove(userId, id, dto?.newCategoryId)
   }
 }

@@ -1,11 +1,13 @@
-import { Text, View, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
+import { ThemedBackground } from '@/components/ui/ThemedBackground'
+import { ThemedText } from '@/components/ui/ThemedText'
 
-const app = () => {
+export default function home() {
   return (
     //TODO: add a logout button and make the logout function
-    <View style={styles.container}>
-      <Text style={styles.text}>testagem foda</Text>
-    </View>
+    <ThemedBackground>
+      <ThemedText variant="headline" style={styles.text} text="Test" />
+    </ThemedBackground>
   )
 }
 
@@ -18,7 +20,6 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'brown',
-    fontSize: 42,
     fontWeight: 'bold',
     textAlign: 'center',
   },

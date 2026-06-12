@@ -1,24 +1,23 @@
-import { StyleSheet, Text } from 'react-native'
-import { Container } from '@/components/ui/Container'
-import { useThemeColor } from '@/hooks/useThemeColor'
+import { StyleSheet } from 'react-native'
+import { ThemedContainer } from '@/components/ui/ThemedContainer'
+import { ThemedText } from '@/components/ui/ThemedText'
 import { CategoryRow } from './CategoryRow'
-import type { CategoryData } from './types'
+import type { CategoryData } from '../../../../types/types'
 
 type props = {
   categories: CategoryData[]
 }
 
 export function CategoryDistribution({ categories }: props) {
-  const theme = useThemeColor()
   const total = categories.reduce((acc, category) => acc + category.amount, 0)
 
   return (
-    <Container style={styles.card}>
-      <Text style={[styles.title, { color: theme.foreground }]}>Distribuição por categoria</Text>
+    <ThemedContainer style={styles.card}>
+      <ThemedText text="Distribuição por categoria" variant="title" style={styles.title} />
       {categories.map((category) => (
         <CategoryRow key={category.name} category={category} total={total} />
       ))}
-    </Container>
+    </ThemedContainer>
   )
 }
 

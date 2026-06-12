@@ -1,9 +1,17 @@
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { styles } from './style'
-import { View } from 'react-native'
+import { View, ViewProps } from 'react-native'
 
-export function ThemedBackground({ children }: { children: React.ReactNode }) {
+type props = ViewProps & {
+  children: React.ReactNode
+}
+
+export function ThemedBackground({ children, style, ...rest }: props) {
   const colors = useThemeColor()
 
-  return <View style={[styles.background, { backgroundColor: colors.background }]}>{children}</View>
+  return (
+    <View style={[styles.background, { backgroundColor: colors.background }, style]} {...rest}>
+      {children}
+    </View>
+  )
 }

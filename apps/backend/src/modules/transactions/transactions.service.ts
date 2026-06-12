@@ -1,4 +1,9 @@
-import { Injectable, BadRequestException, NotFoundException, ForbiddenException } from '@nestjs/common'
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common'
 import { PrismaService } from '@common/prisma/prisma.service'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
@@ -7,7 +12,7 @@ import { TransactionListResponseDto } from './dto/transaction-list.response.dto'
 
 @Injectable()
 export class TransactionsService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(userId: string, dto: CreateTransactionDto) {
     // valida se a categoria existe e pertence ao usuário
@@ -68,7 +73,7 @@ export class TransactionsService {
       description: transaction.description ?? undefined,
       date: transaction.date.toISOString(),
       status: transaction.status ?? undefined,
-      
+
       category: {
         id: transaction.category.id,
         name: transaction.category.name,
@@ -85,7 +90,7 @@ export class TransactionsService {
         id: transaction.account.id,
         name: transaction.account.name,
       },
-    };
+    }
   }
 
   private async getTransactionOrThrow(userId: string, id: string) {
@@ -100,31 +105,23 @@ export class TransactionsService {
         category: true,
         subCategory: true,
       },
-    });
+    })
 
     if (!transaction) {
-      throw new NotFoundException('Transação não encontrada');
+      throw new NotFoundException('Transação não encontrada')
     }
 
     if (transaction.account.institution.userId !== userId) {
-      throw new ForbiddenException('Você não tem acesso a esta transação');
+      throw new ForbiddenException('Você não tem acesso a esta transação')
     }
 
-    return transaction;
+    return transaction
   }
 
-  async findAll(
-    userId: string,
-    query: FilterTransactionsDto
-  ): Promise<TransactionListResponseDto> {
-    const {
-      categoryId,
-      type,
-      page = 1,
-      limit = 20,
-    } = query;
+  async findAll(userId: string, query: FilterTransactionsDto): Promise<TransactionListResponseDto> {
+    const { categoryId, type, page = 1, limit = 20 } = query
 
-    const skip = (page - 1) * limit;
+    const skip = (page - 1) * limit
 
     const [data, total] = await this.prisma.$transaction([
       this.prisma.transaction.findMany({
@@ -171,7 +168,7 @@ export class TransactionsService {
           ...(type && { type }),
         },
       }),
-    ]);
+    ])
 
     const formattedData = data.map((t) => ({
       id: t.id,
@@ -183,7 +180,7 @@ export class TransactionsService {
       category: t.category,
       subCategory: t.subCategory ?? undefined,
       account: t.account,
-    }));
+    }))
 
     return {
       data: formattedData,
@@ -193,49 +190,41 @@ export class TransactionsService {
         limit,
         totalPages: Math.ceil(total / limit),
       },
-    };
+    }
   }
 
-async findOne({ userId, id }: { userId: string, id: string }) {
-  const transaction = await this.getTransactionOrThrow(userId, id);
+  async findOne({ userId, id }: { userId: string; id: string }) {
+    const transaction = await this.getTransactionOrThrow(userId, id)
 
-  return {
-    id: transaction.id,
-    type: transaction.type,
-    amount: transaction.amount,
-    description: transaction.description ?? undefined,
-    date: transaction.date.toISOString(),
-    status: transaction.status ?? undefined,
+    return {
+      id: transaction.id,
+      type: transaction.type,
+      amount: transaction.amount,
+      description: transaction.description ?? undefined,
+      date: transaction.date.toISOString(),
+      status: transaction.status ?? undefined,
 
-    category: {
-      id: transaction.category.id,
-      name: transaction.category.name,
-    },
+      category: {
+        id: transaction.category.id,
+        name: transaction.category.name,
+      },
 
-    subCategory: transaction.subCategory
-      ? {
-          id: transaction.subCategory.id,
-          name: transaction.subCategory.name,
-        }
-      : undefined,
+      subCategory: transaction.subCategory
+        ? {
+            id: transaction.subCategory.id,
+            name: transaction.subCategory.name,
+          }
+        : undefined,
 
-    account: {
-      id: transaction.account.id,
-      name: transaction.account.name,
-    },
-  };
-}
+      account: {
+        id: transaction.account.id,
+        name: transaction.account.name,
+      },
+    }
+  }
 
-  async update({
-    userId,
-    id,
-    dto,
-  }: {
-    userId: string;
-    id: string;
-    dto: UpdateTransactionDto;
-  }) {
-    await this.getTransactionOrThrow(userId, id);
+  async update({ userId, id, dto }: { userId: string; id: string; dto: UpdateTransactionDto }) {
+    await this.getTransactionOrThrow(userId, id)
 
     const updated = await this.prisma.transaction.update({
       where: { id },
@@ -245,7 +234,7 @@ async findOne({ userId, id }: { userId: string, id: string }) {
         subCategory: true,
         account: true,
       },
-    });
+    })
 
     return {
       id: updated.id,
@@ -271,11 +260,11 @@ async findOne({ userId, id }: { userId: string, id: string }) {
         id: updated.account.id,
         name: updated.account.name,
       },
-    };
+    }
   }
 
   async remove({ userId, id }: { userId: string; id: string }) {
-    await this.getTransactionOrThrow(userId, id);
+    await this.getTransactionOrThrow(userId, id)
 
     const deleted = await this.prisma.transaction.delete({
       where: { id },
@@ -284,7 +273,7 @@ async findOne({ userId, id }: { userId: string, id: string }) {
         subCategory: true,
         account: true,
       },
-    });
+    })
 
     return {
       id: deleted.id,
@@ -310,6 +299,6 @@ async findOne({ userId, id }: { userId: string, id: string }) {
         id: deleted.account.id,
         name: deleted.account.name,
       },
-    };
+    }
   }
 }

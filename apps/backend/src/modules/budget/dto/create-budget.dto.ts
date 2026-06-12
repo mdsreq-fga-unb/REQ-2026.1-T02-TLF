@@ -1,11 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsInt, IsNotEmpty, IsString, Max, Min } from 'class-validator'
+import { IsInt, IsNotEmpty, IsString, Max, Min, IsOptional } from 'class-validator'
 
 export class CreateBudgetDto {
-  @ApiProperty({ example: 'uuid-da-categoria' })
+  // TODO: retirar opcionalidade quando a logica de categorias for implementada
+  // @ApiProperty({ example: 'uuid-da-categoria'})
+
+  @ApiProperty({ example: 'uuid-da-categoria', required: false })
   @IsString()
-  @IsNotEmpty()
-  categoryId!: string
+  // TODO: retirar opcionalidade quando a logica de categorias for implementada
+  // @IsNotEmpty()
+  // categoryId!: string
+  @IsOptional()
+  categoryId?: string
 
   @ApiProperty({ example: 'Orçamento Alimentação' })
   @IsString()

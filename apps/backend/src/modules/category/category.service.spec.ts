@@ -19,6 +19,12 @@ const mockPrisma = {
     count: jest.fn(),
     updateMany: jest.fn(),
   },
+  budget: {
+    updateMany: jest.fn(),
+  },
+  recurrence: {
+    updateMany: jest.fn(),
+  },
 }
 
 const mockCategory = {

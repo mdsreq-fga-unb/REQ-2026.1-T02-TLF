@@ -73,10 +73,6 @@ export class CategoryService {
     const category = await this.prisma.category.findUnique({ where: { id, userId } })
     if (!category) throw new NotFoundException('Categoria não encontrada')
 
-    if (category.isDefault && dto.name) {
-      throw new ForbiddenException('Categorias padrão não permitem alteração de nome')
-    }
-
     if (dto.name) {
       await this.checkDuplicateName(userId, dto.name, id)
     }
@@ -95,10 +91,6 @@ export class CategoryService {
   async remove(userId: string, id: string, newCategoryId?: string) {
     const category = await this.prisma.category.findUnique({ where: { id, userId } })
     if (!category) throw new NotFoundException('Categoria não encontrada')
-
-    if (category.isDefault) {
-      throw new ForbiddenException('Categorias padrão não podem ser removidas')
-    }
 
     if (newCategoryId) {
       await this.reclassify(userId, id, newCategoryId)

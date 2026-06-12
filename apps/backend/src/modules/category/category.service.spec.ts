@@ -3,7 +3,6 @@ import { CategoryService } from './category.service'
 import { PrismaService } from '@common/prisma/prisma.service'
 import {
   NotFoundException,
-  ForbiddenException,
   ConflictException,
 } from '@nestjs/common'
 
@@ -100,11 +99,6 @@ describe('CategoryService', () => {
       await expect(service.update('user-001', 'cat-001', { color: '#000' })).rejects.toThrow(NotFoundException)
     })
 
-    it('deve lançar ForbiddenException ao alterar nome de categoria padrão', async () => {
-      mockPrisma.category.findUnique.mockResolvedValue({ ...mockCategory, isDefault: true })
-      await expect(service.update('user-001', 'cat-001', { name: 'Novo Nome' })).rejects.toThrow(ForbiddenException)
-    })
-
     it('deve reclassificar transações ao atualizar com newCategoryId', async () => {
       mockPrisma.category.findUnique
         .mockResolvedValueOnce(mockCategory)
@@ -132,11 +126,6 @@ describe('CategoryService', () => {
       mockPrisma.category.delete.mockResolvedValue(mockCategory)
       const result = await service.remove('user-001', 'cat-001', 'cat-002')
       expect(result).toEqual({ message: 'Categoria removida com sucesso' })
-    })
-
-    it('deve lançar ForbiddenException ao remover categoria padrão', async () => {
-      mockPrisma.category.findUnique.mockResolvedValue({ ...mockCategory, isDefault: true })
-      await expect(service.remove('user-001', 'cat-001')).rejects.toThrow(ForbiddenException)
     })
 
     it('deve lançar NotFoundException se não encontrar', async () => {

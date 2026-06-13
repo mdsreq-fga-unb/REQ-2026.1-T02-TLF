@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common'
 import { PrismaService } from '@common/prisma/prisma.service'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
-import { UpdateTransactionDto } from './dto/update-transaction.dto'
-import { FilterTransactionsDto } from './dto/filter-transactions.dto'
-import { TransactionListResponseDto } from './dto/transaction-list.response.dto'
+import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { FilterTransactionsDto } from './dto/filter-transactions.dto';
+import { TransactionListResponseDto } from './dto/transaction-list.response.dto';
 
 @Injectable()
 export class TransactionsService {
@@ -38,13 +38,37 @@ export class TransactionsService {
       }
     }
 
-    // valida se a conta existe
+    // valida se a conta existe e pertence ao usuário
     const account = await this.prisma.account.findUnique({
       where: { id: dto.accountId },
+      include: {
+        institution: true,
+      },
     })
 
     if (!account) {
       throw new NotFoundException('Conta não encontrada')
+    }
+
+    if (account.institution.userId !== userId) {
+      throw new BadRequestException('Conta não pertence ao usuário')
+    }
+
+    if (dto.destinationAccountId) {
+      const destinationAccount = await this.prisma.account.findUnique({
+        where: { id: dto.destinationAccountId },
+        include: {
+          institution: true,
+        },
+      })
+
+      if (!destinationAccount) {
+        throw new NotFoundException('Conta de destino não encontrada')
+      }
+
+      if (destinationAccount.institution.userId !== userId) {
+        throw new BadRequestException('Conta de destino não pertence ao usuário')
+      }
     }
 
     // cria a transação
@@ -58,6 +82,7 @@ export class TransactionsService {
         description: dto.description,
         date: dto.date ? new Date(dto.date) : new Date(),
         status: dto.status,
+        destinationAccountId: dto.destinationAccountId,
       },
       include: {
         category: true,

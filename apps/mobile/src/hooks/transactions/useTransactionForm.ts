@@ -82,7 +82,7 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
     setSubmitting(true)
     try {
       await transactionsService.create({
-        amount: amount,
+        amount: amountCents,
         description: notes.trim() || categoryId || type,
         date: new Date().toISOString(),
         type,

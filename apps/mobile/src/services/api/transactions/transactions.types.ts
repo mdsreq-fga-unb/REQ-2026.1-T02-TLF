@@ -1,6 +1,6 @@
 export type TransactionType = 'EXPENSE' | 'INCOME' | 'TRANSFER'
 
-export type TransactionStatus = 'PENDING' | 'CONFIRMED'
+export type TransactionStatus = 'PENDING' | 'COMPLETED' | 'FAILED'
 
 export type TransactionApiItem = {
   id: string

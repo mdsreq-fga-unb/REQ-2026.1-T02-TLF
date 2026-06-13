@@ -86,7 +86,7 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
         description: notes.trim() || categoryId || type,
         date: new Date().toISOString(),
         type,
-        status: 'CONFIRMED',
+        status: 'COMPLETED',
         accountId,
         categoryId: categoryId,
         subCategoryId: subcategoryId || undefined,

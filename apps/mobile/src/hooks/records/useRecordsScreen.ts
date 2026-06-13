@@ -24,8 +24,10 @@ import {
 } from '@/utils/records/transactionMappers'
 import { router } from 'expo-router'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useFocusEffect } from 'expo-router';
 
-const USE_MOCK_TRANSACTIONS = true
+
+const USE_MOCK_TRANSACTIONS = false
 
 export type RecordsScreenAlert = {
   title?: string
@@ -42,60 +44,50 @@ export function useRecordsScreen() {
   const [searchQuery, setSearchQuery] = useState('')
   const [alert, setAlert] = useState<RecordsScreenAlert | null>(null)
 
-  useEffect(() => {
-    if (!USE_MOCK_TRANSACTIONS) return
-    setTransactions(mockTransactions)
-    setIsLoading(false)
-    setError(null)
-  }, [])
-
-  useEffect(() => {
+  const loadTransactions = useCallback(async () => {
     if (USE_MOCK_TRANSACTIONS) return
-    let isActive = true
 
-    const loadTransactions = async () => {
-      try {
-        setIsLoading(true)
-        let data
+    try {
+      setIsLoading(true)
+      let data
 
-        if (categoryFilter !== 'Todas') {
-          data = await transactionsService.list({ category: categoryFilter })
-        } else if (typeFilter !== 'ALL') {
-          data = await transactionsService.list({ type: typeFilter })
-        } else {
-          data = await transactionsService.list()
-        }
-
-        if (!isActive) return
-
-        setTransactions(data.map(mapApiTransactionToListItem))
-        setError(null)
-      } catch (loadError) {
-        if (!isActive) return
-
-        try {
-          const localData = await transactionQueries.getAll()
-
-          if (!isActive) return
-
-          setTransactions(localData.map(mapLocalTransactionToListItem))
-          setError('Sem conexao. Exibindo dados locais.')
-        } catch (localError) {
-          console.error('Erro ao carregar transacoes:', loadError)
-          console.error('Erro ao carregar transacoes locais:', localError)
-          setError('Nao foi possivel carregar as transacoes.')
-        }
-      } finally {
-        if (isActive) setIsLoading(false)
+      if (categoryFilter !== 'Todas') {
+        data = await transactionsService.list({ category: categoryFilter })
+      } else if (typeFilter !== 'ALL') {
+        data = await transactionsService.list({ type: typeFilter })
+      } else {
+        data = await transactionsService.list()
       }
-    }
 
-    loadTransactions()
-
-    return () => {
-      isActive = false
+      setTransactions(data.map(mapApiTransactionToListItem))
+      setError(null)
+    } catch (loadError) {
+      console.error('loadTransactions failed', loadError)
+      try {
+        const localData = await transactionQueries.getAll()
+        setTransactions(localData.map(mapLocalTransactionToListItem))
+        setError('Sem conexao. Exibindo dados locais.')
+      } catch (localError) {
+        setError('Nao foi possivel carregar as transacoes.')
+      }
+    } finally {
+      setIsLoading(false)
     }
   }, [categoryFilter, typeFilter])
+
+  useEffect(() => {
+    if (USE_MOCK_TRANSACTIONS) {
+      setTransactions(mockTransactions)
+      setIsLoading(false)
+      setError(null)
+    }
+  }, [])
+
+  useFocusEffect(
+    useCallback(() => {
+      loadTransactions()
+    }, [loadTransactions])
+  )
 
   const dismissAlert = useCallback(() => setAlert(null), [])
 
@@ -133,7 +125,6 @@ export function useRecordsScreen() {
         try {
           await transactionQueries.delete(transactionId)
         } catch {
-          // Local delete is best-effort to keep offline cache in sync.
         }
         setError(null)
         setAlert({

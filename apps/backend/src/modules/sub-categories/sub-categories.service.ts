@@ -8,6 +8,7 @@ import {
 import { buildTimestampWhere } from '@common/sync/sync-query.util'
 import { TableName } from 'generated/prisma/client'
 import { FindManySubCategoriesDto } from './dto/find-many.dto'
+import { RemoveSubCategoryRequestDto } from './dto/remove.dto'
 import { SyncSubCategoryDto } from './dto/sync-sub-category.dto'
 
 @Injectable()
@@ -76,7 +77,8 @@ export class SubCategoriesService {
     })
   }
 
-  async remove(userId: string, id: string) {
+  async remove(dto: RemoveSubCategoryRequestDto): Promise<void> {
+    const { userId, id } = dto
     const subCategory = await this.prisma.subCategory.findUnique({
       where: { id },
       include: { category: true },
@@ -87,7 +89,12 @@ export class SubCategoriesService {
     await this.prisma.$transaction(async (tx) => {
       await nullifyTransactionSubCategoryRefs(tx, id)
       await nullifyRecurrenceSubCategoryRefs(tx, id)
-      await createDeletedRecords(tx, userId, TableName.SUB_CATEGORIES, [id])
+      await createDeletedRecords({
+        tx,
+        userId,
+        tableName: TableName.SUB_CATEGORIES,
+        recordIds: [id],
+      })
       await tx.subCategory.delete({ where: { id } })
     })
   }

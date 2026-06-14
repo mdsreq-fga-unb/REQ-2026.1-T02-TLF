@@ -10,6 +10,7 @@ import {
 import { buildTimestampWhere } from '@common/sync/sync-query.util'
 import { TableName } from 'generated/prisma/client'
 import { FindManyCategoriesDto } from './dto/find-many.dto'
+import { RemoveCategoryRequestDto } from './dto/remove.dto'
 import { SyncCategoryDto } from './dto/sync-category.dto'
 
 @Injectable()
@@ -66,7 +67,8 @@ export class CategoriesService {
     })
   }
 
-  async remove(userId: string, id: string) {
+  async remove(dto: RemoveCategoryRequestDto): Promise<void> {
+    const { userId, id } = dto
     const category = await this.prisma.category.findUnique({
       where: { id },
       include: { subCategories: true, budgets: true },
@@ -75,12 +77,12 @@ export class CategoriesService {
     if (category.userId !== userId) throw new ForbiddenException('Acesso negado')
 
     await this.prisma.$transaction(async (tx) => {
-      await createDeletedRecords(
+      await createDeletedRecords({
         tx,
         userId,
-        TableName.BUDGETS,
-        category.budgets.map((b) => b.id),
-      )
+        tableName: TableName.BUDGETS,
+        recordIds: category.budgets.map((b) => b.id),
+      })
       await tx.budget.deleteMany({ where: { categoryId: id } })
 
       for (const subCategory of category.subCategories) {
@@ -91,13 +93,20 @@ export class CategoriesService {
       await nullifyTransactionCategoryRefs(tx, id)
       await nullifyRecurrenceCategoryRefs(tx, id)
 
-      await createDeletedRecords(
-        tx,
-        userId,
-        TableName.SUB_CATEGORIES,
-        category.subCategories.map((s) => s.id),
-      )
-      await createDeletedRecords(tx, userId, TableName.CATEGORIES, [id])
+      await Promise.all([
+        createDeletedRecords({
+          tx,
+          userId,
+          tableName: TableName.SUB_CATEGORIES,
+          recordIds: category.subCategories.map((s) => s.id),
+        }),
+        createDeletedRecords({
+          tx,
+          userId,
+          tableName: TableName.CATEGORIES,
+          recordIds: [id],
+        }),
+      ])
       await tx.category.delete({ where: { id } })
     })
   }

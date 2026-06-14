@@ -10,6 +10,7 @@ import { buildTimestampWhere } from '@common/sync/sync-query.util'
 import { TableName } from 'generated/prisma/client'
 import { CreateBudgetDto } from './dto/create-budget.dto'
 import { FindManyBudgetsDto } from './dto/find-many.dto'
+import { RemoveBudgetRequestDto } from './dto/remove.dto'
 import { UpdateBudgetDto } from './dto/update-budget.dto'
 import { SyncBudgetDto } from './dto/sync-budget.dto'
 
@@ -192,14 +193,15 @@ export class BudgetService {
     })
   }
 
-  async remove(userId: string, id: string) {
+  async remove(dto: RemoveBudgetRequestDto): Promise<void> {
+    const { userId, id } = dto
     const budget = await this.prisma.budget.findUnique({ where: { id } })
 
     if (!budget) throw new NotFoundException('Orçamento não encontrado')
     if (budget.userId !== userId) throw new ForbiddenException('Acesso negado')
 
     await this.prisma.$transaction(async (tx) => {
-      await createDeletedRecords(tx, userId, TableName.BUDGETS, [id])
+      await createDeletedRecords({ tx, userId, tableName: TableName.BUDGETS, recordIds: [id] })
       await tx.budget.delete({ where: { id } })
     })
   }

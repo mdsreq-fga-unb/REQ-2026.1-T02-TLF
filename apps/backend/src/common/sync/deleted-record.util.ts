@@ -1,13 +1,7 @@
-import { Prisma, TableName } from 'generated/prisma/client'
+import { CreateDeletedRecordsDto } from './dto/create-deleted-records.dto'
 
-type TransactionClient = Prisma.TransactionClient
-
-export async function createDeletedRecords(
-  tx: TransactionClient,
-  userId: string,
-  tableName: TableName,
-  recordIds: string[],
-): Promise<void> {
+export async function createDeletedRecords(dto: CreateDeletedRecordsDto): Promise<void> {
+  const { tx, userId, tableName, recordIds } = dto
   if (recordIds.length === 0) return
 
   await tx.deletedRecord.createMany({

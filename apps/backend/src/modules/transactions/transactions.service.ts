@@ -12,6 +12,7 @@ import { CreateTransactionDto } from './dto/create-transaction.dto'
 import { UpdateTransactionDto } from './dto/update-transaction.dto'
 import { FilterTransactionsDto } from './dto/filter-transactions.dto'
 import { FindManyTransactionsDto } from './dto/find-many.dto'
+import { RemoveTransactionRequestDto } from './dto/remove.dto'
 import { TransactionListResponseDto } from './dto/transaction-list.response.dto'
 import { SyncTransactionDto } from './dto/sync-transaction.dto'
 
@@ -429,11 +430,12 @@ export class TransactionsService {
     })
   }
 
-  async remove({ userId, id }: { userId: string; id: string }) {
+  async remove(dto: RemoveTransactionRequestDto): Promise<void> {
+    const { userId, id } = dto
     await this.getTransactionOrThrow(userId, id)
 
     await this.prisma.$transaction(async (tx) => {
-      await createDeletedRecords(tx, userId, TableName.TRANSACTIONS, [id])
+      await createDeletedRecords({ tx, userId, tableName: TableName.TRANSACTIONS, recordIds: [id] })
       await tx.transaction.delete({ where: { id } })
     })
   }

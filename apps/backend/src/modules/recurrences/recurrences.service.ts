@@ -5,6 +5,7 @@ import { nullifyTransactionRecurrenceRefs } from '@common/sync/set-null.util'
 import { buildTimestampWhere } from '@common/sync/sync-query.util'
 import { TableName } from 'generated/prisma/client'
 import { FindManyRecurrencesDto } from './dto/find-many.dto'
+import { RemoveRecurrenceRequestDto } from './dto/remove.dto'
 import { SyncRecurrenceDto } from './dto/sync-recurrence.dto'
 
 @Injectable()
@@ -94,7 +95,8 @@ export class RecurrencesService {
     })
   }
 
-  async remove(userId: string, recurrenceId: string) {
+  async remove(dto: RemoveRecurrenceRequestDto): Promise<void> {
+    const { userId, id: recurrenceId } = dto
     const recurrence = await this.prisma.recurrence.findUnique({
       where: { id: recurrenceId },
       include: { account: { include: { institution: true } } },
@@ -105,7 +107,12 @@ export class RecurrencesService {
 
     await this.prisma.$transaction(async (tx) => {
       await nullifyTransactionRecurrenceRefs(tx, recurrenceId)
-      await createDeletedRecords(tx, userId, TableName.RECURRENCES, [recurrenceId])
+      await createDeletedRecords({
+        tx,
+        userId,
+        tableName: TableName.RECURRENCES,
+        recordIds: [recurrenceId],
+      })
       await tx.recurrence.delete({ where: { id: recurrenceId } })
     })
   }

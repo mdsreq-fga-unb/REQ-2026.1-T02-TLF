@@ -22,7 +22,7 @@ export class BudgetController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() dto: CreateBudgetDto) {
-    const userId = 'user-teste-001' 
+    const userId = 'user-teste-001'
     return this.budgetService.create(userId, dto)
   }
 
@@ -54,6 +54,6 @@ export class BudgetController {
   @HttpCode(HttpStatus.OK)
   remove(@Param('id') id: string) {
     const userId = 'user-teste-001'
-    return this.budgetService.remove(userId, id)
+    return this.budgetService.remove({ userId, id })
   }
 }

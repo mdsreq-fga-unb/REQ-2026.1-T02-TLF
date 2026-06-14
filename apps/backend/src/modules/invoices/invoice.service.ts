@@ -5,6 +5,7 @@ import { nullifyTransactionInvoiceRefs } from '@common/sync/set-null.util'
 import { buildTimestampWhere } from '@common/sync/sync-query.util'
 import { InvoicePaymentStatus, InvoiceStatus, TableName } from 'generated/prisma/client'
 import { FindManyInvoicesDto } from './dto/find-many.dto'
+import { RemoveInvoiceRequestDto } from './dto/remove.dto'
 import { SyncInvoiceDto } from './dto/sync-invoice.dto'
 
 @Injectable()
@@ -103,7 +104,8 @@ export class InvoiceService {
     })
   }
 
-  async remove(userId: string, invoiceId: string) {
+  async remove(dto: RemoveInvoiceRequestDto): Promise<void> {
+    const { userId, id: invoiceId } = dto
     const invoice = await this.prisma.invoice.findUnique({
       where: { id: invoiceId },
       include: { account: { include: { institution: true } } },
@@ -113,7 +115,12 @@ export class InvoiceService {
 
     await this.prisma.$transaction(async (tx) => {
       await nullifyTransactionInvoiceRefs(tx, invoiceId)
-      await createDeletedRecords(tx, userId, TableName.INVOICES, [invoiceId])
+      await createDeletedRecords({
+        tx,
+        userId,
+        tableName: TableName.INVOICES,
+        recordIds: [invoiceId],
+      })
       await tx.invoice.delete({ where: { id: invoiceId } })
     })
   }

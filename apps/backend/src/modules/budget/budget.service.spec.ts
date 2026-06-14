@@ -30,10 +30,7 @@ describe('BudgetService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        BudgetService,
-        { provide: PrismaService, useValue: mockPrisma },
-      ],
+      providers: [BudgetService, { provide: PrismaService, useValue: mockPrisma }],
     }).compile()
     service = module.get<BudgetService>(BudgetService)
     jest.clearAllMocks()
@@ -117,13 +114,15 @@ describe('BudgetService', () => {
     it('deve remover orçamento', async () => {
       mockPrisma.budget.findUnique.mockResolvedValue(mockBudget)
       mockPrisma.budget.delete.mockResolvedValue(mockBudget)
-      const result = await service.remove('user-001', 'budget-001')
+      const result = await service.remove({ userId: 'user-001', id: 'budget-001' })
       expect(result).toEqual({ message: 'Orçamento removido com sucesso' })
     })
 
     it('deve lançar NotFoundException se não encontrar', async () => {
       mockPrisma.budget.findUnique.mockResolvedValue(null)
-      await expect(service.remove('user-001', 'budget-001')).rejects.toThrow(NotFoundException)
+      await expect(service.remove({ userId: 'user-001', id: 'budget-001' })).rejects.toThrow(
+        NotFoundException,
+      )
     })
   })
 })

@@ -19,6 +19,7 @@ import { NumericKeypad } from './NumericKeypad'
 import { FormField } from './FormField'
 import { SubcategoryChips } from './SubcategoryChips'
 import { PickerModal } from './PickerModal'
+import { DatePickerModal } from '@/components/ui/DatePickerModal'
 
 type Props = {
   title?: string
@@ -46,6 +47,8 @@ export function TransactionForm({ title, mode, initialValues, onSuccess }: Props
     setShowDestinationPicker,
     showCategoryPicker,
     setShowCategoryPicker,
+    showDatePicker,
+    setShowDatePicker,
     successAlertVisible,
     dismissSuccessAlert,
     handleSubmit,
@@ -119,8 +122,8 @@ export function TransactionForm({ title, mode, initialValues, onSuccess }: Props
           <FormField
             icon={Calendar}
             label="Data e Hora"
-            value={formatDateTimeShort(new Date())}
-            onPress={() => {}}
+            value={formatDateTimeShort(form.date)}
+            onPress={() => setShowDatePicker(true)}
           />
 
           <FormField
@@ -188,6 +191,16 @@ export function TransactionForm({ title, mode, initialValues, onSuccess }: Props
         selectedId={form.categoryId}
         onSelect={form.setCategoryId}
         onClose={() => setShowCategoryPicker(false)}
+      />
+
+      <DatePickerModal
+        visible={showDatePicker}
+        value={form.date}
+        onConfirm={(date) => {
+          form.setDate(date)
+          setShowDatePicker(false)
+        }}
+        onCancel={() => setShowDatePicker(false)}
       />
 
       <ThemedOverlayAlert

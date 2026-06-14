@@ -25,6 +25,7 @@ export function useTransactionFormScreen({
   const [showAccountPicker, setShowAccountPicker] = useState(false)
   const [showDestinationPicker, setShowDestinationPicker] = useState(false)
   const [showCategoryPicker, setShowCategoryPicker] = useState(false)
+  const [showDatePicker, setShowDatePicker] = useState(false)
   const [successAlertVisible, setSuccessAlertVisible] = useState(false)
 
   const resolvedTitle =
@@ -86,6 +87,8 @@ export function useTransactionFormScreen({
     setShowDestinationPicker,
     showCategoryPicker,
     setShowCategoryPicker,
+    showDatePicker,
+    setShowDatePicker,
     successAlertVisible,
     dismissSuccessAlert,
     handleSubmit,

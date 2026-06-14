@@ -113,12 +113,10 @@ export function useRecordsScreen() {
         return
       }
 
-      // 1. Ação Local Imediata (Offline-first)
       const previousTransactions = [...transactions]
       setTransactions((prev) => prev.filter((item) => item.id !== transactionId))
 
       try {
-        // 2. Marcar como deletado no banco local
         try {
           await transactionQueries.delete(transactionId)
         } catch (dbError) {
@@ -127,7 +125,6 @@ export function useRecordsScreen() {
           )
         }
 
-        // 3. Tentar excluir na API
         try {
           await transactionsService.delete(transactionId)
           setError(null)
@@ -138,8 +135,6 @@ export function useRecordsScreen() {
           })
         } catch (apiError) {
           console.warn('[OFFLINE-FIRST] Falha ao excluir na API, o registro será sincronizado depois.', apiError)
-          // Não revertemos a UI, pois o registro já está marcado como deletado localmente
-          // e será removido do servidor no próximo Sync.
           setAlert({
             title: 'Excluído localmente',
             message: 'Sem conexão. A alteração será sincronizada em breve.',

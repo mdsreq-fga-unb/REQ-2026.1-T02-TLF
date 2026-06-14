@@ -21,7 +21,9 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
   const [destinationAccountId, setDestinationAccountId] = useState(ACCOUNTS[1].id)
   const [categoryId, setCategoryId] = useState<string | undefined>(initialValues?.categoryId)
   const [subcategoryId, setSubcategoryId] = useState(initialValues?.subcategoryId ?? '')
-  const [date] = useState(() => Date.now())
+  const [date, setDate] = useState<Date>(() =>
+    initialValues?.date ? new Date(initialValues.date) : new Date(),
+  )
   const [notes, setNotes] = useState(initialValues?.notes ?? '')
   const [submitting, setSubmitting] = useState(false)
   const [showKeypad, setShowKeypad] = useState(false)
@@ -64,6 +66,7 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
     setDestinationAccountId(ACCOUNTS[1].id)
     setCategoryId('')
     setSubcategoryId('')
+    setDate(new Date())
     setNotes('')
     setSubmitAttempted(false)
     setSubmitError(null)
@@ -120,7 +123,7 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
         await transactionQueries.create({
           amount: amountCents,
           description: notes.trim() || finalCategoryId || type,
-          date: new Date(),
+          date: date,
           type: type as any,
           status: 'PENDING',
           accountId,
@@ -132,7 +135,7 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
         await transactionsService.create({
           amount: amountCents,
           description: notes.trim() || finalCategoryId || type,
-          date: new Date().toISOString(),
+          date: date.toISOString(),
           type,
           status: 'COMPLETED',
           accountId,
@@ -170,6 +173,8 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
     setSubcategoryId,
     notes,
     setNotes,
+    date,
+    setDate,
     handleKeypad,
     showKeypad,
     setShowKeypad,

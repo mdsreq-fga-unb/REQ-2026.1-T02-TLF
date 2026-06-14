@@ -122,11 +122,9 @@ export function useRecordsScreen() {
         try {
           await transactionQueries.delete(transactionId)
         } catch (dbError) {
-          console.error('Erro ao excluir no banco local:', dbError)
-          // Se falhar no banco local, não prosseguimos para a API
-          setTransactions(previousTransactions)
-          setError('Erro ao atualizar banco local.')
-          return
+          console.warn(
+            '[OFFLINE-FIRST] Registro não encontrado localmente. Tentando excluir apenas na API.',
+          )
         }
 
         // 3. Tentar excluir na API

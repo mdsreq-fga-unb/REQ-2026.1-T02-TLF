@@ -9,7 +9,7 @@ export function mapLocalTransactionToListItem(transaction: Transaction): Transac
     category: transaction.categoryId || 'Sem categoria',
     type: transaction.type,
     date: transaction.date,
-    amount: transaction.amount,
+    amount: transaction.amount / 100,
   }
 }
 
@@ -20,6 +20,6 @@ export function mapApiTransactionToListItem(transaction: TransactionApiItem): Tr
     category: transaction.category?.name ?? transaction.categoryId ?? 'Sem categoria',
     type: transaction.type,
     date: transaction.date,
-    amount: transaction.amount,
+    amount: transaction.amount / 100,
   }
 }

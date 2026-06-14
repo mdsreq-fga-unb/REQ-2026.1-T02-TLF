@@ -103,7 +103,7 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
             subcategoryId: subcategoryId || undefined,
             destinationAccountId: type === 'TRANSFER' ? destinationAccountId : undefined,
           })
-        } catch (localError) {
+        } catch {
           console.warn(
             '[OFFLINE-FIRST] Registro não encontrado localmente. O update será sincronizado apenas na API.',
           )
@@ -148,8 +148,9 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
       onSuccess?.()
     } catch (error) {
       console.error('[TRANSACTION SUBMIT ERROR]', error)
-      if ((error as any)?.response?.data) {
-        console.log('[TRANSACTION SUBMIT ERROR DETAILS]', JSON.stringify((error as any).response.data, null, 2))
+      const axiosError = error as any
+      if (axiosError?.response?.data) {
+        console.log('[TRANSACTION SUBMIT ERROR DETAILS]', JSON.stringify(axiosError.response.data, null, 2))
       }
       const message = error instanceof Error ? error.message : TRANSACTION_FORM_ERRORS.submit
       setSubmitError(message)

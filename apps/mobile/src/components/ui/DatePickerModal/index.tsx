@@ -30,7 +30,7 @@ type Props = {
   asOverlay?: boolean
 }
 
-export function DatePickerModal({ visible, value, onConfirm, onCancel, asOverlay = false }: Props) {
+export function DatePickerModal({ visible, value, onConfirm, onCancel }: Props) {
   const theme = useThemeColor()
   const today = new Date()
 

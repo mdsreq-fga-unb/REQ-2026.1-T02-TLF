@@ -1,6 +1,5 @@
 import React from 'react'
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
-import { BudgetTypeTabs } from '@/components/finance/budget/BudgetTypeTabs'
 import { AmountDisplay } from '@/components/finance/transactions/AmountDisplay'
 import { FormField } from '@/components/finance/transactions/FormField'
 import { NumericKeypad } from '@/components/finance/transactions/NumericKeypad'

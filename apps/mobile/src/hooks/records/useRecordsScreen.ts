@@ -64,14 +64,14 @@ export function useRecordsScreen() {
     } catch (loadError) {
       console.error('loadTransactions failed', loadError)
       try {
-        const localFilters: any = {}
+        const localFilters: Record<string, any> = {}
         if (categoryFilter !== 'Todas') localFilters.categoryId = categoryFilter
         if (typeFilter !== 'ALL') localFilters.type = typeFilter
 
         const localData = await transactionQueries.getByFilters(localFilters)
         setTransactions(localData.map(mapLocalTransactionToListItem))
         setError('Sem conexao. Exibindo dados locais.')
-      } catch (localError) {
+      } catch {
         setError('Nao foi possivel carregar as transacoes.')
       }
     } finally {
@@ -123,7 +123,7 @@ export function useRecordsScreen() {
       try {
         try {
           await transactionQueries.delete(transactionId)
-        } catch (dbError) {
+        } catch {
           console.warn(
             '[OFFLINE-FIRST] Registro não encontrado localmente. Tentando excluir apenas na API.',
           )

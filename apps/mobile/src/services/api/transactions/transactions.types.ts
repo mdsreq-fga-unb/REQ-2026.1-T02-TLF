@@ -42,14 +42,7 @@ export type TransactionApiItem = {
   updatedAt?: string
 }
 
-export type TransactionUpdatePayload = Partial<{
-  amount: number
-  description: string
-  date: string | number
-  type: TransactionType
-  status: TransactionStatus
-  categoryId: string
-}>
+export type TransactionUpdatePayload = Partial<CreateTransactionPayload>
 
 export type TransactionFilters = {
   category?: string

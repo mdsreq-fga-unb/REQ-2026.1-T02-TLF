@@ -90,15 +90,21 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
     try {
       if (initialValues?.id) {
         // UPDATE MODE
-        await transactionQueries.update(initialValues.id, {
-          amount: amountCents,
-          description: notes.trim() || finalCategoryId || type,
-          type: type as any,
-          accountId,
-          categoryId: finalCategoryId,
-          subcategoryId: subcategoryId || undefined,
-          destinationAccountId: type === 'TRANSFER' ? destinationAccountId : undefined,
-        })
+        try {
+          await transactionQueries.update(initialValues.id, {
+            amount: amountCents,
+            description: notes.trim() || finalCategoryId || type,
+            type: type as any,
+            accountId,
+            categoryId: finalCategoryId,
+            subcategoryId: subcategoryId || undefined,
+            destinationAccountId: type === 'TRANSFER' ? destinationAccountId : undefined,
+          })
+        } catch (localError) {
+          console.warn(
+            '[OFFLINE-FIRST] Registro não encontrado localmente. O update será sincronizado apenas na API.',
+          )
+        }
 
         await transactionsService.update(initialValues.id, {
           amount: amountCents,

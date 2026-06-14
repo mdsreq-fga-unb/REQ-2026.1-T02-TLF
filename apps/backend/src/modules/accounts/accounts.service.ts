@@ -4,7 +4,9 @@ import { createDeletedRecords } from '@common/sync/deleted-record.util'
 import { nullifyTransactionDestinationAccountRefs } from '@common/sync/set-null.util'
 import { buildTimestampWhere } from '@common/sync/sync-query.util'
 import { AccountType, Currency, TableName } from 'generated/prisma/client'
+import { DeleteAccountInTransactionDto } from './dto/delete-account-in-transaction.dto'
 import { FindManyAccountsDto } from './dto/find-many.dto'
+import { RemoveAccountRequestDto } from './dto/remove.dto'
 import { SyncAccountDto } from './dto/sync-account.dto'
 
 @Injectable()
@@ -29,6 +31,31 @@ export class AccountsService {
     const institution = await this.prisma.institution.findUnique({ where: { id: institutionId } })
     if (!institution) throw new NotFoundException('Instituição não encontrada')
     if (institution.userId !== userId) throw new ForbiddenException('Acesso negado')
+  }
+
+  async deleteAccountInTransaction(dto: DeleteAccountInTransactionDto): Promise<void> {
+    const { tx, userId, accountId, invoiceIds, recurrenceIds, transactionIds } = dto
+
+    await nullifyTransactionDestinationAccountRefs(tx, accountId)
+
+    await Promise.all([
+      createDeletedRecords({ tx, userId, tableName: TableName.INVOICES, recordIds: invoiceIds }),
+      createDeletedRecords({
+        tx,
+        userId,
+        tableName: TableName.RECURRENCES,
+        recordIds: recurrenceIds,
+      }),
+      createDeletedRecords({
+        tx,
+        userId,
+        tableName: TableName.TRANSACTIONS,
+        recordIds: transactionIds,
+      }),
+      createDeletedRecords({ tx, userId, tableName: TableName.ACCOUNTS, recordIds: [accountId] }),
+    ])
+
+    await tx.account.delete({ where: { id: accountId } })
   }
 
   async syncCreate(userId: string, dto: SyncAccountDto) {
@@ -89,7 +116,8 @@ export class AccountsService {
     })
   }
 
-  async remove(userId: string, accountId: string) {
+  async remove(dto: RemoveAccountRequestDto): Promise<void> {
+    const { userId, id: accountId } = dto
     const account = await this.prisma.account.findUnique({
       where: { id: accountId },
       include: {
@@ -103,28 +131,14 @@ export class AccountsService {
     if (account.institution.userId !== userId) throw new ForbiddenException('Acesso negado')
 
     await this.prisma.$transaction(async (tx) => {
-      await nullifyTransactionDestinationAccountRefs(tx, accountId)
-
-      await createDeletedRecords(
+      await this.deleteAccountInTransaction({
         tx,
         userId,
-        TableName.INVOICES,
-        account.invoices.map((i) => i.id),
-      )
-      await createDeletedRecords(
-        tx,
-        userId,
-        TableName.RECURRENCES,
-        account.recurrences.map((r) => r.id),
-      )
-      await createDeletedRecords(
-        tx,
-        userId,
-        TableName.TRANSACTIONS,
-        account.transactions.map((t) => t.id),
-      )
-      await createDeletedRecords(tx, userId, TableName.ACCOUNTS, [accountId])
-      await tx.account.delete({ where: { id: accountId } })
+        accountId,
+        invoiceIds: account.invoices.map((i) => i.id),
+        recurrenceIds: account.recurrences.map((r) => r.id),
+        transactionIds: account.transactions.map((t) => t.id),
+      })
     })
   }
 }

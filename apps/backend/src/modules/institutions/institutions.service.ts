@@ -1,15 +1,19 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '@common/prisma/prisma.service'
 import { createDeletedRecords } from '@common/sync/deleted-record.util'
-import { nullifyTransactionDestinationAccountRefs } from '@common/sync/set-null.util'
 import { buildTimestampWhere } from '@common/sync/sync-query.util'
+import { AccountsService } from '@modules/accounts/accounts.service'
 import { TableName } from 'generated/prisma/client'
 import { FindManyInstitutionsDto } from './dto/find-many.dto'
+import { RemoveInstitutionRequestDto } from './dto/remove.dto'
 import { SyncInstitutionDto } from './dto/sync-institution.dto'
 
 @Injectable()
 export class InstitutionsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly accountsService: AccountsService,
+  ) {}
 
   findMany(dto: FindManyInstitutionsDto) {
     const { userId, id, createdAfter, updatedAfter } = dto
@@ -60,7 +64,8 @@ export class InstitutionsService {
     })
   }
 
-  async remove(userId: string, institutionId: string) {
+  async remove(dto: RemoveInstitutionRequestDto): Promise<void> {
+    const { userId, id: institutionId } = dto
     const institution = await this.prisma.institution.findUnique({
       where: { id: institutionId },
       include: {
@@ -78,30 +83,22 @@ export class InstitutionsService {
 
     await this.prisma.$transaction(async (tx) => {
       for (const account of institution.accounts) {
-        await nullifyTransactionDestinationAccountRefs(tx, account.id)
-
-        await createDeletedRecords(
+        await this.accountsService.deleteAccountInTransaction({
           tx,
           userId,
-          TableName.INVOICES,
-          account.invoices.map((i) => i.id),
-        )
-        await createDeletedRecords(
-          tx,
-          userId,
-          TableName.RECURRENCES,
-          account.recurrences.map((r) => r.id),
-        )
-        await createDeletedRecords(
-          tx,
-          userId,
-          TableName.TRANSACTIONS,
-          account.transactions.map((t) => t.id),
-        )
-        await createDeletedRecords(tx, userId, TableName.ACCOUNTS, [account.id]) // wouldnt be better make an array of account ids and delete them all at once?
+          accountId: account.id,
+          invoiceIds: account.invoices.map((i) => i.id),
+          recurrenceIds: account.recurrences.map((r) => r.id),
+          transactionIds: account.transactions.map((t) => t.id),
+        })
       }
 
-      await createDeletedRecords(tx, userId, TableName.INSTITUTIONS, [institutionId])
+      await createDeletedRecords({
+        tx,
+        userId,
+        tableName: TableName.INSTITUTIONS,
+        recordIds: [institutionId],
+      })
       await tx.institution.delete({ where: { id: institutionId } })
     })
   }

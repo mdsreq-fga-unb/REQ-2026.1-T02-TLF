@@ -64,7 +64,11 @@ export function useRecordsScreen() {
     } catch (loadError) {
       console.error('loadTransactions failed', loadError)
       try {
-        const localData = await transactionQueries.getAll()
+        const localFilters: any = {}
+        if (categoryFilter !== 'Todas') localFilters.categoryId = categoryFilter
+        if (typeFilter !== 'ALL') localFilters.type = typeFilter
+
+        const localData = await transactionQueries.getByFilters(localFilters)
         setTransactions(localData.map(mapLocalTransactionToListItem))
         setError('Sem conexao. Exibindo dados locais.')
       } catch (localError) {

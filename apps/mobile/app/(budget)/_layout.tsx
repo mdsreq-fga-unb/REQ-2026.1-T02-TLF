@@ -6,7 +6,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { resolveTextTone } from '@/utils/textTone'
 import { Ionicons } from '@expo/vector-icons'
-import { useColorScheme } from 'react-native'
+import { TouchableOpacity, useColorScheme } from 'react-native'
 
 void SplashScreen.preventAutoHideAsync()
 

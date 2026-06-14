@@ -13,7 +13,7 @@ import { View, ScrollView } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
-import { AlignEndHorizontal, Bookmark } from 'lucide-react-native'
+import { AlignEndHorizontal, Bookmark, PiggyBank } from 'lucide-react-native'
 
 type Props = {
   title?: string
@@ -40,7 +40,8 @@ export default function EditBudgetPage({ initialValues }: Props) {
         <ScrollView>
           <AmountDisplay
             amountCents={form.amountLimit}
-            type={form.type}
+            type={'TRANSFER'}
+            showType={false}
             onPress={() => form.setShowKeypad(true)}
           />
           {form.submitAttempted && form.errors.amount && (
@@ -73,7 +74,7 @@ export default function EditBudgetPage({ initialValues }: Props) {
             />
 
             <FormField
-              icon="attach-money"
+              icon={PiggyBank}
               label={form.type == 'BUDGET' ? 'Limite' : 'Meta'}
               value={form.amount}
               onPress={() => {}}
@@ -107,7 +108,7 @@ export default function EditBudgetPage({ initialValues }: Props) {
             gap: 10,
           }}
         >
-          {form.submitError && (
+          {!form.isValid && (
             <View
               style={{ flexDirection: 'row', alignItems: 'center', gap: 8, alignSelf: 'stretch' }}
             >

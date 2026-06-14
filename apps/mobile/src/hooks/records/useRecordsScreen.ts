@@ -110,34 +110,51 @@ export function useRecordsScreen() {
 
       if (USE_MOCK_TRANSACTIONS) {
         setTransactions((prev) => prev.filter((item) => item.id !== transactionId))
-        setError(null)
-        setAlert({
-          title: 'Transacao excluida',
-          message: 'A transacao foi removida com sucesso.',
-          actions: [{ label: 'Entendi', onPress: dismissAlert }],
-        })
         return
       }
 
+      // 1. Ação Local Imediata (Offline-first)
+      const previousTransactions = [...transactions]
+      setTransactions((prev) => prev.filter((item) => item.id !== transactionId))
+
       try {
-        await transactionsService.delete(transactionId)
-        setTransactions((prev) => prev.filter((item) => item.id !== transactionId))
+        // 2. Marcar como deletado no banco local
         try {
           await transactionQueries.delete(transactionId)
-        } catch {
+        } catch (dbError) {
+          console.error('Erro ao excluir no banco local:', dbError)
+          // Se falhar no banco local, não prosseguimos para a API
+          setTransactions(previousTransactions)
+          setError('Erro ao atualizar banco local.')
+          return
         }
-        setError(null)
-        setAlert({
-          title: 'Transacao excluida',
-          message: 'A transacao foi removida com sucesso.',
-          actions: [{ label: 'Entendi', onPress: dismissAlert }],
-        })
-      } catch (deleteError) {
-        console.error('Erro ao excluir transacao:', deleteError)
-        setError('Nao foi possivel excluir a transacao.')
+
+        // 3. Tentar excluir na API
+        try {
+          await transactionsService.delete(transactionId)
+          setError(null)
+          setAlert({
+            title: 'Transação excluída',
+            message: 'A transação foi removida com sucesso.',
+            actions: [{ label: 'Entendi', onPress: dismissAlert }],
+          })
+        } catch (apiError) {
+          console.warn('[OFFLINE-FIRST] Falha ao excluir na API, o registro será sincronizado depois.', apiError)
+          // Não revertemos a UI, pois o registro já está marcado como deletado localmente
+          // e será removido do servidor no próximo Sync.
+          setAlert({
+            title: 'Excluído localmente',
+            message: 'Sem conexão. A alteração será sincronizada em breve.',
+            actions: [{ label: 'Entendi', onPress: dismissAlert }],
+          })
+        }
+      } catch (error) {
+        console.error('Erro crítico no delete:', error)
+        setTransactions(previousTransactions)
+        setError('Não foi possível excluir a transação.')
       }
     },
-    [dismissAlert],
+    [dismissAlert, transactions],
   )
 
   const handleDelete = useCallback(

@@ -97,7 +97,7 @@ export function useRecordsScreen() {
       params: {
         id: transaction.id,
         type: transaction.type,
-        amount: (transaction.amount * 100).toString(),
+        amount: transaction.amount.toString(),
         categoryId: transaction.categoryId,
         description: transaction.description,
       },

@@ -3,7 +3,7 @@
 
 import { ThemedContainer } from '@/components/ui/ThemedContainer'
 import { ThemedText } from '@/components/ui/ThemedText'
-import { Pressable, View } from 'react-native'
+import { Pressable, TouchableOpacity, View } from 'react-native'
 import Fontisto from '@expo/vector-icons/Fontisto'
 import { SectionDivider } from '@/components/ui/SectionDivider'
 import { styles } from './style'
@@ -16,6 +16,7 @@ import { useState } from 'react'
 import { BudgetService } from '@/services/api/budget'
 import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
 import { useBudgetScreen } from '@/hooks/budget/useBudgetScreen'
+import { ThemedButton } from '@/components/ui/ThemedButton'
 
 type props = {
   id: string
@@ -26,6 +27,7 @@ type props = {
   year: number
   totalValue?: number
   spentValue?: number
+  mainBudget?: boolean
   onDelete?: (id: string) => void
 }
 
@@ -38,6 +40,7 @@ export function BudgetItem({
   year,
   totalValue = amountLimit / 100,
   spentValue = 0,
+  mainBudget = false,
   onDelete,
 }: props) {
   const colors = useThemeColor()
@@ -55,14 +58,24 @@ export function BudgetItem({
       <View style={styles.container}>
         <ThemedText children text={name} variant="title" />
         <View style={styles.actionContainer}>
-          <Pressable
-            onPress={() => {
-              setShowAction((prev) => !prev)
-            }}
-            style={styles.iconButton}
-          >
-            <Fontisto name="more-v-a" size={24} color={resolveTextTone(colors, 'muted')} />
-          </Pressable>
+          {mainBudget ? (
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={() => router.push('/(budget)/')}
+              style={[styles.mainButton, { backgroundColor: colors.primary }]}
+            >
+              <ThemedText text="Orçamentos" variant="button" style={{ color: colors.onPrimary }} />
+            </TouchableOpacity>
+          ) : (
+            <Pressable
+              onPress={() => {
+                setShowAction((prev) => !prev)
+              }}
+              style={styles.iconButton}
+            >
+              <Fontisto name="more-v-a" size={24} color={resolveTextTone(colors, 'muted')} />
+            </Pressable>
+          )}
           {showAction ? (
             <View style={[styles.dropdownMenu, { backgroundColor: colors.surfaceMuted }]}>
               <Pressable

@@ -30,4 +30,11 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
   },
+  mainButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    padding: 5,
+    height: 35,
+  },
 })

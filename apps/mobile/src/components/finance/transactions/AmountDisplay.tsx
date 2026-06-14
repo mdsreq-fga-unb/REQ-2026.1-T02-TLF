@@ -7,11 +7,12 @@ import type { TransactionType } from './types'
 
 type Props = {
   amountCents: number
-  type: TransactionType | BudgetType
+  type: TransactionType
+  showType?: boolean
   onPress: () => void
 }
 
-export function AmountDisplay({ amountCents, type, onPress }: Props) {
+export function AmountDisplay({ amountCents, type, showType = true, onPress }: Props) {
   const theme = useThemeColor()
   const color = getTransactionAmountColor(type, theme)
   const amount = amountCents / 100
@@ -19,7 +20,11 @@ export function AmountDisplay({ amountCents, type, onPress }: Props) {
 
   return (
     <Pressable onPress={onPress} style={styles.container}>
-      <ThemedText text={TYPE_LABELS[type]} variant="caption" tone="muted" style={styles.label} />
+      {showType ? (
+        <ThemedText text={TYPE_LABELS[type]} variant="caption" tone="muted" style={styles.label} />
+      ) : (
+        ''
+      )}
       <ThemedText
         text={`${sign ? `${sign} ` : ''}${formatCurrency(amount)}`}
         variant="display"

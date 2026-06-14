@@ -90,4 +90,44 @@ export const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '700',
   },
+  headerTabs: {
+    flexDirection: 'row',
+    marginBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.1)',
+  },
+  tab: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 12,
+    borderBottomWidth: 2,
+    borderBottomColor: 'transparent',
+  },
+  timeContainer: {
+    height: 240,
+    justifyContent: 'center',
+  },
+  timeRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 12,
+  },
+  timeColumn: {
+    width: 60,
+    height: 200,
+  },
+  timeList: {
+    flex: 1,
+    marginTop: 8,
+  },
+  timeItem: {
+    paddingVertical: 12,
+    alignItems: 'center',
+    borderRadius: 8,
+    marginBottom: 4,
+  },
 })

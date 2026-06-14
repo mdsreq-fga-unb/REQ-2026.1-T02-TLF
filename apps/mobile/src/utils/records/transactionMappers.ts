@@ -17,7 +17,7 @@ export function mapApiTransactionToListItem(transaction: TransactionApiItem): Tr
   return {
     id: transaction.id,
     description: transaction.description,
-    category: transaction.category ?? transaction.categoryId ?? 'Sem categoria',
+    category: transaction.category?.name ?? transaction.categoryId ?? 'Sem categoria',
     type: transaction.type,
     date: transaction.date,
     amount: transaction.amount,

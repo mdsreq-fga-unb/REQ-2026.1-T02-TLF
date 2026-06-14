@@ -16,7 +16,15 @@ export type TransactionApiItem = {
   accountId: string
 
   categoryId: string
+  category?: {
+    id: string
+    name: string
+  }
   subcategoryId?: string | null
+  subCategory?: {
+    id: string
+    name: string
+  }
 
   invoiceId?: string | null
   recurrenceId?: string | null

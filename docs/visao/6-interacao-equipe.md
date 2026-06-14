@@ -2,13 +2,13 @@
 
 ## 6.1 Composição da Equipe
 
-| Papel                   | Descrição                                                                      | Responsável      | Participantes                                      |
-|-------------------------|--------------------------------------------------------------------------------|------------------|----------------------------------------------------|
-| Gerente de Projeto      | Coordena o projeto, garante a comunicação entre cliente e equipe, controla prazos e entregas. | Gabriel Mota     | -                                                  |
-| DevOps                  | Gerencia a infraestrutura como código e monitorar sistemas, aumentando a eficiência e a confiabilidade | Gabriel Mota     | Danilo de Melo                                     |
-| Desenvolvedor Frontend  | Responsável pela interface do usuário, design e implementação das funcionalidades no lado do cliente. | Lucas Fujimoto   | Guilherme Ventura, Gabriel Mota                    |
-| Desenvolvedor Backend   | Implementa a lógica de negócios, integração com banco de dados e APIs.         | Danilo de Melo   | Daniel Lira, Tiago Lyra                            |
-| Analista de Requisitos  | Define os requisitos funcionais e não funcionais do sistema e garante que eles sejam atendidos. | Daniel Lira      | Gabriel Mota, Danilo de Melo, Lucas Fujimoto, Guilherme Ventura, Tiago Lyra |
+| Papel                  | Descrição                                                                                              | Responsável    | Participantes                                                               |
+| ---------------------- | ------------------------------------------------------------------------------------------------------ | -------------- | --------------------------------------------------------------------------- |
+| Gerente de Projeto     | Coordena o projeto, garante a comunicação entre cliente e equipe, controla prazos e entregas.          | Gabriel Mota   | -                                                                           |
+| DevOps                 | Gerencia a infraestrutura como código e monitorar sistemas, aumentando a eficiência e a confiabilidade | Gabriel Mota   | Danilo de Melo                                                              |
+| Desenvolvedor Frontend | Responsável pela interface do usuário, design e implementação das funcionalidades no lado do cliente.  | Lucas Fujimoto | Guilherme Ventura, Gabriel Mota                                             |
+| Desenvolvedor Backend  | Implementa a lógica de negócios, integração com banco de dados e APIs.                                 | Danilo de Melo | Daniel Lira, Tiago Lyra                                                     |
+| Analista de Requisitos | Define os requisitos funcionais e não funcionais do sistema e garante que eles sejam atendidos.        | Daniel Lira    | Gabriel Mota, Danilo de Melo, Lucas Fujimoto, Guilherme Ventura, Tiago Lyra |
 
 ## 6.2 Comunicação
 

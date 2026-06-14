@@ -8,21 +8,21 @@
 
 ## 3.2 Quadro Comparativo
 
-| Características            | OpenUP                                                                 | RAD (Rapid Application Development)                                 |
-|----------------------------|------------------------------------------------------------------------|----------------------------------------------------------------------|
-| Abordagem Geral            | Iterativo e incremental, com foco em arquitetura e organização do processo. | Iterativo com forte foco em prototipação rápida e entregas ágeis.    |
-| Foco em Arquitetura        | Forte ênfase na definição de uma arquitetura sólida (baseada em riscos) desde as fases iniciais. | Baixo foco inicial em arquitetura, priorizando a rapidez na construção de protótipos funcionais. |
-| Estrutura de Processos     | Estruturado em fases (Iniciação/Concepção, Elaboração, Construção e Transição). | Estrutura flexível baseada em ciclos curtos de planejamento, workshop de design e prototipagem. |
-| Flexibilidade de Requisitos| Requisitos detalhados conforme a necessidade, priorizando os de alto risco/prioridade. | Alta flexibilidade; os requisitos emergem e evoluem através da prototipagem e feedback constante. |
-| Colaboração com Cliente     | Envolvimento frequente em revisões, demonstrações e validações de marcos. | Colaboração intensa e contínua; exige compromisso total dos usuários nos workshops e revisões. |
-| Complexidade do Processo    | Moderada; é uma versão simplificada do UP, mas mantém papéis e artefatos definidos. | Baixa; processo ágil e direto com foco em velocidade e menor formalidade documental. |
-| Qualidade Técnica          | Alta; garantida pelo foco em arquitetura, requisitos significativos e validação progressiva. | Variável; o foco em velocidade e interfaces pode levar à negligência de aspectos não-funcionais. |
-| Práticas de Desenvolvimento| Uso de modelagem visual, quando necessária, e práticas arquiteturais integradas ao ágil. | Uso intensivo de prototipação evolutiva e ferramentas de desenvolvimento rápido (CASE/Low-code). |
-| Adaptação ao Projeto TLT Finanças | Adequado para sistemas com requisitos de conformidade moderados e necessidade de escalabilidade. | Útil para validação de conceitos iniciais, mas limitado para sistemas financeiros críticos ou complexos. |
-| Documentação               | Documentação enxuta e mínima (Visão, Lista de Requisitos, Casos de Uso simplificados). | Documentação mínima, focada em design de interface, fluxos de dados e modelos de dados. |
-| Controle de Qualidade      | Realizado por meio de validações contínuas, testes e revisões com stakeholders. | Baseado na validação imediata de protótipos funcionais e feedback direto do usuário. |
-| Escalabilidade             | Adequado para projetos de médio porte e passível de adaptação para maior escala. | Mais indicado para projetos de pequeno/médio porte ou sistemas de informação corporativos. |
-| Suporte a Equipes de Desenvolvimento | Otimizado para equipes pequenas e co-localizadas tipicamente 3 a 10 pessoas. | Exige equipes pequenas, altamente colaborativas e com ferramentas de desenvolvimento rápido. |
+| Características                      | OpenUP                                                                                           | RAD (Rapid Application Development)                                                                      |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| Abordagem Geral                      | Iterativo e incremental, com foco em arquitetura e organização do processo.                      | Iterativo com forte foco em prototipação rápida e entregas ágeis.                                        |
+| Foco em Arquitetura                  | Forte ênfase na definição de uma arquitetura sólida (baseada em riscos) desde as fases iniciais. | Baixo foco inicial em arquitetura, priorizando a rapidez na construção de protótipos funcionais.         |
+| Estrutura de Processos               | Estruturado em fases (Iniciação/Concepção, Elaboração, Construção e Transição).                  | Estrutura flexível baseada em ciclos curtos de planejamento, workshop de design e prototipagem.          |
+| Flexibilidade de Requisitos          | Requisitos detalhados conforme a necessidade, priorizando os de alto risco/prioridade.           | Alta flexibilidade; os requisitos emergem e evoluem através da prototipagem e feedback constante.        |
+| Colaboração com Cliente              | Envolvimento frequente em revisões, demonstrações e validações de marcos.                        | Colaboração intensa e contínua; exige compromisso total dos usuários nos workshops e revisões.           |
+| Complexidade do Processo             | Moderada; é uma versão simplificada do UP, mas mantém papéis e artefatos definidos.              | Baixa; processo ágil e direto com foco em velocidade e menor formalidade documental.                     |
+| Qualidade Técnica                    | Alta; garantida pelo foco em arquitetura, requisitos significativos e validação progressiva.     | Variável; o foco em velocidade e interfaces pode levar à negligência de aspectos não-funcionais.         |
+| Práticas de Desenvolvimento          | Uso de modelagem visual, quando necessária, e práticas arquiteturais integradas ao ágil.         | Uso intensivo de prototipação evolutiva e ferramentas de desenvolvimento rápido (CASE/Low-code).         |
+| Adaptação ao Projeto TLT Finanças    | Adequado para sistemas com requisitos de conformidade moderados e necessidade de escalabilidade. | Útil para validação de conceitos iniciais, mas limitado para sistemas financeiros críticos ou complexos. |
+| Documentação                         | Documentação enxuta e mínima (Visão, Lista de Requisitos, Casos de Uso simplificados).           | Documentação mínima, focada em design de interface, fluxos de dados e modelos de dados.                  |
+| Controle de Qualidade                | Realizado por meio de validações contínuas, testes e revisões com stakeholders.                  | Baseado na validação imediata de protótipos funcionais e feedback direto do usuário.                     |
+| Escalabilidade                       | Adequado para projetos de médio porte e passível de adaptação para maior escala.                 | Mais indicado para projetos de pequeno/médio porte ou sistemas de informação corporativos.               |
+| Suporte a Equipes de Desenvolvimento | Otimizado para equipes pequenas e co-localizadas tipicamente 3 a 10 pessoas.                     | Exige equipes pequenas, altamente colaborativas e com ferramentas de desenvolvimento rápido.             |
 
 ## 3.3 Justificativa
 

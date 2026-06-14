@@ -129,3 +129,123 @@ Reunião com o Cliente
 </iframe>
 
 [Assista à reunião com o cliente](https://youtu.be/xdgnHqfKMCQ)
+
+## Reunião 23/05/26
+
+Reunião com a equipe
+
+<iframe
+  width="100%"
+  height="500"
+  src="https://www.youtube.com/embed/-eTuWqAb1cc"
+  title="Reunião 23/05/26 - Equipe"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen>
+</iframe>
+
+[Assista à reunião com a equipe](https://youtu.be/-eTuWqAb1cc)
+
+Reunião com o Cliente - ATUALIZAR
+
+<iframe
+  width="100%"
+  height="500"
+  src="https://www.youtube.com/embed/xdgnHqfKMCQ"
+  title="Reunião 23/05/26 - Cliente"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen>
+</iframe>
+
+[Assista à reunião com o cliente](https://youtu.be/xdgnHqfKMCQ)
+
+## Reunião 30/05/26
+
+Reunião com a equipe
+
+<iframe
+  width="100%"
+  height="500"
+  src="https://www.youtube.com/embed/yKqAJ09onfg"
+  title="Reunião 30/05/26 - Equipe"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen>
+</iframe>
+
+[Assista à reunião com a equipe](https://youtu.be/yKqAJ09onfg)
+
+Reunião com o Cliente - ATUALIZAR
+
+<iframe
+  width="100%"
+  height="500"
+  src="https://www.youtube.com/embed/xdgnHqfKMCQ"
+  title="Reunião 30/05/26 - Cliente"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen>
+</iframe>
+
+[Assista à reunião com o cliente](https://youtu.be/xdgnHqfKMCQ)
+
+## Reunião 06/06/26
+
+Reunião com a equipe
+
+<iframe
+  width="100%"
+  height="500"
+  src="https://www.youtube.com/embed/JmD0sZB5y9s "
+  title="Reunião 06/06/26 - Equipe"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen>
+</iframe>
+
+[Assista à reunião com a equipe](https://youtu.be/JmD0sZB5y9s )
+
+Reunião com o Cliente - ATUALIZAR
+
+<iframe
+  width="100%"
+  height="500"
+  src="https://www.youtube.com/embed/xdgnHqfKMCQ"
+  title="Reunião 06/06/26 - Cliente"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen>
+</iframe>
+
+[Assista à reunião com o cliente](https://youtu.be/xdgnHqfKMCQ)
+
+## Reunião 13/06/26
+
+Reunião com a equipe
+
+<iframe
+  width="100%"
+  height="500"
+  src="https://www.youtube.com/embed/YqVRmAGLpHo"
+  title="Reunião 13/06/26 - Equipe"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen>
+</iframe>
+
+[Assista à reunião com a equipe](https://youtu.be/YqVRmAGLpHo)
+
+Reunião com o Cliente - ATUALIZAR
+
+<iframe
+  width="100%"
+  height="500"
+  src="https://www.youtube.com/embed/xdgnHqfKMCQ"
+  title="Reunião 13/06/26 - Cliente"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen>
+</iframe>
+
+[Assista à reunião com o cliente](https://youtu.be/xdgnHqfKMCQ) 

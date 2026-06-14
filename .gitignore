@@ -9,3 +9,5 @@ __pycache__/
 .python-version
 node_modules
 .venv
+app.json
+android

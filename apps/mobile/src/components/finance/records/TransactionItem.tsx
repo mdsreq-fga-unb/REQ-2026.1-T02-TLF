@@ -51,7 +51,7 @@ export function TransactionItem({ transaction, onDelete, onPress, onEdit }: prop
               numberOfLines={1}
             />
             <ThemedText
-              text={transaction.category}
+              text={`${transaction.category}${transaction.subcategory ? ` • ${transaction.subcategory}` : ''}`}
               variant="caption"
               tone="muted"
               style={styles.subtitle}

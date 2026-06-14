@@ -17,6 +17,7 @@ export type TransactionListItem = {
   description: string
   category: string
   categoryId: string
+  subcategory?: string
   type: 'EXPENSE' | 'INCOME' | 'TRANSFER'
   date: Date | number | string
   amount: number

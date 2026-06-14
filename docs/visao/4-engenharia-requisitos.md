@@ -33,7 +33,6 @@
 #### Elicitação e Descoberta:
 
 - _Entrevista Estruturada_: Realização de sessões de perguntas roteirizadas e direcionadas com o cliente para detalhar as funcionalidades críticas e regras de negócio identificadas na Concepção. O objetivo é extrair informações específicas sobre como o sistema deve se comportar em cenários de exceção, como falhas de conexão e sincronização de dados.
-- _Análise de Documentos_: Estudo de normas financeiras, diretrizes da LGPD e referências de educação financeira para embasar o detalhamento dos RNFs de segurança e usabilidade. Esta técnica auxilia na descoberta de restrições técnicas e legais que devem ser incorporadas ao sistema.
 
 #### Análise e Consenso:
 
@@ -70,7 +69,6 @@
 - _Checklist_: A utilização de checklist garante que cada funcionalidade desenvolvida abrange os pontos importantes daquela função.
 - _Feedback do cliente_: Essa técnica consiste em validar continuamente o que foi feito está correto. Assim, garantindo uma melhoria do projeto.
 - _Definição de Pronto - Definition of Done (DoD)_: Estabelecimento de critérios técnicos (testes unitários com Jest, documentação Swagger atualizada) que um Caso de Uso deve cumprir para ser considerado finalizado.
-- _Testes de Usabilidade_: Observação do uso do sistema por perfis que representam os jovens adultos em dificuldade financeira. O objetivo é identificar barreiras na interface que possam causar o abandono da ferramenta antes da entrega final.
 
 #### Organização e Atualização:
 

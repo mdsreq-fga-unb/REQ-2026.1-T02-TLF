@@ -67,7 +67,6 @@ A partir disso, foi gerada a seguinte Matriz de valor e impacto:
 <iframe width="100%" height="500" src="https://miro.com/app/board/uXjVHTBwhKE=/?share_link_id=623549294839" title="Matriz de impacto e esforçp" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 [Matriz de valo e impacto](https://miro.com/app/board/uXjVHTBwhKE=/?share_link_id=623549294839)
 
-
 | RF / RNF | Descrição                                                                                                                                         | Impacto       | Esforço       | Quadrante | Prioridade sugerida |
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------- | --------- | ------------------- |
 | RF01     | cadastrar uma conta.                                                                                                                              | Alto Impacto  | Baixo esforço | Q1        | Prioridade 1        |

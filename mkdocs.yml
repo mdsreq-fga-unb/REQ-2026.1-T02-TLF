@@ -46,8 +46,8 @@ nav:
       - 5-Cronograma: visao/5-cronograma.md
       - 6-Interação entre equipe e cliente: visao/6-interacao-equipe.md
       - 7-Requisitos de Software: visao/7-requisitos-software.md
-      - 8-Casos de Uso: entregas/8-casosdeuso.md
-      - 9-MoSCoW: entregas/9-MoSCoW.md
+      - 8-Casos de Uso: visao/8-casosdeuso.md
+      - 9-MoSCoW: visao/9-MoSCoW.md
       - 10-DoR e DoD: visao/10-DoR-e-DoD.md
       - 11-Backlog de Produto: visao/11-backlog-produto.md
       - 12.1-Unidade 1: visao/12-unidade-1.md
@@ -56,4 +56,5 @@ nav:
   - Entregas:
       - 1-Apresentações: entregas/apresentacao.md
       - 2-Reuniões: entregas/reunioes.md
+      - 3-Coverage: entregas/Cobertura.md
       

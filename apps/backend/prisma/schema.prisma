@@ -59,6 +59,17 @@ enum NotificationType {
   INVOICE_PARTIALLY_PAID  // fatura parcialmente paga
 }
 
+enum TableName {
+  CATEGORIES
+  SUB_CATEGORIES
+  INSTITUTIONS
+  BUDGETS
+  ACCOUNTS
+  INVOICES
+  RECURRENCES
+  TRANSACTIONS
+  NOTIFICATIONS
+}
 // --- Core ---
 
 model User {
@@ -323,7 +334,7 @@ model Notification {
 model DeletedRecord {
   id         String   @id @default(uuid())
   recordId   String   @map("record_id")
-  tableName  String   @map("table_name")
+  tableName  TableName   @map("table_name")
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")

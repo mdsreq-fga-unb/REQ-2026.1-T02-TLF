@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { transactionsService } from '@/services/api/transactions/transactions.service'
 import type { TransactionType } from '@/services/api/transactions/transactions.types'
-import { ACCOUNTS, MAX_AMOUNT_CENTS, TRANSACTION_FORM_ERRORS } from '@/utils/transactionForm'
+import { ACCOUNTS, CATEGORIES, MAX_AMOUNT_CENTS, TRANSACTION_FORM_ERRORS } from '@/utils/transactionForm'
 import { transactionQueries } from '@/services/database/queries/transaction'
 
 export type TransactionInitialValues = {
@@ -75,33 +75,38 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
       setSubmitError('Invalid transfer')
       return
     }
-    if (!categoryId) {
-      setSubmitError('Category is required')
-      return
-    }
     setSubmitError(null)
     setSubmitting(true)
+
+    const finalCategoryId = type === 'TRANSFER' ? (categoryId || CATEGORIES.TRANSFER[0].id) : categoryId
+
+    if (!finalCategoryId) {
+      setSubmitError('Category is required')
+      setSubmitting(false)
+      return
+    }
+
     try {
       await transactionQueries.create({
         amount: amountCents,
-        description: notes.trim() || categoryId || type,
+        description: notes.trim() || finalCategoryId || type,
         date: new Date(),
         type: type as any,
         status: 'PENDING',
         accountId,
-        categoryId: categoryId!,
+        categoryId: finalCategoryId,
         subcategoryId: subcategoryId || undefined,
         destinationAccountId: type === 'TRANSFER' ? destinationAccountId : undefined,
       })
 
       await transactionsService.create({
         amount: amountCents,
-        description: notes.trim() || categoryId || type,
+        description: notes.trim() || finalCategoryId || type,
         date: new Date().toISOString(),
         type,
         status: 'COMPLETED',
         accountId,
-        categoryId: categoryId,
+        categoryId: finalCategoryId,
         subCategoryId: subcategoryId || undefined,
         destinationAccountId: type === 'TRANSFER' ? destinationAccountId : undefined,
       })

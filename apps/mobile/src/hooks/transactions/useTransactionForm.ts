@@ -5,6 +5,7 @@ import { ACCOUNTS, CATEGORIES, MAX_AMOUNT_CENTS, TRANSACTION_FORM_ERRORS } from 
 import { transactionQueries } from '@/services/database/queries/transaction'
 
 export type TransactionInitialValues = {
+  id?: string
   type?: TransactionType
   amountCents?: number
   accountId?: string
@@ -87,33 +88,60 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
     }
 
     try {
-      await transactionQueries.create({
-        amount: amountCents,
-        description: notes.trim() || finalCategoryId || type,
-        date: new Date(),
-        type: type as any,
-        status: 'PENDING',
-        accountId,
-        categoryId: finalCategoryId,
-        subcategoryId: subcategoryId || undefined,
-        destinationAccountId: type === 'TRANSFER' ? destinationAccountId : undefined,
-      })
+      if (initialValues?.id) {
+        // UPDATE MODE
+        await transactionQueries.update(initialValues.id, {
+          amount: amountCents,
+          description: notes.trim() || finalCategoryId || type,
+          type: type as any,
+          accountId,
+          categoryId: finalCategoryId,
+          subcategoryId: subcategoryId || undefined,
+          destinationAccountId: type === 'TRANSFER' ? destinationAccountId : undefined,
+        })
 
-      await transactionsService.create({
-        amount: amountCents,
-        description: notes.trim() || finalCategoryId || type,
-        date: new Date().toISOString(),
-        type,
-        status: 'COMPLETED',
-        accountId,
-        categoryId: finalCategoryId,
-        subCategoryId: subcategoryId || undefined,
-        destinationAccountId: type === 'TRANSFER' ? destinationAccountId : undefined,
-      })
+        await transactionsService.update(initialValues.id, {
+          amount: amountCents,
+          description: notes.trim() || finalCategoryId || type,
+          type,
+          categoryId: finalCategoryId,
+          accountId,
+          subCategoryId: subcategoryId || undefined,
+          destinationAccountId: type === 'TRANSFER' ? destinationAccountId : undefined,
+        })
+      } else {
+        // CREATE MODE
+        await transactionQueries.create({
+          amount: amountCents,
+          description: notes.trim() || finalCategoryId || type,
+          date: new Date(),
+          type: type as any,
+          status: 'PENDING',
+          accountId,
+          categoryId: finalCategoryId,
+          subcategoryId: subcategoryId || undefined,
+          destinationAccountId: type === 'TRANSFER' ? destinationAccountId : undefined,
+        })
+
+        await transactionsService.create({
+          amount: amountCents,
+          description: notes.trim() || finalCategoryId || type,
+          date: new Date().toISOString(),
+          type,
+          status: 'COMPLETED',
+          accountId,
+          categoryId: finalCategoryId,
+          subCategoryId: subcategoryId || undefined,
+          destinationAccountId: type === 'TRANSFER' ? destinationAccountId : undefined,
+        })
+      }
       reset()
       onSuccess?.()
     } catch (error) {
-      console.error('[TRANSACTION CREATE ERROR]', error)
+      console.error('[TRANSACTION SUBMIT ERROR]', error)
+      if ((error as any)?.response?.data) {
+        console.log('[TRANSACTION SUBMIT ERROR DETAILS]', JSON.stringify((error as any).response.data, null, 2))
+      }
       const message = error instanceof Error ? error.message : TRANSACTION_FORM_ERRORS.submit
       setSubmitError(message)
     } finally {

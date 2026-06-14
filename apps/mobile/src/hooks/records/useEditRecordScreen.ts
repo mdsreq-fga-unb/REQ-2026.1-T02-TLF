@@ -13,12 +13,13 @@ export function useEditRecordScreen() {
 
   const initialValues = useMemo<TransactionInitialValues>(
     () => ({
+      id: parseRouteString(params.id),
       type: parseTransactionType(params.type),
       amountCents: parseAmountCents(params.amount),
       categoryId: parseRouteString(params.categoryId),
       notes: parseRouteString(params.description),
     }),
-    [params.amount, params.categoryId, params.description, params.type],
+    [params.id, params.amount, params.categoryId, params.description, params.type],
   )
 
   const handleBack = useCallback(() => {

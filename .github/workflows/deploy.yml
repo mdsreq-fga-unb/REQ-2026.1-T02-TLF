@@ -3,22 +3,38 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main
-      - master
+      - docs/unidade-3
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versão (ex: unidade-3)'
+        required: true
+
+permissions:
+  contents: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+        with:
+          fetch-depth: 0
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      
+
       - name: Install dependencies
         run: pip install -r requirements.txt
-      
-      - name: Build and deploy
-        run: mkdocs gh-deploy --force
+
+      - name: Configure Git Credentials
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Deploy version with mike
+        run: |
+          mike deploy --push --update-aliases "${{ github.event.inputs.version || 'unidade-3' }}" latest
+          mike set-default --push latest

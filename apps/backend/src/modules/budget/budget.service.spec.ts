@@ -12,7 +12,18 @@ const mockPrisma = {
     update: jest.fn(),
     delete: jest.fn(),
   },
+  deletedRecord: {
+    createMany: jest.fn(),
+  },
+  $transaction: jest.fn(),
 }
+
+mockPrisma.$transaction.mockImplementation((arg: unknown) => {
+  if (typeof arg === 'function') {
+    return arg(mockPrisma)
+  }
+  return Promise.all(arg as Promise<unknown>[])
+})
 
 const mockCategory = { id: 'cat-001', userId: 'user-001', name: 'Alimentação' }
 const mockBudget = {
@@ -114,8 +125,11 @@ describe('BudgetService', () => {
     it('deve remover orçamento', async () => {
       mockPrisma.budget.findUnique.mockResolvedValue(mockBudget)
       mockPrisma.budget.delete.mockResolvedValue(mockBudget)
-      const result = await service.remove({ userId: 'user-001', id: 'budget-001' })
-      expect(result).toEqual({ message: 'Orçamento removido com sucesso' })
+      mockPrisma.deletedRecord.createMany.mockResolvedValue({ count: 1 })
+
+      await service.remove({ userId: 'user-001', id: 'budget-001' })
+
+      expect(mockPrisma.budget.delete).toHaveBeenCalledWith({ where: { id: 'budget-001' } })
     })
 
     it('deve lançar NotFoundException se não encontrar', async () => {

@@ -10,7 +10,7 @@
     "build": "nest build",
     "start": "node dist/main",
     "lint": "eslint \"{src,test}/**/*.ts\" --fix",
-    "test": "jest --passWithNoTests",
+    "test": "prisma generate && jest --passWithNoTests",
     "test:unit": "jest --testPathPattern=unit --passWithNoTests",
     "test:e2e": "jest --testPathPattern=e2e --passWithNoTests",
     "db:migrate": "prisma migrate dev && prisma generate",
@@ -62,24 +62,48 @@
     "typescript": "^5.1.3"
   },
   "jest": {
-  "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": "src",
-  "testRegex": ".*\\.spec\\.ts$",
-  "transform": {
-    "^.+\\.(t|j)s$": ["ts-jest", {
-      "tsconfig": "tsconfig.test.json"
-    }]
-  },
-  "collectCoverageFrom": ["**/*.(t|j)s"],
-  "coverageDirectory": "../coverage",
-  "testEnvironment": "node",
-  "moduleNameMapper": {
-    "@common/(.*)": ["<rootDir>/common/$1"],
-    "@modules/(.*)": ["<rootDir>/modules/$1"],
-    "@config/(.*)": ["<rootDir>/config/$1"],
-    "prisma/seed": ["<rootDir>/../prisma/seed.ts"]
-  },
-  "testPathIgnorePatterns": ["/node_modules/"],
-  "modulePathIgnorePatterns": ["prisma.config.ts"]
-}
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": [
+        "ts-jest",
+        {
+          "tsconfig": "tsconfig.test.json"
+        }
+      ]
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "@common/(.*)": [
+        "<rootDir>/common/$1"
+      ],
+      "@modules/(.*)": [
+        "<rootDir>/modules/$1"
+      ],
+      "@config/(.*)": [
+        "<rootDir>/config/$1"
+      ],
+      "generated/prisma/(.*)": [
+        "<rootDir>/../generated/prisma/$1"
+      ],
+      "prisma/seed": [
+        "<rootDir>/../prisma/seed.ts"
+      ]
+    },
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "modulePathIgnorePatterns": [
+      "prisma.config.ts"
+    ]
+  }
 }

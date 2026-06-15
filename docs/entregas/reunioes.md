@@ -1,6 +1,6 @@
 # Reuniões
 
-## Reunião 25/04/26
+## Reunião 25/04/26 - Iteração 3
 
 Reunião com a equipe
 
@@ -32,7 +32,7 @@ Reunião com o Cliente
 
 ---
 
-## Reunião 02/05/26
+## Reunião 02/05/26  - Iteração 4
 
 Reunião com a equipe
 
@@ -64,7 +64,7 @@ Reunião com o Cliente
 
 ---
 
-## Reunião 09/05/26
+## Reunião 09/05/26 - Iteração 5
 
 Reunião com a equipe
 
@@ -100,7 +100,7 @@ Validação da metrica de Impacto:
 
 ---
 
-## Reunião 16/05/26
+## Reunião 16/05/26 - Iteração 6
 
 Reunião com a equipe
 
@@ -130,7 +130,7 @@ Reunião com o Cliente
 
 [Assista à reunião com o cliente](https://youtu.be/xdgnHqfKMCQ)
 
-## Reunião 23/05/26
+## Reunião 23/05/26 - Iteração 7
 
 Reunião com a equipe
 
@@ -160,7 +160,7 @@ Reunião com o Cliente
 
 [Assista à reunião com o cliente](https://youtu.be/9W3T-pLOr3E)
 
-## Reunião 30/05/26
+## Reunião 30/05/26 - Iteração 8
 
 Reunião com a equipe
 
@@ -190,7 +190,7 @@ Reunião com o Cliente
 
 [Assista à reunião com o cliente](https://youtu.be/HQuqCY1qNgc)
 
-## Reunião 06/06/26
+## Reunião 06/06/26 - Iteração 9.1
 
 Reunião com a equipe
 
@@ -220,7 +220,7 @@ Reunião com o Cliente
 
 [Assista à reunião com o cliente](https://youtu.be/LvVauA5MBNo)
 
-## Reunião 13/06/26
+## Reunião 13/06/26 - Iteração 9.2
 
 Reunião com a equipe
 

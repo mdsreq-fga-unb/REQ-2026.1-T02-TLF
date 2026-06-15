@@ -7,7 +7,7 @@ import type { TransactionType } from './types'
 
 type Props = {
   amountCents: number
-  type: TransactionType
+  type: TransactionType | BudgetType
   onPress: () => void
 }
 

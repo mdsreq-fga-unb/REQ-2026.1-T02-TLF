@@ -98,6 +98,7 @@ model Category {
   icon  String
   color String
 
+  isDefault Boolean @default(false) @map("is_default")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -117,7 +118,7 @@ model SubCategory {
   categoryId String   @map("category_id")
 
   name  String
-  icon  String   // icon and color should match parent category in app code when creating a subcategory
+  icon  String // icon and color should match parent category in app code when creating a subcategory
   color String
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -153,8 +154,8 @@ model Budget {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
 
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  categoryId String   @map("category_id")
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  categoryId String?   @map("category_id")
 
   name        String
   amountLimit Int    @map("amount_limit")
@@ -181,7 +182,7 @@ model Account {
   balance Int         @default(0)
 
   // credit cards only:
-  closingDay  Int? @map("closing_day") 
+  closingDay  Int? @map("closing_day")
   dueDay      Int? @map("due_day")
   creditLimit Int? @default(0) @map("credit_limit")
 
@@ -212,14 +213,14 @@ model Invoice {
 
   status         InvoiceStatus        @default(OPEN)
   paymentStatus  InvoicePaymentStatus @default(NOT_PAID)
-  referenceMonth Int @map("reference_month")
-  referenceYear  Int @map("reference_year")
-  totalAmount    Int @default(0) @map("total_amount")
-  paidAmount     Int @default(0) @map("paid_amount")
+  referenceMonth Int                  @map("reference_month")
+  referenceYear  Int                  @map("reference_year")
+  totalAmount    Int                  @default(0) @map("total_amount")
+  paidAmount     Int                  @default(0) @map("paid_amount")
 
   // ALWAYS the same of it's account:
-  closingDay     Int @map("closing_day")
-  dueDay         Int @map("due_day")
+  closingDay Int @map("closing_day")
+  dueDay     Int @map("due_day")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -343,31 +344,32 @@ model DeletedRecord {
   @@index([userId, deletedAt])
   @@map("deleted_records")
 }
-  // ─── POST-MVP: SPLIT TRANSACTIONS ───────────────────────────────────────────
-  // Allows a single purchase to be split across multiple categories.
-  //
-  // Two supported flows:
-  //
-  // A) BOTTOM-UP (during purchase — user doesn't know the total yet)
-  //    User adds items per category as they shop. The sum of splits becomes
-  //    the final transaction total. Good for real-time tracking at the store.
-  //
-  // B) TOP-DOWN (after purchase — user knows the total)
-  //    User enters the total first, then distributes across categories.
-  //    The app tracks remaining unallocated amount in real time.
-  //    Useful for categorizing a receipt after the fact.
-  //
-  // Schema changes needed when implementing:
-  //   1. Make categoryId optional (parent transaction has no category)
-  //   2. Add parentId self-relation (children point to their parent)
-  //   3. Debit balance ONCE on the parent — children never affect balance
-  //   4. Exclude parent transactions that have splits from category reports
-  //      to avoid double-counting (filter: parentId IS NULL AND no splits,
-  //      OR parentId IS NOT NULL)
-  //
-  // parentId String?       @map("parent_id")
-  // parent   Transaction?  @relation("TransactionSplit", fields: [parentId], references: [id], onDelete: Cascade)
-  // splits   Transaction[] @relation("TransactionSplit")
-  //
-  // FRONTEND: Add a option "Split transaction" to the transaction form, when the user selects this option, a new form should be displayed to the user to split the transaction into multiple categories.
-  // ────────────────────────────────────────────────────────────────────────────
+
+// ─── POST-MVP: SPLIT TRANSACTIONS ───────────────────────────────────────────
+// Allows a single purchase to be split across multiple categories.
+//
+// Two supported flows:
+//
+// A) BOTTOM-UP (during purchase — user doesn't know the total yet)
+//    User adds items per category as they shop. The sum of splits becomes
+//    the final transaction total. Good for real-time tracking at the store.
+//
+// B) TOP-DOWN (after purchase — user knows the total)
+//    User enters the total first, then distributes across categories.
+//    The app tracks remaining unallocated amount in real time.
+//    Useful for categorizing a receipt after the fact.
+//
+// Schema changes needed when implementing:
+//   1. Make categoryId optional (parent transaction has no category)
+//   2. Add parentId self-relation (children point to their parent)
+//   3. Debit balance ONCE on the parent — children never affect balance
+//   4. Exclude parent transactions that have splits from category reports
+//      to avoid double-counting (filter: parentId IS NULL AND no splits,
+//      OR parentId IS NOT NULL)
+//
+// parentId String?       @map("parent_id")
+// parent   Transaction?  @relation("TransactionSplit", fields: [parentId], references: [id], onDelete: Cascade)
+// splits   Transaction[] @relation("TransactionSplit")
+//
+// FRONTEND: Add a option "Split transaction" to the transaction form, when the user selects this option, a new form should be displayed to the user to split the transaction into multiple categories.
+// ────────────────────────────────────────────────────────────────────────────

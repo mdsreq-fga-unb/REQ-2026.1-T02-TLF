@@ -98,6 +98,7 @@ export default function LoginScreen() {
                 style={{ textAlign: 'center' }}
               />
               <ThemedLink replace href="/(auth)/register" text="Crie uma conta aqui" />
+              <ThemedLink replace href="/(tabs)/" text="tabs" />
             </ThemedContainer>
           </ThemedContainer>
         </ThemedContainer>

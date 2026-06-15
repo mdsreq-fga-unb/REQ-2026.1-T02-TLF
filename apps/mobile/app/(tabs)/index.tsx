@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { ThemedContainer } from '@/components/ui/ThemedContainer'
@@ -91,7 +92,6 @@ export default function home() {
                 {({ slice }) => {
                   return (
                     <>
-                      {slice}
                       <Pie.Slice strokeCap="round" />
                       <Pie.SliceAngularInset
                         angularInset={{

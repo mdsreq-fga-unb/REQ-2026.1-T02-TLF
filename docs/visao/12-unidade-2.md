@@ -1,6 +1,6 @@
-# 10 UNIDADE 2
+# 12 UNIDADE 2
 
-## 10.2 Unidade 2
+## 12.2 Unidade 2
 
 Durante a unidade 2 do projeto TLT Finanças, a equipe aprofundou a evolução do produto a partir das bases consolidadas na unidade anterior, avançando na organização do backlog, no refinamento das entregas e na validação incremental das funcionalidades. Nesse período, a equipe passou a lidar de forma mais concreta com os desafios de execução do cronograma, integração entre componentes, definição de métricas objetivas e manutenção da rastreabilidade das atividades e decisões do projeto. Assim, além do amadurecimento técnico, a unidade também evidenciou a necessidade de maior disciplina organizacional, documentação mais consistente e acompanhamento mais rigoroso das entregas.
 

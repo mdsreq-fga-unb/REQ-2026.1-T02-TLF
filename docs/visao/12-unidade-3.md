@@ -1,6 +1,6 @@
-# 10 UNIDADE 2
+# 12 UNIDADE 3
 
-## 10.2 Unidade 2
+## 12.2 Unidade 3
 
 Durante a unidade 3 do projeto TLT Finanças, a equipe aprofundou a evolução do produto a partir das bases consolidadas na unidade anterior, avançando na organização do backlog, no refinamento das entregas e na validação incremental das funcionalidades. Nesse período, a equipe passou a lidar de forma mais concreta com os desafios de execução do cronograma, integração entre componentes. Assim, além do amadurecimento técnico, a unidade também evidenciou a necessidade de maior disciplina organizacional e acompanhamento mais rigoroso das entregas.
 
@@ -24,6 +24,6 @@ Durante a unidade 3 do projeto TLT Finanças, a equipe aprofundou a evolução d
    *Desafio*: A organização do trabalho depende de comunicação constante, porque a equipe precisa alinhar decisões técnicas, dividir tarefas, manter coerência entre as entregas de frontend, backend e requisitos, e sanar duvidas de outros membros. Devido a isso, parte do projeto sofreu atrasos devido a falta de comunicação entre os membros do grupo na hora de pedirem auxilio uns dos outros.
    *Ação de melhoria*: Para fortalecer a colaboração, a equipe decidiu manter uma rotina de checkups mais frequente e rigorosa, com o objetivo de mitigar as dificuldades da equipe atraves do compartilhemento
 
-De modo geral, a unidade 2 reforçou que os maiores desafios da equipe não estavam apenas no aspecto técnico, mas também na disciplina de comunicação, no controle do tempo. Essas dificuldades foram parcialmente superadas com colaboração, replanejamento e adaptação contínua, mas também deixaram claro que a equipe precisa manter uma postura mais rigorosa em relação ao acompanhamento das entregas, à documentação, à integração entre as partes do sistema e a comunicação entre os membros.
+De modo geral, a unidade 3 reforçou que os maiores desafios da equipe não estavam apenas no aspecto técnico, mas também na disciplina de comunicação, no controle do tempo. Essas dificuldades foram parcialmente superadas com colaboração, replanejamento e adaptação contínua, mas também deixaram claro que a equipe precisa manter uma postura mais rigorosa em relação ao acompanhamento das entregas, à documentação, à integração entre as partes do sistema e a comunicação entre os membros.
 
 ---

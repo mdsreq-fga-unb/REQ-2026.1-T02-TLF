@@ -8,7 +8,7 @@ import {
   isValidAppearanceColor,
   isValidAppearanceIcon,
   type AppearanceColor,
-} from '@/services/institutions/appearance'
+} from '@/utils/institutions/appearance'
 import type { IconKey } from '@/utils/icons'
 
 const DEFAULT_RETURN_TO = '/instituicao/nova'

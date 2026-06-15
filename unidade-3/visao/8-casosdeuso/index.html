@@ -774,9 +774,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#uc24-apgar-conta-de-instituicao" class="md-nav__link">
+  <a href="#uc24-apagar-conta-de-instituicao" class="md-nav__link">
     <span class="md-ellipsis">
-      UC24 - Apgar Conta de Instituição
+      UC24 - Apagar Conta de Instituição
     </span>
   </a>
   
@@ -1393,9 +1393,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#uc24-apgar-conta-de-instituicao" class="md-nav__link">
+  <a href="#uc24-apagar-conta-de-instituicao" class="md-nav__link">
     <span class="md-ellipsis">
-      UC24 - Apgar Conta de Instituição
+      UC24 - Apagar Conta de Instituição
     </span>
   </a>
   
@@ -1508,7 +1508,11 @@
 <li>Sistema cria a conta.</li>
 <li>Usuário é redirecionado para o login.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li>Não existe</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Usuário ou email já cadastrado: sistema exibe erro.</li>
 <li>Dados inválidos: sistema solicita correção.</li>
@@ -1525,7 +1529,11 @@
 <li>Sistema valida as credenciais.</li>
 <li>Acesso ao sistema é concedido.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li>Não existe</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Credenciais inválidas: erro exibido.</li>
 <li>Falha de conexão: sistema exibe mensagem de erro.</li>
@@ -1543,7 +1551,11 @@
 <li>Usuário acessa o link, informa e confirma nova senha.</li>
 <li>Sistema valida os dados, atualiza a senha e redireciona para o login.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li><strong>Recuperação via SMS:</strong> Se o usuário tiver um telefone vinculado à conta, ele pode optar por receber um código (OTP) por SMS para redefinir a senha dentro do próprio aplicativo, em vez de acessar um link externo por e-mail.</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Email não cadastrado ou senha inválida: sistema exige correção.</li>
 <li>Falha no envio do e-mail ou link inválido/expirado: sistema informa erro ou solicita nova requisição.</li>
@@ -1563,9 +1575,13 @@
 <li>Usuário acessa o painel inicial após login.</li>
 <li>Sistema carrega e exibe saldo total, resumo de receitas e despesas do mês atual.</li>
 <li>Sistema lista as últimas transações registradas.</li>
-<li>Usuário visualiza o saldo total, orçamento mais proximo do limite.</li>
+<li>Usuário visualiza o saldo total e o orçamento mais próximo do limite.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li><strong>Modo Privacidade:</strong> O usuário toca no ícone de "olho" para ocultar os valores numéricos de saldos e transações visíveis na tela, protegendo as informações de terceiros ao seu redor.</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Nenhum dado registrado: sistema exibe painel vazio com mensagem orientativa.</li>
 <li>Falha ao carregar dados: sistema exibe mensagem de erro e botão para tentar novamente.</li>
@@ -1582,7 +1598,11 @@
 <li>Usuário pode aplicar filtros por período, tipo ou categoria.</li>
 <li>Sistema atualiza a lista conforme filtros aplicados.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li><strong>Busca por texto:</strong> O usuário utiliza a barra de pesquisa para digitar o nome de um estabelecimento ou descrição específica, filtrando a lista independentemente das opções de categoria ou período.</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Nenhuma transação encontrada para os filtros: sistema exibe mensagem "Nenhum resultado".</li>
 <li>Falha ao carregar histórico: sistema exibe erro e botão para recarregar.</li>
@@ -1599,7 +1619,11 @@
 <li>Sistema gera e exibe gráficos: saldo total, receitas vs despesas, gastos por categoria.</li>
 <li>Usuário interage com os gráficos (tooltips, zoom, cliques).</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li>Não existe</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Nenhum dado disponível: sistema exibe painel vazio com mensagem orientativa.</li>
 <li>Período sem movimentações: sistema informa ausência de dados para o período.</li>
@@ -1616,7 +1640,11 @@
 <li>Confirma o registro e o sistema salva.</li>
 <li>Saldo é atualizado.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li>Não existe</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Dados incompletos, campos vazios ou valores inválidos: sistema exibe erro.</li>
 <li>Sem conexão com internet: transação é salva offline e sincronizada posteriormente.</li>
@@ -1634,7 +1662,11 @@
 <li>Confirma a edição e o sistema valida os novos dados.</li>
 <li>Sistema salva as alterações e atualiza o saldo.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li>Não existe</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Dados inválidos ou campos vazios: sistema exibe erro e solicita correção.</li>
 <li>Transação não encontrada: sistema exibe mensagem informativa.</li>
@@ -1651,7 +1683,11 @@
 <li>Sistema solicita confirmação da ação e o usuário confirma.</li>
 <li>Sistema remove a transação, atualiza o saldo e exibe mensagem de sucesso.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li><strong>Exclusão em Lote:</strong> O usuário ativa o modo de seleção, marca várias transações simultaneamente e clica em "Excluir" para remover todas de uma só vez com apenas uma confirmação.</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Transação não encontrada ou erro ao excluir: sistema exibe falha.</li>
 <li>Usuário cancela a operação: exclusão interrompida.</li>
@@ -1668,7 +1704,15 @@
 <li>Confirma a criação e o sistema valida.</li>
 <li>Sistema salva a nova categoria e a disponibiliza na lista.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li>
+<ul>
+<li><strong>Criar categoria inline:</strong> Durante o preenchimento, o usuário nota que a categoria desejada não existe e seleciona "Nova Categoria", criando-a diretamente no fluxo do formulário sem perder os dados já inseridos.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Nome de categoria já existente: sistema exibe erro e sugere outro nome.</li>
 <li>Nome vazio ou inválido: sistema solicita preenchimento correto.</li>
@@ -1685,7 +1729,11 @@
 <li>Confirma a edição e o sistema valida.</li>
 <li>Sistema salva as alterações.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li>Não existe</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Novo nome já utilizado por outra categoria: sistema exibe erro.</li>
 <li>Categoria padrão do sistema: edição limitada (apenas cor/ícone).</li>
@@ -1703,7 +1751,11 @@
 <li>Sistema alerta sobre transações que serão desvinculadas e solicita confirmação.</li>
 <li>Usuário confirma e o sistema remove a categoria.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li><strong>Exclusão em cascata:</strong> O sistema oferece a opção "Apagar categoria e todas as transações vinculadas", permitindo que o usuário limpe de uma só vez a classificação e o histórico atrelado a ela.</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Categoria com transações vinculadas: sistema oferece opção de reclassificar para outra categoria.</li>
 <li>Tentativa de excluir categoria padrão: sistema bloqueia a ação.</li>
@@ -1721,7 +1773,11 @@
 <li>Confirma e sistema valida unicidade dentro da categoria pai.</li>
 <li>Sistema salva a subcategoria.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li><strong>Conversão de Categoria Principal:</strong> O usuário seleciona uma Categoria principal existente no painel geral e escolhe "Converter em subcategoria", selecionando em seguida qual será o novo "Pai" daquele agrupamento.</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Subcategoria já existente na mesma categoria pai: sistema exibe erro.</li>
 <li>Nome vazio: sistema solicita preenchimento.</li>
@@ -1738,7 +1794,11 @@
 <li>Altera o nome e confirma.</li>
 <li>Sistema valida e salva.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li><strong>Mudar Categoria Pai:</strong> Durante a edição, o usuário opta por transferir a subcategoria para uma nova Categoria Pai em vez de apenas renomeá-la.</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Novo nome já existe na mesma categoria pai: sistema rejeita.</li>
 <li>Usuário cancela: nome mantido.</li>
@@ -1755,7 +1815,11 @@
 <li>Sistema oferece opção de mover transações para categoria pai ou outra subcategoria.</li>
 <li>Usuário escolhe e confirma; sistema remove a subcategoria.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li>Não existe</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Usuário cancela: subcategoria mantida.</li>
 <li>Erro ao reclassificar: sistema notifica e aborta.</li>
@@ -1771,7 +1835,11 @@
 <li>Define o valor/prazo da meta e os limites de gastos por categoria.</li>
 <li>Sistema salva o registro e inicia o acompanhamento do progresso.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li>Não existe</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Dados ou valores informados são inválidos: sistema exibe erro.</li>
 </ul>
@@ -1787,7 +1855,11 @@
 <li>Confirma e o sistema valida os novos dados.</li>
 <li>Sistema salva e atualiza o acompanhamento.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li><strong>Edição Restrita ao Mês Vigente:</strong> O usuário decide aplicar a alteração dos limites apenas para o mês atual (devido a um gasto atípico), mantendo a regra antiga para os meses futuros.</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Dados inválidos: sistema exibe erro e mantém os valores anteriores.</li>
 <li>Usuário cancela: alterações descartadas.</li>
@@ -1803,7 +1875,11 @@
 <li>Clica em "Excluir" e o sistema solicita confirmação.</li>
 <li>Usuário confirma e o sistema remove o registro.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li>Não existe</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Usuário cancela: item mantido.</li>
 <li>Erro ao excluir: sistema exibe mensagem de falha.</li>
@@ -1820,7 +1896,11 @@
 <li>Confirma e o sistema valida.</li>
 <li>Sistema salva a instituição.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li>Não existe</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Instituição já cadastrada: sistema exibe erro.</li>
 <li>Dados incompletos: sistema solicita preenchimento.</li>
@@ -1836,7 +1916,11 @@
 <li>Clica em "Editar" e modifica os campos permitidos.</li>
 <li>Confirma e o sistema salva as alterações.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li>Não existe</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Nome duplicado com outra instituição: sistema rejeita.</li>
 <li>Usuário cancela: dados originais mantidos.</li>
@@ -1853,7 +1937,11 @@
 <li>Sistema solicita confirmação e usuário confirma.</li>
 <li>Sistema remove a instituição.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li>Não existe</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Instituição com contas vinculadas: sistema bloqueia exclusão e orienta remover contas primeiro.</li>
 <li>Usuário cancela: instituição mantida.</li>
@@ -1870,7 +1958,11 @@
 <li>Confirma e o sistema valida.</li>
 <li>Sistema salva a conta e a disponibiliza no painel.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li>Não existe</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Saldo inicial inválido: sistema exibe erro.</li>
 <li>Instituição não encontrada: sistema orienta cadastrar instituição primeiro.</li>
@@ -1886,14 +1978,18 @@
 <li>Clica em "Editar" e modifica dados como saldo, descrição ou tipo.</li>
 <li>Confirma e o sistema salva as alterações.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li><strong>Reajuste Automático de Saldo:</strong> O usuário não digita o saldo manualmente, optando por inserir o valor atual real de sua conta bancária, e o sistema cria uma transação de "Ajuste de Saldo" para igualar os valores de forma rastreável.</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Saldo editado não pode gerar inconsistências: sistema alerta sobre impacto no histórico.</li>
 <li>Usuário cancela: dados mantidos.</li>
 </ul>
 <hr />
-<h2 id="uc24-apgar-conta-de-instituicao">UC24 - Apgar Conta de Instituição</h2>
-<p><strong>Descrição:</strong> Permite apgar o registro de uma conta financeira registrada.<br />
+<h2 id="uc24-apagar-conta-de-instituicao">UC24 - Apagar Conta de Instituição</h2>
+<p><strong>Descrição:</strong> Permite apagar o registro de uma conta financeira cadastrada.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e conta existente.<br />
 <strong>Pós-condições:</strong> Conta apagada.</p>
 <p><strong>Fluxo Principal:</strong></p>
@@ -1901,9 +1997,13 @@
 <li>Acessa a lista de contas e seleciona a conta.</li>
 <li>Clica em "Apagar".</li>
 <li>Sistema solicita confirmação e usuário confirma.</li>
-<li>Sistema remove a Conta.</li>
+<li>Sistema remove a conta.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li>Não existe</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Usuário cancela: item mantido.</li>
 <li>Erro ao excluir: sistema exibe mensagem de falha.</li>
@@ -1920,7 +2020,11 @@
 <li>Opcionalmente define data de término.</li>
 <li>Confirma e o sistema valida e salva.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li><strong>Recorrência em Dias Úteis:</strong> O usuário assinala a opção de que, caso a data de vencimento caia no fim de semana, o sistema deve registrar e projetar a transação para o próximo dia útil subsequente.</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Frequência inválida ou data de término anterior ao início: sistema exibe erro.</li>
 <li>Valor zerado: sistema rejeita.</li>
@@ -1937,7 +2041,11 @@
 <li>Sistema pergunta se a alteração se aplica a todas as instâncias ou apenas às futuras.</li>
 <li>Usuário escolhe e confirma; sistema salva.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li><strong>Pular Ocorrência:</strong> O usuário opta apenas por pular ou ignorar a ocorrência do mês atual, mantendo as configurações gerais e a programação ativa para o mês subsequente.</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Alteração retroativa pode causar inconsistências: sistema alerta.</li>
 <li>Usuário cancela: recorrência mantida.</li>
@@ -1954,14 +2062,18 @@
 <li>Usuário escolhe manter ou remover instâncias futuras e confirma.</li>
 <li>Sistema processa a exclusão.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li><strong>Pausar Recorrência:</strong> O usuário decide pausar a assinatura indefinidamente, interrompendo as previsões futuras sem remover a configuração matriz para fácil reativação no futuro.</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Usuário cancela: recorrência mantida.</li>
 <li>Erro ao remover instâncias: sistema notifica falha parcial.</li>
 </ul>
 <hr />
 <h2 id="uc28-exportar-relatorios-csv">UC28 - Exportar Relatórios CSV</h2>
-<p><strong>Descrição:</strong> permite exportar relatórios financeiros em formato CSV.<br />
+<p><strong>Descrição:</strong> Permite exportar relatórios financeiros em formato CSV.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e existência de dados registrados.<br />
 <strong>Pós-condições:</strong> Relatório gerado, exibido e disponibilizado para download.</p>
 <p><strong>Fluxo Principal:</strong></p>
@@ -1971,11 +2083,16 @@
 <li>Sistema gera os gráficos/relatório e disponibiliza para download.</li>
 <li>Usuário realiza o download do arquivo.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li><strong>Compartilhamento Direto:</strong> Após a geração do CSV, em vez do download para a pasta local, o sistema abre o modal nativo do dispositivo móvel para compartilhamento (ex: WhatsApp, Email ou Google Drive).</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Período inválido ou sem dados suficientes: sistema solicita correção ou emite aviso.</li>
 <li>Formato não suportado ou erro ao gerar/baixar: sistema informa falha.</li>
 </ul>
+<hr />
 <h2 id="uc29-receber-notificacoes-de-alerta">UC29 - Receber Notificações de Alerta</h2>
 <p><strong>Descrição:</strong> Notificação de limites de gastos atingidos ou próximos de 80%.<br />
 <strong>Pré-condições:</strong> Limite de gastos deve estar previamente definido.<br />
@@ -1987,14 +2104,18 @@
 <li>Usuário recebe a notificação no dispositivo ou na central de notificações do app.</li>
 <li>Usuário pode tocar na notificação para ver detalhes.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li><strong>Central in-app:</strong> O usuário com permissões de Push desativadas (ou no modo Não Perturbe) acessa o histórico de limites estourados através de uma "Central de Avisos" representada pelo ícone de sino dentro do próprio aplicativo.</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Limite não configurado: sistema não envia notificação de limite.</li>
 <li>Permissão de notificação negada: sistema exibe alerta apenas internamente.</li>
 </ul>
 <hr />
 <h2 id="uc30-enviar-feedback">UC30 - Enviar Feedback</h2>
-<p><strong>Descrição:</strong> Permite enviar feedback, reportar erros ou sugerir melhorias para o APP TLT finanças.<br />
+<p><strong>Descrição:</strong> Permite enviar feedback, reportar erros ou sugerir melhorias para o app TLT Finanças.<br />
 <strong>Pré-condições:</strong> Usuário autenticado.<br />
 <strong>Pós-condições:</strong> Feedback registrado e confirmação de envio exibida ao usuário.</p>
 <p><strong>Fluxo Principal:</strong></p>
@@ -2003,7 +2124,11 @@
 <li>Opcionalmente, anexa arquivos/imagens e confirma.</li>
 <li>Sistema valida, registra o feedback e exibe a confirmação de envio.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li><strong>Envio de Log de Diagnóstico Automático:</strong> Após uma falha fatal (crash), ao reiniciar o app o sistema detecta o ocorrido e sugere o envio de um relatório gerado automaticamente contendo os rastros da falha (stack trace), exigindo apenas o consentimento do usuário.</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Descrição vazia ou arquivo grande/inválido: sistema exibe erro.</li>
 <li>Falha no envio: sistema sugere tentar novamente mais tarde.</li>
@@ -2020,7 +2145,11 @@
 <li>Usuário acessa a seção "Dicas" no menu.</li>
 <li>Sistema exibe as dicas geradas.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li><strong>Refinamento do Algoritmo:</strong> O usuário interage com uma dica fornecendo feedback rápido (ex: marcando com botões "Útil" ou "Irrelevante"), treinando o algoritmo e solicitando a substituição imediata da dica por uma nova.</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Dados insuficientes de uso: sistema exibe dicas genéricas de educação financeira.</li>
 <li>Falha ao gerar dicas: sistema convida usuário a retornar mais tarde.</li>
@@ -2036,11 +2165,14 @@
 <li>Sistema carrega os conteúdos, divididos por categorias.</li>
 <li>Usuário seleciona um material e consome o conteúdo exibido.</li>
 </ol>
-<p><strong>Fluxos Exceção:</strong></p>
+<p><strong>Fluxos Alternativos:</strong></p>
+<ul>
+<li><strong>Download para acesso offline:</strong> O usuário clica no ícone de nuvem para baixar um material em PDF, salvando-o no armazenamento local do dispositivo para leitura sem conexão no futuro.</li>
+</ul>
+<p><strong>Fluxos de Exceção:</strong></p>
 <ul>
 <li>Falha de conexão ou conteúdo indisponível/link inválido: sistema exibe erro ou retorna à lista.</li>
 </ul>
-<hr />
 
 
 

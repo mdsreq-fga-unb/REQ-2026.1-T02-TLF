@@ -13,11 +13,11 @@
 - RF10 – criar uma categoria de transação. (UC10)
 - RF11 – editar uma categoria de transação. (UC11)
 - RF12 – excluir uma categoria de transação. (UC12)
-- RF16 – criar uma meta ou orçamento. (UC16)
-- RF17 – editar uma meta ou orçamento. (UC17)
-- RF18 – excluir uma meta ou orçamento. (UC18)
+- RF16 – criar uma orçamento. (UC16)
+- RF17 – editar uma orçamento. (UC17)
+- RF18 – excluir uma orçamento. (UC18)
 - RNF02 – O acesso às funcionalidades deve ser restrito a usuários autenticados.
-- RNF10 – Os dados pessoais do usuário devem ser armazenados de forma criptografada no servidor.
+- RNF09 – Os dados pessoais do usuário devem ser armazenados de forma criptografada no servidor.
 
 ## Should Have
 
@@ -25,13 +25,12 @@
 - RF25 – cadastrar uma transação recorrente. (UC25)
 - RF26 – editar uma transação recorrente. (UC26)
 - RF27 – excluir uma transação recorrente. (UC27)
-- RF29 – notificar quando um limite for atingido ou estiver próximo. (UC29)
-- RNF01 – As senhas devem atender a critérios mínimos de complexidade.
-- RNF03 – exibir um menu principal de navegação.
-- RNF04 – As mensagens de erro devem ser orientativas e claras.
-- RNF06 – O sistema deve funcionar nos principais sistemas operacionais móveis Android.
-- RNF08 – O sistema deve continuar útil em ambientes com internet instável ou indisponível, preservando a funcionalidade de registro financeiro básico.
-- RNF12 – O sistema deve sincronizar automaticamente com o servidor as transações registradas offline assim que a conexão com a internet for restabelecida.
+- RF29 – notificar quando um limite for atingido ou estiver próximo de 80%. (UC29)
+- RNF01 – As senhas devem atender a critérios mínimos de complexidade de acordo com uma pontuação acima de 2 na ZXCVBN.
+- RNF03 – exibir um menu principal de navegação na área inicial.
+- RNF05 – O sistema deve funcionar nos principais sistemas operacionais móveis Android 7.0 (API 24) ou superior.
+- RNF07 – O sistema deve continuar útil em ambientes com internet instável ou indisponível, preservando a funcionalidade de registro financeiro básico.
+- RNF11 – O sistema deve sincronizar automaticamente com o servidor as transações registradas offline assim que a conexão com a internet for restabelecida.
 
 ## Could Have
 
@@ -44,14 +43,14 @@
 - RF22 – registrar uma conta financeira. (UC22)
 - RF23 – editar de uma conta financeira. (UC23)
 - RF24 – excluir uma conta financeira. (UC24)
-- RF30 – permitir o envio de feedback. (UC30)
-- RNF05 – As mensagens de erro devem ser exibidas de forma padronizada e legível nas telas do aplicativo móvel.
-- RNF07 – permitir a alteração do tema de visualização.
-- RNF09 – as telas devem ser carregadas em até 3 segundos.
-- RNF11 – O envio de feedback não deve expor, involuntariamente, informações financeiras do usuário.
+- RF30 – permitir o envio de comentarios de feedback. (UC30)
+- RNF04 – As mensagens de erro devem ser exibidas de forma padronizada e legível nas telas do aplicativo móvel.
+- RNF06 – permitir a alteração do tema de visualização entre claro e escuro.
+- RNF08 – as telas devem ser carregadas em até 3 segundos.
+- RNF10 – O envio de feedback não deve expor, involuntariamente, informações do usuário.
 
 ## Won’t Have
 
-- RF28 – Exportar um relatório financeiro. (UC28)
-- RF31 – gerar e exibir dica financeira personalizada. (UC31)
-- RF32 – disponibilizar materiais de educação financeira. (UC32)
+- RF28 – Exportar um relatório financeiro CSV. (UC28)
+- RF31 – gerar e exibir dica financeira personalizada com IA. (UC31)
+- RF32 – disponibilizar PDFs de educação financeira. (UC32)

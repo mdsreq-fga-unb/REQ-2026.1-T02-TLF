@@ -94,4 +94,35 @@ Com base no cenário de alto endividamento e na carência de educação financei
 
 - **Previsibilidade**: Capacidade de criar metas e limites de gastos, proporcionando uma visão exata do fluxo de caixa e planejamento mensal.
 
+## 2.8 Intervenção Social
+
+### Impactos Esperados
+
+- **Maior organização financeira**: Espera-se que os usuários consigam acompanhar receitas, despesas e saldo de maneira mais estruturada, reduzindo o descontrole financeiro cotidiano.
+
+- **Aumento da consciência financeira**: A visualização consolidada de gastos, histórico e gráficos pode estimular uma maior compreensão sobre hábitos de consumo e padrões de despesas.
+
+- **Redução de endividamento e esquecimentos**: O registro contínuo de transações e o acompanhamento do fluxo de caixa podem auxiliar na redução de atrasos em pagamentos, juros e parcelas não planejadas.
+
+- **Maior previsibilidade financeira**: A organização por metas, categorias e períodos pode contribuir para o planejamento mensal e a tomada de decisões financeiras mais conscientes.
+
+- **Inclusão digital e acessibilidade**: O funcionamento offline, a interface simplificada e a gratuidade da plataforma ampliam o acesso para usuários com limitações de conectividade, baixa renda ou pouca familiaridade com tecnologias financeiras.
+
+- **Apoio à autonomia do usuário**: A ferramenta busca fortalecer a capacidade do usuário de gerir suas próprias finanças sem depender exclusivamente de planilhas complexas ou acompanhamento externo.
+
+### Efeitos Emergentes
+
+- **Abandono progressivo do uso**: Existe o risco de usuários deixarem de utilizar a aplicação após um período inicial de engajamento, reduzindo os benefícios esperados.
+
+- **Baixa adesão às rotinas de registro**: Como o sistema depende do registro frequente das movimentações, a falta de disciplina contínua pode comprometer a qualidade das análises e relatórios.
+
+- **Subutilização de funcionalidades analíticas**: Usuários com baixa educação financeira podem utilizar apenas funções básicas, deixando de aproveitar relatórios, metas e gráficos.
+
+- **Frustração por resultados não imediatos**: Alguns usuários podem esperar mudanças financeiras rápidas e perder motivação caso os benefícios dependam de acompanhamento contínuo e mudança de hábitos.
+
+- **Problemas de confiança e privacidade**: Pode haver resistência relacionada ao armazenamento de informações financeiras pessoais, exigindo clareza sobre segurança e proteção de dados.
+
+- **Dependência de sincronização offline/online**: Falhas ou inconsistências na sincronização podem afetar a percepção de confiabilidade do sistema e gerar receio no uso contínuo.
+
+- **Mudanças comportamentais inesperadas**: O acompanhamento constante dos gastos pode gerar maior consciência financeira, mas também ansiedade ou excesso de controle em determinados perfis de usuário.
 ---

@@ -11,6 +11,7 @@
 ## UC01 - Cadastrar Usuário
 
 **Descrição:** Permite ao usuário criar uma conta no sistema.  
+**Pré-condições:** Usuário não deve estar cadastrado.  
 **Pós-condições:** Conta criada com sucesso.
 
 **Fluxo Principal:**
@@ -22,7 +23,7 @@
 5. Sistema cria a conta.
 6. Usuário é redirecionado para o login.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Usuário ou email já cadastrado: sistema exibe erro.
 - Dados inválidos: sistema solicita correção.
@@ -42,7 +43,7 @@
 3. Sistema valida as credenciais.
 4. Acesso ao sistema é concedido.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Credenciais inválidas: erro exibido.
 - Falha de conexão: sistema exibe mensagem de erro.
@@ -63,7 +64,7 @@
 4. Usuário acessa o link, informa e confirma nova senha.
 5. Sistema valida os dados, atualiza a senha e redireciona para o login.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Email não cadastrado ou senha inválida: sistema exige correção.
 - Falha no envio do e-mail ou link inválido/expirado: sistema informa erro ou solicita nova requisição.
@@ -86,9 +87,9 @@
 1. Usuário acessa o painel inicial após login.
 2. Sistema carrega e exibe saldo total, resumo de receitas e despesas do mês atual.
 3. Sistema lista as últimas transações registradas.
-4. Usuário visualiza as informações principais.
+4. Usuário visualiza o saldo total, orçamento mais proximo do limite.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Nenhum dado registrado: sistema exibe painel vazio com mensagem orientativa.
 - Falha ao carregar dados: sistema exibe mensagem de erro e botão para tentar novamente.
@@ -108,7 +109,7 @@
 3. Usuário pode aplicar filtros por período, tipo ou categoria.
 4. Sistema atualiza a lista conforme filtros aplicados.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Nenhuma transação encontrada para os filtros: sistema exibe mensagem "Nenhum resultado".
 - Falha ao carregar histórico: sistema exibe erro e botão para recarregar.
@@ -128,7 +129,7 @@
 3. Sistema gera e exibe gráficos: saldo total, receitas vs despesas, gastos por categoria.
 4. Usuário interage com os gráficos (tooltips, zoom, cliques).
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Nenhum dado disponível: sistema exibe painel vazio com mensagem orientativa.
 - Período sem movimentações: sistema informa ausência de dados para o período.
@@ -148,7 +149,7 @@
 3. Confirma o registro e o sistema salva.
 4. Saldo é atualizado.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Dados incompletos, campos vazios ou valores inválidos: sistema exibe erro.
 - Sem conexão com internet: transação é salva offline e sincronizada posteriormente.
@@ -169,7 +170,7 @@
 4. Confirma a edição e o sistema valida os novos dados.
 5. Sistema salva as alterações e atualiza o saldo.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Dados inválidos ou campos vazios: sistema exibe erro e solicita correção.
 - Transação não encontrada: sistema exibe mensagem informativa.
@@ -189,7 +190,7 @@
 2. Sistema solicita confirmação da ação e o usuário confirma.
 3. Sistema remove a transação, atualiza o saldo e exibe mensagem de sucesso.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Transação não encontrada ou erro ao excluir: sistema exibe falha.
 - Usuário cancela a operação: exclusão interrompida.
@@ -209,7 +210,7 @@
 3. Confirma a criação e o sistema valida.
 4. Sistema salva a nova categoria e a disponibiliza na lista.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Nome de categoria já existente: sistema exibe erro e sugere outro nome.
 - Nome vazio ou inválido: sistema solicita preenchimento correto.
@@ -229,7 +230,7 @@
 3. Confirma a edição e o sistema valida.
 4. Sistema salva as alterações.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Novo nome já utilizado por outra categoria: sistema exibe erro.
 - Categoria padrão do sistema: edição limitada (apenas cor/ícone).
@@ -250,7 +251,7 @@
 3. Sistema alerta sobre transações que serão desvinculadas e solicita confirmação.
 4. Usuário confirma e o sistema remove a categoria.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Categoria com transações vinculadas: sistema oferece opção de reclassificar para outra categoria.
 - Tentativa de excluir categoria padrão: sistema bloqueia a ação.
@@ -271,7 +272,7 @@
 3. Confirma e sistema valida unicidade dentro da categoria pai.
 4. Sistema salva a subcategoria.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Subcategoria já existente na mesma categoria pai: sistema exibe erro.
 - Nome vazio: sistema solicita preenchimento.
@@ -291,7 +292,7 @@
 3. Altera o nome e confirma.
 4. Sistema valida e salva.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Novo nome já existe na mesma categoria pai: sistema rejeita.
 - Usuário cancela: nome mantido.
@@ -311,14 +312,14 @@
 3. Sistema oferece opção de mover transações para categoria pai ou outra subcategoria.
 4. Usuário escolhe e confirma; sistema remove a subcategoria.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Usuário cancela: subcategoria mantida.
 - Erro ao reclassificar: sistema notifica e aborta.
 
 ---
 
-## UC16 - Criar Orçamento/Metas
+## UC16 - Criar Orçamento
 
 **Descrição:** Permite criar objetivos financeiros e definir metas/limites de gastos mensais.  
 **Pré-condições:** Usuário autenticado.  
@@ -330,13 +331,13 @@
 2. Define o valor/prazo da meta e os limites de gastos por categoria.
 3. Sistema salva o registro e inicia o acompanhamento do progresso.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Dados ou valores informados são inválidos: sistema exibe erro.
 
 ---
 
-## UC17 - Editar Orçamento/Metas
+## UC17 - Editar Orçamento
 
 **Descrição:** Permite ao usuário modificar metas financeiras e limites de gastos existentes.  
 **Pré-condições:** Usuário autenticado e existência de pelo menos uma meta ou orçamento cadastrado.  
@@ -349,14 +350,14 @@
 3. Confirma e o sistema valida os novos dados.
 4. Sistema salva e atualiza o acompanhamento.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Dados inválidos: sistema exibe erro e mantém os valores anteriores.
 - Usuário cancela: alterações descartadas.
 
 ---
 
-## UC18 - Apagar Orçamento/Metas
+## UC18 - Apagar Orçamento
 
 **Descrição:** Permite ao usuário remover um planejamento financeiro ou meta do sistema.  
 **Pré-condições:** Usuário autenticado e existência de meta ou orçamento.  
@@ -368,7 +369,7 @@
 2. Clica em "Excluir" e o sistema solicita confirmação.
 3. Usuário confirma e o sistema remove o registro.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Usuário cancela: item mantido.
 - Erro ao excluir: sistema exibe mensagem de falha.
@@ -388,7 +389,7 @@
 3. Confirma e o sistema valida.
 4. Sistema salva a instituição.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Instituição já cadastrada: sistema exibe erro.
 - Dados incompletos: sistema solicita preenchimento.
@@ -407,7 +408,7 @@
 2. Clica em "Editar" e modifica os campos permitidos.
 3. Confirma e o sistema salva as alterações.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Nome duplicado com outra instituição: sistema rejeita.
 - Usuário cancela: dados originais mantidos.
@@ -427,7 +428,7 @@
 3. Sistema solicita confirmação e usuário confirma.
 4. Sistema remove a instituição.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Instituição com contas vinculadas: sistema bloqueia exclusão e orienta remover contas primeiro.
 - Usuário cancela: instituição mantida.
@@ -447,7 +448,7 @@
 3. Confirma e o sistema valida.
 4. Sistema salva a conta e a disponibiliza no painel.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Saldo inicial inválido: sistema exibe erro.
 - Instituição não encontrada: sistema orienta cadastrar instituição primeiro.
@@ -466,7 +467,7 @@
 2. Clica em "Editar" e modifica dados como saldo, descrição ou tipo.
 3. Confirma e o sistema salva as alterações.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Saldo editado não pode gerar inconsistências: sistema alerta sobre impacto no histórico.
 - Usuário cancela: dados mantidos.
@@ -486,7 +487,7 @@
 3. Sistema solicita confirmação e usuário confirma.
 4. Sistema remove a Conta.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Usuário cancela: item mantido.
 - Erro ao excluir: sistema exibe mensagem de falha.
@@ -506,7 +507,7 @@
 3. Opcionalmente define data de término.
 4. Confirma e o sistema valida e salva.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Frequência inválida ou data de término anterior ao início: sistema exibe erro.
 - Valor zerado: sistema rejeita.
@@ -522,11 +523,11 @@
 **Fluxo Principal:**
 
 1. Acessa lista de recorrências e seleciona a desejada.
-2. Clica em "Editar" e modifica os campos.
+2. Clica em "Editar" e modifica os campos valor, tipo, categoria, frequência (diária, semanal, mensal, anual) e data de início.
 3. Sistema pergunta se a alteração se aplica a todas as instâncias ou apenas às futuras.
 4. Usuário escolhe e confirma; sistema salva.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Alteração retroativa pode causar inconsistências: sistema alerta.
 - Usuário cancela: recorrência mantida.
@@ -542,49 +543,49 @@
 **Fluxo Principal:**
 
 1. Acessa lista de recorrências e seleciona a recorrência.
-2. Clica em "Excluir" e sistema pergunta sobre transações futuras já geradas.
+2. Clica em "Excluir" e sistema pergunta como lidar com transações já geradas, se mantem ou remove todas.
 3. Usuário escolhe manter ou remover instâncias futuras e confirma.
 4. Sistema processa a exclusão.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Usuário cancela: recorrência mantida.
 - Erro ao remover instâncias: sistema notifica falha parcial.
 
 ---
 
-## UC28 - Exportar Relatórios
+## UC28 - Exportar Relatórios CSV
 
-**Descrição:** Apresenta gráficos/análises e permite exportar relatórios financeiros em formatos como PDF ou CSV.  
+**Descrição:** permite exportar relatórios financeiros em formato CSV.  
 **Pré-condições:** Usuário autenticado e existência de dados registrados.  
 **Pós-condições:** Relatório gerado, exibido e disponibilizado para download.
 
 **Fluxo Principal:**
 
-1. Acessa a área de relatórios e seleciona período/filtros.
+1. Acessa a área de relatórios.
 2. Escolhe o formato de exportação e confirma.
-3. Sistema gera os gráficos/relatório e disponibiliza para visualização ou download.
+3. Sistema gera os gráficos/relatório e disponibiliza para download.
 4. Usuário realiza o download do arquivo.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Período inválido ou sem dados suficientes: sistema solicita correção ou emite aviso.
 - Formato não suportado ou erro ao gerar/baixar: sistema informa falha.
 
 ## UC29 - Receber Notificações de Alerta
 
-**Descrição:** Notificação de limites de gastos atingidos ou próximos do limite.  
+**Descrição:** Notificação de limites de gastos atingidos ou próximos de 80%.  
 **Pré-condições:** Limite de gastos deve estar previamente definido.  
 **Pós-condições:** Alertas enviados ao usuário por meio de notificações push ou dentro do sistema.
 
 **Fluxo Principal:**
 
 1. Sistema monitora os gastos do usuário em relação aos limites definidos.
-2. Quando um limite é atingido ou está próximo, o sistema gera um alerta.
+2. Quando um limite é atingido ou está próximo de 80%, o sistema gera um alerta.
 3. Usuário recebe a notificação no dispositivo ou na central de notificações do app.
 4. Usuário pode tocar na notificação para ver detalhes.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Limite não configurado: sistema não envia notificação de limite.
 - Permissão de notificação negada: sistema exibe alerta apenas internamente.
@@ -593,8 +594,8 @@
 
 ## UC30 - Enviar Feedback
 
-**Descrição:** Permite enviar feedback, reportar erros ou sugerir melhorias.  
-**Pré-condições:** Usuário autenticado e sistema disponível para envio de mensagens.  
+**Descrição:** Permite enviar feedback, reportar erros ou sugerir melhorias para o APP TLT finanças.  
+**Pré-condições:** Usuário autenticado.  
 **Pós-condições:** Feedback registrado e confirmação de envio exibida ao usuário.
 
 **Fluxo Principal:**
@@ -603,7 +604,7 @@
 2. Opcionalmente, anexa arquivos/imagens e confirma.
 3. Sistema valida, registra o feedback e exibe a confirmação de envio.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Descrição vazia ou arquivo grande/inválido: sistema exibe erro.
 - Falha no envio: sistema sugere tentar novamente mais tarde.
@@ -612,8 +613,8 @@
 
 ## UC31 - Visualizar Dicas Financeiras
 
-**Descrição:** Fornecimento de recomendações e dicas financeiras personalizadas com base no comportamento do usuário.  
-**Pré-condições:** Usuário autenticado e dados de uso suficientes para personalização.  
+**Descrição:** Usuário acessa dicas financeiras personalizadas com base no comportamento do usuário.  
+**Pré-condições:** Usuário autenticado.  
 **Pós-condições:** Dicas exibidas ao usuário em área específica.
 
 **Fluxo Principal:**
@@ -623,7 +624,7 @@
 3. Usuário acessa a seção "Dicas" no menu.
 4. Sistema exibe as dicas geradas.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Dados insuficientes de uso: sistema exibe dicas genéricas de educação financeira.
 - Falha ao gerar dicas: sistema convida usuário a retornar mais tarde.
@@ -632,17 +633,17 @@
 
 ## UC32 - Acessar Materiais de Educação Financeira
 
-**Descrição:** Permite acessar uma aba com conteúdos educativos recomendados, como cursos e vídeos.  
+**Descrição:** Permite acessar uma aba com conteúdos educativos recomendados.  
 **Pré-condições:** Autenticação no sistema e conexão ativa com a internet.  
 **Pós-condições:** Materiais visualizados e acesso registrado.
 
 **Fluxo Principal:**
 
 1. No menu principal, seleciona "Materiais de Educação Financeira".
-2. Sistema carrega os conteúdos, divididos por categorias (vídeos, artigos, etc.).
+2. Sistema carrega os conteúdos, divididos por categorias.
 3. Usuário seleciona um material e consome o conteúdo exibido.
 
-**Fluxos Alternativos:**
+**Fluxos Exceção:**
 
 - Falha de conexão ou conteúdo indisponível/link inválido: sistema exibe erro ou retorna à lista.
 

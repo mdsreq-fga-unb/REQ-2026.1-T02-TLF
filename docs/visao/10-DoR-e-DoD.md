@@ -2,7 +2,7 @@
 
 ## 8.1 Definition of Ready (DoR)
 
-1. O item foi apresentado na reunião de planejamento da iteração sem dúvidas em aberto, e sua descrição está registrada na Work Item List com título, contexto de negócio e comportamento esperado preenchidos, de forma que qualquer membro da equipe consiga implementá-lo sem solicitar esclarecimentos adicionais.
+1. O item foi validado pelo cliente para garantir agregue valor ao produto, e apresentado na reunião de planejamento da iteração sem dúvidas em aberto, e sua descrição está registrada na Work Item List com título, contexto de negócio e comportamento esperado preenchidos, de forma que qualquer membro da equipe consiga implementá-lo sem solicitar esclarecimentos adicionais.
 2. Os critérios de aceitação estão escritos de forma objetiva e verificável, permitindo que qualquer membro da equipe confirme seu atendimento de forma independente, sem consultar o responsável pelo item.
 3. A equipe avaliou coletivamente que o item é realizável dentro da iteração corrente de sete dias, considerando os demais itens planejados e a distribuição de papéis da equipe.
 4. As dependências técnicas do item foram identificadas, incluindo configurações de Supabase Auth, schemas do banco de dados via Prisma, endpoints de API e comportamento esperado do WatermelonDB quando aplicável, e estão disponíveis ou têm data de disponibilidade confirmada dentro da iteração.
@@ -15,7 +15,7 @@
 
 Uma funcionalidade é considerada concluída quando todos os critérios abaixo forem satisfeitos:
 
-1. O código foi implementado conforme os critérios de aceitação definidos no DoR e atende ao comportamento esperado descrito no requisito funcional correspondente.
+1. O código foi implementado conforme os critérios de aceitação definidos no DoR e atende ao comportamento esperado descrito no Caso de Uso correspondente.
 2. Foram escritos testes unitários com Jest cobrindo os cenários principais e os casos de borda da funcionalidade, com cobertura mínima de 70% nas camadas de negócio, services e controllers no backend; hooks e funções utilitárias no frontend, excluindo componentes de interface de usuário.
 3. O código passou por revisão de ao menos um outro membro da equipe via Pull Request no GitHub e foi aprovado antes do merge na branch principal.
 4. Quando aplicável, os endpoints de backend criados ou alterados pela funcionalidade estão documentados e atualizados no Swagger, com descrição dos parâmetros, corpos de requisição e respostas possíveis.

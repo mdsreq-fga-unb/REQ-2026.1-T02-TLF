@@ -86,15 +86,16 @@ export function TransactionForm({ title, mode, initialValues, onSuccess }: Props
           <FormField
             icon={CreditCard}
             label={form.type === 'TRANSFER' ? 'De Conta' : 'Conta'}
-            value={selectedAccount?.label ?? ''}
+            value={selectedAccount?.label ?? 'Selecionar...'}
             onPress={() => setShowAccountPicker(true)}
+            error={form.submitAttempted ? form.errors.account : undefined}
           />
 
           {form.type === 'TRANSFER' && (
             <FormField
               icon={Landmark}
               label="Para Conta"
-              value={selectedDestination?.label ?? ''}
+              value={selectedDestination?.label ?? 'Selecionar...'}
               onPress={() => setShowDestinationPicker(true)}
               error={form.submitAttempted ? form.errors.destinationAccount : undefined}
             />

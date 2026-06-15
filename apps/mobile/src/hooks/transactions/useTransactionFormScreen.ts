@@ -50,7 +50,7 @@ export function useTransactionFormScreen({
   const selectedDestination = ACCOUNTS.find((account) => account.id === form.destinationAccountId)
   const selectedCategory = categories.find((category) => category.id === form.categoryId)
   const destinationOptions = useMemo(
-    () => ACCOUNTS.filter((account) => account.id !== form.accountId),
+    () => ACCOUNTS.filter((account) => account.id !== (form.accountId || null)),
     [form.accountId],
   )
 

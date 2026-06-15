@@ -19,9 +19,9 @@ export type TransactionInitialValues = {
 export function useTransactionForm(initialValues?: TransactionInitialValues) {
   const [type, setType] = useState<TransactionType>(initialValues?.type ?? 'EXPENSE')
   const [amountCents, setAmountCents] = useState(initialValues?.amountCents ?? 0)
-  const [accountId, setAccountId] = useState(initialValues?.accountId ?? ACCOUNTS[0].id)
+  const [accountId, setAccountId] = useState(initialValues?.accountId || '')
   const [destinationAccountId, setDestinationAccountId] = useState(
-    initialValues?.destinationAccountId ?? ACCOUNTS[1].id,
+    initialValues?.destinationAccountId || '',
   )
   const [categoryId, setCategoryId] = useState<string | undefined>(initialValues?.categoryId)
   const [subcategoryId, setSubcategoryId] = useState(initialValues?.subcategoryId ?? '')
@@ -54,20 +54,21 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
 
   const errors = {
     amount: amountCents === 0 ? TRANSACTION_FORM_ERRORS.amount : undefined,
+    account: accountId === '' ? 'Selecione uma conta' : undefined,
     category:
       type !== 'TRANSFER' && categoryId === '' ? TRANSACTION_FORM_ERRORS.category : undefined,
     destinationAccount:
-      type === 'TRANSFER' && destinationAccountId === accountId
+      type === 'TRANSFER' && (destinationAccountId === '' || destinationAccountId === accountId)
         ? TRANSACTION_FORM_ERRORS.destinationAccount
         : undefined,
   }
 
-  const isValid = !errors.amount && !errors.category && !errors.destinationAccount
+  const isValid = !errors.amount && !errors.account && !errors.category && !errors.destinationAccount
 
   const reset = () => {
     setAmountCents(0)
-    setAccountId(ACCOUNTS[0].id)
-    setDestinationAccountId(ACCOUNTS[1].id)
+    setAccountId('')
+    setDestinationAccountId('')
     setCategoryId('')
     setSubcategoryId('')
     setDate(new Date())

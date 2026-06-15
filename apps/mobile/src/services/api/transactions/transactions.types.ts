@@ -14,6 +14,10 @@ export type TransactionApiItem = {
   status: TransactionStatus
 
   accountId: string
+  account?: {
+    id: string
+    name: string
+  }
 
   categoryId: string
   category?: {
@@ -51,6 +55,10 @@ export type TransactionFilters = {
 
 export type CreateTransactionPayload = {
   accountId: string
+  account?: {
+    id: string
+    name: string
+  }
   categoryId: string
   subCategoryId?: string
 

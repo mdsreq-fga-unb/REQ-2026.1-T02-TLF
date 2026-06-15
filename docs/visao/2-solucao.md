@@ -125,4 +125,5 @@ Com base no cenário de alto endividamento e na carência de educação financei
 - **Dependência de sincronização offline/online**: Falhas ou inconsistências na sincronização podem afetar a percepção de confiabilidade do sistema e gerar receio no uso contínuo.
 
 - **Mudanças comportamentais inesperadas**: O acompanhamento constante dos gastos pode gerar maior consciência financeira, mas também ansiedade ou excesso de controle em determinados perfis de usuário.
+
 ---

@@ -1,8 +1,8 @@
-# 9. Work Item List do produto
+# 11. Work Item List do produto
 
 > Aqui, cabe destacar que todas Requisitos Funcionais, a seguir, são derivadas da lista de Casos de Uso apresentados. Esta é uma lista preliminar e deverá sofrer ajustes sempre que necessário, durante o desenvolvimento do produto do TLT finanças.
 
-## 9.1 WIL Geral
+## 11.1 WIL Geral
 
 A tabela, a seguir, apresenta cada um dos requisitos funcionais (RFs) declarados utilizando a técnica de Casos de Uso (UCs), assim como a rastreabilidade com os requisitos não funcionais (RNFs).
 
@@ -41,7 +41,7 @@ A tabela, a seguir, apresenta cada um dos requisitos funcionais (RFs) declarados
 | RF31 – gerar e exibir dica financeira personalizada.               | UC31        | Permite ao sistema analisar o comportamento financeiro do usuário e exibir dicas personalizadas.           | RNF02, RNF03, RNF04, RNF05, RNF09               |
 | RF32 – disponibilizar materiais de educação financeira.            | UC32        | Permite ao usuário acessar materiais educativos recomendados, como cursos, vídeos e artigos.               | RNF02, RNF03, RNF04, RNF05, RNF06, RNF09        |
 
-## 9.2 Priorização da WIL e escopo
+## 11.2 Priorização da WIL e escopo
 
 Para a priorização do backlog foram utilizados os seguintes critérios:
 

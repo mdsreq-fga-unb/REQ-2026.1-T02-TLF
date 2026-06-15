@@ -88,6 +88,7 @@ export class TransactionsService {
         category: true,
         subCategory: true,
         account: true,
+        destinationAccount: true,
       },
     })
 
@@ -98,6 +99,7 @@ export class TransactionsService {
       description: transaction.description ?? undefined,
       date: transaction.date.toISOString(),
       status: transaction.status ?? undefined,
+      destinationAccountId: transaction.destinationAccountId ?? undefined,
 
       category: {
         id: transaction.category.id,
@@ -205,6 +207,7 @@ export class TransactionsService {
       category: t.category,
       subCategory: t.subCategory ?? undefined,
       account: t.account,
+      destinationAccountId: t.destinationAccountId ?? undefined,
     }))
 
     return {
@@ -228,6 +231,7 @@ export class TransactionsService {
       description: transaction.description ?? undefined,
       date: transaction.date.toISOString(),
       status: transaction.status ?? undefined,
+      destinationAccountId: transaction.destinationAccountId ?? undefined,
 
       category: {
         id: transaction.category.id,
@@ -268,6 +272,7 @@ export class TransactionsService {
       description: updated.description ?? undefined,
       date: updated.date.toISOString(),
       status: updated.status ?? undefined,
+      destinationAccountId: updated.destinationAccountId ?? undefined,
 
       category: {
         id: updated.category.id,
@@ -307,6 +312,7 @@ export class TransactionsService {
       description: deleted.description ?? undefined,
       date: deleted.date.toISOString(),
       status: deleted.status ?? undefined,
+      destinationAccountId: deleted.destinationAccountId ?? undefined,
 
       category: {
         id: deleted.category.id,

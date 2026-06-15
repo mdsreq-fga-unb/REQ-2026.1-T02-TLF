@@ -6,17 +6,12 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/unidade-3/entregas/MoSCoW/</loc>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/unidade-3/entregas/Cobertura/</loc>
          <lastmod>2026-06-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/unidade-3/entregas/apresentacao/</loc>
-         <lastmod>2026-06-15</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/unidade-3/entregas/casosdeuso/</loc>
          <lastmod>2026-06-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -31,12 +26,22 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/unidade-3/visao/10-unidade-1/</loc>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/unidade-3/visao/10-DoR-e-DoD/</loc>
          <lastmod>2026-06-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/unidade-3/visao/10-unidade-2/</loc>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/unidade-3/visao/11-backlog-produto/</loc>
+         <lastmod>2026-06-15</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/unidade-3/visao/12-unidade-1/</loc>
+         <lastmod>2026-06-15</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/unidade-3/visao/12-unidade-2/</loc>
          <lastmod>2026-06-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -71,12 +76,12 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/unidade-3/visao/8-DoR-e-DoD/</loc>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/unidade-3/visao/8-casosdeuso/</loc>
          <lastmod>2026-06-15</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/unidade-3/visao/9-backlog-produto/</loc>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/unidade-3/visao/9-MoSCoW/</loc>
          <lastmod>2026-06-15</lastmod>
          <changefreq>daily</changefreq>
     </url>

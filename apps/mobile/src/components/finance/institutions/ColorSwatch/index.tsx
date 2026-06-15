@@ -1,5 +1,5 @@
 import { Pressable, View } from 'react-native'
-import type { AppearanceColor } from '@/services/institutions/appearance'
+import type { AppearanceColor } from '@/utils/institutions/appearance'
 import { styles } from './style'
 
 type Props = {

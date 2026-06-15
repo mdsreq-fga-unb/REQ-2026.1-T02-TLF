@@ -146,19 +146,19 @@ Reunião com a equipe
 
 [Assista à reunião com a equipe](https://youtu.be/-eTuWqAb1cc)
 
-Reunião com o Cliente - ATUALIZAR
+Reunião com o Cliente
 
 <iframe
   width="100%"
   height="500"
-  src="https://www.youtube.com/embed/xdgnHqfKMCQ"
+  src="https://www.youtube.com/embed/9W3T-pLOr3E"
   title="Reunião 23/05/26 - Cliente"
   frameborder="0"
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
   allowfullscreen>
 </iframe>
 
-[Assista à reunião com o cliente](https://youtu.be/xdgnHqfKMCQ)
+[Assista à reunião com o cliente](https://youtu.be/9W3T-pLOr3E)
 
 ## Reunião 30/05/26
 
@@ -176,19 +176,19 @@ Reunião com a equipe
 
 [Assista à reunião com a equipe](https://youtu.be/yKqAJ09onfg)
 
-Reunião com o Cliente - ATUALIZAR
+Reunião com o Cliente
 
 <iframe
   width="100%"
   height="500"
-  src="https://www.youtube.com/embed/xdgnHqfKMCQ"
+  src="https://www.youtube.com/embed/HQuqCY1qNgc"
   title="Reunião 30/05/26 - Cliente"
   frameborder="0"
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
   allowfullscreen>
 </iframe>
 
-[Assista à reunião com o cliente](https://youtu.be/xdgnHqfKMCQ)
+[Assista à reunião com o cliente](https://youtu.be/HQuqCY1qNgc)
 
 ## Reunião 06/06/26
 
@@ -204,21 +204,21 @@ Reunião com a equipe
   allowfullscreen>
 </iframe>
 
-[Assista à reunião com a equipe](https://youtu.be/JmD0sZB5y9s )
+[Assista à reunião com a equipe](https://youtu.be/JmD0sZB5y9s)
 
-Reunião com o Cliente - ATUALIZAR
+Reunião com o Cliente
 
 <iframe
   width="100%"
   height="500"
-  src="https://www.youtube.com/embed/xdgnHqfKMCQ"
+  src="https://www.youtube.com/embed/LvVauA5MBNo"
   title="Reunião 06/06/26 - Cliente"
   frameborder="0"
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
   allowfullscreen>
 </iframe>
 
-[Assista à reunião com o cliente](https://youtu.be/xdgnHqfKMCQ)
+[Assista à reunião com o cliente](https://youtu.be/LvVauA5MBNo)
 
 ## Reunião 13/06/26
 
@@ -236,16 +236,8 @@ Reunião com a equipe
 
 [Assista à reunião com a equipe](https://youtu.be/YqVRmAGLpHo)
 
-Reunião com o Cliente - ATUALIZAR
+Reunião com o Cliente
 
-<iframe
-  width="100%"
-  height="500"
-  src="https://www.youtube.com/embed/xdgnHqfKMCQ"
-  title="Reunião 13/06/26 - Cliente"
-  frameborder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-  allowfullscreen>
-</iframe>
+![Reunião com o Cliente dia 13/06/26](../images/reuniao_13-06-26.png)
 
-[Assista à reunião com o cliente](https://youtu.be/xdgnHqfKMCQ) 
+[Assista à reunião com o cliente](https://youtu.be/xdgnHqfKMCQ)

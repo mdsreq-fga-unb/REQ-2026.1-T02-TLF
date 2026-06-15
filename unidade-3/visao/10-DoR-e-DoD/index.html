@@ -843,6 +843,27 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entregas/prototipo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4-Prototipo
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -912,7 +933,7 @@
 <h1 id="10-dor-e-dod">10. DoR e DoD</h1>
 <h2 id="101-definition-of-ready-dor">10.1 Definition of Ready (DoR)</h2>
 <ol>
-<li>O item foi apresentado na reunião de planejamento da iteração sem dúvidas em aberto, e sua descrição está registrada na Work Item List com título, contexto de negócio e comportamento esperado preenchidos, de forma que qualquer membro da equipe consiga implementá-lo sem solicitar esclarecimentos adicionais.</li>
+<li>O item foi validado pelo cliente para garantir agregue valor ao produto, e apresentado na reunião de planejamento da iteração sem dúvidas em aberto, e sua descrição está registrada na Work Item List com título, contexto de negócio e comportamento esperado preenchidos, de forma que qualquer membro da equipe consiga implementá-lo sem solicitar esclarecimentos adicionais.</li>
 <li>Os critérios de aceitação estão escritos de forma objetiva e verificável, permitindo que qualquer membro da equipe confirme seu atendimento de forma independente, sem consultar o responsável pelo item.</li>
 <li>A equipe avaliou coletivamente que o item é realizável dentro da iteração corrente de sete dias, considerando os demais itens planejados e a distribuição de papéis da equipe.</li>
 <li>As dependências técnicas do item foram identificadas, incluindo configurações de Supabase Auth, schemas do banco de dados via Prisma, endpoints de API e comportamento esperado do WatermelonDB quando aplicável, e estão disponíveis ou têm data de disponibilidade confirmada dentro da iteração.</li>
@@ -924,7 +945,7 @@
 <h2 id="102-definition-of-done-dod">10.2 Definition of Done (DoD)</h2>
 <p>Uma funcionalidade é considerada concluída quando todos os critérios abaixo forem satisfeitos:</p>
 <ol>
-<li>O código foi implementado conforme os critérios de aceitação definidos no DoR e atende ao comportamento esperado descrito no requisito funcional correspondente.</li>
+<li>O código foi implementado conforme os critérios de aceitação definidos no DoR e atende ao comportamento esperado descrito no Caso de Uso correspondente.</li>
 <li>Foram escritos testes unitários com Jest cobrindo os cenários principais e os casos de borda da funcionalidade, com cobertura mínima de 70% nas camadas de negócio, services e controllers no backend; hooks e funções utilitárias no frontend, excluindo componentes de interface de usuário.</li>
 <li>O código passou por revisão de ao menos um outro membro da equipe via Pull Request no GitHub e foi aprovado antes do merge na branch principal.</li>
 <li>Quando aplicável, os endpoints de backend criados ou alterados pela funcionalidade estão documentados e atualizados no Swagger, com descrição dos parâmetros, corpos de requisição e respostas possíveis.</li>

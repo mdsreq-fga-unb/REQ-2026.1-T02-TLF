@@ -999,6 +999,27 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entregas/prototipo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4-Prototipo
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1253,9 +1274,9 @@
 </ul>
 <h3 id="orcamentos-e-metas">Orçamentos e Metas</h3>
 <ul>
-<li><strong>RF16</strong> – criar uma meta ou orçamento. (UC16)</li>
-<li><strong>RF17</strong> – editar uma meta ou orçamento. (UC17)</li>
-<li><strong>RF18</strong> – excluir uma meta ou orçamento. (UC18)</li>
+<li><strong>RF16</strong> – criar uma orçamento. (UC16)</li>
+<li><strong>RF17</strong> – editar uma orçamento. (UC17)</li>
+<li><strong>RF18</strong> – excluir uma orçamento. (UC18)</li>
 </ul>
 <h3 id="instituicoes-financeiras-e-contas">Instituições Financeiras e Contas</h3>
 <ul>
@@ -1274,45 +1295,44 @@
 </ul>
 <h3 id="relatorios-e-exportacao">Relatórios e Exportação</h3>
 <ul>
-<li><strong>RF28</strong> – Exportar um relatório financeiro. (UC28)</li>
+<li><strong>RF28</strong> – Exportar um relatório financeiro CSV. (UC28)</li>
 </ul>
 <h3 id="notificacoes-e-erros">Notificações e Erros</h3>
 <ul>
-<li><strong>RF29</strong> – notificar quando um limite for atingido ou estiver próximo. (UC29)</li>
+<li><strong>RF29</strong> – notificar quando um limite for atingido ou estiver próximo de 80%. (UC29)</li>
 </ul>
 <h3 id="interface-e-configuracoes">Interface e Configurações</h3>
 <ul>
-<li><strong>RF30</strong> – permitir o envio de feedback. (UC30)</li>
+<li><strong>RF30</strong> – permitir o envio de comentarios de feedback. (UC30)</li>
 </ul>
 <h3 id="conteudos-educacionais">Conteúdos Educacionais</h3>
 <ul>
-<li><strong>RF31</strong> – gerar e exibir dica financeira personalizada. (UC31)</li>
-<li><strong>RF32</strong> – disponibilizar materiais de educação financeira. (UC32)</li>
+<li><strong>RF31</strong> – gerar e exibir dica financeira com IA. (UC31)</li>
+<li><strong>RF32</strong> – disponibilizar PDFs de educação financeira. (UC32)</li>
 </ul>
 <h2 id="72-lista-de-requisitos-nao-funcionais">7.2 Lista de Requisitos Não Funcionais</h2>
 <h3 id="seguranca">Segurança</h3>
 <ul>
-<li><strong>RNF01</strong> – As senhas devem atender a critérios mínimos de complexidade.</li>
+<li><strong>RNF01</strong> – As senhas devem atender a critérios mínimos de complexidade de acordo com uma pontuação acima de 2 na ZXCVBN.</li>
 <li><strong>RNF02</strong> – O acesso às funcionalidades deve ser restrito a usuários autenticados.</li>
 </ul>
 <h3 id="usabilidade">Usabilidade</h3>
 <ul>
-<li><strong>RNF03</strong> – exibir um menu principal de navegação.</li>
-<li><strong>RNF04</strong> – As mensagens de erro devem ser orientativas e claras.</li>
-<li><strong>RNF05</strong> – As mensagens de erro devem ser exibidas de forma padronizada e legível nas telas do aplicativo móvel.</li>
-<li><strong>RNF06</strong> – O sistema deve funcionar nos principais sistemas operacionais móveis Android.</li>
-<li><strong>RNF07</strong> – permitir a alteração do tema de visualização.</li>
-<li><strong>RNF08</strong> – O sistema deve continuar útil em ambientes com internet instável ou indisponível, preservando a funcionalidade de registro financeiro básico.</li>
+<li><strong>RNF03</strong> – exibir um menu principal de navegação na área inicial.</li>
+<li><strong>RNF04</strong> – As mensagens de erro devem ser exibidas de forma padronizada e legível nas telas do aplicativo móvel de acordo com padrões da WCAG.</li>
+<li><strong>RNF05</strong> – O sistema deve funcionar nos principais sistemas operacionais móveis Android 7.0 (API 24) ou superior.</li>
+<li><strong>RNF06</strong> – permitir a alteração do tema de visualização entre claro e escuro.</li>
+<li><strong>RNF07</strong> – O sistema deve continuar útil em ambientes com internet instável ou indisponível, preservando a funcionalidade de registro financeiro básico.</li>
 </ul>
 <h3 id="desempenho">Desempenho</h3>
 <ul>
-<li><strong>RNF09</strong> – as telas devem ser carregadas em até 3 segundos.</li>
+<li><strong>RNF08</strong> – as telas devem ser carregadas em até 3 segundos.</li>
 </ul>
 <h3 id="confiabilidade">Confiabilidade</h3>
 <ul>
-<li><strong>RNF10</strong> – Os dados pessoais do usuário devem ser armazenados de forma criptografada no servidor.</li>
-<li><strong>RNF11</strong> – O envio de feedback não deve expor, involuntariamente, informações financeiras do usuário.</li>
-<li><strong>RNF12</strong> – O sistema deve sincronizar automaticamente com o servidor as transações registradas offline assim que a conexão com a internet for restabelecida.</li>
+<li><strong>RNF09</strong> – Os dados pessoais do usuário devem ser armazenados de forma criptografada no servidor.</li>
+<li><strong>RNF10</strong> – O envio de feedback não deve expor, involuntariamente, informações do usuário.</li>
+<li><strong>RNF11</strong> – O sistema deve sincronizar automaticamente com o servidor as transações registradas offline assim que a conexão com a internet for restabelecida.</li>
 </ul>
 <h2 id="73-matriz-sintese-de-rastreabilidade">7.3 Matriz-síntese de rastreabilidade</h2>
 <iframe width="100%" height="500" src="https://miro.com/app/board/uXjVHTxsQHI=/?share_link_id=455679825476" title="Árvore de rastreabilidade no miro" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
@@ -1343,7 +1363,7 @@
 <td>OE4</td>
 <td>CP3</td>
 <td>RF05</td>
-<td>RFN10</td>
+<td>RFN09</td>
 </tr>
 <tr>
 <td>OE2</td>
@@ -1355,19 +1375,19 @@
 <td>OE3</td>
 <td>CP5</td>
 <td>-</td>
-<td>RNF08, RNF12</td>
+<td>RNF07, RNF11</td>
 </tr>
 <tr>
 <td>OE6</td>
 <td>CP6</td>
 <td>-</td>
-<td>RNF06, RNF07, RNF09</td>
+<td>RNF05, RNF06, RNF08</td>
 </tr>
 <tr>
 <td>OE5</td>
 <td>CP7</td>
 <td>-</td>
-<td>RNF01, RNF09</td>
+<td>RNF01, RNF10</td>
 </tr>
 <tr>
 <td>OE3</td>
@@ -1391,7 +1411,7 @@
 <td>OE6</td>
 <td>CP11</td>
 <td>-</td>
-<td>RNF04, RNF05</td>
+<td>RNF04</td>
 </tr>
 </tbody>
 </table>

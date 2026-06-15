@@ -44,10 +44,9 @@ export class TransactionsController {
     description: 'Lista de transações encontrada com sucesso',
   })
   @Get()
-  findAll(@CurrentUser('id') userId: string, @Query() query: FilterTransactionsDto) {
-    return this.transactionsService.findAll(userId, {
-      ...query,
-    })
+  findAll(@CurrentUser('id') userId: string,
+    @Query() query: FilterTransactionsDto) {
+    return this.transactionsService.findAll(userId, query);
   }
 
   @ApiResponse({

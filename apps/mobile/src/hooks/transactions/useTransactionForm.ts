@@ -9,16 +9,20 @@ export type TransactionInitialValues = {
   type?: TransactionType
   amountCents?: number
   accountId?: string
+  destinationAccountId?: string
   categoryId?: string
   subcategoryId?: string
   notes?: string
+  date?: string
 }
 
 export function useTransactionForm(initialValues?: TransactionInitialValues) {
   const [type, setType] = useState<TransactionType>(initialValues?.type ?? 'EXPENSE')
   const [amountCents, setAmountCents] = useState(initialValues?.amountCents ?? 0)
   const [accountId, setAccountId] = useState(initialValues?.accountId ?? ACCOUNTS[0].id)
-  const [destinationAccountId, setDestinationAccountId] = useState(ACCOUNTS[1].id)
+  const [destinationAccountId, setDestinationAccountId] = useState(
+    initialValues?.destinationAccountId ?? ACCOUNTS[1].id,
+  )
   const [categoryId, setCategoryId] = useState<string | undefined>(initialValues?.categoryId)
   const [subcategoryId, setSubcategoryId] = useState(initialValues?.subcategoryId ?? '')
   const [date, setDate] = useState<Date>(() =>

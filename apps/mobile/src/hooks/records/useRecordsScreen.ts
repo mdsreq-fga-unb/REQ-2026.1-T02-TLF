@@ -103,7 +103,11 @@ export function useRecordsScreen() {
         type: transaction.type,
         amount: transaction.amount.toString(),
         categoryId: transaction.categoryId,
+        subcategoryId: transaction.subcategoryId || '',
+        accountId: transaction.accountId,
+        destinationAccountId: transaction.destinationAccountId || '',
         description: transaction.description,
+        date: typeof transaction.date === 'string' ? transaction.date : new Date(transaction.date).toISOString(),
       },
     })
   }, [])

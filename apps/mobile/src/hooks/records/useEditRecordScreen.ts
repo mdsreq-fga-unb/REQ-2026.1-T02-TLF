@@ -17,9 +17,23 @@ export function useEditRecordScreen() {
       type: parseTransactionType(params.type),
       amountCents: parseAmountCents(params.amount),
       categoryId: parseRouteString(params.categoryId),
+      subcategoryId: parseRouteString(params.subcategoryId),
+      accountId: parseRouteString(params.accountId),
+      destinationAccountId: parseRouteString(params.destinationAccountId),
       notes: parseRouteString(params.description),
+      date: parseRouteString(params.date),
     }),
-    [params.id, params.amount, params.categoryId, params.description, params.type],
+    [
+      params.id,
+      params.amount,
+      params.categoryId,
+      params.subcategoryId,
+      params.accountId,
+      params.destinationAccountId,
+      params.description,
+      params.type,
+      params.date,
+    ],
   )
 
   const handleBack = useCallback(() => {

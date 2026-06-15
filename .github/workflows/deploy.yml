@@ -1,6 +1,9 @@
 name: Deploy to GitHub Pages
 
 on:
+  push:
+    branches:
+      - docs/unidade-3
   workflow_dispatch:
     inputs:
       version:
@@ -33,5 +36,5 @@ jobs:
 
       - name: Deploy version with mike
         run: |
-          mike deploy --push --update-aliases "${{ inputs.version }}" latest
+          mike deploy --push --update-aliases "${{ github.event.inputs.version || 'unidade-3' }}" latest
           mike set-default --push latest

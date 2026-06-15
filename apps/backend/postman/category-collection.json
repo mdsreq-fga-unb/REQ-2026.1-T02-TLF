@@ -1,0 +1,199 @@
+{
+  "info": {
+    "name": "TLT Finanças - Category API",
+    "description": "Collection para testar os endpoints de categorias",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "categoryId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. POST /category - Criar categoria",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 201', () => pm.response.to.have.status(201));",
+              "const json = pm.response.json();",
+              "pm.collectionVariables.set('categoryId', json.id);",
+              "pm.test('Tem id', () => pm.expect(json.id).to.exist);",
+              "pm.test('Não expõe userId', () => pm.expect(json.userId).to.be.undefined);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/category",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Saúde\",\n  \"icon\": \"heart\",\n  \"color\": \"#2ECC71\"\n}"
+        }
+      }
+    },
+    {
+      "name": "2. POST /category - Nome duplicado (409)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": ["pm.test('Status 409', () => pm.response.to.have.status(409));"]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/category",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Saúde\",\n  \"icon\": \"heart\",\n  \"color\": \"#2ECC71\"\n}"
+        }
+      }
+    },
+    {
+      "name": "3. POST /category - Dados inválidos (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": ["pm.test('Status 400', () => pm.response.to.have.status(400));"]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/category",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"\",\n  \"icon\": \"heart\",\n  \"color\": \"cor-invalida\"\n}"
+        }
+      }
+    },
+    {
+      "name": "4. GET /category - Listar categorias (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('É array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/category"
+      }
+    },
+    {
+      "name": "5. GET /category/:id - Buscar por ID (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('ID correto', () => pm.expect(pm.response.json().id).to.equal(pm.collectionVariables.get('categoryId')));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/category/{{categoryId}}"
+      }
+    },
+    {
+      "name": "6. GET /category/:id - ID inexistente (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": ["pm.test('Status 404', () => pm.response.to.have.status(404));"]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/category/id-inexistente"
+      }
+    },
+    {
+      "name": "7. PATCH /category/:id - Atualizar (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('Cor atualizada', () => pm.expect(pm.response.json().color).to.equal('#E74C3C'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "url": "{{baseUrl}}/category/{{categoryId}}",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"color\": \"#E74C3C\"\n}"
+        }
+      }
+    },
+    {
+      "name": "8. DELETE /category/:id - Deletar (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('Mensagem correta', () => pm.expect(pm.response.json().message).to.equal('Categoria removida com sucesso'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/category/{{categoryId}}",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        }
+      }
+    },
+    {
+      "name": "9. GET /category/:id - Após deletar (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": ["pm.test('Status 404', () => pm.response.to.have.status(404));"]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/category/{{categoryId}}"
+      }
+    }
+  ]
+}

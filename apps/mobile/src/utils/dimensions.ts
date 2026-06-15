@@ -35,6 +35,8 @@ export const layout = {
 export const iconSize = {
   sm: 18,
   md: 22,
-  lg: 28,
   tab: 26,
+  lg: 28,
+  xlg: 38,
+  xxlg: 50,
 } as const

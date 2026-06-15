@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { router, useLocalSearchParams } from 'expo-router'
 import {
   mockAccounts,
@@ -82,6 +82,7 @@ export function useNovaRecorrencia() {
   const [showAccountPicker, setShowAccountPicker] = useState(false)
   const [showCategoryPicker, setShowCategoryPicker] = useState(false)
   const [showSubcategoryPicker, setShowSubcategoryPicker] = useState(false)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handleKeypad = (key: string) => {
     setAmountCents((prev) => {
@@ -115,11 +116,24 @@ export function useNovaRecorrencia() {
 
   const showSuccessAndGoBack = () => {
     setShowSuccess(true)
-    globalThis.setTimeout(() => {
+    const timeout = globalThis.setTimeout(() => {
       setShowSuccess(false)
       router.back()
     }, 1600)
+
+    timeoutRef.current = timeout
+    if (typeof (timeout as any)?.unref === 'function') {
+      ;(timeout as any).unref()
+    }
   }
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
 
   const handleSave = () => {
     if (!validate()) return

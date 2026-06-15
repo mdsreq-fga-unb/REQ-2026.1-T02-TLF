@@ -39,6 +39,7 @@ android
 /apps/mobile/ios/
 
 # Android / iOS signing and tooling
+android
 .kotlin/
 *.orig.*
 *.jks
@@ -46,6 +47,7 @@ android
 *.p12
 *.key
 *.mobileprovision
+app.json
 
 # Python / MkDocs
 site/

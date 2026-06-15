@@ -20,7 +20,7 @@ type Props = {
   initialValues?: BudgetInitialValues
 }
 
-export default function EditBudgetPage({ initialValues }: Props) {
+export default function EditBudgetScreen({ initialValues }: Props) {
   const theme = useThemeColor()
   const form = useBudgetScreen(initialValues)
   const params = useLocalSearchParams<{ id?: string }>()

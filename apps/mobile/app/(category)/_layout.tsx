@@ -10,7 +10,7 @@ import { TouchableOpacity, useColorScheme } from 'react-native'
 
 void SplashScreen.preventAutoHideAsync()
 
-export default function BudgetLayout() {
+export default function CategoryLayout() {
   const isDark = useColorScheme() === 'dark'
   const colors = useThemeColor()
 
@@ -49,7 +49,7 @@ export default function BudgetLayout() {
         <Stack.Screen
           name="index"
           options={{
-            title: 'Orçamentos e metas',
+            title: 'Categorias',
 
             headerRight: () => (
               <TouchableOpacity

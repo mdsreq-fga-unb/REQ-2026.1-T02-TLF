@@ -19,11 +19,9 @@ Uma funcionalidade é considerada concluída quando todos os critérios abaixo f
 2. Foram escritos testes unitários com Jest cobrindo os cenários principais e os casos de borda da funcionalidade, com cobertura mínima de 70% nas camadas de negócio, services e controllers no backend; hooks e funções utilitárias no frontend, excluindo componentes de interface de usuário.
 3. O código passou por revisão de ao menos um outro membro da equipe via Pull Request no GitHub e foi aprovado antes do merge na branch principal.
 4. Quando aplicável, os endpoints de backend criados ou alterados pela funcionalidade estão documentados e atualizados no Swagger, com descrição dos parâmetros, corpos de requisição e respostas possíveis.
-5. A suíte de testes unitários existente foi executada após a implementação sem novas falhas; funcionalidades adjacentes sem cobertura automatizada foram verificadas manualmente por ao menos um membro da equipe que não desenvolveu o item.
-6. Quando aplicável, o comportamento offline foi verificado: a funcionalidade opera corretamente sem conexão via WatermelonDB e os dados são sincronizados com o backend após restabelecimento da conexão.
-7. Os dados pessoais e financeiros manipulados pela funcionalidade não são acessíveis sem autenticação ativa via Supabase Auth, não são armazenados em texto puro no banco de dados, não aparecem em logs de console em ambiente de produção e não são transmitidos sem criptografia entre cliente e servidor.
-8. O código foi integrado ao repositório no GitHub com mensagem de commit descritiva, seguindo o padrão de versionamento adotado pela equipe.
-9. O aplicativo compila e executa sem erros ou crashes no ambiente de desenvolvimento, Expo Go ou build de desenvolvimento, após a integração da funcionalidade.
-10. A rastreabilidade do item foi atualizada na Lista de Requisitos de Software do projeto, confirmando que o RF ou RNF correspondente foi implementado conforme declarado, incluindo eventuais ajustes acordados com o cliente durante a iteração.
+5. Quando aplicável, o comportamento offline foi verificado: a funcionalidade opera corretamente sem conexão via WatermelonDB e os dados são sincronizados com o backend após restabelecimento da conexão.
+6. Os dados pessoais e financeiros manipulados pela funcionalidade não são acessíveis sem autenticação ativa via Supabase Auth, não são armazenados em texto puro no banco de dados, não aparecem em logs de console em ambiente de produção e não são transmitidos sem criptografia entre cliente e servidor.
+7. O aplicativo compila e executa sem erros ou crashes no ambiente de desenvolvimento, Expo Go ou build de desenvolvimento, após a integração da funcionalidade.
+8. A rastreabilidade do item foi atualizada na Lista de Requisitos de Software do projeto, confirmando que o RF ou RNF correspondente foi implementado conforme declarado, incluindo eventuais ajustes acordados com o cliente durante a iteração.
 
 ---

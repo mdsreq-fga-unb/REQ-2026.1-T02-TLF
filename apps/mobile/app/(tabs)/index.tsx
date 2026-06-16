@@ -38,7 +38,7 @@ export default function home() {
         <ThemedContainer style={{ marginTop: 70, alignItems: 'flex-start', gap: 10 }}>
           <ThemedText text="Saldo na conta" variant="label" tone="muted" />
           {/* TODO: Adaptar quando registro for integrado */}
-          <ThemedText text="R$50.000,00" variant="display" style={{ textAlign: 'left' }} />
+          <ThemedText text="R$ 3.944,75" variant="display" style={{ textAlign: 'left' }} />
         </ThemedContainer>
         {budget ? (
           <BudgetItem
@@ -79,8 +79,7 @@ export default function home() {
             <ThemedText text="Estatisticas" variant="bodyLarge" style={{ textAlign: 'left' }} />
             <TouchableOpacity
               activeOpacity={0.85}
-              // TODO: Ajustar rota para categorias ou historico
-              // onPress={() => router.push('/(budget)/')}
+              onPress={() => router.push('/records')}
               style={[styles.button, { backgroundColor: colors.primary }]}
             >
               <ThemedText text="Ver mais" variant="button" style={{ color: colors.onPrimary }} />
@@ -116,7 +115,7 @@ export default function home() {
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <ThemedText text="Total Gasto" variant="label" tone="muted" />
                 <ThemedText
-                  text="R$ 5.350"
+                  text="R$ 2.355,75"
                   variant="headline"
                   style={{ fontWeight: 'bold', marginTop: 2 }}
                 />

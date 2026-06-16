@@ -1,5 +1,5 @@
 import { Pressable, View } from 'react-native'
-import { UserRound, CircleQuestionMark } from 'lucide-react-native'
+import { UserRound, Bell } from 'lucide-react-native'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { resolveTextTone, TextTone } from '@/utils/textTone'
 import { iconSize } from '@/utils/dimensions'
@@ -22,7 +22,7 @@ export function ThemedHeader({ iconTone = 'default' }: props) {
       </Pressable>
       {/* TODO: add caminho para assistencia ou perguntas frequentes ou algo nesse sentido */}
       <Pressable>
-        <CircleQuestionMark color={iconColor} size={iconSize.lg} />
+        <Bell color={iconColor} size={iconSize.lg} />
       </Pressable>
     </View>
   )

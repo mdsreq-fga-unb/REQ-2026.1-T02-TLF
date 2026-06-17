@@ -84,10 +84,7 @@ describe('TransactionsController', () => {
 
       await controller.findAll('user-1', query as any)
 
-      expect(transactionsServiceMock.findAll).toHaveBeenCalledWith('user-1', {
-        categoryId: 'cat-1',
-        type: TransactionType.INCOME,
-      })
+      expect(transactionsServiceMock.findAll).toHaveBeenCalledWith('user-1', query)
     })
   })
 

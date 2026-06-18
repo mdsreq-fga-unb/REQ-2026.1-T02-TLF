@@ -4,7 +4,6 @@ import * as Notifications from 'expo-notifications'
 
 export async function triggerNotification(input: NotificationInput) {
   const existingNotification = await notificationQueries.getByFilters({
-    userId: input.userId,
     type: input.type,
     isRead: false,
   })

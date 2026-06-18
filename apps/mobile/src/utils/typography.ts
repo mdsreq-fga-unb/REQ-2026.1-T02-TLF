@@ -31,7 +31,7 @@ export const typography = {
   } satisfies TextStyle,
   label: {
     fontFamily: m.medium,
-    fontSize: 14,
+    fontSize: 15,
     lineHeight: 18,
   } satisfies TextStyle,
   caption: {

@@ -1,7 +1,7 @@
 import { Database } from '@nozbe/watermelondb'
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite'
 import { schema } from './schema'
-import { migrations } from './migration'
+import migrations from './migration'
 import { Transaction } from './models/transaction'
 import { Notification } from './models/notification'
 import { Category } from './models/category'

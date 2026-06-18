@@ -6,6 +6,7 @@ export async function triggerNotification(input: NotificationInput) {
   const existingNotification = await notificationQueries.getByFilters({
     type: input.type,
     isRead: false,
+    referenceId: input.referenceId,
   })
 
   if (existingNotification.length > 0) return

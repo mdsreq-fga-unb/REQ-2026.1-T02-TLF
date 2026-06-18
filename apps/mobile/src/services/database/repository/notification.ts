@@ -26,6 +26,7 @@ export type NotificationUpdateInput = Partial<NotificationInput>
 export type NotificationFilters = {
   type?: NotificationType
   isRead?: boolean
+  referenceId?: string
 }
 
 export type NotificationFilter = 'all' | 'unread' | 'read'
@@ -81,6 +82,7 @@ export const getNotificationsByFilters = async (filters: NotificationFilters) =>
 
   if (filters.type) conditions.push(Q.where('type', filters.type))
   if (filters.isRead !== undefined) conditions.push(Q.where('is_read', filters.isRead))
+  if (filters.referenceId) conditions.push(Q.where('reference_id', filters.referenceId))
 
   return notificationsCollection()
     .query(...conditions)

@@ -12,6 +12,7 @@ type FieldDef = {
   local: string
   remote: string
   transform?: 'timestamp'
+  pullOnly?: boolean
 }
 
 type TableDef = {
@@ -58,7 +59,9 @@ const TABLE_DEFS: Record<string, TableDef> = {
     fields: [
       { local: 'name', remote: 'name' },
       { local: 'color', remote: 'color' },
+      { local: 'icon', remote: 'icon' },
       { local: 'logo_url', remote: 'logoUrl' },
+      { local: 'user_id', remote: 'userId', pullOnly: true },
       { local: 'created_at', remote: 'createdAt', transform: 'timestamp' },
       { local: 'updated_at', remote: 'updatedAt', transform: 'timestamp' },
     ],
@@ -201,7 +204,7 @@ const mapPushRecord = (record: SyncRecord, tableDef: TableDef): SyncRecord => {
     if (key === 'id' || key.startsWith('_')) continue
 
     const field = localIndex[key]
-    if (!field) continue
+    if (!field || field.pullOnly) continue
 
     result[field.remote] = applyPushValue(value, field)
   }

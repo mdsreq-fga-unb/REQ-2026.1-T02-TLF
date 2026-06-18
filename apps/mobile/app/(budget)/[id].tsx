@@ -13,7 +13,7 @@ import { View, ScrollView } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
-import { AlignEndHorizontal, Bookmark } from 'lucide-react-native'
+import { AlignEndHorizontal, Bookmark, CircleDollarSign } from 'lucide-react-native'
 
 type Props = {
   title?: string
@@ -69,11 +69,10 @@ export default function EditBudgetPage({ initialValues }: Props) {
               label="Categoria"
               value={selectedCategory?.label ?? ''}
               onPress={() => form.setShowCategoryPicker(true)}
-              error={form.submitAttempted ? form.errors.category : undefined}
             />
 
             <FormField
-              icon="attach-money"
+              icon={CircleDollarSign}
               label={form.type == 'BUDGET' ? 'Limite' : 'Meta'}
               value={form.amount}
               onPress={() => {}}
@@ -107,14 +106,12 @@ export default function EditBudgetPage({ initialValues }: Props) {
             gap: 10,
           }}
         >
-          {form.submitError && (
+          {form.feedbackMessage && (
             <View
               style={{ flexDirection: 'row', alignItems: 'center', gap: 8, alignSelf: 'stretch' }}
             >
               <MaterialIcons name="error-outline" size={18} color="#f2685a" />
-              {form.submitAttempted && form.errors.category && (
-                <ThemedText children text={form.errors.category} tone="warning" />
-              )}
+              <ThemedText children text={form.feedbackMessage} tone="warning" />
             </View>
           )}
           <ThemedButton

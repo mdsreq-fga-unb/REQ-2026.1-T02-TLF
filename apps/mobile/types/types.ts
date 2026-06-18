@@ -8,8 +8,9 @@ export type SummaryData = {
 
 export type CategoryData = {
   name: string
-  icon: string
+  icon?: string
   color: string
+  amount: number
 }
 
 export type TransactionListItem = {
@@ -19,6 +20,17 @@ export type TransactionListItem = {
   type: 'EXPENSE' | 'INCOME' | 'TRANSFER'
   date: Date | number | string
   amount: number
+}
+
+export type InstitutionListItem = {
+  id: string
+  name: string
+  color: string
+  icon?: string
+  iconColor?: string
+  logoUrl?: string | null
+  /** Nº de contas vinculadas. Quando > 0, a exclusão é bloqueada. */
+  accountsCount?: number
 }
 
 export type BudgetType = 'BUDGET' | 'GOAL'

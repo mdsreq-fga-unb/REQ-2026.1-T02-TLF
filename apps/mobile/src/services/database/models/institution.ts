@@ -1,5 +1,5 @@
 import { Model, Q } from '@nozbe/watermelondb'
-import { date, field, lazy, readonly } from '@nozbe/watermelondb/decorators'
+import { date, field, lazy, readonly, text } from '@nozbe/watermelondb/decorators'
 import type { Account } from './account'
 
 export class Institution extends Model {
@@ -9,9 +9,11 @@ export class Institution extends Model {
     accounts: { type: 'has_many' as const, foreignKey: 'institution_id' },
   }
 
-  @field('name') name!: string
+  @text('name') name!: string
   @field('color') color!: string
+  @field('icon') icon!: string | null
   @field('logo_url') logoUrl!: string | null
+  @field('user_id') userId!: string | null
   @readonly @date('created_at') createdAt!: Date
   @readonly @date('updated_at') updatedAt!: Date
 

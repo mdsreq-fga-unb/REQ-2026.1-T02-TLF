@@ -2,6 +2,8 @@ import { Q } from '@nozbe/watermelondb'
 import { database } from '..'
 import { Transaction, TransactionType, TransactionStatus } from '../models/transaction'
 
+export type { TransactionType, TransactionStatus }
+
 const TRANSACTIONS_TABLE = 'transactions'
 
 const transactionsCollection = () => database.get<Transaction>(TRANSACTIONS_TABLE)

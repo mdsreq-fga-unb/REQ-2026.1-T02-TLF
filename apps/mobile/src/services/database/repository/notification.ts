@@ -1,14 +1,12 @@
 import { Q } from '@nozbe/watermelondb'
 import { database } from '..'
 import { Notification, NotificationType } from '../models/notification'
-import { useAuthStore } from '@/stores/auth'
 
 const NOTIFICATIONS_TABLE = 'notifications'
 
 const notificationsCollection = () => database.get<Notification>(NOTIFICATIONS_TABLE)
 
 export type NotificationInput = {
-  userId?: string
   type: NotificationType
   title: string
   description: string
@@ -26,17 +24,16 @@ export type NotificationInput = {
 export type NotificationUpdateInput = Partial<NotificationInput>
 
 export type NotificationFilters = {
-  userId?: string
   type?: NotificationType
   isRead?: boolean
 }
+
+export type NotificationFilter = 'all' | 'unread' | 'read'
 
 const applyNotificationFields = (
   notification: Notification,
   input: NotificationInput | NotificationUpdateInput,
 ) => {
-  const resolvedUserId = input.userId ?? useAuthStore.getState().user?.id
-  if (resolvedUserId !== undefined) notification.userId = resolvedUserId
   if (input.type !== undefined) notification.type = input.type
   if (input.title !== undefined) notification.title = input.title
   if (input.description !== undefined) notification.description = input.description
@@ -67,6 +64,29 @@ export const getNotificationById = async (id: string) => {
   return notificationsCollection().find(id)
 }
 
+export const getNotificationQueryConditions = (filter: NotificationFilter) => {
+  if (filter === 'unread') {
+    return [Q.where('is_read', false), Q.sortBy('created_at', 'desc')]
+  }
+
+  if (filter === 'read') {
+    return [Q.where('is_read', true), Q.sortBy('created_at', 'desc')]
+  }
+
+  return [Q.sortBy('is_read', 'asc'), Q.sortBy('created_at', 'desc')]
+}
+
+export const getNotificationsByFilters = async (filters: NotificationFilters) => {
+  const conditions = []
+
+  if (filters.type) conditions.push(Q.where('type', filters.type))
+  if (filters.isRead !== undefined) conditions.push(Q.where('is_read', filters.isRead))
+
+  return notificationsCollection()
+    .query(...conditions)
+    .fetch()
+}
+
 export const updateNotification = async (id: string, input: NotificationUpdateInput) => {
   return database.write(async () => {
     const notification = await getNotificationById(id)
@@ -87,16 +107,24 @@ export const getAllNotifications = async () => {
   return notificationsCollection().query(Q.sortBy('created_at', 'desc')).fetch()
 }
 
-export const getNotificationsByFilters = async (filters: NotificationFilters) => {
-  const conditions = []
+export const markNotificationAsRead = async (id: string) => {
+  await updateNotification(id, { isRead: true })
+}
 
-  if (filters.userId) conditions.push(Q.where('user_id', filters.userId))
-  if (filters.type) conditions.push(Q.where('type', filters.type))
-  if (filters.isRead !== undefined) conditions.push(Q.where('is_read', filters.isRead))
+export const markAllNotificationsAsRead = async () => {
+  const unread = await getNotificationsByFilters({ isRead: false })
 
-  return notificationsCollection()
-    .query(...conditions)
-    .fetch()
+  if (unread.length === 0) return
+
+  await database.write(async () => {
+    await Promise.all(
+      unread.map((notification) =>
+        notification.update((record) => {
+          record.isRead = true
+        }),
+      ),
+    )
+  })
 }
 
 export const notificationQueries = {

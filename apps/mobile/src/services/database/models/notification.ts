@@ -20,7 +20,6 @@ export type NotificationType = keyof typeof notificationTypes
 export class Notification extends Model {
   static table = 'notifications'
 
-  @field('user_id') userId!: string
   @field('type') type!: NotificationType
   @field('title') title!: string
   @field('description') description!: string

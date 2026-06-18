@@ -109,37 +109,6 @@ export const markTransactionAsDeleted = async (id: string) => {
   })
 }
 
-// TODO: remove this function after testing
-export const runTransactionCrudSmokeTest = async () => {
-  const created = await createTransaction({
-    amount: 100,
-    description: 'WatermelonDB smoke test',
-    date: new Date(),
-    type: 'EXPENSE',
-    status: 'PENDING',
-    accountId: 'test-account',
-    categoryId: 'test-category',
-  })
-
-  const found = await getTransactionById(created.id)
-  const updated = await updateTransaction(found.id, {
-    amount: 150,
-    status: 'CONFIRMED',
-  })
-  const filtered = await getTransactionsByFilters({
-    accountId: 'test-account',
-    status: 'CONFIRMED',
-  })
-
-  await markTransactionAsDeleted(updated.id)
-
-  return {
-    createdId: created.id,
-    updatedAmount: updated.amount,
-    filteredCount: filtered.length,
-  }
-}
-
 export const transactionQueries = {
   table: TRANSACTIONS_TABLE,
   getAll: getAllTransactions,
@@ -150,5 +119,4 @@ export const transactionQueries = {
   update: updateTransaction,
   delete: markTransactionAsDeleted,
   markAsDeleted: markTransactionAsDeleted,
-  runSmokeTest: runTransactionCrudSmokeTest,
 }

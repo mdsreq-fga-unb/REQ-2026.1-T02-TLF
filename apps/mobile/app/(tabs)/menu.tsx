@@ -1,10 +1,11 @@
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
-import { ThemedText } from '@/components/ui/ThemedText'
+import { ThemedButton } from '@/components/ui/ThemedButton'
+import { router } from 'expo-router'
 
 export default function BudgetsScreen() {
   return (
     <ThemedBackground>
-      <ThemedText text="Orçamentos" />
+      <ThemedButton title="Notificações" onPress={() => router.push('/notifications')} />
     </ThemedBackground>
   )
 }

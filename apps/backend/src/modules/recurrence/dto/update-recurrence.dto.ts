@@ -1,9 +1,8 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateRecurrenceDto } from './create-recurrence.dto';
-import { IsOptional, IsEnum } from 'class-validator';
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { RecurrenceApplyScope } from '../enums/recurrence-apply-scope.enum';
-
+import { PartialType } from '@nestjs/mapped-types'
+import { CreateRecurrenceDto } from './create-recurrence.dto'
+import { IsOptional, IsEnum } from 'class-validator'
+import { ApiPropertyOptional } from '@nestjs/swagger'
+import { RecurrenceApplyScope } from '../enums/recurrence-apply-scope.enum'
 
 export class UpdateRecurrenceDto extends PartialType(CreateRecurrenceDto) {
   @ApiPropertyOptional({
@@ -15,5 +14,5 @@ export class UpdateRecurrenceDto extends PartialType(CreateRecurrenceDto) {
   })
   @IsOptional()
   @IsEnum(RecurrenceApplyScope)
-  applyScope?: RecurrenceApplyScope;
+  applyScope?: RecurrenceApplyScope
 }

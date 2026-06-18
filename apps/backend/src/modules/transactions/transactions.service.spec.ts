@@ -16,9 +16,7 @@ const prismaMock = {
     update: jest.fn(),
     delete: jest.fn(),
   },
-  $transaction: jest.fn((operations: Promise<unknown>[]) =>
-    Promise.all(operations),
-  ),
+  $transaction: jest.fn((operations: Promise<unknown>[]) => Promise.all(operations)),
 }
 
 const mockCategory = {
@@ -290,9 +288,7 @@ describe('TransactionsService', () => {
     })
 
     it('deve lançar ForbiddenException quando o usuário não tiver acesso', async () => {
-      prismaMock.transaction.findUnique.mockResolvedValue(
-        transactionWithAccess('outro-user'),
-      )
+      prismaMock.transaction.findUnique.mockResolvedValue(transactionWithAccess('outro-user'))
 
       await expect(
         service.findOne({

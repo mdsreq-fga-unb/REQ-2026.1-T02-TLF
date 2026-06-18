@@ -82,20 +82,17 @@ describe('TransactionsController', () => {
         type: TransactionType.INCOME,
       }
 
-      await controller.findAll('user-1', query as any);
+      await controller.findAll('user-1', query as any)
 
-      expect(transactionsServiceMock.findAll).toHaveBeenCalledWith(
-        'user-1',
-        query,
-      );
-    });
-  });
+      expect(transactionsServiceMock.findAll).toHaveBeenCalledWith('user-1', query)
+    })
+  })
 
   describe('findOne', () => {
     it('deve chamar service.findOne corretamente', async () => {
       transactionsServiceMock.findOne.mockResolvedValue({ id: '1' })
 
-      await controller.findOne('user-1', '1');
+      await controller.findOne('user-1', '1')
 
       expect(transactionsServiceMock.findOne).toHaveBeenCalledWith({
         userId: 'user-1',
@@ -108,9 +105,9 @@ describe('TransactionsController', () => {
     it('deve chamar service.update com dados corretos', async () => {
       transactionsServiceMock.update.mockResolvedValue({ id: '1' })
 
-      const dto = { description: 'novo valor' };
+      const dto = { description: 'novo valor' }
 
-      await controller.update('user-1', '1', dto as any);
+      await controller.update('user-1', '1', dto as any)
 
       expect(transactionsServiceMock.update).toHaveBeenCalledWith({
         userId: 'user-1',
@@ -124,12 +121,12 @@ describe('TransactionsController', () => {
     it('deve chamar service.remove com dados corretos', async () => {
       transactionsServiceMock.remove.mockResolvedValue({ id: '1' })
 
-      await controller.remove('user-1', '1');
+      await controller.remove('user-1', '1')
 
       expect(transactionsServiceMock.remove).toHaveBeenCalledWith({
         userId: 'user-1',
         id: '1',
-      });
-    });
-  });
-});
+      })
+    })
+  })
+})

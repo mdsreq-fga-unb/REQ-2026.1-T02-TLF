@@ -21,6 +21,7 @@ export default function CreateCategoryScreen() {
     setCategoryColor,
     iconPickerVisible,
     setIconPickerVisible,
+    icon,
     setIcon,
     iconComponent,
     name,
@@ -28,6 +29,7 @@ export default function CreateCategoryScreen() {
     nameTouched,
     setNameTouched,
     isFormValid,
+    handleCreateSubmit,
   } = useCategory()
 
   const { withOpacity } = useColors()
@@ -107,6 +109,7 @@ export default function CreateCategoryScreen() {
       <ThemedButton
         title="Adicionar categoria"
         style={{ width: '90%', position: 'absolute', bottom: insets.bottom + 10 }}
+        onPress={() => handleCreateSubmit(name, icon, categoryColor)}
       />
     </ThemedBackground>
   )

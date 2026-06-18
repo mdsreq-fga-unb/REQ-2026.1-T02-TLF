@@ -13,7 +13,8 @@ import { View, ScrollView } from 'react-native'
 import { router } from 'expo-router'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
-import { AlignEndHorizontal, Bookmark, Calendar, Monitor } from 'lucide-react-native'
+import { AlignEndHorizontal, Bookmark, Calendar } from 'lucide-react-native'
+import { MoneyIcon } from 'phosphor-react-native'
 
 type Props = {
   title?: string
@@ -76,7 +77,7 @@ export default function CreateBudgetScreen({ initialValues }: Props) {
             />
 
             <FormField
-              icon={Monitor}
+              icon={MoneyIcon}
               label={form.type == 'BUDGET' ? 'Limite' : 'Meta'}
               value={form.amount}
               onPress={() => {}}

@@ -4,16 +4,14 @@ import { AmountDisplay } from '@/components/finance/transactions/AmountDisplay'
 import { FormField } from '@/components/finance/transactions/FormField'
 import { NumericKeypad } from '@/components/finance/transactions/NumericKeypad'
 import { PickerModal } from '@/components/finance/transactions/PickerModal'
-import { CATEGORIES } from '@/components/finance/transactions/types'
 import { ThemedButton } from '@/components/ui/ThemedButton'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { BudgetInitialValues, useBudgetScreen } from '@/hooks/budget/useBudgetScreen'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { View, ScrollView } from 'react-native'
 import { router } from 'expo-router'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
-import { AlignEndHorizontal, Bookmark, Calendar } from 'lucide-react-native'
+import { LayoutGrid, Bookmark, Calendar } from 'lucide-react-native'
 import { MoneyIcon } from 'phosphor-react-native'
 
 type Props = {
@@ -25,8 +23,7 @@ export default function CreateBudgetScreen({ initialValues }: Props) {
   const theme = useThemeColor()
   const form = useBudgetScreen(initialValues)
 
-  const categories = CATEGORIES['EXPENSE']
-  const selectedCategory = categories.find((c) => c.id === form.categoryId)
+  // const selectedCategory = form.selectedCategoryLabel
 
   return (
     <ThemedBackground>
@@ -44,7 +41,8 @@ export default function CreateBudgetScreen({ initialValues }: Props) {
         <ScrollView>
           <AmountDisplay
             amountCents={form.amountLimit}
-            type={form.type}
+            type={'TRANSFER'}
+            budget={true}
             onPress={() => form.setShowKeypad(true)}
           />
           {form.submitAttempted && form.errors.amount && (
@@ -69,9 +67,9 @@ export default function CreateBudgetScreen({ initialValues }: Props) {
             />
 
             <FormField
-              icon={AlignEndHorizontal}
+              icon={LayoutGrid}
               label="Categoria"
-              value={selectedCategory?.label ?? ''}
+              value={form.selectedCategoryLabel}
               onPress={() => form.setShowCategoryPicker(true)}
               error={form.submitAttempted ? form.errors.category : undefined}
             />
@@ -113,7 +111,7 @@ export default function CreateBudgetScreen({ initialValues }: Props) {
           <PickerModal
             visible={form.showCategoryPicker}
             title="Selecionar Categoria"
-            options={categories}
+            options={form.categoryOptions}
             selectedId={form.categoryId}
             onSelect={form.setCategoryId}
             onClose={() => form.setShowCategoryPicker(false)}
@@ -129,7 +127,7 @@ export default function CreateBudgetScreen({ initialValues }: Props) {
             gap: 10,
           }}
         >
-          {form.submitError && (
+          {/* {form.submitError && (
             <View
               style={{ flexDirection: 'row', alignItems: 'center', gap: 8, alignSelf: 'stretch' }}
             >
@@ -138,7 +136,7 @@ export default function CreateBudgetScreen({ initialValues }: Props) {
                 <ThemedText children text={form.errors.category} tone="warning" />
               )}
             </View>
-          )}
+          )} */}
           <ThemedButton
             title={form.submitting ? 'Salvando...' : 'Adicionar Registro'}
             disabled={form.submitting || !form.isValid}

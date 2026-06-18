@@ -126,10 +126,10 @@ model Budget {
   userId String @map("user_id")
 
   // TODO: retirar opcionalidade quando a logica de categorias for implementada
-  // category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  // categoryId String  @map("category_id")
-  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId String?   @map("category_id")
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String  @map("category_id")
+  // category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  // categoryId String?   @map("category_id")
 
   name        String
   amountLimit Int    @map("amount_limit")

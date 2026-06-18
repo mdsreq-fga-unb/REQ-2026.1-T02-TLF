@@ -25,4 +25,9 @@ export class UpdateBudgetDto {
   @IsInt()
   @Min(2000)
   year?: number
+
+  @ApiProperty({ required: false, example: 'uuid-da-categoria' })
+  @IsOptional()
+  @IsString()
+  categoryId?: string
 }

@@ -24,6 +24,7 @@ export default function BudgetsScreen() {
           <BudgetItem
             id={item.id}
             categoryId={item.categoryId}
+            categoryColor={item.category?.color}
             amountLimit={item.amountLimit}
             name={item.name}
             month={item.month}
@@ -34,7 +35,7 @@ export default function BudgetsScreen() {
         contentContainerStyle={styles.listContainer}
         refreshing={useBudget.refreshing}
         onRefresh={useBudget.onRefresh}
-      ></FlatList>
+      />
     </ThemedBackground>
   )
 }

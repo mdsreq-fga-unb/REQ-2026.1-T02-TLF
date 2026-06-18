@@ -4,16 +4,15 @@ import { AmountDisplay } from '@/components/finance/transactions/AmountDisplay'
 import { FormField } from '@/components/finance/transactions/FormField'
 import { NumericKeypad } from '@/components/finance/transactions/NumericKeypad'
 import { PickerModal } from '@/components/finance/transactions/PickerModal'
-import { CATEGORIES } from '@/components/finance/transactions/types'
 import { ThemedButton } from '@/components/ui/ThemedButton'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { BudgetInitialValues, useBudgetScreen } from '@/hooks/budget/useBudgetScreen'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { View, ScrollView } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
-import { AlignEndHorizontal, Bookmark } from 'lucide-react-native'
+import { Bookmark, LayoutGrid } from 'lucide-react-native'
+import { MoneyIcon } from 'phosphor-react-native'
 
 type Props = {
   title?: string
@@ -25,8 +24,6 @@ export default function EditBudgetScreen({ initialValues }: Props) {
   const form = useBudgetScreen(initialValues)
   const params = useLocalSearchParams<{ id?: string }>()
   const id = String(params.id ?? '')
-  const categories = CATEGORIES['EXPENSE']
-  const selectedCategory = categories.find((c) => c.id === form.categoryId)
 
   useEffect(() => {
     if (id) {
@@ -65,15 +62,15 @@ export default function EditBudgetScreen({ initialValues }: Props) {
             />
 
             <FormField
-              icon={AlignEndHorizontal}
+              icon={LayoutGrid}
               label="Categoria"
-              value={selectedCategory?.label ?? ''}
+              value={form.selectedCategoryLabel}
               onPress={() => form.setShowCategoryPicker(true)}
               error={form.submitAttempted ? form.errors.category : undefined}
             />
 
             <FormField
-              icon="attach-money"
+              icon={MoneyIcon}
               label={form.type == 'BUDGET' ? 'Limite' : 'Meta'}
               value={form.amount}
               onPress={() => {}}
@@ -91,7 +88,7 @@ export default function EditBudgetScreen({ initialValues }: Props) {
           <PickerModal
             visible={form.showCategoryPicker}
             title="Selecionar Categoria"
-            options={categories}
+            options={form.categoryOptions}
             selectedId={form.categoryId}
             onSelect={form.setCategoryId}
             onClose={() => form.setShowCategoryPicker(false)}
@@ -107,7 +104,7 @@ export default function EditBudgetScreen({ initialValues }: Props) {
             gap: 10,
           }}
         >
-          {form.submitError && (
+          {/* {form.submitError && (
             <View
               style={{ flexDirection: 'row', alignItems: 'center', gap: 8, alignSelf: 'stretch' }}
             >
@@ -116,7 +113,7 @@ export default function EditBudgetScreen({ initialValues }: Props) {
                 <ThemedText children text={form.errors.category} tone="warning" />
               )}
             </View>
-          )}
+          )} */}
           <ThemedButton
             title={form.submitting ? 'Salvando...' : 'Salvar'}
             disabled={form.submitting || !form.isValid}

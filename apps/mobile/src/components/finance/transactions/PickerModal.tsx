@@ -1,13 +1,16 @@
+// apps/mobile/src/components/finance/transactions/PickerModal.tsx
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import { AppIcon } from '@/components/ui/AppIcon'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
+import { useColors } from '@/hooks/useColors'
 import type { IconKey } from '@/utils/icons'
 
 type Option = {
   id: string
   label: string
   icon: IconKey | string
+  color?: string
 }
 
 type Props = {
@@ -21,6 +24,7 @@ type Props = {
 
 export function PickerModal({ visible, title, options, selectedId, onSelect, onClose }: Props) {
   const theme = useThemeColor()
+  const { withOpacity } = useColors()
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
@@ -32,9 +36,12 @@ export function PickerModal({ visible, title, options, selectedId, onSelect, onC
             <AppIcon name="x" size={22} color={theme.mutedForeground} />
           </Pressable>
         </View>
+
         <ScrollView>
           {options.map((item) => {
             const selected = item.id === selectedId
+            const optionColor = item.color ?? theme.primary
+
             return (
               <Pressable
                 key={item.id}
@@ -44,21 +51,19 @@ export function PickerModal({ visible, title, options, selectedId, onSelect, onC
                 }}
                 style={({ pressed }) => [
                   styles.option,
-                  selected && { backgroundColor: `${theme.primary}18` },
+                  selected && { backgroundColor: withOpacity(optionColor, 0.12) },
                   pressed && { opacity: 0.75 },
                 ]}
               >
-                <View style={[styles.optionIcon, { backgroundColor: `${theme.primary}20` }]}>
-                  <AppIcon
-                    name={item.icon}
-                    size={18}
-                    color={selected ? theme.primary : theme.mutedForeground}
-                  />
+                <View
+                  style={[styles.optionIcon, { backgroundColor: withOpacity(optionColor, 0.17) }]}
+                >
+                  <AppIcon name={item.icon} size={18} color={optionColor} />
                 </View>
-                <ThemedText text={item.label} variant="body" style={styles.optionLabel} />
-                {selected && (
-                  <AppIcon name="check" size={18} color={theme.primary} strokeWidth={2.5} />
-                )}
+
+                <ThemedText text={item.label} variant="body" style={[styles.optionLabel, { textAlign: 'left'}]} />
+
+                {selected && <AppIcon name="check" size={18} color={optionColor} weight="bold" />}
               </Pressable>
             )
           })}

@@ -10,9 +10,7 @@ type props = ViewProps & {
 export function ProgressBar({ percentage, backColor, fillColor }: props) {
   return (
     <View style={[styles.outerBar, { backgroundColor: backColor }]}>
-      <View
-        style={[styles.fillBar, { backgroundColor: fillColor, width: `${percentage}%` }]}
-      ></View>
+      <View style={[styles.fillBar, { backgroundColor: fillColor, width: `${percentage}%` }]} />
     </View>
   )
 }

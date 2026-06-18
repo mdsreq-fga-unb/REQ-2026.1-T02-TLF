@@ -11,6 +11,12 @@ export class PullRequestDto {
   lastUpdatedAt?: string | null
 }
 
+export class PullQueryDto {
+  @IsOptional()
+  @IsDateString()
+  lastUpdatedAt?: string | null
+}
+
 export class PullResponseDto {
   changes?: PullChanges
   timestamp!: Date

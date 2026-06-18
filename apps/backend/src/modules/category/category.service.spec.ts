@@ -29,7 +29,6 @@ const mockCategory = {
   name: 'Alimentação',
   icon: 'fork',
   color: '#FF0000',
-  isDefault: false,
 }
 
 describe('CategoryService', () => {

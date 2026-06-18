@@ -50,21 +50,21 @@ export class CategoryService {
 
     return this.prisma.category.create({
       data: { ...dto, userId },
-      select: { id: true, name: true, icon: true, color: true, isDefault: true },
+      select: { id: true, name: true, icon: true, color: true },
     })
   }
 
   async findAll(userId: string) {
     return this.prisma.category.findMany({
       where: { userId },
-      select: { id: true, name: true, icon: true, color: true, isDefault: true },
+      select: { id: true, name: true, icon: true, color: true },
     })
   }
 
   async findOne(userId: string, id: string) {
     const category = await this.prisma.category.findUnique({
       where: { id, userId },
-      select: { id: true, name: true, icon: true, color: true, isDefault: true },
+      select: { id: true, name: true, icon: true, color: true },
     })
     if (!category) throw new NotFoundException('Categoria não encontrada')
     return category
@@ -85,7 +85,7 @@ export class CategoryService {
     return this.prisma.category.update({
       where: { id },
       data: dto,
-      select: { id: true, name: true, icon: true, color: true, isDefault: true },
+      select: { id: true, name: true, icon: true, color: true },
     })
   }
 

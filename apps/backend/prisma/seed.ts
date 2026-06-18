@@ -17,7 +17,9 @@ export class SeedService {
         },
         update: {},
         create: {
-          ...category,
+          name: category.name,
+          icon: category.icon,
+          color: category.color,
           userId,
         },
       })

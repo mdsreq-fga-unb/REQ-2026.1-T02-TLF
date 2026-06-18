@@ -1,3 +1,5 @@
+import { CategoryDTO, createCategory, getCategories, updateCategory } from '@/services/api/category'
+import { router, useFocusEffect } from 'expo-router'
 import {
   HeartIcon,
   HouseIcon,
@@ -82,33 +84,36 @@ import {
   WifiHighIcon,
   WrenchIcon,
   XCircleIcon,
+  ReceiptIcon,
+  CurrencyDollarIcon,
+  BusIcon,
+  ShoppingBagIcon,
+  HeartbeatIcon,
 } from 'phosphor-react-native'
 import { useState, useMemo, useCallback } from 'react'
 
 type IconProps = { size?: number; color?: string }
 
-type IconItem = {
+export type IconItem = {
   key: string
   label: string
   Icon: React.ComponentType<IconProps>
 }
 
-type ColorItem = {
+export type ColorItem = {
   key: string
   label: string
   color: string
 }
 
-type CategoryItem = {
-  id: string
-  name: string
-  icon: IconItem
-  color: ColorItem
-}
-
 export function useCategory() {
   const ICONS: IconItem[] = [
     { key: 'heart', label: 'Coração', Icon: HeartIcon },
+    { key: 'heartbeat', label: 'Coração', Icon: HeartbeatIcon },
+    { key: 'shopping-bag', label: 'sacola', Icon: ShoppingBagIcon },
+    { key: 'bus', label: 'onibus', Icon: BusIcon },
+    { key: 'currency-dollar', label: 'dinheiro', Icon: CurrencyDollarIcon },
+    { key: 'receipt', label: 'receita', Icon: ReceiptIcon },
     { key: 'house', label: 'Casa', Icon: HouseIcon },
     { key: 'user', label: 'Usuário', Icon: UserIcon },
     { key: 'car', label: 'Carro', Icon: CarIcon },
@@ -206,6 +211,15 @@ export function useCategory() {
 
   const iconComponent = useMemo(() => ICONS.find((item) => item.key === icon)?.Icon, [icon])
 
+  const iconMapper = useMemo<Record<string, React.ComponentType<IconProps>>>(
+    () =>
+      Object.fromEntries(ICONS.map(({ key, Icon }) => [key, Icon])) as Record<
+        string,
+        React.ComponentType<IconProps>
+      >,
+    [],
+  )
+
   const COLORS: ColorItem[] = [
     { key: 'red', label: 'Vermelho', color: '#EF4444' },
     { key: 'orange', label: 'Laranja', color: '#F97316' },
@@ -236,29 +250,49 @@ export function useCategory() {
   const [categoryColor, setCategoryColor] = useState('#ff0000')
   const [colorPickerVisible, setColorPickerVisible] = useState(false)
 
-  // TODO: remover para integração
-  // MOCK para testagem
+  const colorMapper = Object.fromEntries(COLORS.map((c) => [c.key, c.color]))
 
-  const CATEGORYS: CategoryItem[] = [
-    {
-      id: '1',
-      name: 'Musica',
-      icon: { key: 'speaker', label: 'Alto-falante', Icon: SpeakerHighIcon },
-      color: { key: 'white', label: 'Branco', color: '#FFFFFF' },
-    },
-    {
-      id: '2',
-      name: 'Mercado',
-      icon: { key: 'storefront', label: 'Loja', Icon: StorefrontIcon },
-      color: { key: 'orange', label: 'Laranja', color: '#F97316' },
-    },
-    {
-      id: '3',
-      name: 'Advogado',
-      icon: { key: 'file-text', label: 'Arquivo de texto', Icon: FileTextIcon },
-      color: { key: 'lime', label: 'Lima', color: '#84CC16' },
-    },
-  ]
+  const getColorHex = (colorKey?: string) => {
+    if (!colorKey) return '#000000'
+    return colorMapper[colorKey] ?? colorKey
+  }
+
+  const [categories, setCategories] = useState<CategoryDTO[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const loadCategories = useCallback(async () => {
+    try {
+      setLoading(true)
+      const data = await getCategories()
+      setCategories(data)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useFocusEffect(
+    useCallback(() => {
+      loadCategories()
+    }, []),
+  )
+
+  // const log = () => {
+  //   console.log(
+  //   categories.map(c => ({
+  //     name: c.name,
+  //     icon: c.icon,
+  //   }))
+  //   )
+  //   console.log(
+  //     Object.keys(iconMapper)
+  //   )
+  // }
+
+  const mappedCategories = categories.map((item) => ({
+    ...item,
+    iconComponent: iconMapper[item.icon],
+    colorHex: getColorHex(item.color),
+  }))
 
   const [name, setName] = useState('')
   const [nameTouched, setNameTouched] = useState(false)
@@ -268,10 +302,35 @@ export function useCategory() {
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null)
   const dismissFeedback = useCallback(() => setFeedbackMessage(null), [])
 
+  const handleCreateSubmit = async (name: string, icon: string, color: string) => {
+    await createCategory({
+      name,
+      icon,
+      color,
+    })
+
+    router.back()
+  }
+
+  const handleEditSubmit = async (id: string, name: string, icon: string, color: string) => {
+    await updateCategory(id, {
+      name,
+      icon,
+      color,
+    })
+
+    router.back()
+  }
+
   return {
     ICONS,
     COLORS,
-    CATEGORYS,
+    categories,
+    setCategories,
+    loading,
+    setLoading,
+    loadCategories,
+    mappedCategories,
     iconQuery,
     setIconQuery,
     selectedIcon,
@@ -293,6 +352,9 @@ export function useCategory() {
     feedbackMessage,
     setFeedbackMessage,
     dismissFeedback,
+    handleCreateSubmit,
+    handleEditSubmit,
     iconComponent,
+    // log,
   }
 }

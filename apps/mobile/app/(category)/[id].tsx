@@ -8,24 +8,27 @@ import { ThemedSeparator } from '@/components/ui/ThemedSeparator'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useCategory } from '@/hooks/category/useCategory'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useLocalSearchParams } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { useColors } from '@/hooks/useColors'
 import { ThemedContainer } from '@/components/ui/ThemedContainer'
 import { ThemedFieldError } from '@/components/ui/ThemedFieldError'
 import { ThemedInputContainer } from '@/components/ui/ThemedInputContainer'
 import { ThemedInputForm } from '@/components/ui/ThemedInputForm'
 import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
+import { deleteCategory } from '@/services/api/category'
+import { ActivityIndicator } from 'react-native'
 
 export default function EditCategoryScreen() {
   const params = useLocalSearchParams()
   const {
-    CATEGORYS,
+    mappedCategories,
     colorPickerVisible,
     setColorPickerVisible,
     categoryColor,
     setCategoryColor,
     iconPickerVisible,
     setIconPickerVisible,
+    icon,
     setIcon,
     name,
     setName,
@@ -36,32 +39,30 @@ export default function EditCategoryScreen() {
     feedbackMessage,
     setFeedbackMessage,
     dismissFeedback,
+    handleEditSubmit,
+    loading,
   } = useCategory()
 
   const { withOpacity } = useColors()
 
   const id = String(params.id ?? '')
-  const selectedCategory = CATEGORYS.find((c) => c.id === id)
+  const isEditing = !!id
+  const selectedCategory = mappedCategories.find((c) => c.id === id)
 
   const insets = useSafeAreaInsets()
 
-  // Inicializar valores do hook quando a categoria muda
   useEffect(() => {
     if (selectedCategory) {
-      setCategoryColor(selectedCategory.color.color)
-      setIcon(selectedCategory.icon.key)
+      setCategoryColor(selectedCategory.colorHex)
+      setIcon(selectedCategory.icon)
       setName(selectedCategory.name)
     }
-  }, [id])
+  }, [selectedCategory])
 
-  if (!selectedCategory) {
+  if (isEditing && (loading || !selectedCategory)) {
     return (
       <ThemedBackground>
-        <ThemedText
-          text="Erro: categoria não foi passada corretamente"
-          variant="display"
-          tone="warning"
-        />
+        <ActivityIndicator />
       </ThemedBackground>
     )
   }
@@ -140,6 +141,7 @@ export default function EditCategoryScreen() {
       <ThemedButton
         title="Salvar mudanças"
         style={{ width: '90%', position: 'absolute', bottom: insets.bottom + 75 }}
+        onPress={() => handleEditSubmit(id, name, icon, categoryColor)}
       />
       <ThemedButton
         title="Excluir categoria"
@@ -157,9 +159,9 @@ export default function EditCategoryScreen() {
             label: 'Confirmar',
             onPress: async () => {
               try {
-                // await CategoryService.delete(id)
+                await deleteCategory(id)
                 dismissFeedback()
-                // onDelete?.(id)
+                router.back()
               } catch (deleteError) {
                 console.error('Erro ao excluir orçamento:', deleteError)
                 setFeedbackMessage('Não foi possível excluir o orçamento. Tente novamente.')

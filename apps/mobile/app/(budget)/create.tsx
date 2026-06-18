@@ -1,6 +1,5 @@
 import React from 'react'
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
-import { BudgetTypeTabs } from '@/components/finance/budget/BudgetTypeTabs'
 import { AmountDisplay } from '@/components/finance/transactions/AmountDisplay'
 import { FormField } from '@/components/finance/transactions/FormField'
 import { NumericKeypad } from '@/components/finance/transactions/NumericKeypad'
@@ -14,7 +13,8 @@ import { View, ScrollView } from 'react-native'
 import { router } from 'expo-router'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
-import { AlignEndHorizontal, Bookmark } from 'lucide-react-native'
+import { AlignEndHorizontal, Bookmark, Calendar } from 'lucide-react-native'
+import { MoneyIcon } from 'phosphor-react-native'
 
 type Props = {
   title?: string
@@ -77,7 +77,7 @@ export default function CreateBudgetScreen({ initialValues }: Props) {
             />
 
             <FormField
-              icon="attach-money"
+              icon={MoneyIcon}
               label={form.type == 'BUDGET' ? 'Limite' : 'Meta'}
               value={form.amount}
               onPress={() => {}}
@@ -85,7 +85,7 @@ export default function CreateBudgetScreen({ initialValues }: Props) {
             />
 
             <FormField
-              icon="calendar-today"
+              icon={Calendar}
               label="Mês"
               value={`${new Date().getMonth() + 1}`}
               onPress={() => {}}
@@ -93,7 +93,7 @@ export default function CreateBudgetScreen({ initialValues }: Props) {
             />
 
             <FormField
-              icon="calendar-today"
+              icon={Calendar}
               label="Ano"
               value={form.year !== undefined ? String(form.year) : ''}
               onPress={() => {}}

@@ -1,55 +1,79 @@
-import React from 'react'
-import { Text, Button } from 'react-native'
-import { render, fireEvent } from '@testing-library/react-native'
+import { act, renderHook, waitFor } from '@testing-library/react-native'
+import { getCategories, createCategory, updateCategory } from '@/services/api/category'
 import { useCategory } from './useCategory'
 
-function HookTester() {
-  const { categoryColor, setCategoryColor, icon, setIcon, name, setName, iconComponent } =
-    useCategory()
+jest.mock('@/services/api/category', () => ({
+  getCategories: jest.fn(),
+  createCategory: jest.fn(),
+  updateCategory: jest.fn(),
+}))
 
-  const IconComp = iconComponent
+jest.mock('expo-router', () => {
+  const React = require('react')
 
-  return (
-    <>
-      <Text testID="color">{categoryColor}</Text>
-      <Text testID="icon">{icon}</Text>
-      <Text testID="name">{name}</Text>
-      <Button title="set-color" onPress={() => setCategoryColor('#123456')} />
-      <Button title="set-icon" onPress={() => setIcon('storefront')} />
-      <Button title="set-name" onPress={() => setName('Teste')} />
-      {IconComp ? <IconComp testID="icon-comp" /> : null}
-    </>
-  )
-}
+  return {
+    router: { back: jest.fn() },
+    useFocusEffect: (effect: () => void | (() => void)) => React.useEffect(effect, []),
+  }
+})
+
+const mockedGetCategories = jest.mocked(getCategories)
+const mockedCreateCategory = jest.mocked(createCategory)
+const mockedUpdateCategory = jest.mocked(updateCategory)
 
 describe('useCategory hook', () => {
-  it('returns default values', () => {
-    const { getByTestId } = render(<HookTester />)
-
-    expect(getByTestId('color').props.children).toBe('#ff0000')
-    expect(getByTestId('icon').props.children).toBe('heart')
-    expect(getByTestId('name').props.children).toBe('')
+  beforeEach(() => {
+    jest.clearAllMocks()
+    mockedGetCategories.mockResolvedValue([])
+    mockedCreateCategory.mockResolvedValue(undefined as never)
+    mockedUpdateCategory.mockResolvedValue(undefined as never)
   })
 
-  it('updates values when setters are called', () => {
-    const { getByTestId, getByText } = render(<HookTester />)
+  it('returns default values', async () => {
+    const { result } = renderHook(() => useCategory())
 
-    fireEvent.press(getByText('set-color'))
-    expect(getByTestId('color').props.children).toBe('#123456')
+    await waitFor(() => {
+      expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+    })
 
-    fireEvent.press(getByText('set-icon'))
-    expect(getByTestId('icon').props.children).toBe('storefront')
-
-    fireEvent.press(getByText('set-name'))
-    expect(getByTestId('name').props.children).toBe('Teste')
+    expect(result.current.categoryColor).toBe('#ff0000')
+    expect(result.current.icon).toBe('heart')
+    expect(result.current.name).toBe('')
+    expect(result.current.iconComponent).toBeDefined()
   })
 
-  it('renders an icon component when available', () => {
-    const { queryByTestId, getByText } = render(<HookTester />)
+  it('updates values when setters are called', async () => {
+    const { result } = renderHook(() => useCategory())
 
-    expect(queryByTestId('icon-comp')).toBeTruthy()
+    await waitFor(() => {
+      expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+    })
 
-    fireEvent.press(getByText('set-icon'))
-    expect(queryByTestId('icon-comp')).toBeTruthy()
+    act(() => {
+      result.current.setCategoryColor('#123456')
+      result.current.setIcon('storefront')
+      result.current.setName('Teste')
+    })
+
+    expect(result.current.categoryColor).toBe('#123456')
+    expect(result.current.icon).toBe('storefront')
+    expect(result.current.name).toBe('Teste')
+    expect(result.current.iconComponent).toBeDefined()
+  })
+
+  it('renders an icon component when available', async () => {
+    const { result } = renderHook(() => useCategory())
+
+    await waitFor(() => {
+      expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+    })
+
+    expect(result.current.iconComponent).toBeDefined()
+
+    act(() => {
+      result.current.setIcon('storefront')
+    })
+
+    expect(result.current.iconComponent).toBeDefined()
   })
 })

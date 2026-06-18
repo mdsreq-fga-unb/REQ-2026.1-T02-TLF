@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { ThemedColorPicker } from '@/components/category/ThemedColorPicker'
 import { ThemedIconPicker } from '@/components/category/ThemedIconPicker'
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
@@ -51,12 +51,17 @@ export default function EditCategoryScreen() {
 
   const insets = useSafeAreaInsets()
 
+  const initializedRef = useRef(false)
+
   useEffect(() => {
-    if (selectedCategory) {
-      setCategoryColor(selectedCategory.colorHex)
-      setIcon(selectedCategory.icon)
-      setName(selectedCategory.name)
-    }
+    if (!selectedCategory) return
+    if (initializedRef.current) return
+
+    initializedRef.current = true
+
+    setCategoryColor(selectedCategory.colorHex)
+    setIcon(selectedCategory.icon)
+    setName(selectedCategory.name)
   }, [selectedCategory])
 
   if (isEditing && (loading || !selectedCategory)) {

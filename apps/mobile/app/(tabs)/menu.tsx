@@ -17,7 +17,12 @@ export default function BudgetsScreen() {
           icon={ChartColumnStacked}
           onPress={() => router.push('/(category)')}
         />
-        <ThemedListItem text="item 2" icon={FileText} />
+        {/* TODO: fazer logout de vdd */}
+        <ThemedListItem
+          text="logout*"
+          icon={FileText}
+          onPress={() => router.push('/(auth)/login')}
+        />
         <ThemedListItem text="item 3" />
         <ThemedListItem text="item 4" />
       </ThemedContainer>

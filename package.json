@@ -14,7 +14,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,json}\"",
     "precommit": "lint-staged",
     "prepush": "npm run test",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@nestjs/schedule": "^6.1.3",

@@ -10,6 +10,7 @@ import { TransactionsModule } from './modules/transactions/transactions.module'
 import { SupabaseModule } from './modules/supabase/supabase.module'
 import { UserModule } from './modules/user/user.module'
 import { RecurrenceModule } from './modules/recurrence/recurrence.module'
+import { InstitutionModule } from './modules/institution/institution.module'
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { RecurrenceModule } from './modules/recurrence/recurrence.module'
     UserModule,
     SupabaseModule,
     RecurrenceModule,
+    InstitutionModule,
   ],
 })
 export class AppModule {}

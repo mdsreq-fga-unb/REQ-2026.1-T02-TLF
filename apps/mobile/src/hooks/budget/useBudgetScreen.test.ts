@@ -1,24 +1,56 @@
-import { renderHook, act } from '@testing-library/react-native'
+import { act, renderHook, waitFor } from '@testing-library/react-native'
 import { BudgetService } from '@/services/api/budget'
+import { getCategories } from '@/services/api/category'
 import { useBudgetScreen } from './useBudgetScreen'
 
-jest.mock('@/services/api/budget')
+jest.mock('@/services/api/budget', () => ({
+  BudgetService: {
+    getAll: jest.fn(),
+    getById: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+  },
+}))
+
+jest.mock('@/services/api/category', () => ({
+  getCategories: jest.fn(),
+}))
+
+jest.mock('expo-router', () => {
+  const React = require('react')
+
+  return {
+    useFocusEffect: (effect: () => void | (() => void)) => React.useEffect(effect, []),
+  }
+})
 
 const mockedBudgetService = jest.mocked(BudgetService)
+const mockedGetCategories = jest.mocked(getCategories)
 
 describe('useBudgetScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    mockedGetCategories.mockResolvedValue([] as never)
+    mockedBudgetService.getAll.mockResolvedValue({ data: [] } as never)
+    mockedBudgetService.getById.mockResolvedValue({ data: {} } as never)
+    mockedBudgetService.create.mockResolvedValue({ data: { id: 'budget-1' } } as never)
+    mockedBudgetService.update.mockResolvedValue({ data: { id: 'budget-1' } } as never)
   })
 
   describe('initial state', () => {
-    it('should initialize with default values', () => {
+    it('should initialize with default values', async () => {
       const { result } = renderHook(() => useBudgetScreen())
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       expect(result.current.name).toBe('')
       expect(result.current.type).toBe('BUDGET')
       expect(result.current.amountLimit).toBe(0)
       expect(result.current.categoryId).toBe('')
+      expect(result.current.selectedCategoryLabel).toBe('')
       expect(result.current.submitting).toBe(false)
       expect(result.current.showKeypad).toBe(false)
       expect(result.current.showCategoryPicker).toBe(false)
@@ -28,7 +60,7 @@ describe('useBudgetScreen', () => {
       expect(result.current.feedbackMessage).toBeNull()
     })
 
-    it('should initialize with provided initial values', () => {
+    it('should initialize with provided initial values', async () => {
       const initialValues = {
         name: 'Groceries',
         type: 'BUDGET' as const,
@@ -40,6 +72,10 @@ describe('useBudgetScreen', () => {
 
       const { result } = renderHook(() => useBudgetScreen(initialValues))
 
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
+
       expect(result.current.name).toBe('Groceries')
       expect(result.current.type).toBe('BUDGET')
       expect(result.current.amountLimit).toBe(50000)
@@ -50,30 +86,44 @@ describe('useBudgetScreen', () => {
   })
 
   describe('validation', () => {
-    it('should be invalid when amount is 0', () => {
+    it('should be invalid when amount is 0', async () => {
       const { result } = renderHook(() => useBudgetScreen())
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       expect(result.current.errors.amount).toBe('Informe o valor da transação')
       expect(result.current.isValid).toBe(false)
     })
 
-    it('should be valid when amount is greater than 0', () => {
+    it('should be valid when amount and category are filled', async () => {
       const { result } = renderHook(() => useBudgetScreen())
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       act(() => {
         result.current.handleKeypad('5')
         result.current.handleKeypad('0')
         result.current.handleKeypad('0')
+        result.current.setCategoryId('cat-1')
       })
 
       expect(result.current.errors.amount).toBeUndefined()
+      expect(result.current.errors.category).toBeUndefined()
       expect(result.current.isValid).toBe(true)
     })
   })
 
   describe('keypad handling', () => {
-    it('should add digits to amount limit', () => {
+    it('should add digits to amount limit', async () => {
       const { result } = renderHook(() => useBudgetScreen())
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       act(() => {
         result.current.handleKeypad('1')
@@ -84,8 +134,12 @@ describe('useBudgetScreen', () => {
       expect(result.current.amountLimit).toBe(123)
     })
 
-    it('should delete last digit when pressing del', () => {
+    it('should delete last digit when pressing del', async () => {
       const { result } = renderHook(() => useBudgetScreen())
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       act(() => {
         result.current.handleKeypad('1')
@@ -97,11 +151,14 @@ describe('useBudgetScreen', () => {
       expect(result.current.amountLimit).toBe(12)
     })
 
-    it('should not exceed MAX_CENTS', () => {
+    it('should not exceed MAX_CENTS', async () => {
       const { result } = renderHook(() => useBudgetScreen())
 
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
+
       act(() => {
-        // Try to input a value that exceeds MAX_CENTS (9_999_999)
         for (let i = 0; i < 20; i++) {
           result.current.handleKeypad('9')
         }
@@ -110,8 +167,12 @@ describe('useBudgetScreen', () => {
       expect(result.current.amountLimit).toBeLessThanOrEqual(9_999_999)
     })
 
-    it('should ignore non-numeric keys', () => {
+    it('should ignore non-numeric keys', async () => {
       const { result } = renderHook(() => useBudgetScreen())
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       act(() => {
         result.current.handleKeypad('1')
@@ -124,8 +185,12 @@ describe('useBudgetScreen', () => {
   })
 
   describe('type change', () => {
-    it('should change budget type', () => {
+    it('should change budget type', async () => {
       const { result } = renderHook(() => useBudgetScreen())
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       act(() => {
         result.current.handleTypeChange('LIMIT')
@@ -134,8 +199,12 @@ describe('useBudgetScreen', () => {
       expect(result.current.type).toBe('LIMIT')
     })
 
-    it('should clear categoryId when type changes', () => {
-      const { result } = renderHook(() => useBudgetScreen({ categoryId: 'cat-1' }))
+    it('should clear categoryId when type changes', async () => {
+      const { result } = renderHook(() => useBudgetScreen({ categoryId: 'cat-1', name: 'Budget', month: 4, year: 2026 }))
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       act(() => {
         result.current.handleTypeChange('LIMIT')
@@ -149,6 +218,10 @@ describe('useBudgetScreen', () => {
     it('should not submit when form is invalid', async () => {
       const { result } = renderHook(() => useBudgetScreen())
 
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
+
       await act(async () => {
         await result.current.handleCreateSubmit()
       })
@@ -158,12 +231,15 @@ describe('useBudgetScreen', () => {
     })
 
     it('should create budget successfully', async () => {
-      mockedBudgetService.create.mockResolvedValue({ data: { id: 'budget-1' } })
-
       const { result } = renderHook(() => useBudgetScreen())
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       act(() => {
         result.current.setName('Monthly Budget')
+        result.current.setCategoryId('cat-1')
         result.current.handleKeypad('1')
         result.current.handleKeypad('0')
         result.current.handleKeypad('0')
@@ -182,10 +258,12 @@ describe('useBudgetScreen', () => {
         amountLimit: 10000,
         month: expect.any(Number),
         year: expect.any(Number),
+        categoryId: 'cat-1',
       })
       expect(onSuccess).toHaveBeenCalled()
       expect(result.current.name).toBe('orçamento')
       expect(result.current.amountLimit).toBe(0)
+      expect(result.current.categoryId).toBe('')
     })
 
     it('should handle create error', async () => {
@@ -194,8 +272,13 @@ describe('useBudgetScreen', () => {
 
       const { result } = renderHook(() => useBudgetScreen())
 
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
+
       act(() => {
         result.current.setName('Budget')
+        result.current.setCategoryId('cat-1')
         result.current.handleKeypad('1')
         result.current.handleKeypad('0')
         result.current.handleKeypad('0')
@@ -220,8 +303,13 @@ describe('useBudgetScreen', () => {
 
       const { result } = renderHook(() => useBudgetScreen())
 
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
+
       act(() => {
         result.current.setName('Budget')
+        result.current.setCategoryId('cat-1')
         result.current.handleKeypad('1')
         result.current.handleKeypad('0')
         result.current.handleKeypad('0')
@@ -239,6 +327,10 @@ describe('useBudgetScreen', () => {
     it('should not submit when form is invalid', async () => {
       const { result } = renderHook(() => useBudgetScreen())
 
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
+
       await act(async () => {
         await result.current.handleEditSubmit('budget-1')
       })
@@ -248,12 +340,15 @@ describe('useBudgetScreen', () => {
     })
 
     it('should edit budget successfully', async () => {
-      mockedBudgetService.update.mockResolvedValue({ data: { id: 'budget-1' } })
-
       const { result } = renderHook(() => useBudgetScreen())
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       act(() => {
         result.current.setName('Updated Budget')
+        result.current.setCategoryId('cat-1')
         result.current.handleKeypad('2')
         result.current.handleKeypad('5')
         result.current.handleKeypad('0')
@@ -272,6 +367,7 @@ describe('useBudgetScreen', () => {
         amountLimit: 25000,
         month: expect.any(Number),
         year: expect.any(Number),
+        categoryId: 'cat-1',
       })
       expect(onSuccess).toHaveBeenCalled()
     })
@@ -282,8 +378,13 @@ describe('useBudgetScreen', () => {
 
       const { result } = renderHook(() => useBudgetScreen())
 
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
+
       act(() => {
         result.current.setName('Budget')
+        result.current.setCategoryId('cat-1')
         result.current.handleKeypad('1')
         result.current.handleKeypad('0')
         result.current.handleKeypad('0')
@@ -304,9 +405,13 @@ describe('useBudgetScreen', () => {
         { id: '2', name: 'Budget 2', amountLimit: 20000 },
       ]
 
-      mockedBudgetService.getAll.mockResolvedValue({ data: mockBudgets })
+      mockedBudgetService.getAll.mockResolvedValue({ data: mockBudgets } as never)
 
       const { result } = renderHook(() => useBudgetScreen())
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       await act(async () => {
         await result.current.fetchBudgets()
@@ -321,6 +426,10 @@ describe('useBudgetScreen', () => {
       mockedBudgetService.getAll.mockRejectedValue(new Error(errorMessage))
 
       const { result } = renderHook(() => useBudgetScreen())
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       await act(async () => {
         await result.current.fetchBudgets()
@@ -341,9 +450,13 @@ describe('useBudgetScreen', () => {
           year: 2026,
           categoryId: 'cat-1',
         },
-      })
+      } as never)
 
       const { result } = renderHook(() => useBudgetScreen())
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       await act(async () => {
         await result.current.fetchBudget('budget-1')
@@ -351,7 +464,7 @@ describe('useBudgetScreen', () => {
 
       expect(result.current.name).toBe('My Budget')
       expect(result.current.amountLimit).toBe(50000)
-      expect(result.current.month).toBe(4) // month - 1
+      expect(result.current.month).toBe(4)
       expect(result.current.year).toBe(2026)
       expect(result.current.categoryId).toBe('cat-1')
     })
@@ -360,9 +473,13 @@ describe('useBudgetScreen', () => {
   describe('refresh', () => {
     it('should refresh budgets', async () => {
       const mockBudgets = [{ id: '1', name: 'Budget 1', amountLimit: 10000 }]
-      mockedBudgetService.getAll.mockResolvedValue({ data: mockBudgets })
+      mockedBudgetService.getAll.mockResolvedValue({ data: mockBudgets } as never)
 
       const { result } = renderHook(() => useBudgetScreen())
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       await act(async () => {
         await result.current.onRefresh()
@@ -373,9 +490,13 @@ describe('useBudgetScreen', () => {
     })
 
     it('should set refreshing flag to false after refresh completes', async () => {
-      mockedBudgetService.getAll.mockResolvedValue({ data: [] })
+      mockedBudgetService.getAll.mockResolvedValue({ data: [] } as never)
 
       const { result } = renderHook(() => useBudgetScreen())
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       expect(result.current.refreshing).toBe(false)
 
@@ -389,12 +510,17 @@ describe('useBudgetScreen', () => {
 
   describe('reset', () => {
     it('should reset form after successful create submit', async () => {
-      mockedBudgetService.create.mockResolvedValue({ data: { id: 'budget-1' } })
+      mockedBudgetService.create.mockResolvedValue({ data: { id: 'budget-1' } } as never)
 
       const { result } = renderHook(() => useBudgetScreen())
 
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
+
       act(() => {
         result.current.setName('Test Budget')
+        result.current.setCategoryId('cat-1')
         result.current.handleKeypad('1')
         result.current.handleKeypad('0')
         result.current.handleKeypad('0')
@@ -414,8 +540,12 @@ describe('useBudgetScreen', () => {
   })
 
   describe('feedback message', () => {
-    it('should dismiss feedback message', () => {
+    it('should dismiss feedback message', async () => {
       const { result } = renderHook(() => useBudgetScreen())
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       act(() => {
         result.current.setFeedbackMessage('Test message')
@@ -432,8 +562,12 @@ describe('useBudgetScreen', () => {
   })
 
   describe('ui state', () => {
-    it('should toggle keypad visibility', () => {
+    it('should toggle keypad visibility', async () => {
       const { result } = renderHook(() => useBudgetScreen())
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       expect(result.current.showKeypad).toBe(false)
 
@@ -444,8 +578,12 @@ describe('useBudgetScreen', () => {
       expect(result.current.showKeypad).toBe(true)
     })
 
-    it('should toggle category picker visibility', () => {
+    it('should toggle category picker visibility', async () => {
       const { result } = renderHook(() => useBudgetScreen())
+
+      await waitFor(() => {
+        expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      })
 
       expect(result.current.showCategoryPicker).toBe(false)
 

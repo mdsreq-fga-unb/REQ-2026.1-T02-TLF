@@ -29,9 +29,8 @@ export class RecurrenceDetailResponseDto {
       id: '3cec466a-096d-4016-bb10-bcc9b94a7d36',
       name: 'Assinaturas',
     },
-    required: false,
   })
-  category?: {
+  category!: {
     id: string
     name: string
   }

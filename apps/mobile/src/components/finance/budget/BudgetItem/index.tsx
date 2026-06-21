@@ -1,6 +1,3 @@
-// TODO: Remover quando sistema de categorias for implementado
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import { ThemedContainer } from '@/components/ui/ThemedContainer'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { Pressable, View } from 'react-native'
@@ -16,10 +13,12 @@ import { useState } from 'react'
 import { BudgetService } from '@/services/api/budget'
 import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
 import { useBudgetScreen } from '@/hooks/budget/useBudgetScreen'
+import { useColors } from '@/hooks/useColors'
 
 type props = {
   id: string
   categoryId: string
+  categoryColor?: string
   amountLimit: number
   name: string
   month: number
@@ -31,16 +30,15 @@ type props = {
 
 export function BudgetItem({
   id,
-  categoryId,
+  categoryColor,
   amountLimit,
   name,
-  month,
-  year,
   totalValue = amountLimit / 100,
   spentValue = 0,
   onDelete,
 }: props) {
   const colors = useThemeColor()
+  const { withOpacity } = useColors()
   const remainingValue = totalValue - spentValue
   const fillPercentage = Math.round((spentValue / totalValue) * 100)
   const formatedTotalValue = formatCurrency(totalValue)
@@ -49,6 +47,8 @@ export function BudgetItem({
   const safePercentage = Math.min(100, fillPercentage)
   const [showAction, setShowAction] = useState(false)
   const useBudget = useBudgetScreen()
+
+  const budgetColor = categoryColor ?? colors.primary
 
   return (
     <ThemedContainer style={{ padding: 20 }}>
@@ -68,7 +68,7 @@ export function BudgetItem({
               <Pressable
                 onPress={() => {
                   router.push(`/(budget)/${id}`)
-                  setShowAction(false) // Fecha o menu após a ação
+                  setShowAction(false)
                 }}
                 style={styles.menuItem}
               >
@@ -89,11 +89,18 @@ export function BudgetItem({
           ) : null}
         </View>
       </View>
+
       <View style={styles.container}>
         <ThemedText children variant="display" text={`${formatedTotalValue}`} />
         <ThemedText children variant="display" text={`${safePercentage}%`} />
       </View>
-      <ProgressBar percentage={safePercentage} backColor="blue" fillColor="green" />
+
+      <ProgressBar
+        percentage={safePercentage}
+        backColor={withOpacity(budgetColor, 0.17)}
+        fillColor={budgetColor}
+      />
+
       <View style={styles.container}>
         {remainingValue > 0 ? (
           <ThemedText children variant="label" tone="muted" text={`${formatedSpentValue} gastos`} />
@@ -105,12 +112,16 @@ export function BudgetItem({
           text={`${formatedRemainingValue} ${remainingValue > 0 ? 'sobrando' : 'além do limite'}`}
         />
       </View>
+
       <ThemedOverlayAlert
         visible={useBudget.feedbackMessage != null}
         onRequestClose={useBudget.dismissFeedback}
         message={useBudget.feedbackMessage ?? ''}
         actions={[
-          { label: 'Cancelar', onPress: useBudget.dismissFeedback },
+          {
+            label: 'Cancelar',
+            onPress: useBudget.dismissFeedback,
+          },
           {
             label: 'Confirmar',
             onPress: async () => {

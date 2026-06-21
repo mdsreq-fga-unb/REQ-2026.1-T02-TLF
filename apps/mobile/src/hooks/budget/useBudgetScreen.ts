@@ -1,7 +1,7 @@
-// TODO: Remover quando sistema de categorias for implementado
-/* eslint-disable no-console */
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
+import { useFocusEffect } from 'expo-router'
 import { BudgetService } from '@/services/api/budget'
+import { getCategories, type CategoryDTO } from '@/services/api/category'
 import { BudgetData, BudgetListItem, BudgetType } from 'types/types'
 import { formatCurrency } from '@/utils/formatters'
 import { getApiErrorMessage } from '@/utils/apiErrorMessage'
@@ -31,13 +31,46 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
   const [budgets, setBudgets] = useState<BudgetListItem[]>([])
   const [refreshing, setRefreshing] = useState(false)
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null)
+  const [categories, setCategories] = useState<CategoryDTO[]>([])
 
   const dismissFeedback = useCallback(() => setFeedbackMessage(null), [])
+
+  const loadCategories = useCallback(async () => {
+    try {
+      const data = await getCategories()
+      setCategories(data)
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Não foi possível carregar as categorias'
+      setFeedbackMessage(errorMessage)
+    }
+  }, [])
+
+  useFocusEffect(
+    useCallback(() => {
+      void loadCategories()
+    }, [loadCategories]),
+  )
+
+  const categoryOptions = useMemo(
+    () =>
+      categories.map((item) => ({
+        id: item.id,
+        label: item.name,
+        icon: item.icon,
+        color: item.color,
+      })),
+    [categories],
+  )
+
+  const selectedCategoryLabel = useMemo(
+    () => categoryOptions.find((item) => item.id === categoryId)?.label ?? '',
+    [categoryOptions, categoryId],
+  )
 
   async function fetchBudgets() {
     try {
       const response = await BudgetService.getAll()
-
       setBudgets(response.data)
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred'
@@ -47,15 +80,12 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
 
   async function onRefresh() {
     setRefreshing(true)
-
     await fetchBudgets()
-
     setRefreshing(false)
   }
 
   async function fetchBudget(id: string) {
     const response = await BudgetService.getById(id)
-
     const budget = response.data
 
     setName(budget.name)
@@ -84,13 +114,10 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
 
   const errors = {
     amount: amountLimit === 0 ? 'Informe o valor da transação' : undefined,
-    // TODO: Reativar quando a logica de categorias for implementada
-    // category: categoryId === '' ? 'Selecione uma categoria' : undefined,
+    category: categoryId === '' ? 'Selecione uma categoria' : undefined,
   }
 
-  // TODO: Reativar quando a logica de categorias for implementada
-  // const isValid = !errors.amount && !errors.category
-  const isValid = !errors.amount
+  const isValid = !errors.amount && !errors.category
 
   const reset = () => {
     setName('orçamento')
@@ -107,15 +134,16 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
     if (!isValid || submitting) return
     setFeedbackMessage(null)
     setSubmitting(true)
+
     try {
       const payload: BudgetData = {
-        name: name,
-        amountLimit: amountLimit,
+        name,
+        amountLimit,
         month: month + 1,
-        year: year,
+        year,
+        categoryId,
       }
 
-      console.log('[BudgetCreateSubmit] payload:', payload)
       await BudgetService.create(payload)
       reset()
       onSuccess?.()
@@ -134,15 +162,16 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
     if (!isValid || submitting) return
     setFeedbackMessage(null)
     setSubmitting(true)
+
     try {
       const payload: BudgetData = {
-        name: name,
-        amountLimit: amountLimit,
-        month: month,
-        year: year,
+        name,
+        amountLimit,
+        month,
+        year,
+        categoryId,
       }
 
-      console.log('[BudgetEditSubmit] payload:', payload)
       await BudgetService.update(id, payload)
       onSuccess?.()
     } catch (error) {
@@ -165,6 +194,7 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
     setAmountLimit,
     categoryId,
     setCategoryId,
+    selectedCategoryLabel,
     month,
     setMonth,
     year,
@@ -190,5 +220,8 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
     feedbackMessage,
     setFeedbackMessage,
     dismissFeedback,
+    categories,
+    categoryOptions,
+    loadCategories,
   }
 }

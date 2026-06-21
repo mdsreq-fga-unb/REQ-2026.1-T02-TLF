@@ -7,6 +7,7 @@ export type SummaryData = {
 }
 
 export type CategoryData = {
+  id: string
   name: string
   icon?: string
   color: string
@@ -52,10 +53,10 @@ export type BudgetData = {
 export type BudgetListItem = {
   id: string
   name: string
-  categoryId: string
   amountLimit: number
   month: number
   year: number
-  totalValue?: number
   spentValue?: number
+  categoryId: string
+  category?: CategoryData
 }

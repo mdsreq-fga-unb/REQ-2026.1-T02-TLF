@@ -31,7 +31,7 @@ export class RecurrenceListResponseDto {
     startDate: string
     endDate?: string
     isActive: boolean
-    category?: {
+    category: {
       id: string
       name: string
     }

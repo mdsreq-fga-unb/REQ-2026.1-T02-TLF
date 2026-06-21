@@ -35,18 +35,18 @@ export class BudgetService {
 
   async create(userId: string, dto: CreateBudgetDto) {
     // TODO: Validar categoria quando o módulo de categorias estiver implementado
-    // const category = await this.prisma.category.findUnique({
-    //   where: { id: dto.categoryId },
-    // })
-    // if (!category) throw new NotFoundException('Categoria não encontrada')
-    // if (category.userId !== userId)
-    //   throw new ForbiddenException('Categoria não pertence ao usuário')
+    const category = await this.prisma.category.findUnique({
+      where: { id: dto.categoryId },
+    })
+    if (!category) throw new NotFoundException('Categoria não encontrada')
+    if (category.userId !== userId)
+      throw new ForbiddenException('Categoria não pertence ao usuário')
 
     const existing = await this.prisma.budget.findUnique({
       where: {
         userId_categoryId_month_year: {
           userId,
-          categoryId: dto.categoryId ? dto.categoryId : '',
+          categoryId: dto.categoryId,
           month: dto.month,
           year: dto.year,
         },
@@ -65,7 +65,7 @@ export class BudgetService {
         year: true,
         categoryId: true,
         // TODO: Retornar category quando o módulo de categorias estiver implementado
-        // category: { select: { id: true, name: true } },
+        category: { select: { id: true, name: true, color: true, icon: true  } },
       },
     })
   }
@@ -80,8 +80,7 @@ export class BudgetService {
         month: true,
         year: true,
         categoryId: true,
-        // TODO: Retornar category quando o módulo de categorias estiver implementado
-        // category: { select: { id: true, name: true } },
+        category: { select: { id: true, name: true, color: true, icon: true  } },
       },
     })
   }
@@ -97,8 +96,7 @@ export class BudgetService {
         year: true,
         categoryId: true,
         userId: true,
-        // TODO: Retornar category quando o módulo de categorias estiver implementado
-        // category: { select: { id: true, name: true } },
+        category: { select: { id: true, name: true, color: true, icon: true  } },
       },
     })
 
@@ -120,8 +118,7 @@ export class BudgetService {
         month: true,
         year: true,
         categoryId: true,
-        // TODO: Retornar category quando o módulo de categorias estiver implementado
-        // category: { select: { id: true, name: true } },
+        category: { select: { id: true, name: true, color: true, icon: true  } },
       },
     })
   }
@@ -142,8 +139,7 @@ export class BudgetService {
         month: true,
         year: true,
         categoryId: true,
-        // TODO: Retornar category quando o módulo de categorias estiver implementado
-        // category: { select: { id: true, name: true } },
+        category: { select: { id: true, name: true, color: true, icon: true  } },
       },
     })
   }

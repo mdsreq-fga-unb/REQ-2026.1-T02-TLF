@@ -1,15 +1,15 @@
-import { iconByKey, type IconKey } from '@/utils/icons'
-import { iconSize } from '@/utils/dimensions'
-import { Tag } from 'lucide-react-native'
+// apps/mobile/src/components/ui/AppIcon/index.tsx
+import { resolveIcon, type IconKey } from '@/utils/icons'
+import type { IconProps } from 'phosphor-react-native'
 
 type Props = {
   name: IconKey | string
   size?: number
   color?: string
-  strokeWidth?: number
+  weight?: IconProps['weight']
 }
 
-export function AppIcon({ name, size = iconSize.md, color, strokeWidth = 2 }: Props) {
-  const Icon = iconByKey[name as IconKey] ?? Tag
-  return <Icon size={size} color={color} strokeWidth={strokeWidth} />
+export function AppIcon({ name, size = 24, color, weight = 'regular' }: Props) {
+  const Icon = resolveIcon(name)
+  return <Icon size={size} color={color} weight={weight} />
 }

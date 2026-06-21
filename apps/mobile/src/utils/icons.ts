@@ -77,13 +77,8 @@ import {
   type LucideIcon,
 } from 'lucide-react-native'
 
-export type AppIconProps = {
-  size?: number
-  color?: string
-  strokeWidth?: number
-}
-
-export type AppIcon = ComponentType<AppIconProps>
+export type AppIconProps = IconProps
+export type AppIconComponent = ComponentType<IconProps>
 
 export const iconByKey = {
   'alert-circle': AlertCircle,
@@ -164,6 +159,6 @@ export const iconByKey = {
 
 export type IconKey = keyof typeof iconByKey
 
-export function resolveIcon(key: string): AppIcon {
+export function resolveIcon(key: string): AppIconComponent {
   return iconByKey[key as IconKey] ?? Tag
 }

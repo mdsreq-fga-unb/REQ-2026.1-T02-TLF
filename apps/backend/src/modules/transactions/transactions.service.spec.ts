@@ -1,8 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { TransactionsService } from './transactions.service'
 import { PrismaService } from '@common/prisma/prisma.service'
-import { BadRequestException, NotFoundException, ForbiddenException } from '@nestjs/common'
+import { NotFoundException, ForbiddenException } from '@nestjs/common'
 import { TransactionType, TransactionStatus } from '../../../generated/prisma/enums'
+import { CreateTransactionDto } from './dto/create-transaction.dto'
+import { UpdateTransactionDto } from './dto/update-transaction.dto'
 
 const prismaMock = {
   category: { findUnique: jest.fn() },
@@ -61,6 +63,11 @@ const mockTransaction = {
   destinationInstitutionId: null,
 }
 
+const mockTransactionWithAccess = {
+  ...mockTransaction,
+  institution: mockInstitution,
+}
+
 const formattedTransaction = {
   id: mockTransaction.id,
   type: mockTransaction.type,
@@ -111,7 +118,7 @@ describe('TransactionsService', () => {
       prismaMock.institution.findUnique.mockResolvedValue(mockInstitution)
       prismaMock.transaction.create.mockResolvedValue(mockTransaction)
 
-      const result = await service.create('user-1', dto as any)
+      const result = await service.create('user-1', dto as CreateTransactionDto)
 
       expect(result).toEqual(formattedTransaction)
       expect(prismaMock.transaction.create).toHaveBeenCalledTimes(1)
@@ -121,7 +128,7 @@ describe('TransactionsService', () => {
       prismaMock.category.findUnique.mockResolvedValue(mockCategory)
       prismaMock.institution.findUnique.mockResolvedValue(null)
 
-      await expect(service.create('user-1', dto as any)).rejects.toThrow(NotFoundException)
+      await expect(service.create('user-1', dto as CreateTransactionDto)).rejects.toThrow(NotFoundException)
     })
 
     it('deve lançar BadRequestException se instituição não pertencer ao usuário', async () => {
@@ -131,7 +138,7 @@ describe('TransactionsService', () => {
         userId: 'outro-user',
       })
 
-      await expect(service.create('user-1', dto as any)).rejects.toThrow(BadRequestException)
+      await expect(service.create('user-1', dto as CreateTransactionDto)).rejects.toThrow(ForbiddenException)
     })
   })
 
@@ -140,7 +147,7 @@ describe('TransactionsService', () => {
       prismaMock.transaction.findMany.mockResolvedValue([mockTransaction])
       prismaMock.transaction.count.mockResolvedValue(1)
 
-      const result = await service.findAll('user-1', {} as any)
+      const result = await service.findAll('user-1', {})
 
       expect(result.data).toHaveLength(1)
       expect(result.meta).toEqual({
@@ -155,7 +162,7 @@ describe('TransactionsService', () => {
       prismaMock.transaction.findMany.mockResolvedValue([mockTransaction])
       prismaMock.transaction.count.mockResolvedValue(1)
 
-      await service.findAll('user-1', {} as any)
+      await service.findAll('user-1', {})
 
       expect(prismaMock.transaction.findMany).toHaveBeenCalledWith({
         where: { institution: { userId: 'user-1' } },
@@ -173,7 +180,7 @@ describe('TransactionsService', () => {
 
   describe('findOne', () => {
     it('deve retornar uma transação quando o usuário tiver acesso', async () => {
-      prismaMock.transaction.findUnique.mockResolvedValue(mockTransaction)
+      prismaMock.transaction.findUnique.mockResolvedValue(mockTransactionWithAccess)
 
       const result = await service.findOne({
         userId: 'user-1',
@@ -211,7 +218,7 @@ describe('TransactionsService', () => {
 
   describe('update', () => {
     it('deve atualizar transação com sucesso', async () => {
-      prismaMock.transaction.findUnique.mockResolvedValue(mockTransaction)
+      prismaMock.transaction.findUnique.mockResolvedValue(mockTransactionWithAccess)
       prismaMock.institution.findUnique.mockResolvedValue(mockInstitution)
 
       prismaMock.transaction.update.mockResolvedValue({
@@ -226,7 +233,7 @@ describe('TransactionsService', () => {
         id: '1',
         dto: {
           description: 'novo valor',
-        } as any,
+        } as UpdateTransactionDto,
       })
 
       expect(prismaMock.transaction.update).toHaveBeenCalledWith({
@@ -245,7 +252,7 @@ describe('TransactionsService', () => {
 
   describe('remove', () => {
     it('deve remover transação com sucesso', async () => {
-      prismaMock.transaction.findUnique.mockResolvedValue(mockTransaction)
+      prismaMock.transaction.findUnique.mockResolvedValue(mockTransactionWithAccess)
       prismaMock.transaction.delete.mockResolvedValue({
         ...mockTransaction,
         id: '1',

@@ -31,12 +31,15 @@ describe('useEditRecordScreen', () => {
     expect(result.current.mode).toBe('edit')
     expect(result.current.title).toBe(TRANSACTION_FORM_COPY.editTitle)
     expect(result.current.initialValues).toEqual({
+      id: 'tx-1',
       type: 'EXPENSE',
       amountCents: 15050,
       categoryId: 'food',
+      subcategoryId: '',
       institutionId: 'inst-1',
       destinationInstitutionId: 'inst-2',
       notes: 'Almoco',
+      date: '',
     })
   })
 

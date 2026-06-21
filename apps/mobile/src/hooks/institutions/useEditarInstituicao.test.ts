@@ -31,7 +31,7 @@ describe('useEditarInstituicao', () => {
     jest.clearAllMocks()
     jest.useFakeTimers()
     mockParams = {
-      id: 'mock-inst-1',
+      id: mockInstitutions[0].id,
       name: 'Nubank',
       color: '#820AD1',
       icon: 'landmark',
@@ -83,7 +83,7 @@ describe('useEditarInstituicao', () => {
 
       const updated = useInstitutionsStore
         .getState()
-        .institutions.find((item) => item.id === 'mock-inst-1')
+        .institutions.find((item) => item.id === mockInstitutions[0].id)
 
       expect(updated?.name).toBe('Nubank Ultravioleta')
       expect(result.current.showSuccess).toBe(true)

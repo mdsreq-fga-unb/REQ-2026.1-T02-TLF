@@ -6,20 +6,26 @@ import { useRecordsScreen } from './useRecordsScreen'
 jest.mock('@/services/database/repository/transaction', () => ({
   transactionQueries: {
     getAll: jest.fn(),
+    getByFilters: jest.fn(),
     delete: jest.fn(),
   },
 }))
 
-jest.mock('@/services/api/transactions', () => ({
-  listTransactions: jest.fn(),
-  listTransactionsByCategory: jest.fn(),
-  listTransactionsByType: jest.fn(),
-  deleteTransaction: jest.fn(),
+jest.mock('@/services/api/transactions/transactions.service', () => ({
+  transactionsService: {
+    list: jest.fn().mockResolvedValue(jest.requireActual('@/utils/fixtures/records').mockTransactions),
+    delete: jest.fn().mockResolvedValue(undefined),
+  },
 }))
 
-jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
-}))
+jest.mock('expo-router', () => {
+  const React = require('react')
+
+  return {
+    router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
+    useFocusEffect: (effect: () => void | (() => void)) => React.useEffect(effect, []),
+  }
+})
 
 const mockedPush = jest.mocked(router.push)
 
@@ -89,9 +95,14 @@ describe('useRecordsScreen', () => {
         type: transaction.type,
         amount: transaction.amount.toString(),
         categoryId: transaction.categoryId,
+        subcategoryId: transaction.subcategoryId || '',
         institutionId: transaction.institutionId,
         destinationInstitutionId: transaction.destinationInstitutionId || '',
         description: transaction.description,
+        date:
+          typeof transaction.date === 'string'
+            ? transaction.date
+            : transaction.date.toISOString(),
       },
     })
   })

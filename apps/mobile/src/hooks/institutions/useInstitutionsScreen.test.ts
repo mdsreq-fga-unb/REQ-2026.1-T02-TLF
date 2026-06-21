@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-native'
+import { renderHook, act, waitFor } from '@testing-library/react-native'
 import { router } from 'expo-router'
 import { mockInstitutions } from '@/utils/fixtures/institutions'
 import { useInstitutionsStore } from '@/stores/institutions'
@@ -83,7 +83,7 @@ describe('useInstitutionsScreen', () => {
       expect(mockedPush).toHaveBeenCalledWith({
         pathname: '/instituicao/[id]',
         params: {
-          id: 'mock-inst-1',
+          id: mockInstitutions[0].id,
           name: 'Nubank',
           color: '#820AD1',
           icon: 'landmark',
@@ -103,50 +103,54 @@ describe('useInstitutionsScreen', () => {
   })
 
   describe('delete', () => {
-    it('should block deletion for institutions with linked accounts', () => {
+    it('should block deletion for institutions with linked accounts', async () => {
       const { result } = renderHook(() => useInstitutionsScreen())
 
-      act(() => {
-        result.current.handleDelete('mock-inst-1') // accountsCount: 2
+      await act(async () => {
+        result.current.handleDelete(mockInstitutions[0].id)
       })
 
-      expect(result.current.blockedVisible).toBe(true)
-      expect(result.current.confirmVisible).toBe(false)
+      await waitFor(() => {
+        expect(result.current.blockedVisible).toBe(true)
+        expect(result.current.confirmVisible).toBe(false)
+      })
     })
 
-    it('should open the confirmation for institutions without accounts', () => {
+    it('should open the confirmation for institutions without accounts', async () => {
       const { result } = renderHook(() => useInstitutionsScreen())
 
-      act(() => {
-        result.current.handleDelete('mock-inst-2') // accountsCount: 0
+      await act(async () => {
+        result.current.handleDelete(mockInstitutions[1].id)
       })
 
-      expect(result.current.confirmVisible).toBe(true)
-      expect(result.current.blockedVisible).toBe(false)
+      await waitFor(() => {
+        expect(result.current.confirmVisible).toBe(true)
+        expect(result.current.blockedVisible).toBe(false)
+      })
     })
 
-    it('should remove the institution from the store on confirm', () => {
+    it('should remove the institution from the store on confirm', async () => {
       const { result } = renderHook(() => useInstitutionsScreen())
 
-      act(() => {
-        result.current.handleDelete('mock-inst-2')
+      await act(async () => {
+        result.current.handleDelete(mockInstitutions[1].id)
       })
 
-      act(() => {
+      await act(async () => {
         result.current.confirmDelete()
       })
 
       expect(result.current.confirmVisible).toBe(false)
       expect(
-        useInstitutionsStore.getState().institutions.find((item) => item.id === 'mock-inst-2'),
+        useInstitutionsStore.getState().institutions.find((item) => item.id === mockInstitutions[1].id),
       ).toBeUndefined()
     })
 
-    it('should cancel a pending deletion without removing anything', () => {
+    it('should cancel a pending deletion without removing anything', async () => {
       const { result } = renderHook(() => useInstitutionsScreen())
 
-      act(() => {
-        result.current.handleDelete('mock-inst-2')
+      await act(async () => {
+        result.current.handleDelete(mockInstitutions[1].id)
       })
 
       act(() => {
@@ -157,13 +161,16 @@ describe('useInstitutionsScreen', () => {
       expect(useInstitutionsStore.getState().institutions).toHaveLength(mockInstitutions.length)
     })
 
-    it('should dismiss the blocked modal', () => {
+    it('should dismiss the blocked modal', async () => {
       const { result } = renderHook(() => useInstitutionsScreen())
 
-      act(() => {
-        result.current.handleDelete('mock-inst-1')
+      await act(async () => {
+        result.current.handleDelete(mockInstitutions[0].id)
       })
-      expect(result.current.blockedVisible).toBe(true)
+
+      await waitFor(() => {
+        expect(result.current.blockedVisible).toBe(true)
+      })
 
       act(() => {
         result.current.dismissBlocked()

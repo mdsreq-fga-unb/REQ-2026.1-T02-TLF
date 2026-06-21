@@ -22,48 +22,49 @@ export class CategoryService {
   }
 
   private async reclassify(userId: string, fromCategoryId: string, toCategoryId: string) {
-  const newCategory = await this.prisma.category.findUnique({
-    where: { id: toCategoryId },
-  })
-  if (!newCategory) throw new NotFoundException('Categoria destino não encontrada')
-  if (newCategory.userId !== userId) throw new ForbiddenException('Categoria destino não pertence ao usuário')
+    const newCategory = await this.prisma.category.findUnique({
+      where: { id: toCategoryId },
+    })
+    if (!newCategory) throw new NotFoundException('Categoria destino não encontrada')
+    if (newCategory.userId !== userId)
+      throw new ForbiddenException('Categoria destino não pertence ao usuário')
 
-  await Promise.all([
-    this.prisma.transaction.updateMany({
-      where: { categoryId: fromCategoryId },
-      data: { categoryId: toCategoryId },
-    }),
-    this.prisma.budget.updateMany({
-      where: { categoryId: fromCategoryId },
-      data: { categoryId: toCategoryId },
-    }),
-    this.prisma.recurrence.updateMany({
-      where: { categoryId: fromCategoryId },
-      data: { categoryId: toCategoryId },
-    }),
-  ])
-}
+    await Promise.all([
+      this.prisma.transaction.updateMany({
+        where: { categoryId: fromCategoryId },
+        data: { categoryId: toCategoryId },
+      }),
+      this.prisma.budget.updateMany({
+        where: { categoryId: fromCategoryId },
+        data: { categoryId: toCategoryId },
+      }),
+      this.prisma.recurrence.updateMany({
+        where: { categoryId: fromCategoryId },
+        data: { categoryId: toCategoryId },
+      }),
+    ])
+  }
 
   async create(userId: string, dto: CreateCategoryDto) {
     await this.checkDuplicateName(userId, dto.name)
 
     return this.prisma.category.create({
       data: { ...dto, userId },
-      select: { id: true, name: true, icon: true, color: true, isDefault: true },
+      select: { id: true, name: true, icon: true, color: true },
     })
   }
 
   async findAll(userId: string) {
     return this.prisma.category.findMany({
       where: { userId },
-      select: { id: true, name: true, icon: true, color: true, isDefault: true },
+      select: { id: true, name: true, icon: true, color: true },
     })
   }
 
   async findOne(userId: string, id: string) {
     const category = await this.prisma.category.findUnique({
       where: { id, userId },
-      select: { id: true, name: true, icon: true, color: true, isDefault: true },
+      select: { id: true, name: true, icon: true, color: true },
     })
     if (!category) throw new NotFoundException('Categoria não encontrada')
     return category
@@ -84,7 +85,7 @@ export class CategoryService {
     return this.prisma.category.update({
       where: { id },
       data: dto,
-      select: { id: true, name: true, icon: true, color: true, isDefault: true },
+      select: { id: true, name: true, icon: true, color: true },
     })
   }
 

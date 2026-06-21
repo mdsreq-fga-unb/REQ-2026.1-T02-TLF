@@ -3,7 +3,7 @@ import type {
   SummaryData,
   TransactionListItem,
 } from '@/components/finance/records/types'
-import type { TransactionType } from '@/services/database/queries/transaction'
+import { TransactionType } from '@/services/database/models/transaction'
 import { resolveCategoryColor } from './categoryColors'
 
 export function buildCategoryOptions(

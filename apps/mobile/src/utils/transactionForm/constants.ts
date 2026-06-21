@@ -1,4 +1,4 @@
-import type { TransactionType } from '@/services/database/queries/transaction'
+import { TransactionType } from '@/services/database/models/transaction'
 
 export const MAX_AMOUNT_CENTS = 9_999_999
 

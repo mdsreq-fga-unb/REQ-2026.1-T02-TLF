@@ -49,9 +49,7 @@
         {
           "listen": "test",
           "script": {
-            "exec": [
-              "pm.test('Status 409', () => pm.response.to.have.status(409));"
-            ]
+            "exec": ["pm.test('Status 409', () => pm.response.to.have.status(409));"]
           }
         }
       ],
@@ -71,9 +69,7 @@
         {
           "listen": "test",
           "script": {
-            "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));"
-            ]
+            "exec": ["pm.test('Status 400', () => pm.response.to.have.status(400));"]
           }
         }
       ],
@@ -129,9 +125,7 @@
         {
           "listen": "test",
           "script": {
-            "exec": [
-              "pm.test('Status 404', () => pm.response.to.have.status(404));"
-            ]
+            "exec": ["pm.test('Status 404', () => pm.response.to.have.status(404));"]
           }
         }
       ],
@@ -192,9 +186,7 @@
         {
           "listen": "test",
           "script": {
-            "exec": [
-              "pm.test('Status 404', () => pm.response.to.have.status(404));"
-            ]
+            "exec": ["pm.test('Status 404', () => pm.response.to.have.status(404));"]
           }
         }
       ],

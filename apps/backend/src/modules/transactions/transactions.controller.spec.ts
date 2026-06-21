@@ -3,6 +3,8 @@ import { TransactionsController } from './transactions.controller'
 import { TransactionsService } from './transactions.service'
 import { AuthGuard } from '../auth/context/auth.guard'
 import { TransactionType, TransactionStatus } from '../../../generated/prisma/enums'
+import { FilterTransactionsDto } from './dto/filter-transactions.dto'
+import { UpdateTransactionDto } from './dto/update-transaction.dto'
 
 const transactionsServiceMock = {
   create: jest.fn(),
@@ -77,25 +79,22 @@ describe('TransactionsController', () => {
     it('deve chamar findAll com userId e filtros', async () => {
       transactionsServiceMock.findAll.mockResolvedValue({ data: [{ id: '1' }], meta: {} })
 
-      const query = {
+      const query: FilterTransactionsDto = {
         categoryId: 'cat-1',
         type: TransactionType.INCOME,
       }
 
-      await controller.findAll('user-1', query as any);
+      await controller.findAll('user-1', query)
 
-      expect(transactionsServiceMock.findAll).toHaveBeenCalledWith(
-        'user-1',
-        query,
-      );
-    });
-  });
+      expect(transactionsServiceMock.findAll).toHaveBeenCalledWith('user-1', query)
+    })
+  })
 
   describe('findOne', () => {
     it('deve chamar service.findOne corretamente', async () => {
       transactionsServiceMock.findOne.mockResolvedValue({ id: '1' })
 
-      await controller.findOne('user-1', '1');
+      await controller.findOne('user-1', '1')
 
       expect(transactionsServiceMock.findOne).toHaveBeenCalledWith({
         userId: 'user-1',
@@ -108,9 +107,9 @@ describe('TransactionsController', () => {
     it('deve chamar service.update com dados corretos', async () => {
       transactionsServiceMock.update.mockResolvedValue({ id: '1' })
 
-      const dto = { description: 'novo valor' };
+      const dto: UpdateTransactionDto = { description: 'novo valor' }
 
-      await controller.update('user-1', '1', dto as any);
+      await controller.update('user-1', '1', dto)
 
       expect(transactionsServiceMock.update).toHaveBeenCalledWith({
         userId: 'user-1',
@@ -124,12 +123,12 @@ describe('TransactionsController', () => {
     it('deve chamar service.remove com dados corretos', async () => {
       transactionsServiceMock.remove.mockResolvedValue({ id: '1' })
 
-      await controller.remove('user-1', '1');
+      await controller.remove('user-1', '1')
 
       expect(transactionsServiceMock.remove).toHaveBeenCalledWith({
         userId: 'user-1',
         id: '1',
-      });
-    });
-  });
-});
+      })
+    })
+  })
+})

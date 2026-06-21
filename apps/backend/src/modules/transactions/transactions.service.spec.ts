@@ -16,10 +16,18 @@ const prismaMock = {
     update: jest.fn(),
     delete: jest.fn(),
   },
-  $transaction: jest.fn((operations: Promise<unknown>[]) =>
-    Promise.all(operations),
-  ),
+  deletedRecord: {
+    createMany: jest.fn(),
+  },
+  $transaction: jest.fn(),
 }
+
+prismaMock.$transaction.mockImplementation((arg: unknown) => {
+  if (typeof arg === 'function') {
+    return arg(prismaMock)
+  }
+  return Promise.all(arg as Promise<unknown>[])
+})
 
 const mockCategory = {
   id: 'cat-1',
@@ -333,9 +341,7 @@ describe('TransactionsService', () => {
     })
 
     it('deve lançar ForbiddenException quando o usuário não tiver acesso', async () => {
-      prismaMock.transaction.findUnique.mockResolvedValue(
-        transactionWithAccess('outro-user'),
-      )
+      prismaMock.transaction.findUnique.mockResolvedValue(transactionWithAccess('outro-user'))
 
       await expect(
         service.findOne({
@@ -382,29 +388,19 @@ describe('TransactionsService', () => {
   describe('remove', () => {
     it('deve remover transação com sucesso', async () => {
       prismaMock.transaction.findUnique.mockResolvedValue(transactionWithAccess('user-1'))
-
       prismaMock.transaction.delete.mockResolvedValue({
         ...mockTransaction,
         id: '1',
       })
+      prismaMock.deletedRecord.createMany.mockResolvedValue({ count: 1 })
 
-      const result = await service.remove({
+      await service.remove({
         userId: 'user-1',
         id: '1',
       })
 
       expect(prismaMock.transaction.delete).toHaveBeenCalledWith({
         where: { id: '1' },
-        include: {
-          category: true,
-          subCategory: true,
-          account: true,
-        },
-      })
-
-      expect(result).toEqual({
-        ...formattedTransaction,
-        id: '1',
       })
     })
   })

@@ -3,7 +3,7 @@ import type {
   SummaryData,
   TransactionListItem,
 } from '@/components/finance/records/types'
-import type { TransactionType } from '@/services/database/queries/transaction'
+import { TransactionType } from '@/services/database/models/transaction'
 
 export const recordsSummary: SummaryData = {
   balance: 3570.75,

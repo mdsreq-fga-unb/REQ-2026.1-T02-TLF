@@ -1,1 +1,5 @@
-// migrations must be implemented before launching the app. risk of data loss
+import { schemaMigrations } from '@nozbe/watermelondb/Schema/migrations'
+
+export default schemaMigrations({
+  migrations: [],
+})

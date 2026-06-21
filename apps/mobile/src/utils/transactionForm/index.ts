@@ -1,5 +1,5 @@
 import type { SemanticColors } from '@/utils/colors'
-import type { TransactionType } from '@/services/database/queries/transaction'
+import { TransactionType } from '@/services/database/models/transaction'
 
 export * from './constants'
 export * from './data'

@@ -1,8 +1,7 @@
 import { useCallback, useState } from 'react'
-import { transactionsService } from '@/services/api/transactions/transactions.service'
-import type { TransactionType } from '@/services/api/transactions/transactions.types'
-import { ACCOUNTS, CATEGORIES, MAX_AMOUNT_CENTS, TRANSACTION_FORM_ERRORS } from '@/utils/transactionForm'
-import { transactionQueries } from '@/services/database/queries/transaction'
+import { createTransaction } from '@/services/database/repository/transaction'
+import { TransactionType } from '@/services/database/models/transaction'
+import { ACCOUNTS, MAX_AMOUNT_CENTS, TRANSACTION_FORM_ERRORS } from '@/utils/transactionForm'
 
 export type TransactionInitialValues = {
   id?: string

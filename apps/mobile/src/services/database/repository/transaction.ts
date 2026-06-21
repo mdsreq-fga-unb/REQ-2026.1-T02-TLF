@@ -1,13 +1,12 @@
 import { Q } from '@nozbe/watermelondb'
 import { database } from '..'
-import { Transaction } from '../models/transaction'
+import { Transaction, TransactionType, TransactionStatus } from '../models/transaction'
+
+export type { TransactionType, TransactionStatus }
 
 const TRANSACTIONS_TABLE = 'transactions'
 
 const transactionsCollection = () => database.get<Transaction>(TRANSACTIONS_TABLE)
-
-export type TransactionType = 'EXPENSE' | 'INCOME' | 'TRANSFER'
-export type TransactionStatus = 'PENDING' | 'CONFIRMED'
 
 export type TransactionInput = {
   amount: number
@@ -62,7 +61,7 @@ const applyTransactionFields = (
 }
 
 export const getAllTransactions = async () => {
-  return transactionsCollection().query().fetch()
+  return transactionsCollection().query(Q.sortBy('created_at', 'desc')).fetch()
 }
 
 export const getTransactionById = async (id: string) => {
@@ -112,37 +111,6 @@ export const markTransactionAsDeleted = async (id: string) => {
   })
 }
 
-// TODO: remove this function after testing
-export const runTransactionCrudSmokeTest = async () => {
-  const created = await createTransaction({
-    amount: 100,
-    description: 'WatermelonDB smoke test',
-    date: new Date(),
-    type: 'EXPENSE',
-    status: 'PENDING',
-    accountId: 'test-account',
-    categoryId: 'test-category',
-  })
-
-  const found = await getTransactionById(created.id)
-  const updated = await updateTransaction(found.id, {
-    amount: 150,
-    status: 'CONFIRMED',
-  })
-  const filtered = await getTransactionsByFilters({
-    accountId: 'test-account',
-    status: 'CONFIRMED',
-  })
-
-  await markTransactionAsDeleted(updated.id)
-
-  return {
-    createdId: created.id,
-    updatedAmount: updated.amount,
-    filteredCount: filtered.length,
-  }
-}
-
 export const transactionQueries = {
   table: TRANSACTIONS_TABLE,
   getAll: getAllTransactions,
@@ -153,5 +121,4 @@ export const transactionQueries = {
   update: updateTransaction,
   delete: markTransactionAsDeleted,
   markAsDeleted: markTransactionAsDeleted,
-  runSmokeTest: runTransactionCrudSmokeTest,
 }

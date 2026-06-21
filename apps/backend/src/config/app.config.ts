@@ -9,6 +9,7 @@ const envSchema = z.object({
   SUPABASE_ANON_KEY: z.string().min(10),
   SUPABASE_SERVICE_KEY: z.string().min(10),
   SUPABASE_JWT_SECRET: z.string().min(10),
+  HTTP_BODY_LIMIT: z.string(),
 })
 
 export type AppConfig = z.infer<typeof envSchema>
@@ -21,6 +22,7 @@ export const appConfig = registerAs('app', () => ({
   supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
   supabaseServiceKey: process.env.SUPABASE_SERVICE_KEY,
   supabaseJwtSecret: process.env.SUPABASE_JWT_SECRET,
+  httpBodyLimit: process.env.HTTP_BODY_LIMIT,
 }))
 
 export function validate(config: Record<string, unknown>) {

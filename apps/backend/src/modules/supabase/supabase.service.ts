@@ -15,8 +15,8 @@ export class SupabaseService {
       )
     }
     this.supabaseClient = createClient(supabaseUrl, supabaseServiceKey, {
-  realtime: { transport: ws.WebSocket as unknown as typeof WebSocket },
-})
+      realtime: { transport: ws.WebSocket as unknown as typeof WebSocket },
+    })
   }
   get auth(): SupabaseClient['auth'] {
     return this.supabaseClient.auth

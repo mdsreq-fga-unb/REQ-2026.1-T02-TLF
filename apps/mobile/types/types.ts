@@ -8,8 +8,9 @@ export type SummaryData = {
 
 export type CategoryData = {
   name: string
-  icon: string
+  icon?: string
   color: string
+  amount: number
 }
 
 export type TransactionListItem = {

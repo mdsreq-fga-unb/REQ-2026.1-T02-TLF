@@ -11,6 +11,12 @@ function nestMessage(data: unknown): string | undefined {
   return undefined
 }
 
+function responseMessage(error: unknown): string | undefined {
+  if (!error || typeof error !== 'object' || !('response' in error)) return undefined
+  const response = (error as { response?: { data?: unknown } }).response
+  return nestMessage(response?.data)
+}
+
 export function getApiErrorMessage(error: unknown, fallback: string): string {
   if (axios.isAxiosError(error)) {
     const noResponse = !error.response
@@ -33,6 +39,8 @@ export function getApiErrorMessage(error: unknown, fallback: string): string {
     if (status === 409) return 'Este recurso já existe ou está em conflito.'
     if (status != null && status >= 500) return 'Falha no servidor. Tente mais tarde.'
   }
+  const fromResponse = responseMessage(error)
+  if (fromResponse) return fromResponse
   if (error instanceof Error && error.message.trim() !== '') return error.message
   return fallback
 }

@@ -3,11 +3,16 @@ import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { ValidationPipe } from '@nestjs/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { json, urlencoded } from 'express'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
   app.setGlobalPrefix('api/v1')
+
+  const bodyLimit = process.env.HTTP_BODY_LIMIT
+  app.use(json({ limit: bodyLimit }))
+  app.use(urlencoded({ extended: true, limit: bodyLimit }))
 
   app.useGlobalPipes(
     new ValidationPipe({

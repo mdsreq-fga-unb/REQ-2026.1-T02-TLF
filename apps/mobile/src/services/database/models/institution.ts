@@ -1,8 +1,13 @@
-import { Model } from '@nozbe/watermelondb'
-import { field, date, readonly, text } from '@nozbe/watermelondb/decorators'
+import { Model, Q } from '@nozbe/watermelondb'
+import { date, field, lazy, readonly, text } from '@nozbe/watermelondb/decorators'
+import type { Account } from './account'
 
 export class Institution extends Model {
   static table = 'institutions'
+
+  static associations = {
+    accounts: { type: 'has_many' as const, foreignKey: 'institution_id' },
+  }
 
   @text('name') name!: string
   @field('color') color!: string
@@ -11,4 +16,7 @@ export class Institution extends Model {
   @field('user_id') userId!: string | null
   @readonly @date('created_at') createdAt!: Date
   @readonly @date('updated_at') updatedAt!: Date
+
+  @lazy
+  accounts = this.collections.get<Account>('accounts').query(Q.where('institution_id', this.id))
 }

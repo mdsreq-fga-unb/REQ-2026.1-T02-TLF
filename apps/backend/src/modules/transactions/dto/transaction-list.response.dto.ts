@@ -33,7 +33,7 @@ export class TransactionListResponseDto {
     description?: string
     date: string
     status?: string
-    category: {
+    category?: {
       id: string
       name: string
     }

@@ -3,7 +3,7 @@ import { mockTransactions } from '@/utils/fixtures/records'
 import { router } from 'expo-router'
 import { useRecordsScreen } from './useRecordsScreen'
 
-jest.mock('@/services/database/queries/transaction', () => ({
+jest.mock('@/services/database/repository/transaction', () => ({
   transactionQueries: {
     getAll: jest.fn(),
     delete: jest.fn(),

@@ -19,6 +19,8 @@ describe('useEditRecordScreen', () => {
       type: 'EXPENSE',
       amount: '150.5',
       categoryId: 'food',
+      institutionId: 'inst-1',
+      destinationInstitutionId: 'inst-2',
       description: 'Almoco',
     })
   })
@@ -32,6 +34,8 @@ describe('useEditRecordScreen', () => {
       type: 'EXPENSE',
       amountCents: 15050,
       categoryId: 'food',
+      institutionId: 'inst-1',
+      destinationInstitutionId: 'inst-2',
       notes: 'Almoco',
     })
   })

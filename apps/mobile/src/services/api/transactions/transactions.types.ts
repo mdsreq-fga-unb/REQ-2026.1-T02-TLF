@@ -13,27 +13,21 @@ export type TransactionApiItem = {
   type: TransactionType
   status: TransactionStatus
 
-  accountId: string
-  account?: {
+  institution?: {
     id: string
     name: string
   }
 
-  categoryId: string
   category?: {
     id: string
     name: string
   }
-  subcategoryId?: string | null
   subCategory?: {
     id: string
     name: string
   }
 
-  invoiceId?: string | null
-  recurrenceId?: string | null
-
-  destinationAccountId?: string | null
+  destinationInstitutionId?: string | null
 
   installmentRef?: string | null
   installmentNumber?: number | null
@@ -46,19 +40,8 @@ export type TransactionApiItem = {
   updatedAt?: string
 }
 
-export type TransactionUpdatePayload = Partial<CreateTransactionPayload>
-
-export type TransactionFilters = {
-  category?: string
-  type?: TransactionType
-}
-
 export type CreateTransactionPayload = {
-  accountId: string
-  account?: {
-    id: string
-    name: string
-  }
+  institutionId: string
   categoryId: string
   subCategoryId?: string
 
@@ -71,7 +54,14 @@ export type CreateTransactionPayload = {
 
   invoiceId?: string
   recurrenceId?: string
-  destinationAccountId?: string
+  destinationInstitutionId?: string
   installmentNumber?: number
   installmentTotal?: number
+}
+
+export type TransactionUpdatePayload = Partial<CreateTransactionPayload>
+
+export type TransactionFilters = {
+  category?: string
+  type?: TransactionType
 }

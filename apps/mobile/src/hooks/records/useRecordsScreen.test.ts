@@ -88,7 +88,9 @@ describe('useRecordsScreen', () => {
         id: transaction.id,
         type: transaction.type,
         amount: transaction.amount.toString(),
-        categoryId: transaction.category,
+        categoryId: transaction.categoryId,
+        institutionId: transaction.institutionId,
+        destinationInstitutionId: transaction.destinationInstitutionId || '',
         description: transaction.description,
       },
     })

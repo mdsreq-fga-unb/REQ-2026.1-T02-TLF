@@ -3,6 +3,14 @@ import { IsOptional, IsUUID, IsEnum, IsInt, Min } from 'class-validator'
 import { TransactionType } from '../../../../generated/prisma/client'
 export class FilterTransactionsDto {
   @ApiPropertyOptional({
+    example: 'ae73db85-6c25-4b8d-91b2-d0cda2830c65',
+    description: 'ID da instituição usado como filtro',
+  })
+  @IsOptional()
+  @IsUUID()
+  institutionId?: string
+
+  @ApiPropertyOptional({
     enum: TransactionType,
     example: TransactionType.EXPENSE,
     description: 'Tipo da transação para filtro',

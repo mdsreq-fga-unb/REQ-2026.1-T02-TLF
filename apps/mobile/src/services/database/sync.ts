@@ -8,7 +8,7 @@ let isSyncing = false
 async function runSync(): Promise<void> {
   await synchronize({
     database,
-    migrationsEnabledAtVersion: 1,
+    migrationsEnabledAtVersion: 2,
 
     pullChanges: async ({ lastPulledAt }) => {
       const { data } = await api.get('/sync/pull', {

@@ -1,6 +1,8 @@
-import { router } from 'expo-router'
+import { router, useFocusEffect } from 'expo-router'
 import { useCallback, useMemo, useState } from 'react'
-import { ACCOUNTS, CATEGORIES, TRANSACTION_FORM_COPY } from '@/utils/transactionForm'
+import { useInstitutionsStore } from '@/stores/institutions'
+import { getCategories, type CategoryDTO } from '@/services/api/category'
+import { TRANSACTION_FORM_COPY } from '@/utils/transactionForm'
 import {
   useTransactionForm,
   type TransactionInitialValues,
@@ -22,11 +24,56 @@ export function useTransactionFormScreen({
   title,
 }: Options = {}) {
   const form = useTransactionForm(initialValues)
-  const [showAccountPicker, setShowAccountPicker] = useState(false)
+  const institutions = useInstitutionsStore((state) => state.institutions)
+  const [showInstitutionPicker, setShowInstitutionPicker] = useState(false)
   const [showDestinationPicker, setShowDestinationPicker] = useState(false)
   const [showCategoryPicker, setShowCategoryPicker] = useState(false)
   const [showDatePicker, setShowDatePicker] = useState(false)
   const [successAlertVisible, setSuccessAlertVisible] = useState(false)
+  const [categories, setCategories] = useState<CategoryDTO[]>([])
+
+  const loadCategories = useCallback(async () => {
+    try {
+      const data = await getCategories()
+      setCategories(data)
+    } catch (error) {
+      console.error('[TransactionForm] Failed to load categories', error)
+    }
+  }, [])
+
+  useFocusEffect(
+    useCallback(() => {
+      void loadCategories()
+    }, [loadCategories]),
+  )
+
+  const categoryOptions = useMemo(
+    () =>
+      categories.map((item) => ({
+        id: item.id,
+        label: item.name,
+        icon: item.icon,
+        color: item.color,
+      })),
+    [categories],
+  )
+
+  const institutionOptions = useMemo(
+    () =>
+      institutions.map((institution) => ({
+        id: institution.id,
+        label: institution.name,
+        icon: institution.icon ?? 'landmark',
+      })),
+    [institutions],
+  )
+
+  const transferCategoryId = useMemo(
+    () =>
+      categoryOptions.find((category) => category.label.toLowerCase().includes('transfer'))?.id ??
+      categoryOptions[0]?.id,
+    [categoryOptions],
+  )
 
   const resolvedTitle =
     title ?? (mode === 'edit' ? TRANSACTION_FORM_COPY.editTitle : TRANSACTION_FORM_COPY.createTitle)
@@ -45,13 +92,17 @@ export function useTransactionFormScreen({
       ? TRANSACTION_FORM_COPY.editSuccessMessage
       : TRANSACTION_FORM_COPY.successMessage
 
-  const categories = CATEGORIES[form.type]
-  const selectedAccount = ACCOUNTS.find((account) => account.id === form.accountId)
-  const selectedDestination = ACCOUNTS.find((account) => account.id === form.destinationAccountId)
-  const selectedCategory = categories.find((category) => category.id === form.categoryId)
+  const selectedInstitution = institutionOptions.find(
+    (institution) => institution.id === form.institutionId,
+  )
+  const selectedDestinationInstitution = institutionOptions.find(
+    (institution) => institution.id === form.destinationInstitutionId,
+  )
+  const selectedCategory = categoryOptions.find((category) => category.id === form.categoryId)
   const destinationOptions = useMemo(
-    () => ACCOUNTS.filter((account) => account.id !== (form.accountId || null)),
-    [form.accountId],
+    () =>
+      institutionOptions.filter((institution) => institution.id !== (form.institutionId || null)),
+    [form.institutionId, institutionOptions],
   )
 
   const dismissSuccessAlert = useCallback(() => {
@@ -60,10 +111,13 @@ export function useTransactionFormScreen({
   }, [onSuccess])
 
   const handleSubmit = useCallback(() => {
-    form.submit(() => {
-      setSuccessAlertVisible(true)
-    })
-  }, [form])
+    form.submit(
+      () => {
+        setSuccessAlertVisible(true)
+      },
+      { transferCategoryId },
+    )
+  }, [form, transferCategoryId])
 
   const openRecorrencias = useCallback(() => {
     router.push('/recorrencia')
@@ -76,13 +130,14 @@ export function useTransactionFormScreen({
     submitLabel,
     successTitle,
     successMessage,
-    categories,
-    selectedAccount,
-    selectedDestination,
+    categories: categoryOptions,
+    institutionOptions,
+    selectedInstitution,
+    selectedDestinationInstitution,
     selectedCategory,
     destinationOptions,
-    showAccountPicker,
-    setShowAccountPicker,
+    showInstitutionPicker,
+    setShowInstitutionPicker,
     showDestinationPicker,
     setShowDestinationPicker,
     showCategoryPicker,

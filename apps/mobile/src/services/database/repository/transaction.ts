@@ -14,12 +14,12 @@ export type TransactionInput = {
   date: Date
   type: TransactionType
   status: TransactionStatus
-  accountId: string
+  institutionId: string
   categoryId: string
   subcategoryId?: string | null
   invoiceId?: string | null
   recurrenceId?: string | null
-  destinationAccountId?: string | null
+  destinationInstitutionId?: string | null
   installmentRef?: string | null
   installmentNumber?: number | null
   installmentTotal?: number | null
@@ -30,7 +30,7 @@ export type TransactionInput = {
 export type TransactionUpdateInput = Partial<TransactionInput>
 
 export type TransactionFilters = {
-  accountId?: string
+  institutionId?: string
   categoryId?: string
   status?: TransactionStatus
   type?: TransactionType
@@ -45,13 +45,13 @@ const applyTransactionFields = (
   if (input.date !== undefined) transaction.date = input.date
   if (input.type !== undefined) transaction.type = input.type
   if (input.status !== undefined) transaction.status = input.status
-  if (input.accountId !== undefined) transaction.accountId = input.accountId
+  if (input.institutionId !== undefined) transaction.institutionId = input.institutionId
   if (input.categoryId !== undefined) transaction.categoryId = input.categoryId
   if (input.subcategoryId !== undefined) transaction.subcategoryId = input.subcategoryId
   if (input.invoiceId !== undefined) transaction.invoiceId = input.invoiceId
   if (input.recurrenceId !== undefined) transaction.recurrenceId = input.recurrenceId
-  if (input.destinationAccountId !== undefined) {
-    transaction.destinationAccountId = input.destinationAccountId
+  if (input.destinationInstitutionId !== undefined) {
+    transaction.destinationInstitutionId = input.destinationInstitutionId
   }
   if (input.installmentRef !== undefined) transaction.installmentRef = input.installmentRef
   if (input.installmentNumber !== undefined) transaction.installmentNumber = input.installmentNumber
@@ -75,7 +75,7 @@ export const getTransactionsCount = async () => {
 export const getTransactionsByFilters = async (filters: TransactionFilters) => {
   const conditions = []
 
-  if (filters.accountId) conditions.push(Q.where('account_id', filters.accountId))
+  if (filters.institutionId) conditions.push(Q.where('institution_id', filters.institutionId))
   if (filters.categoryId) conditions.push(Q.where('category_id', filters.categoryId))
   if (filters.status) conditions.push(Q.where('status', filters.status))
   if (filters.type) conditions.push(Q.where('type', filters.type))

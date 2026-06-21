@@ -1,7 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '@common/prisma/prisma.service'
 import { createDeletedRecords } from '@common/sync/deleted-record.util'
-import { nullifyTransactionDestinationAccountRefs } from '@common/sync/set-null.util'
 import { buildTimestampWhere } from '@common/sync/sync-query.util'
 import { AccountType, Currency, TableName } from 'generated/prisma/client'
 import { DeleteAccountInTransactionDto } from './dto/delete-account-in-transaction.dto'
@@ -34,9 +33,7 @@ export class AccountsService {
   }
 
   async deleteAccountInTransaction(dto: DeleteAccountInTransactionDto): Promise<void> {
-    const { tx, userId, accountId, invoiceIds, recurrenceIds, transactionIds } = dto
-
-    await nullifyTransactionDestinationAccountRefs(tx, accountId)
+    const { tx, userId, accountId, invoiceIds, recurrenceIds } = dto
 
     await Promise.all([
       createDeletedRecords({ tx, userId, tableName: TableName.INVOICES, recordIds: invoiceIds }),
@@ -45,12 +42,6 @@ export class AccountsService {
         userId,
         tableName: TableName.RECURRENCES,
         recordIds: recurrenceIds,
-      }),
-      createDeletedRecords({
-        tx,
-        userId,
-        tableName: TableName.TRANSACTIONS,
-        recordIds: transactionIds,
       }),
       createDeletedRecords({ tx, userId, tableName: TableName.ACCOUNTS, recordIds: [accountId] }),
     ])
@@ -124,7 +115,6 @@ export class AccountsService {
         institution: true,
         invoices: true,
         recurrences: true,
-        transactions: true,
       },
     })
     if (!account) throw new NotFoundException('Conta não encontrada')
@@ -137,7 +127,6 @@ export class AccountsService {
         accountId,
         invoiceIds: account.invoices.map((i) => i.id),
         recurrenceIds: account.recurrences.map((r) => r.id),
-        transactionIds: account.transactions.map((t) => t.id),
       })
     })
   }

@@ -7,7 +7,7 @@ import {
   relation,
   text,
 } from '@nozbe/watermelondb/decorators'
-import type { Account } from './account'
+import type { Institution } from './institution'
 import type { Category } from './category'
 import type { Invoice } from './invoice'
 import type { Recurrence } from './recurrece'
@@ -31,8 +31,8 @@ export class Transaction extends Model {
   static table = 'transactions'
 
   static associations = {
-    accounts: { type: 'belongs_to' as const, key: 'account_id' },
-    destination_accounts: { type: 'belongs_to' as const, key: 'destination_account_id' },
+    institutions: { type: 'belongs_to' as const, key: 'institution_id' },
+    destination_institutions: { type: 'belongs_to' as const, key: 'destination_institution_id' },
     categories: { type: 'belongs_to' as const, key: 'category_id' },
     sub_categories: { type: 'belongs_to' as const, key: 'subcategory_id' },
     invoices: { type: 'belongs_to' as const, key: 'invoice_id' },
@@ -44,12 +44,12 @@ export class Transaction extends Model {
   @date('date') date!: Date
   @field('type') type!: TransactionType
   @field('status') status!: TransactionStatus
-  @field('account_id') accountId!: string
+  @field('institution_id') institutionId!: string
   @field('category_id') categoryId!: string | null
   @field('subcategory_id') subcategoryId!: string | null
   @field('invoice_id') invoiceId!: string | null
   @field('recurrence_id') recurrenceId!: string | null
-  @field('destination_account_id') destinationAccountId!: string | null
+  @field('destination_institution_id') destinationInstitutionId!: string | null
   @field('installment_ref') installmentRef!: string | null
   @field('installment_number') installmentNumber!: number | null
   @field('installment_total') installmentTotal!: number | null
@@ -58,8 +58,9 @@ export class Transaction extends Model {
   @readonly @date('created_at') createdAt!: Date
   @readonly @date('updated_at') updatedAt!: Date
 
-  @immutableRelation('accounts', 'account_id') account!: Relation<Account>
-  @relation('accounts', 'destination_account_id') destinationAccount!: Relation<Account>
+  @immutableRelation('institutions', 'institution_id') institution!: Relation<Institution>
+  @relation('institutions', 'destination_institution_id')
+  destinationInstitution!: Relation<Institution>
   @relation('categories', 'category_id') category!: Relation<Category>
   @relation('sub_categories', 'subcategory_id') subCategory!: Relation<SubCategory>
   @relation('invoices', 'invoice_id') invoice!: Relation<Invoice>

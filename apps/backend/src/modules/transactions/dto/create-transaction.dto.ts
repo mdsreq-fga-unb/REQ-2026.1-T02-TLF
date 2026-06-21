@@ -5,10 +5,10 @@ import { TransactionType, TransactionStatus } from '../../../../generated/prisma
 export class CreateTransactionDto {
   @ApiProperty({
     example: 'ae73db85-6c25-4b8d-91b2-d0cda2830c65',
-    description: 'ID da conta bancária',
+    description: 'ID da instituição',
   })
   @IsUUID()
-  accountId!: string
+  institutionId!: string
 
   @ApiProperty({
     example: '3cec466a-096d-4016-bb10-bcc9b94a7d36',
@@ -85,11 +85,11 @@ export class CreateTransactionDto {
 
   @ApiPropertyOptional({
     example: '5b6d0359-79e2-4e67-9d6f-81bc96e76095',
-    description: 'ID da conta destinatária da transação',
+    description: 'ID da instituição destinatária da transação',
   })
   @IsOptional()
   @IsUUID()
-  destinationAccountId?: string
+  destinationInstitutionId?: string
 
   @ApiPropertyOptional({
     example: 3,

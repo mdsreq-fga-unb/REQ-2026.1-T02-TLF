@@ -41,7 +41,7 @@ export default function CreateBudgetScreen({ initialValues }: Props) {
           <AmountDisplay
             amountCents={form.amountLimit}
             type={'TRANSFER'}
-            budget={true}
+            showType={false}
             onPress={() => form.setShowKeypad(true)}
           />
           {form.submitAttempted && form.errors.amount && (

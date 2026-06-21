@@ -61,9 +61,15 @@ export function PickerModal({ visible, title, options, selectedId, onSelect, onC
                   <AppIcon name={item.icon} size={18} color={optionColor} />
                 </View>
 
-                <ThemedText text={item.label} variant="body" style={[styles.optionLabel, { textAlign: 'left'}]} />
+                <ThemedText
+                  text={item.label}
+                  variant="body"
+                  style={[styles.optionLabel, { textAlign: 'left' }]}
+                />
 
-                {selected && <AppIcon name="check" size={18} color={optionColor} weight="bold" />}
+                {selected && (
+                  <AppIcon name="check" size={18} color={optionColor} strokeWidth={2.5} />
+                )}
               </Pressable>
             )
           })}

@@ -437,7 +437,7 @@ export class RecurrenceService {
         const day = Math.min(recurrence.chargeDate, lastDay)
 
         return {
-          accountId: recurrence.accountId,
+          institutionId: recurrence.account.institution.id,
           categoryId: recurrence.categoryId,
           subCategoryId: recurrence.subCategoryId,
           amount: recurrence.amount,

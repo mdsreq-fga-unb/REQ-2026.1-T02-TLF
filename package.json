@@ -19,7 +19,6 @@
   "dependencies": {
     "@nestjs/schedule": "^6.1.3",
     "class-validator": "^0.14.4",
-    "phosphor-react-native": "^3.0.6",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {

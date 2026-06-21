@@ -59,18 +59,13 @@ export const updateAccount = async (id: string, input: AccountUpdateInput) => {
 
 export const markAccountAsDeleted = async (id: string) => {
   return database.write(async () => {
-    const [invoices, recurrences, transactions, account] = await Promise.all([
+    const [invoices, recurrences, account] = await Promise.all([
       database.get('invoices').query(Q.where('account_id', id)).fetch(),
       database.get('recurrences').query(Q.where('account_id', id)).fetch(),
-      database
-        .get('transactions')
-        .query(Q.or(Q.where('account_id', id), Q.where('destination_account_id', id)))
-        .fetch(),
       getAccountById(id),
     ])
 
     await database.batch([
-      ...transactions.map((record) => record.prepareMarkAsDeleted()),
       ...recurrences.map((record) => record.prepareMarkAsDeleted()),
       ...invoices.map((record) => record.prepareMarkAsDeleted()),
       account.prepareMarkAsDeleted(),

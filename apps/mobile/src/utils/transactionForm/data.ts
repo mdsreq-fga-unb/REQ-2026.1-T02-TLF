@@ -3,7 +3,7 @@ import type { IconKey } from '@/utils/icons'
 
 export type { TransactionType }
 
-export type FormAccount = {
+export type FormInstitution = {
   id: string
   label: string
   icon: IconKey
@@ -21,13 +21,6 @@ export type FormSubcategory = {
   label: string
   icon: IconKey
 }
-
-// These IDs are real values from the PostgreSQL database used by the backend.
-// The mobile form still uses static options, but the payload must use actual DB row IDs.
-export const ACCOUNTS: FormAccount[] = [
-  { id: '22222222-2222-4222-a222-222222222222', label: 'Conta Principal', icon: 'banknote' },
-  { id: '55555555-5555-5555-a555-555555555555', label: 'Conta Corrente BB', icon: 'landmark' },
-]
 
 export const CATEGORIES: Record<TransactionType, FormCategory[]> = {
   EXPENSE: [

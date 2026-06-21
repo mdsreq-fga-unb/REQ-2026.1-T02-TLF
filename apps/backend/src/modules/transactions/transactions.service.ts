@@ -16,18 +16,36 @@ import { RemoveTransactionRequestDto } from './dto/remove.dto'
 import { TransactionListResponseDto } from './dto/transaction-list.response.dto'
 import { SyncTransactionDto } from './dto/sync-transaction.dto'
 
+type TransactionWithRelations = {
+  id: string
+  type: string
+  amount: number
+  description: string | null
+  date: Date
+  status: string
+  categoryId: string | null
+  subCategoryId: string | null
+  institutionId: string
+  invoiceId: string | null
+  recurrenceId: string | null
+  destinationInstitutionId: string | null
+  category: { id: string; name: string } | null
+  subCategory: { id: string; name: string } | null
+  institution: { id: string; name: string }
+}
+
 @Injectable()
 export class TransactionsService {
   constructor(private readonly prisma: PrismaService) {}
 
   findMany(dto: FindManyTransactionsDto) {
-    const { userId, id, accountId, categoryId, type, status, createdAfter, updatedAfter } = dto
+    const { userId, id, institutionId, categoryId, type, status, createdAfter, updatedAfter } = dto
 
     return this.prisma.transaction.findMany({
       where: {
-        account: { institution: { userId } },
+        institution: { userId },
         ...(id && { id }),
-        ...(accountId && { accountId }),
+        ...(institutionId && { institutionId }),
         ...(categoryId && { categoryId }),
         ...(type && { type }),
         ...(status && { status }),
@@ -37,7 +55,6 @@ export class TransactionsService {
   }
 
   async create(userId: string, dto: CreateTransactionDto) {
-    // valida se a categoria existe e pertence ao usuário
     const category = await this.prisma.category.findUnique({
       where: { id: dto.categoryId },
     })
@@ -50,7 +67,6 @@ export class TransactionsService {
       throw new BadRequestException('Categoria não pertence ao usuário')
     }
 
-    // valida subcategoria se informada
     if (dto.subCategoryId) {
       const subCategory = await this.prisma.subCategory.findUnique({
         where: { id: dto.subCategoryId },
@@ -60,43 +76,16 @@ export class TransactionsService {
       }
     }
 
-    // valida se a conta existe e pertence ao usuário
-    const account = await this.prisma.account.findUnique({
-      where: { id: dto.accountId },
-      include: {
-        institution: true,
-      },
+    await this.assertTransactionRelations(userId, {
+      institutionId: dto.institutionId,
+      invoiceId: dto.invoiceId,
+      recurrenceId: dto.recurrenceId,
+      destinationInstitutionId: dto.destinationInstitutionId,
     })
 
-    if (!account) {
-      throw new NotFoundException('Conta não encontrada')
-    }
-
-    if (account.institution.userId !== userId) {
-      throw new BadRequestException('Conta não pertence ao usuário')
-    }
-
-    if (dto.destinationAccountId) {
-      const destinationAccount = await this.prisma.account.findUnique({
-        where: { id: dto.destinationAccountId },
-        include: {
-          institution: true,
-        },
-      })
-
-      if (!destinationAccount) {
-        throw new NotFoundException('Conta de destino não encontrada')
-      }
-
-      if (destinationAccount.institution.userId !== userId) {
-        throw new BadRequestException('Conta de destino não pertence ao usuário')
-      }
-    }
-
-    // cria a transação
     const transaction = await this.prisma.transaction.create({
       data: {
-        accountId: dto.accountId,
+        institutionId: dto.institutionId,
         categoryId: dto.categoryId,
         subCategoryId: dto.subCategoryId,
         type: dto.type,
@@ -104,55 +93,25 @@ export class TransactionsService {
         description: dto.description,
         date: dto.date ? new Date(dto.date) : new Date(),
         status: dto.status,
-        destinationAccountId: dto.destinationAccountId,
+        invoiceId: dto.invoiceId,
+        recurrenceId: dto.recurrenceId,
+        destinationInstitutionId: dto.destinationInstitutionId,
       },
       include: {
         category: true,
         subCategory: true,
-        account: true,
-        destinationAccount: true,
+        institution: true,
       },
     })
 
-    return {
-      id: transaction.id,
-      type: transaction.type,
-      amount: transaction.amount,
-      description: transaction.description ?? undefined,
-      date: transaction.date.toISOString(),
-      status: transaction.status ?? undefined,
-      destinationAccountId: transaction.destinationAccountId ?? undefined,
-
-      category: transaction.category
-        ? {
-            id: transaction.category.id,
-            name: transaction.category.name,
-          }
-        : undefined,
-
-      subCategory: transaction.subCategory
-        ? {
-            id: transaction.subCategory.id,
-            name: transaction.subCategory.name,
-          }
-        : undefined,
-
-      account: {
-        id: transaction.account.id,
-        name: transaction.account.name,
-      },
-    }
+    return this.formatTransaction(transaction as TransactionWithRelations)
   }
 
   private async getTransactionOrThrow(userId: string, id: string) {
     const transaction = await this.prisma.transaction.findUnique({
       where: { id },
       include: {
-        account: {
-          include: {
-            institution: true,
-          },
-        },
+        institution: true,
         category: true,
         subCategory: true,
       },
@@ -162,7 +121,7 @@ export class TransactionsService {
       throw new NotFoundException('Transação não encontrada')
     }
 
-    if (transaction.account.institution.userId !== userId) {
+    if (transaction.institution.userId !== userId) {
       throw new ForbiddenException('Você não tem acesso a esta transação')
     }
 
@@ -170,16 +129,15 @@ export class TransactionsService {
   }
 
   async findAll(userId: string, query: FilterTransactionsDto): Promise<TransactionListResponseDto> {
-    const { categoryId, type, page = 1, limit = 20 } = query
+    const { institutionId, categoryId, type, page = 1, limit = 20 } = query
 
     const skip = (page - 1) * limit
 
     const [data, total] = await this.prisma.$transaction([
       this.prisma.transaction.findMany({
         where: {
-          account: {
-            institution: { userId },
-          },
+          institution: { userId },
+          ...(institutionId && { institutionId }),
           ...(categoryId && { categoryId }),
           ...(type && { type }),
         },
@@ -201,7 +159,7 @@ export class TransactionsService {
               name: true,
             },
           },
-          account: {
+          institution: {
             select: {
               id: true,
               name: true,
@@ -212,27 +170,15 @@ export class TransactionsService {
 
       this.prisma.transaction.count({
         where: {
-          account: {
-            institution: { userId },
-          },
+          institution: { userId },
+          ...(institutionId && { institutionId }),
           ...(categoryId && { categoryId }),
           ...(type && { type }),
         },
       }),
     ])
 
-    const formattedData = data.map((t) => ({
-      id: t.id,
-      type: t.type,
-      amount: t.amount,
-      description: t.description ?? undefined,
-      date: t.date.toISOString(),
-      status: t.status ?? undefined,
-      category: t.category ?? undefined,
-      subCategory: t.subCategory ?? undefined,
-      account: t.account,
-      destinationAccountId: t.destinationAccountId ?? undefined,
-    }))
+    const formattedData = data.map((t) => this.formatTransaction(t as TransactionWithRelations))
 
     return {
       data: formattedData,
@@ -247,95 +193,85 @@ export class TransactionsService {
 
   async findOne({ userId, id }: { userId: string; id: string }) {
     const transaction = await this.getTransactionOrThrow(userId, id)
-
-    return {
-      id: transaction.id,
-      type: transaction.type,
-      amount: transaction.amount,
-      description: transaction.description ?? undefined,
-      date: transaction.date.toISOString(),
-      status: transaction.status ?? undefined,
-      destinationAccountId: transaction.destinationAccountId ?? undefined,
-
-      category: transaction.category
-        ? {
-            id: transaction.category.id,
-            name: transaction.category.name,
-          }
-        : undefined,
-
-      subCategory: transaction.subCategory
-        ? {
-            id: transaction.subCategory.id,
-            name: transaction.subCategory.name,
-          }
-        : undefined,
-
-      account: {
-        id: transaction.account.id,
-        name: transaction.account.name,
-      },
-    }
+    return this.formatTransaction(transaction as TransactionWithRelations)
   }
 
   async update({ userId, id, dto }: { userId: string; id: string; dto: UpdateTransactionDto }) {
-    await this.getTransactionOrThrow(userId, id)
+    const current = await this.getTransactionOrThrow(userId, id)
+
+    const nextInstitutionId = dto.institutionId ?? current.institutionId
+    const nextInvoiceId = dto.invoiceId ?? current.invoiceId
+    const nextRecurrenceId = dto.recurrenceId ?? current.recurrenceId
+    const nextDestinationInstitutionId =
+      dto.destinationInstitutionId ?? current.destinationInstitutionId
+
+    if (dto.categoryId) {
+      const category = await this.prisma.category.findUnique({
+        where: { id: dto.categoryId },
+      })
+      if (!category) {
+        throw new NotFoundException('Categoria não encontrada')
+      }
+      if (category.userId !== userId) {
+        throw new BadRequestException('Categoria não pertence ao usuário')
+      }
+    }
+
+    if (dto.subCategoryId) {
+      const subCategory = await this.prisma.subCategory.findUnique({
+        where: { id: dto.subCategoryId },
+      })
+      if (!subCategory || (dto.categoryId ?? current.categoryId) !== subCategory.categoryId) {
+        throw new BadRequestException('Subcategoria inválida')
+      }
+    }
+
+    await this.assertTransactionRelations(userId, {
+      institutionId: nextInstitutionId,
+      invoiceId: nextInvoiceId,
+      recurrenceId: nextRecurrenceId,
+      destinationInstitutionId: nextDestinationInstitutionId,
+    })
 
     const updated = await this.prisma.transaction.update({
       where: { id },
-      data: dto,
+      data: {
+        institutionId: dto.institutionId,
+        categoryId: dto.categoryId,
+        subCategoryId: dto.subCategoryId,
+        type: dto.type,
+        amount: dto.amount,
+        description: dto.description,
+        date: dto.date ? new Date(dto.date) : undefined,
+        status: dto.status,
+        invoiceId: dto.invoiceId,
+        recurrenceId: dto.recurrenceId,
+        destinationInstitutionId: dto.destinationInstitutionId,
+      },
       include: {
         category: true,
         subCategory: true,
-        account: true,
+        institution: true,
       },
     })
 
-    return {
-      id: updated.id,
-      type: updated.type,
-      amount: updated.amount,
-      description: updated.description ?? undefined,
-      date: updated.date.toISOString(),
-      status: updated.status ?? undefined,
-      destinationAccountId: updated.destinationAccountId ?? undefined,
-
-      category: updated.category
-        ? {
-            id: updated.category.id,
-            name: updated.category.name,
-          }
-        : undefined,
-
-      subCategory: updated.subCategory
-        ? {
-            id: updated.subCategory.id,
-            name: updated.subCategory.name,
-          }
-        : undefined,
-
-      account: {
-        id: updated.account.id,
-        name: updated.account.name,
-      },
-    }
+    return this.formatTransaction(updated as TransactionWithRelations)
   }
 
   private async assertTransactionRelations(
     userId: string,
     data: {
-      accountId: string
+      institutionId: string
       invoiceId?: string | null
       recurrenceId?: string | null
-      destinationAccountId?: string | null
+      destinationInstitutionId?: string | null
     },
   ): Promise<void> {
-    const account = await this.prisma.account.findUnique({
-      where: { id: data.accountId },
-      include: { institution: true },
+    const institution = await this.prisma.institution.findUnique({
+      where: { id: data.institutionId },
     })
-    if (!account) throw new NotFoundException('Conta não encontrada')
-    if (account.institution.userId !== userId) throw new ForbiddenException('Acesso negado')
+    if (!institution) throw new NotFoundException('Instituição não encontrada')
+    if (institution.userId !== userId) throw new ForbiddenException('Acesso negado')
 
     if (data.invoiceId) {
       const invoice = await this.prisma.invoice.findUnique({
@@ -343,10 +279,11 @@ export class TransactionsService {
         include: { account: { include: { institution: true } } },
       })
       if (!invoice) throw new NotFoundException('Fatura não encontrada')
-      if (invoice.account.institution.userId !== userId)
+      if (invoice.account.institution.userId !== userId) {
         throw new ForbiddenException('Acesso negado')
-      if (invoice.accountId !== data.accountId) {
-        throw new BadRequestException('Fatura deve pertencer à mesma conta da transação')
+      }
+      if (invoice.account.institutionId !== data.institutionId) {
+        throw new BadRequestException('Fatura deve pertencer à mesma instituição da transação')
       }
     }
 
@@ -359,34 +296,36 @@ export class TransactionsService {
       if (recurrence.account.institution.userId !== userId) {
         throw new ForbiddenException('Acesso negado')
       }
-      if (recurrence.accountId !== data.accountId) {
-        throw new BadRequestException('Recorrência deve pertencer à mesma conta da transação')
+      if (recurrence.account.institutionId !== data.institutionId) {
+        throw new BadRequestException('Recorrência deve pertencer à mesma instituição da transação')
       }
     }
 
-    if (data.destinationAccountId) {
-      const destination = await this.prisma.account.findUnique({
-        where: { id: data.destinationAccountId },
-        include: { institution: true },
+    if (data.destinationInstitutionId) {
+      const destination = await this.prisma.institution.findUnique({
+        where: { id: data.destinationInstitutionId },
       })
-      if (!destination) throw new NotFoundException('Conta destino não encontrada')
-      if (destination.institution.userId !== userId) throw new ForbiddenException('Acesso negado')
+      if (!destination) throw new NotFoundException('Instituição de destino não encontrada')
+      if (destination.userId !== userId) throw new ForbiddenException('Acesso negado')
+      if (destination.id === data.institutionId) {
+        throw new BadRequestException('Instituição de destino deve ser diferente da origem')
+      }
     }
   }
 
   async syncCreate(userId: string, dto: SyncTransactionDto) {
     await this.assertTransactionRelations(userId, {
-      accountId: dto.accountId,
+      institutionId: dto.institutionId,
       invoiceId: dto.invoiceId,
       recurrenceId: dto.recurrenceId,
-      destinationAccountId: dto.destinationAccountId,
+      destinationInstitutionId: dto.destinationInstitutionId,
     })
 
     return this.prisma.transaction.upsert({
       where: { id: dto.id },
       create: {
         id: dto.id,
-        accountId: dto.accountId,
+        institutionId: dto.institutionId,
         categoryId: dto.categoryId ?? null,
         subCategoryId: dto.subCategoryId ?? null,
         type: dto.type,
@@ -396,7 +335,7 @@ export class TransactionsService {
         status: dto.status ?? TransactionStatus.COMPLETED,
         invoiceId: dto.invoiceId ?? null,
         recurrenceId: dto.recurrenceId ?? null,
-        destinationAccountId: dto.destinationAccountId ?? null,
+        destinationInstitutionId: dto.destinationInstitutionId ?? null,
         installmentReference: dto.installmentReference ?? null,
         installmentNumber: dto.installmentNumber ?? null,
         installmentTotal: dto.installmentTotal ?? null,
@@ -406,7 +345,7 @@ export class TransactionsService {
         ...(dto.updatedAt && { updatedAt: new Date(dto.updatedAt) }),
       },
       update: {
-        accountId: dto.accountId,
+        institutionId: dto.institutionId,
         categoryId: dto.categoryId ?? null,
         subCategoryId: dto.subCategoryId ?? null,
         type: dto.type,
@@ -416,7 +355,7 @@ export class TransactionsService {
         status: dto.status,
         invoiceId: dto.invoiceId ?? null,
         recurrenceId: dto.recurrenceId ?? null,
-        destinationAccountId: dto.destinationAccountId ?? null,
+        destinationInstitutionId: dto.destinationInstitutionId ?? null,
         installmentReference: dto.installmentReference ?? null,
         installmentNumber: dto.installmentNumber ?? null,
         installmentTotal: dto.installmentTotal ?? null,
@@ -430,16 +369,16 @@ export class TransactionsService {
   async syncUpdate(userId: string, dto: SyncTransactionDto) {
     await this.getTransactionOrThrow(userId, dto.id)
     await this.assertTransactionRelations(userId, {
-      accountId: dto.accountId,
+      institutionId: dto.institutionId,
       invoiceId: dto.invoiceId,
       recurrenceId: dto.recurrenceId,
-      destinationAccountId: dto.destinationAccountId,
+      destinationInstitutionId: dto.destinationInstitutionId,
     })
 
     return this.prisma.transaction.update({
       where: { id: dto.id },
       data: {
-        accountId: dto.accountId,
+        institutionId: dto.institutionId,
         categoryId: dto.categoryId ?? null,
         subCategoryId: dto.subCategoryId ?? null,
         type: dto.type,
@@ -449,7 +388,7 @@ export class TransactionsService {
         status: dto.status,
         invoiceId: dto.invoiceId ?? null,
         recurrenceId: dto.recurrenceId ?? null,
-        destinationAccountId: dto.destinationAccountId ?? null,
+        destinationInstitutionId: dto.destinationInstitutionId ?? null,
         installmentReference: dto.installmentReference ?? null,
         installmentNumber: dto.installmentNumber ?? null,
         installmentTotal: dto.installmentTotal ?? null,
@@ -457,16 +396,49 @@ export class TransactionsService {
         externalId: dto.externalId ?? null,
         ...(dto.updatedAt && { updatedAt: new Date(dto.updatedAt) }),
       },
+      include: {
+        category: true,
+        subCategory: true,
+        institution: true,
+      },
     })
   }
 
   async remove(dto: RemoveTransactionRequestDto): Promise<void> {
     const { userId, id } = dto
-    await this.getTransactionOrThrow(userId, id)
+    const transaction = await this.getTransactionOrThrow(userId, id)
 
     await this.prisma.$transaction(async (tx) => {
       await createDeletedRecords({ tx, userId, tableName: TableName.TRANSACTIONS, recordIds: [id] })
-      await tx.transaction.delete({ where: { id } })
+      await tx.transaction.delete({ where: { id: transaction.id } })
     })
+  }
+
+  private formatTransaction(transaction: TransactionWithRelations) {
+    return {
+      id: transaction.id,
+      type: transaction.type,
+      amount: transaction.amount,
+      description: transaction.description ?? undefined,
+      date: transaction.date.toISOString(),
+      status: transaction.status ?? undefined,
+      destinationInstitutionId: transaction.destinationInstitutionId ?? undefined,
+      category: transaction.category
+        ? {
+            id: transaction.category.id,
+            name: transaction.category.name,
+          }
+        : undefined,
+      subCategory: transaction.subCategory
+        ? {
+            id: transaction.subCategory.id,
+            name: transaction.subCategory.name,
+          }
+        : undefined,
+      institution: {
+        id: transaction.institution.id,
+        name: transaction.institution.name,
+      },
+    }
   }
 }

@@ -24,8 +24,7 @@ import {
 } from '@/utils/records/transactionMappers'
 import { router } from 'expo-router'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useFocusEffect } from 'expo-router';
-
+import { useFocusEffect } from 'expo-router'
 
 const USE_MOCK_TRANSACTIONS = false
 
@@ -90,7 +89,7 @@ export function useRecordsScreen() {
   useFocusEffect(
     useCallback(() => {
       loadTransactions()
-    }, [loadTransactions])
+    }, [loadTransactions]),
   )
 
   const dismissAlert = useCallback(() => setAlert(null), [])
@@ -104,10 +103,13 @@ export function useRecordsScreen() {
         amount: transaction.amount.toString(),
         categoryId: transaction.categoryId,
         subcategoryId: transaction.subcategoryId || '',
-        accountId: transaction.accountId,
-        destinationAccountId: transaction.destinationAccountId || '',
+        institutionId: transaction.institutionId,
+        destinationInstitutionId: transaction.destinationInstitutionId || '',
         description: transaction.description,
-        date: typeof transaction.date === 'string' ? transaction.date : new Date(transaction.date).toISOString(),
+        date:
+          typeof transaction.date === 'string'
+            ? transaction.date
+            : new Date(transaction.date).toISOString(),
       },
     })
   }, [])
@@ -142,7 +144,10 @@ export function useRecordsScreen() {
             actions: [{ label: 'Entendi', onPress: dismissAlert }],
           })
         } catch (apiError) {
-          console.warn('[OFFLINE-FIRST] Falha ao excluir na API, o registro será sincronizado depois.', apiError)
+          console.warn(
+            '[OFFLINE-FIRST] Falha ao excluir na API, o registro será sincronizado depois.',
+            apiError,
+          )
           setAlert({
             title: 'Excluído localmente',
             message: 'Sem conexão. A alteração será sincronizada em breve.',

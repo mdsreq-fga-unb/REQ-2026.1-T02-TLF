@@ -1,103 +1,12 @@
 import { CategoryDTO, createCategory, getCategories, updateCategory } from '@/services/api/category'
 import { router, useFocusEffect } from 'expo-router'
-import {
-  HeartIcon,
-  HouseIcon,
-  UserIcon,
-  CarIcon,
-  BellIcon,
-  CameraIcon,
-  ChatCircleIcon,
-  CreditCardIcon,
-  FolderIcon,
-  GearIcon,
-  GlobeIcon,
-  LeafIcon,
-  MagnifyingGlassIcon,
-  MusicNoteIcon,
-  PhoneIcon,
-  StarIcon,
-  TagIcon,
-  TrashIcon,
-  WalletIcon,
-  AirplaneIcon,
-  AlarmIcon,
-  ArchiveIcon,
-  ArrowClockwiseIcon,
-  ArrowCounterClockwiseIcon,
-  BookIcon,
-  BookmarkSimpleIcon,
-  BriefcaseIcon,
-  BrowserIcon,
-  CalendarBlankIcon,
-  CameraRotateIcon,
-  ChartBarIcon,
-  CheckCircleIcon,
-  ClockIcon,
-  CloudIcon,
-  CodeIcon,
-  CompassIcon,
-  CopyIcon,
-  DownloadSimpleIcon,
-  EnvelopeSimpleIcon,
-  EyeIcon,
-  EyeSlashIcon,
-  FileIcon,
-  FileTextIcon,
-  FlagIcon,
-  FunnelIcon,
-  GiftIcon,
-  HandHeartIcon,
-  HeadphonesIcon,
-  ImageIcon,
-  InfoIcon,
-  KeyIcon,
-  LightbulbIcon,
-  LinkSimpleIcon,
-  ListBulletsIcon,
-  MapPinIcon,
-  MicrophoneIcon,
-  MoonIcon,
-  PaperPlaneRightIcon,
-  PauseIcon,
-  PencilSimpleIcon,
-  PlayIcon,
-  PrinterIcon,
-  RocketIcon,
-  ShieldCheckIcon,
-  ShoppingCartIcon,
-  SmileyIcon,
-  SparkleIcon,
-  SpeakerHighIcon,
-  SquaresFourIcon,
-  StorefrontIcon,
-  SwatchesIcon,
-  ThumbsUpIcon,
-  TimerIcon,
-  ToggleLeftIcon,
-  TrophyIcon,
-  TruckIcon,
-  UploadSimpleIcon,
-  UserCircleIcon,
-  UserPlusIcon,
-  VideoCameraIcon,
-  WifiHighIcon,
-  WrenchIcon,
-  XCircleIcon,
-  ReceiptIcon,
-  CurrencyDollarIcon,
-  BusIcon,
-  ShoppingBagIcon,
-  HeartbeatIcon,
-} from 'phosphor-react-native'
 import { useState, useMemo, useCallback } from 'react'
-
-type IconProps = { size?: number; color?: string }
+import { resolveIcon, type AppIcon } from '@/utils/icons'
 
 export type IconItem = {
   key: string
   label: string
-  Icon: React.ComponentType<IconProps>
+  Icon: AppIcon
 }
 
 export type ColorItem = {
@@ -106,97 +15,139 @@ export type ColorItem = {
   color: string
 }
 
+const ICONS_DATA: Array<{ key: string; label: string; Icon: AppIcon }> = [
+  { key: 'heart', label: 'Coração', Icon: resolveIcon('heart') },
+  { key: 'heartbeat', label: 'Coração', Icon: resolveIcon('heartbeat') },
+  { key: 'shopping-bag', label: 'sacola', Icon: resolveIcon('shopping-bag') },
+  { key: 'bus', label: 'onibus', Icon: resolveIcon('bus') },
+  { key: 'currency-dollar', label: 'dinheiro', Icon: resolveIcon('currency-dollar') },
+  { key: 'receipt', label: 'receita', Icon: resolveIcon('receipt') },
+  { key: 'house', label: 'Casa', Icon: resolveIcon('house') },
+  { key: 'user', label: 'Usuário', Icon: resolveIcon('user') },
+  { key: 'car', label: 'Carro', Icon: resolveIcon('car') },
+  { key: 'bell', label: 'Sino', Icon: resolveIcon('bell') },
+  { key: 'camera', label: 'Câmera', Icon: resolveIcon('camera') },
+  { key: 'chat', label: 'Chat', Icon: resolveIcon('chat') },
+  { key: 'card', label: 'Cartão', Icon: resolveIcon('card') },
+  { key: 'folder', label: 'Pasta', Icon: resolveIcon('folder') },
+  { key: 'gear', label: 'Configurações', Icon: resolveIcon('gear') },
+  { key: 'globe', label: 'Globo', Icon: resolveIcon('globe') },
+  { key: 'leaf', label: 'Folha', Icon: resolveIcon('leaf') },
+  { key: 'search', label: 'Pesquisar', Icon: resolveIcon('search') },
+  { key: 'music', label: 'Música', Icon: resolveIcon('music') },
+  { key: 'phone', label: 'Telefone', Icon: resolveIcon('phone') },
+  { key: 'star', label: 'Estrela', Icon: resolveIcon('star') },
+  { key: 'tag', label: 'Etiqueta', Icon: resolveIcon('tag') },
+  { key: 'trash', label: 'Lixeira', Icon: resolveIcon('trash') },
+  { key: 'wallet', label: 'Carteira', Icon: resolveIcon('wallet') },
+  { key: 'alarm', label: 'Alarme', Icon: resolveIcon('alarm') },
+  { key: 'archive', label: 'Arquivar', Icon: resolveIcon('archive') },
+  { key: 'airplane', label: 'Avião', Icon: resolveIcon('airplane') },
+  { key: 'arrow-clockwise', label: 'Atualizar', Icon: resolveIcon('arrow-clockwise') },
+  {
+    key: 'arrow-counter-clockwise',
+    label: 'Desfazer',
+    Icon: resolveIcon('arrow-counter-clockwise'),
+  },
+  { key: 'book', label: 'Livro', Icon: resolveIcon('book') },
+  { key: 'bookmark', label: 'Marcador', Icon: resolveIcon('bookmark') },
+  { key: 'briefcase', label: 'Maleta', Icon: resolveIcon('briefcase') },
+  { key: 'browser', label: 'Navegador', Icon: resolveIcon('browser') },
+  { key: 'calendar', label: 'Calendário', Icon: resolveIcon('calendar') },
+  { key: 'camera-rotate', label: 'Girar câmera', Icon: resolveIcon('camera-rotate') },
+  { key: 'chart-bar', label: 'Gráfico de barras', Icon: resolveIcon('chart-bar') },
+  { key: 'check-circle', label: 'Confirmar', Icon: resolveIcon('check-circle') },
+  { key: 'clock', label: 'Relógio', Icon: resolveIcon('clock') },
+  { key: 'cloud', label: 'Nuvem', Icon: resolveIcon('cloud') },
+  { key: 'code', label: 'Código', Icon: resolveIcon('code') },
+  { key: 'compass', label: 'Bússola', Icon: resolveIcon('compass') },
+  { key: 'copy', label: 'Copiar', Icon: resolveIcon('copy') },
+  { key: 'download', label: 'Baixar', Icon: resolveIcon('download') },
+  { key: 'envelope', label: 'Email', Icon: resolveIcon('envelope') },
+  { key: 'eye', label: 'Visualizar', Icon: resolveIcon('eye') },
+  { key: 'eye-slash', label: 'Ocultar', Icon: resolveIcon('eye-slash') },
+  { key: 'file', label: 'Arquivo', Icon: resolveIcon('file') },
+  { key: 'file-text', label: 'Arquivo de texto', Icon: resolveIcon('file-text') },
+  { key: 'flag', label: 'Bandeira', Icon: resolveIcon('flag') },
+  { key: 'funnel', label: 'Filtro', Icon: resolveIcon('funnel') },
+  { key: 'gift', label: 'Presente', Icon: resolveIcon('gift') },
+  { key: 'hand-heart', label: 'Mão com coração', Icon: resolveIcon('hand-heart') },
+  { key: 'headphones', label: 'Fones de ouvido', Icon: resolveIcon('headphones') },
+  { key: 'image', label: 'Imagem', Icon: resolveIcon('image') },
+  { key: 'info', label: 'Informação', Icon: resolveIcon('info') },
+  { key: 'key', label: 'Chave', Icon: resolveIcon('key') },
+  { key: 'lightbulb', label: 'Lâmpada', Icon: resolveIcon('lightbulb') },
+  { key: 'link', label: 'Link', Icon: resolveIcon('link') },
+  { key: 'list', label: 'Lista', Icon: resolveIcon('list') },
+  { key: 'map-pin', label: 'Pino de mapa', Icon: resolveIcon('map-pin') },
+  { key: 'microphone', label: 'Microfone', Icon: resolveIcon('microphone') },
+  { key: 'moon', label: 'Lua', Icon: resolveIcon('moon') },
+  { key: 'paper-plane', label: 'Enviar', Icon: resolveIcon('paper-plane') },
+  { key: 'pause', label: 'Pausar', Icon: resolveIcon('pause') },
+  { key: 'pencil', label: 'Editar', Icon: resolveIcon('pencil') },
+  { key: 'play', label: 'Reproduzir', Icon: resolveIcon('play') },
+  { key: 'printer', label: 'Impressora', Icon: resolveIcon('printer') },
+  { key: 'rocket', label: 'Foguete', Icon: resolveIcon('rocket') },
+  { key: 'shield-check', label: 'Escudo com confirmação', Icon: resolveIcon('shield-check') },
+  { key: 'shopping-cart', label: 'Carrinho', Icon: resolveIcon('shopping-cart') },
+  { key: 'smiley', label: 'Sorriso', Icon: resolveIcon('smiley') },
+  { key: 'speaker', label: 'Alto-falante', Icon: resolveIcon('speaker') },
+  { key: 'sparkles', label: 'Brilhos', Icon: resolveIcon('sparkles') },
+  { key: 'squares-four', label: 'Grade', Icon: resolveIcon('squares-four') },
+  { key: 'storefront', label: 'Loja', Icon: resolveIcon('storefront') },
+  { key: 'swatches', label: 'Paleta', Icon: resolveIcon('swatches') },
+  { key: 'thumbs-up', label: 'Gostei', Icon: resolveIcon('thumbs-up') },
+  { key: 'timer', label: 'Temporizador', Icon: resolveIcon('timer') },
+  { key: 'toggle-left', label: 'Alternar', Icon: resolveIcon('toggle-left') },
+  { key: 'trophy', label: 'Troféu', Icon: resolveIcon('trophy') },
+  { key: 'truck', label: 'Caminhão', Icon: resolveIcon('truck') },
+  { key: 'upload', label: 'Enviar', Icon: resolveIcon('upload') },
+  { key: 'user-circle', label: 'Usuário em círculo', Icon: resolveIcon('user-circle') },
+  { key: 'user-plus', label: 'Adicionar usuário', Icon: resolveIcon('user-plus') },
+  { key: 'video-camera', label: 'Câmera de vídeo', Icon: resolveIcon('video-camera') },
+  { key: 'wifi', label: 'Wi-Fi', Icon: resolveIcon('wifi') },
+  { key: 'wrench', label: 'Chave inglesa', Icon: resolveIcon('wrench') },
+  { key: 'x-circle', label: 'Fechar', Icon: resolveIcon('x-circle') },
+]
+
+const COLORS_DATA: ColorItem[] = [
+  { key: 'red', label: 'Vermelho', color: '#EF4444' },
+  { key: 'orange', label: 'Laranja', color: '#F97316' },
+  { key: 'amber', label: 'Âmbar', color: '#F59E0B' },
+  { key: 'yellow', label: 'Amarelo', color: '#EAB308' },
+  { key: 'lime', label: 'Lima', color: '#84CC16' },
+  { key: 'green', label: 'Verde', color: '#22C55E' },
+  { key: 'emerald', label: 'Esmeralda', color: '#10B981' },
+  { key: 'teal', label: 'Turquesa', color: '#14B8A6' },
+  { key: 'cyan', label: 'Ciano', color: '#06B6D4' },
+  { key: 'sky', label: 'Céu', color: '#0EA5E9' },
+  { key: 'blue', label: 'Azul', color: '#3B82F6' },
+  { key: 'indigo', label: 'Índigo', color: '#6366F1' },
+  { key: 'violet', label: 'Violeta', color: '#8B5CF6' },
+  { key: 'purple', label: 'Roxo', color: '#A855F7' },
+  { key: 'fuchsia', label: 'Fúcsia', color: '#D946EF' },
+  { key: 'pink', label: 'Rosa', color: '#EC4899' },
+  { key: 'rose', label: 'Rosa Escuro', color: '#F43F5E' },
+  { key: 'gray', label: 'Cinza', color: '#6B7280' },
+  { key: 'slate', label: 'Ardósia', color: '#64748B' },
+  { key: 'zinc', label: 'Zinco', color: '#71717A' },
+  { key: 'neutral', label: 'Neutro', color: '#737373' },
+  { key: 'stone', label: 'Pedra', color: '#78716C' },
+  { key: 'black', label: 'Preto', color: '#111827' },
+  { key: 'white', label: 'Branco', color: '#FFFFFF' },
+]
+
 export function useCategory() {
-  const ICONS: IconItem[] = [
-    { key: 'heart', label: 'Coração', Icon: HeartIcon },
-    { key: 'heartbeat', label: 'Coração', Icon: HeartbeatIcon },
-    { key: 'shopping-bag', label: 'sacola', Icon: ShoppingBagIcon },
-    { key: 'bus', label: 'onibus', Icon: BusIcon },
-    { key: 'currency-dollar', label: 'dinheiro', Icon: CurrencyDollarIcon },
-    { key: 'receipt', label: 'receita', Icon: ReceiptIcon },
-    { key: 'house', label: 'Casa', Icon: HouseIcon },
-    { key: 'user', label: 'Usuário', Icon: UserIcon },
-    { key: 'car', label: 'Carro', Icon: CarIcon },
-    { key: 'bell', label: 'Sino', Icon: BellIcon },
-    { key: 'camera', label: 'Câmera', Icon: CameraIcon },
-    { key: 'chat', label: 'Chat', Icon: ChatCircleIcon },
-    { key: 'card', label: 'Cartão', Icon: CreditCardIcon },
-    { key: 'folder', label: 'Pasta', Icon: FolderIcon },
-    { key: 'gear', label: 'Configurações', Icon: GearIcon },
-    { key: 'globe', label: 'Globo', Icon: GlobeIcon },
-    { key: 'leaf', label: 'Folha', Icon: LeafIcon },
-    { key: 'search', label: 'Pesquisar', Icon: MagnifyingGlassIcon },
-    { key: 'music', label: 'Música', Icon: MusicNoteIcon },
-    { key: 'phone', label: 'Telefone', Icon: PhoneIcon },
-    { key: 'star', label: 'Estrela', Icon: StarIcon },
-    { key: 'tag', label: 'Etiqueta', Icon: TagIcon },
-    { key: 'trash', label: 'Lixeira', Icon: TrashIcon },
-    { key: 'wallet', label: 'Carteira', Icon: WalletIcon },
-    { key: 'alarm', label: 'Alarme', Icon: AlarmIcon },
-    { key: 'archive', label: 'Arquivar', Icon: ArchiveIcon },
-    { key: 'airplane', label: 'Avião', Icon: AirplaneIcon },
-    { key: 'arrow-clockwise', label: 'Atualizar', Icon: ArrowClockwiseIcon },
-    { key: 'arrow-counter-clockwise', label: 'Desfazer', Icon: ArrowCounterClockwiseIcon },
-    { key: 'book', label: 'Livro', Icon: BookIcon },
-    { key: 'bookmark', label: 'Marcador', Icon: BookmarkSimpleIcon },
-    { key: 'briefcase', label: 'Maleta', Icon: BriefcaseIcon },
-    { key: 'browser', label: 'Navegador', Icon: BrowserIcon },
-    { key: 'calendar', label: 'Calendário', Icon: CalendarBlankIcon },
-    { key: 'camera-rotate', label: 'Girar câmera', Icon: CameraRotateIcon },
-    { key: 'chart-bar', label: 'Gráfico de barras', Icon: ChartBarIcon },
-    { key: 'check-circle', label: 'Confirmar', Icon: CheckCircleIcon },
-    { key: 'clock', label: 'Relógio', Icon: ClockIcon },
-    { key: 'cloud', label: 'Nuvem', Icon: CloudIcon },
-    { key: 'code', label: 'Código', Icon: CodeIcon },
-    { key: 'compass', label: 'Bússola', Icon: CompassIcon },
-    { key: 'copy', label: 'Copiar', Icon: CopyIcon },
-    { key: 'download', label: 'Baixar', Icon: DownloadSimpleIcon },
-    { key: 'envelope', label: 'Email', Icon: EnvelopeSimpleIcon },
-    { key: 'eye', label: 'Visualizar', Icon: EyeIcon },
-    { key: 'eye-slash', label: 'Ocultar', Icon: EyeSlashIcon },
-    { key: 'file', label: 'Arquivo', Icon: FileIcon },
-    { key: 'file-text', label: 'Arquivo de texto', Icon: FileTextIcon },
-    { key: 'flag', label: 'Bandeira', Icon: FlagIcon },
-    { key: 'funnel', label: 'Filtro', Icon: FunnelIcon },
-    { key: 'gift', label: 'Presente', Icon: GiftIcon },
-    { key: 'hand-heart', label: 'Mão com coração', Icon: HandHeartIcon },
-    { key: 'headphones', label: 'Fones de ouvido', Icon: HeadphonesIcon },
-    { key: 'image', label: 'Imagem', Icon: ImageIcon },
-    { key: 'info', label: 'Informação', Icon: InfoIcon },
-    { key: 'key', label: 'Chave', Icon: KeyIcon },
-    { key: 'lightbulb', label: 'Lâmpada', Icon: LightbulbIcon },
-    { key: 'link', label: 'Link', Icon: LinkSimpleIcon },
-    { key: 'list', label: 'Lista', Icon: ListBulletsIcon },
-    { key: 'map-pin', label: 'Pino de mapa', Icon: MapPinIcon },
-    { key: 'microphone', label: 'Microfone', Icon: MicrophoneIcon },
-    { key: 'moon', label: 'Lua', Icon: MoonIcon },
-    { key: 'paper-plane', label: 'Enviar', Icon: PaperPlaneRightIcon },
-    { key: 'pause', label: 'Pausar', Icon: PauseIcon },
-    { key: 'pencil', label: 'Editar', Icon: PencilSimpleIcon },
-    { key: 'play', label: 'Reproduzir', Icon: PlayIcon },
-    { key: 'printer', label: 'Impressora', Icon: PrinterIcon },
-    { key: 'rocket', label: 'Foguete', Icon: RocketIcon },
-    { key: 'shield-check', label: 'Escudo com confirmação', Icon: ShieldCheckIcon },
-    { key: 'shopping-cart', label: 'Carrinho', Icon: ShoppingCartIcon },
-    { key: 'smiley', label: 'Sorriso', Icon: SmileyIcon },
-    { key: 'speaker', label: 'Alto-falante', Icon: SpeakerHighIcon },
-    { key: 'sparkles', label: 'Brilhos', Icon: SparkleIcon },
-    { key: 'squares-four', label: 'Grade', Icon: SquaresFourIcon },
-    { key: 'storefront', label: 'Loja', Icon: StorefrontIcon },
-    { key: 'swatches', label: 'Paleta', Icon: SwatchesIcon },
-    { key: 'thumbs-up', label: 'Gostei', Icon: ThumbsUpIcon },
-    { key: 'timer', label: 'Temporizador', Icon: TimerIcon },
-    { key: 'toggle-left', label: 'Alternar', Icon: ToggleLeftIcon },
-    { key: 'trophy', label: 'Troféu', Icon: TrophyIcon },
-    { key: 'truck', label: 'Caminhão', Icon: TruckIcon },
-    { key: 'upload', label: 'Enviar', Icon: UploadSimpleIcon },
-    { key: 'user-circle', label: 'Usuário em círculo', Icon: UserCircleIcon },
-    { key: 'user-plus', label: 'Adicionar usuário', Icon: UserPlusIcon },
-    { key: 'video-camera', label: 'Câmera de vídeo', Icon: VideoCameraIcon },
-    { key: 'wifi', label: 'Wi-Fi', Icon: WifiHighIcon },
-    { key: 'wrench', label: 'Chave inglesa', Icon: WrenchIcon },
-    { key: 'x-circle', label: 'Fechar', Icon: XCircleIcon },
-  ]
+  const ICONS = useMemo<IconItem[]>(
+    () =>
+      ICONS_DATA.map((item) => ({
+        ...item,
+        Icon: resolveIcon(item.key),
+      })),
+    [],
+  )
+
+  const COLORS = useMemo<ColorItem[]>(() => COLORS_DATA, [])
 
   const [iconQuery, setIconQuery] = useState('')
   const [selectedIcon, setSelectedIcon] = useState('heart')
@@ -207,55 +158,30 @@ export function useCategory() {
     const q = iconQuery.trim().toLowerCase()
     if (!q) return ICONS
     return ICONS.filter((item) => item.label.toLowerCase().includes(q))
-  }, [iconQuery])
+  }, [ICONS, iconQuery])
 
-  const iconComponent = useMemo(() => ICONS.find((item) => item.key === icon)?.Icon, [icon])
+  const iconComponent = useMemo(() => ICONS.find((item) => item.key === icon)?.Icon, [ICONS, icon])
 
-  const iconMapper = useMemo<Record<string, React.ComponentType<IconProps>>>(
-    () =>
-      Object.fromEntries(ICONS.map(({ key, Icon }) => [key, Icon])) as Record<
-        string,
-        React.ComponentType<IconProps>
-      >,
-    [],
+  const iconMapper = useMemo<Record<string, AppIcon>>(
+    () => Object.fromEntries(ICONS.map((item) => [item.key, item.Icon])) as Record<string, AppIcon>,
+    [ICONS],
   )
 
-  const COLORS: ColorItem[] = [
-    { key: 'red', label: 'Vermelho', color: '#EF4444' },
-    { key: 'orange', label: 'Laranja', color: '#F97316' },
-    { key: 'amber', label: 'Âmbar', color: '#F59E0B' },
-    { key: 'yellow', label: 'Amarelo', color: '#EAB308' },
-    { key: 'lime', label: 'Lima', color: '#84CC16' },
-    { key: 'green', label: 'Verde', color: '#22C55E' },
-    { key: 'emerald', label: 'Esmeralda', color: '#10B981' },
-    { key: 'teal', label: 'Turquesa', color: '#14B8A6' },
-    { key: 'cyan', label: 'Ciano', color: '#06B6D4' },
-    { key: 'sky', label: 'Céu', color: '#0EA5E9' },
-    { key: 'blue', label: 'Azul', color: '#3B82F6' },
-    { key: 'indigo', label: 'Índigo', color: '#6366F1' },
-    { key: 'violet', label: 'Violeta', color: '#8B5CF6' },
-    { key: 'purple', label: 'Roxo', color: '#A855F7' },
-    { key: 'fuchsia', label: 'Fúcsia', color: '#D946EF' },
-    { key: 'pink', label: 'Rosa', color: '#EC4899' },
-    { key: 'rose', label: 'Rosa Escuro', color: '#F43F5E' },
-    { key: 'gray', label: 'Cinza', color: '#6B7280' },
-    { key: 'slate', label: 'Ardósia', color: '#64748B' },
-    { key: 'zinc', label: 'Zinco', color: '#71717A' },
-    { key: 'neutral', label: 'Neutro', color: '#737373' },
-    { key: 'stone', label: 'Pedra', color: '#78716C' },
-    { key: 'black', label: 'Preto', color: '#111827' },
-    { key: 'white', label: 'Branco', color: '#FFFFFF' },
-  ]
+  const colorMapper = useMemo(
+    () => Object.fromEntries(COLORS.map((color) => [color.key, color.color])),
+    [COLORS],
+  )
+
+  const getColorHex = useCallback(
+    (colorKey?: string) => {
+      if (!colorKey) return '#000000'
+      return (colorMapper as Record<string, string>)[colorKey] ?? colorKey
+    },
+    [colorMapper],
+  )
 
   const [categoryColor, setCategoryColor] = useState('#ff0000')
   const [colorPickerVisible, setColorPickerVisible] = useState(false)
-
-  const colorMapper = Object.fromEntries(COLORS.map((c) => [c.key, c.color]))
-
-  const getColorHex = (colorKey?: string) => {
-    if (!colorKey) return '#000000'
-    return colorMapper[colorKey] ?? colorKey
-  }
 
   const [categories, setCategories] = useState<CategoryDTO[]>([])
   const [loading, setLoading] = useState(true)
@@ -272,27 +198,19 @@ export function useCategory() {
 
   useFocusEffect(
     useCallback(() => {
-      loadCategories()
-    }, []),
+      void loadCategories()
+    }, [loadCategories]),
   )
 
-  // const log = () => {
-  //   console.log(
-  //   categories.map(c => ({
-  //     name: c.name,
-  //     icon: c.icon,
-  //   }))
-  //   )
-  //   console.log(
-  //     Object.keys(iconMapper)
-  //   )
-  // }
-
-  const mappedCategories = categories.map((item) => ({
-    ...item,
-    iconComponent: iconMapper[item.icon],
-    colorHex: getColorHex(item.color),
-  }))
+  const mappedCategories = useMemo(
+    () =>
+      categories.map((item) => ({
+        ...item,
+        iconComponent: iconMapper[item.icon],
+        colorHex: getColorHex(item.color),
+      })),
+    [categories, getColorHex, iconMapper],
+  )
 
   const [name, setName] = useState('')
   const [nameTouched, setNameTouched] = useState(false)
@@ -355,6 +273,5 @@ export function useCategory() {
     handleCreateSubmit,
     handleEditSubmit,
     iconComponent,
-    // log,
   }
 }

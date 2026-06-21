@@ -1,14 +1,15 @@
 import { useCallback, useState } from 'react'
-import { createTransaction } from '@/services/database/repository/transaction'
 import { TransactionType } from '@/services/database/models/transaction'
-import { ACCOUNTS, MAX_AMOUNT_CENTS, TRANSACTION_FORM_ERRORS } from '@/utils/transactionForm'
+import { transactionsService } from '@/services/api/transactions/transactions.service'
+import { transactionQueries } from '@/services/database/repository/transaction'
+import { MAX_AMOUNT_CENTS, TRANSACTION_FORM_ERRORS } from '@/utils/transactionForm'
 
 export type TransactionInitialValues = {
   id?: string
   type?: TransactionType
   amountCents?: number
-  accountId?: string
-  destinationAccountId?: string
+  institutionId?: string
+  destinationInstitutionId?: string
   categoryId?: string
   subcategoryId?: string
   notes?: string
@@ -18,9 +19,9 @@ export type TransactionInitialValues = {
 export function useTransactionForm(initialValues?: TransactionInitialValues) {
   const [type, setType] = useState<TransactionType>(initialValues?.type ?? 'EXPENSE')
   const [amountCents, setAmountCents] = useState(initialValues?.amountCents ?? 0)
-  const [accountId, setAccountId] = useState(initialValues?.accountId || '')
-  const [destinationAccountId, setDestinationAccountId] = useState(
-    initialValues?.destinationAccountId || '',
+  const [institutionId, setInstitutionId] = useState(initialValues?.institutionId || '')
+  const [destinationInstitutionId, setDestinationInstitutionId] = useState(
+    initialValues?.destinationInstitutionId || '',
   )
   const [categoryId, setCategoryId] = useState<string | undefined>(initialValues?.categoryId)
   const [subcategoryId, setSubcategoryId] = useState(initialValues?.subcategoryId ?? '')
@@ -53,21 +54,23 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
 
   const errors = {
     amount: amountCents === 0 ? TRANSACTION_FORM_ERRORS.amount : undefined,
-    account: accountId === '' ? 'Selecione uma conta' : undefined,
+    institution: institutionId === '' ? 'Selecione uma instituição' : undefined,
     category:
       type !== 'TRANSFER' && categoryId === '' ? TRANSACTION_FORM_ERRORS.category : undefined,
-    destinationAccount:
-      type === 'TRANSFER' && (destinationAccountId === '' || destinationAccountId === accountId)
-        ? TRANSACTION_FORM_ERRORS.destinationAccount
+    destinationInstitution:
+      type === 'TRANSFER' &&
+      (destinationInstitutionId === '' || destinationInstitutionId === institutionId)
+        ? TRANSACTION_FORM_ERRORS.destinationInstitution
         : undefined,
   }
 
-  const isValid = !errors.amount && !errors.account && !errors.category && !errors.destinationAccount
+  const isValid =
+    !errors.amount && !errors.institution && !errors.category && !errors.destinationInstitution
 
   const reset = () => {
     setAmountCents(0)
-    setAccountId('')
-    setDestinationAccountId('')
+    setInstitutionId('')
+    setDestinationInstitutionId('')
     setCategoryId('')
     setSubcategoryId('')
     setDate(new Date())
@@ -76,17 +79,18 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
     setSubmitError(null)
   }
 
-  const submit = async (onSuccess?: () => void) => {
+  const submit = async (onSuccess?: () => void, options?: { transferCategoryId?: string }) => {
     setSubmitAttempted(true)
     if (!isValid || submitting) return
-    if (type === 'TRANSFER' && destinationAccountId === accountId) {
+    if (type === 'TRANSFER' && destinationInstitutionId === institutionId) {
       setSubmitError('Invalid transfer')
       return
     }
     setSubmitError(null)
     setSubmitting(true)
 
-    const finalCategoryId = type === 'TRANSFER' ? (categoryId || CATEGORIES.TRANSFER[0].id) : categoryId
+    const finalCategoryId =
+      type === 'TRANSFER' ? categoryId || options?.transferCategoryId || '' : categoryId
 
     if (!finalCategoryId) {
       setSubmitError('Category is required')
@@ -96,16 +100,16 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
 
     try {
       if (initialValues?.id) {
-        // UPDATE MODE
         try {
           await transactionQueries.update(initialValues.id, {
             amount: amountCents,
             description: notes.trim() || finalCategoryId || type,
             type: type as any,
-            accountId,
+            institutionId,
             categoryId: finalCategoryId,
             subcategoryId: subcategoryId || undefined,
-            destinationAccountId: type === 'TRANSFER' ? destinationAccountId : undefined,
+            destinationInstitutionId:
+              type === 'TRANSFER' ? destinationInstitutionId || undefined : undefined,
           })
         } catch {
           console.warn(
@@ -118,22 +122,23 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
           description: notes.trim() || finalCategoryId || type,
           type,
           categoryId: finalCategoryId,
-          accountId,
+          institutionId,
           subCategoryId: subcategoryId || undefined,
-          destinationAccountId: type === 'TRANSFER' ? destinationAccountId : undefined,
+          destinationInstitutionId:
+            type === 'TRANSFER' ? destinationInstitutionId || undefined : undefined,
         })
       } else {
-        // CREATE MODE
         await transactionQueries.create({
           amount: amountCents,
           description: notes.trim() || finalCategoryId || type,
           date: date,
           type: type as any,
           status: 'PENDING',
-          accountId,
+          institutionId,
           categoryId: finalCategoryId,
           subcategoryId: subcategoryId || undefined,
-          destinationAccountId: type === 'TRANSFER' ? destinationAccountId : undefined,
+          destinationInstitutionId:
+            type === 'TRANSFER' ? destinationInstitutionId || undefined : undefined,
         })
 
         await transactionsService.create({
@@ -142,10 +147,11 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
           date: date.toISOString(),
           type,
           status: 'COMPLETED',
-          accountId,
+          institutionId,
           categoryId: finalCategoryId,
           subCategoryId: subcategoryId || undefined,
-          destinationAccountId: type === 'TRANSFER' ? destinationAccountId : undefined,
+          destinationInstitutionId:
+            type === 'TRANSFER' ? destinationInstitutionId || undefined : undefined,
         })
       }
       reset()
@@ -154,7 +160,10 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
       console.error('[TRANSACTION SUBMIT ERROR]', error)
       const axiosError = error as any
       if (axiosError?.response?.data) {
-        console.log('[TRANSACTION SUBMIT ERROR DETAILS]', JSON.stringify(axiosError.response.data, null, 2))
+        console.log(
+          '[TRANSACTION SUBMIT ERROR DETAILS]',
+          JSON.stringify(axiosError.response.data, null, 2),
+        )
       }
       const message = error instanceof Error ? error.message : TRANSACTION_FORM_ERRORS.submit
       setSubmitError(message)
@@ -168,10 +177,10 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
     handleTypeChange,
     amountCents,
     amount,
-    accountId,
-    setAccountId,
-    destinationAccountId,
-    setDestinationAccountId,
+    institutionId,
+    setInstitutionId,
+    destinationInstitutionId,
+    setDestinationInstitutionId,
     categoryId,
     setCategoryId,
     subcategoryId,

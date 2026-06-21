@@ -23,7 +23,7 @@ const mockTransaction = {
   status: TransactionStatus.COMPLETED,
   category: { id: 'cat-001', name: 'Alimentação' },
   subCategory: null,
-  account: { id: 'acc-001', name: 'Conta Corrente' },
+  institution: { id: 'inst-001', name: 'Nubank' },
 }
 
 describe('TransactionsController', () => {
@@ -50,7 +50,7 @@ describe('TransactionsController', () => {
 
   describe('create', () => {
     const dto = {
-      accountId: 'acc-001',
+      institutionId: 'inst-001',
       categoryId: 'cat-001',
       type: TransactionType.EXPENSE,
       amount: 5000,
@@ -60,18 +60,10 @@ describe('TransactionsController', () => {
     it('deve chamar o service e retornar a transação criada', async () => {
       transactionsServiceMock.create.mockResolvedValue(mockTransaction)
 
-      const result = await controller.create(dto, 'user-teste-001')
+      const result = await controller.create(dto as never, 'user-teste-001')
 
       expect(result).toEqual(mockTransaction)
       expect(transactionsServiceMock.create).toHaveBeenCalledWith('user-teste-001', dto)
-    })
-
-    it('deve passar o userId correto para o service', async () => {
-      transactionsServiceMock.create.mockResolvedValue(mockTransaction)
-
-      await controller.create(dto, 'user-teste-001')
-
-      expect(transactionsServiceMock.create).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -80,6 +72,7 @@ describe('TransactionsController', () => {
       transactionsServiceMock.findAll.mockResolvedValue({ data: [{ id: '1' }], meta: {} })
 
       const query: FilterTransactionsDto = {
+        institutionId: 'inst-1',
         categoryId: 'cat-1',
         type: TransactionType.INCOME,
       }

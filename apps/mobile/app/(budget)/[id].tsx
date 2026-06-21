@@ -36,7 +36,8 @@ export default function EditBudgetScreen({ initialValues }: Props) {
         <ScrollView>
           <AmountDisplay
             amountCents={form.amountLimit}
-            type={form.type}
+            type={'TRANSFER'}
+            showType={false}
             onPress={() => form.setShowKeypad(true)}
           />
           {form.submitAttempted && form.errors.amount && (

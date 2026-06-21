@@ -73,9 +73,9 @@ export class InstitutionsService {
           include: {
             invoices: true,
             recurrences: true,
-            transactions: true,
           },
         },
+        transactions: true,
       },
     })
     if (!institution) throw new NotFoundException('Instituição não encontrada')
@@ -89,9 +89,15 @@ export class InstitutionsService {
           accountId: account.id,
           invoiceIds: account.invoices.map((i) => i.id),
           recurrenceIds: account.recurrences.map((r) => r.id),
-          transactionIds: account.transactions.map((t) => t.id),
         })
       }
+
+      await createDeletedRecords({
+        tx,
+        userId,
+        tableName: TableName.TRANSACTIONS,
+        recordIds: institution.transactions.map((transaction) => transaction.id),
+      })
 
       await createDeletedRecords({
         tx,
@@ -99,6 +105,11 @@ export class InstitutionsService {
         tableName: TableName.INSTITUTIONS,
         recordIds: [institutionId],
       })
+
+      for (const transaction of institution.transactions) {
+        await tx.transaction.delete({ where: { id: transaction.id } })
+      }
+
       await tx.institution.delete({ where: { id: institutionId } })
     })
   }

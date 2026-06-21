@@ -44,13 +44,13 @@ export async function nullifyTransactionInvoiceRefs(
   })
 }
 
-export async function nullifyTransactionDestinationAccountRefs(
+export async function nullifyTransactionDestinationInstitutionRefs(
   tx: TransactionClient,
-  accountId: string,
+  institutionId: string,
 ): Promise<void> {
   await tx.transaction.updateMany({
-    where: { destinationAccountId: accountId },
-    data: { destinationAccountId: null, updatedAt: now() },
+    where: { destinationInstitutionId: institutionId },
+    data: { destinationInstitutionId: null, updatedAt: now() },
   })
 }
 

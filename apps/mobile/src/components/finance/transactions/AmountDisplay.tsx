@@ -3,27 +3,27 @@ import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { formatCurrency } from '@/utils/formatters'
 import { getTransactionAmountColor, TYPE_LABELS, TYPE_SIGN } from '@/utils/transactionForm'
-import type { BudgetType } from '../../../../types/types'
 import type { TransactionType } from './types'
 
 type Props = {
   amountCents: number
   type: TransactionType
-  budget?: boolean
+  showType?: boolean
   onPress: () => void
 }
 
-export function AmountDisplay({ amountCents, type, budget = false, onPress }: Props) {
+export function AmountDisplay({ amountCents, type, showType = true, onPress }: Props) {
   const theme = useThemeColor()
+  const color = getTransactionAmountColor(type, theme)
   const amount = amountCents / 100
-  const label = isBudgetType(type) ? BUDGET_TYPE_LABELS[type] : TYPE_LABELS[type]
-  const sign = isBudgetType(type) ? '' : TYPE_SIGN[type]
-  const color = isBudgetType(type) ? theme.primary : getTransactionAmountColor(type, theme)
+  const sign = TYPE_SIGN[type]
 
   return (
     <Pressable onPress={onPress} style={styles.container}>
-      {!budget && (
+      {showType ? (
         <ThemedText text={TYPE_LABELS[type]} variant="caption" tone="muted" style={styles.label} />
+      ) : (
+        ''
       )}
       <ThemedText
         text={`${sign ? `${sign} ` : ''}${formatCurrency(amount)}`}

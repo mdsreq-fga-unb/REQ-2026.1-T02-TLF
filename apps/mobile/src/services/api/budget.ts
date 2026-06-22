@@ -12,7 +12,7 @@ export interface CreateBudgetDTO {
 export const BudgetService = {
   getAll: () => api.get<BudgetListItem[]>('/budget'),
 
-  getById: (id: string) => api.get(`/budget/${id}`),
+  getById: (id: string) => api.get<BudgetListItem>(`/budget/${id}`),
 
   create: (data: CreateBudgetDTO) => api.post('/budget', data),
 

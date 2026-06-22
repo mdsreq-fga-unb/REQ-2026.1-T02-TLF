@@ -23,8 +23,9 @@ type props = {
   name: string
   month: number
   year: number
-  totalValue?: number
   spentValue?: number
+  remainingValue?: number
+  spentPercentage?: number
   onDelete?: (id: string) => void
 }
 
@@ -33,18 +34,23 @@ export function BudgetItem({
   categoryColor,
   amountLimit,
   name,
-  totalValue = amountLimit / 100,
   spentValue = 0,
+  remainingValue,
+  spentPercentage,
   onDelete,
 }: props) {
   const colors = useThemeColor()
   const { withOpacity } = useColors()
-  const remainingValue = totalValue - spentValue
-  const fillPercentage = Math.round((spentValue / totalValue) * 100)
+  const totalValue = amountLimit / 100
+  const spentAmount = spentValue / 100
+  const calculatedRemainingValue = remainingValue ?? amountLimit - spentValue
+  const remainingAmount = calculatedRemainingValue / 100
+  const calculatedPercentage =
+    spentPercentage ?? (amountLimit > 0 ? Math.round((spentValue / amountLimit) * 100) : 0)
+  const safePercentage = Math.min(100, calculatedPercentage)
   const formatedTotalValue = formatCurrency(totalValue)
-  const formatedSpentValue = formatCurrency(spentValue)
-  const formatedRemainingValue = formatCurrency(remainingValue)
-  const safePercentage = Math.min(100, fillPercentage)
+  const formatedSpentValue = formatCurrency(spentAmount)
+  const formatedRemainingValue = formatCurrency(remainingAmount)
   const [showAction, setShowAction] = useState(false)
   const useBudget = useBudgetScreen()
 
@@ -102,14 +108,14 @@ export function BudgetItem({
       />
 
       <View style={styles.container}>
-        {remainingValue > 0 ? (
+        {remainingAmount > 0 ? (
           <ThemedText children variant="label" tone="muted" text={`${formatedSpentValue} gastos`} />
         ) : null}
         <ThemedText
           children
           variant="label"
-          tone={remainingValue > 0 ? 'default' : 'warning'}
-          text={`${formatedRemainingValue} ${remainingValue > 0 ? 'sobrando' : 'além do limite'}`}
+          tone={remainingAmount > 0 ? 'default' : 'warning'}
+          text={`${formatedRemainingValue} ${remainingAmount > 0 ? 'sobrando' : 'além do limite'}`}
         />
       </View>
 

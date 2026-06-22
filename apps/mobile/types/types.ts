@@ -57,6 +57,8 @@ export type BudgetListItem = {
   month: number
   year: number
   spentValue?: number
+  remainingValue?: number
+  spentPercentage?: number
   categoryId: string
   category?: CategoryData
 }

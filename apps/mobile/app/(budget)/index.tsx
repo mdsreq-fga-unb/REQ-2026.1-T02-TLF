@@ -29,6 +29,9 @@ export default function BudgetsScreen() {
             name={item.name}
             month={item.month}
             year={item.year}
+            spentValue={item.spentValue}
+            remainingValue={item.remainingValue}
+            spentPercentage={item.spentPercentage}
             onDelete={() => useBudget.fetchBudgets()}
           />
         )}

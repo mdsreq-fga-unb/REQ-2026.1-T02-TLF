@@ -4,6 +4,7 @@ import { useThemeColor } from '@/hooks/useThemeColor'
 import { resolveTextTone, TextTone } from '@/utils/textTone'
 import { iconSize } from '@/utils/dimensions'
 import { styles } from './style'
+import { router } from 'expo-router'
 
 type props = {
   iconTone?: TextTone
@@ -20,8 +21,7 @@ export function ThemedHeader({ iconTone = 'default' }: props) {
           <UserRound color={iconColor} size={iconSize.lg} />
         </View>
       </Pressable>
-      {/* TODO: add caminho para assistencia ou perguntas frequentes ou algo nesse sentido */}
-      <Pressable>
+      <Pressable onPress={() => router.push('/notifications')}>
         <Bell color={iconColor} size={iconSize.lg} />
       </Pressable>
     </View>

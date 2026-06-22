@@ -3,6 +3,7 @@ import type { SemanticColors } from '@/utils/colors'
 export type TextTone =
   | 'default'
   | 'muted'
+  | 'positive'
   | 'destructive'
   | 'warning'
   | 'link'
@@ -13,6 +14,8 @@ export function resolveTextTone(colors: SemanticColors, tone: TextTone): string 
   switch (tone) {
     case 'muted':
       return colors.mutedForeground
+    case 'positive':
+      return colors.success
     case 'destructive':
       return colors.destructive
     case 'warning':

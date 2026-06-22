@@ -1,4 +1,3 @@
-import { CategoryDistribution } from '@/components/finance/records/CategoryDistribution'
 import { RecordsHeader } from '@/components/finance/records/RecordsHeader'
 import { RecordsSearch } from '@/components/finance/records/RecordsSearch'
 import { RecordsSummary } from '@/components/finance/records/RecordsSummary'
@@ -24,7 +23,6 @@ export default function RecordsScreen() {
     transactionTypeOptions,
     filteredTransactions,
     summaryData,
-    categoryData,
     isLoading,
     error,
     handleEdit,
@@ -54,7 +52,6 @@ export default function RecordsScreen() {
           onDeleteTransaction={handleDelete}
           onEditTransaction={handleEdit}
         />
-        <CategoryDistribution categories={categoryData} />
       </ThemedScrollArea>
       <ThemedOverlayAlert
         visible={alert != null}

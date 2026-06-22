@@ -2,18 +2,30 @@ import { BudgetItem } from '@/components/finance/budget/BudgetItem'
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
 import { FlatList } from 'react-native-gesture-handler'
 import { StyleSheet } from 'react-native'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useBudgetScreen } from '@/hooks/budget/useBudgetScreen'
 import { useFocusEffect } from 'expo-router'
+import { database } from '@/services/database'
+import { Category } from '@/services/database/models/category'
+import { Q } from '@nozbe/watermelondb'
+import { withObservables } from '@nozbe/watermelondb/react'
 
-export default function BudgetsScreen() {
+type BudgetsScreenProps = {
+  categories: Category[]
+}
+
+function BudgetsScreenView({ categories }: BudgetsScreenProps) {
   const useBudget = useBudgetScreen()
 
   useFocusEffect(
     useCallback(() => {
       useBudget.fetchBudgets()
-    }, []),
+    }, [useBudget.fetchBudgets]),
   )
+
+  const categoryById = useMemo(() => {
+    return new Map(categories.map((category) => [category.id, category.color]))
+  }, [categories])
 
   return (
     <ThemedBackground>
@@ -24,7 +36,7 @@ export default function BudgetsScreen() {
           <BudgetItem
             id={item.id}
             categoryId={item.categoryId}
-            categoryColor={item.category?.color}
+            categoryColor={categoryById.get(item.categoryId) ?? item.category?.color}
             amountLimit={item.amountLimit}
             name={item.name}
             month={item.month}
@@ -42,6 +54,16 @@ export default function BudgetsScreen() {
     </ThemedBackground>
   )
 }
+
+const BudgetsScreen = withObservables([], () => {
+  const categoriesCollection = database.get<Category>('categories')
+
+  return {
+    categories: categoriesCollection.query(Q.sortBy('name', 'asc')),
+  }
+})(BudgetsScreenView)
+
+export default BudgetsScreen
 
 const styles = StyleSheet.create({
   screen: {

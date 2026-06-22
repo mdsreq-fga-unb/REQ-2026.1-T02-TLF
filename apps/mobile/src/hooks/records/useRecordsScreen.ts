@@ -48,26 +48,14 @@ export function useRecordsScreen() {
 
     try {
       setIsLoading(true)
-      let data
 
-      if (categoryFilter !== 'Todas') {
-        data = await transactionsService.list({ category: categoryFilter })
-      } else if (typeFilter !== 'ALL') {
-        data = await transactionsService.list({ type: typeFilter })
-      } else {
-        data = await transactionsService.list()
-      }
-
+      const data = await transactionsService.list()
       setTransactions(data.map(mapApiTransactionToListItem))
       setError(null)
     } catch (loadError) {
       console.error('loadTransactions failed', loadError)
       try {
-        const localFilters: Record<string, any> = {}
-        if (categoryFilter !== 'Todas') localFilters.categoryId = categoryFilter
-        if (typeFilter !== 'ALL') localFilters.type = typeFilter
-
-        const localData = await transactionQueries.getByFilters(localFilters)
+        const localData = await transactionQueries.getAll()
         setTransactions(localData.map(mapLocalTransactionToListItem))
         setError('Sem conexao. Exibindo dados locais.')
       } catch {
@@ -76,7 +64,7 @@ export function useRecordsScreen() {
     } finally {
       setIsLoading(false)
     }
-  }, [categoryFilter, typeFilter])
+  }, [])
 
   useEffect(() => {
     if (USE_MOCK_TRANSACTIONS) {

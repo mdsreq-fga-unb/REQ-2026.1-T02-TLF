@@ -26,6 +26,7 @@ type props = {
   spentValue?: number
   remainingValue?: number
   spentPercentage?: number
+  mainBudget?: boolean
   onDelete?: (id: string) => void
 }
 
@@ -37,6 +38,7 @@ export function BudgetItem({
   spentValue = 0,
   remainingValue,
   spentPercentage,
+  mainBudget = false,
   onDelete,
 }: props) {
   const colors = useThemeColor()

@@ -30,6 +30,8 @@ type BudgetBase = {
   categoryId: string
   userId?: string
   category?: BudgetCategory | null
+  createdAt: Date
+  updatedAt: Date
 }
 
 type BudgetSummary = {

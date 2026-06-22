@@ -3,8 +3,7 @@ import { notificationTypes } from '@/services/database/models/notification'
 import { triggerNotification } from '@/services/notification/notification.service'
 import { router } from 'expo-router'
 import { ThemedListItem } from '@/components/ui/ThemedListItem'
-import { FileText, ChartColumnStacked } from 'lucide-react-native'
-import { router } from 'expo-router'
+import { FileText, ChartColumnStacked, LogOut,  } from 'lucide-react-native'
 import { ThemedSimpleHeader } from '@/components/ui/ThemedSimpleHeader'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { ThemedContainer } from '@/components/ui/ThemedContainer'
@@ -42,12 +41,11 @@ export default function BudgetsScreen() {
         />
         {/* TODO: fazer logout de vdd */}
         <ThemedListItem
-          text="logout*"
-          icon={FileText}
+          text="Logout*"
+          icon={LogOut}
           onPress={() => router.push('/(auth)/login')}
         />
-        <ThemedListItem text="item 3" />
-        <ThemedListItem text="item 4" />
+
       </ThemedContainer>
     </ThemedBackground>
   )

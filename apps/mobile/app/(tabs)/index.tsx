@@ -44,10 +44,14 @@ export default function Home() {
           <BudgetItem
             id={budget.id}
             categoryId={budget.categoryId}
+            categoryColor={budget.category?.color}
             amountLimit={budget.amountLimit}
             name={budget.name}
             month={budget.month}
             year={budget.year}
+            spentValue={budget.spentValue}
+            remainingValue={budget.remainingValue}
+            spentPercentage={budget.spentPercentage}
             onDelete={() => fetchBudgets()}
             mainBudget={true}
           />

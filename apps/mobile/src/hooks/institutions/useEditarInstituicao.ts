@@ -1,13 +1,11 @@
 import { useState } from 'react'
 import { router, useLocalSearchParams } from 'expo-router'
 import { defaultAppearanceColor } from '@/utils/institutions/appearance'
-import { updateInstitution } from '@/services/api/institutions'
 import { institutionQueries } from '@/services/database/queries/institution'
 import { useInstitutionForm } from '@/hooks/institutions/useInstitutionForm'
 import { useInstitutionsStore } from '@/stores/institutions'
+import { mapLocalInstitutionToListItem } from '@/utils/institutions/institutionMappers'
 import type { IconKey } from '@/utils/icons'
-
-const USE_MOCK_INSTITUTIONS = true
 
 const DEFAULT_ICON: IconKey = 'landmark'
 
@@ -29,6 +27,9 @@ export function useEditarInstituicao() {
   })
 
   const updateInstitutionInStore = useInstitutionsStore((state) => state.updateInstitution)
+  const currentInstitution = useInstitutionsStore((state) =>
+    state.institutions.find((institution) => institution.id === id),
+  )
 
   const [isSaving, setIsSaving] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
@@ -38,29 +39,21 @@ export function useEditarInstituicao() {
 
     const payload = form.buildPayload()
 
-    if (USE_MOCK_INSTITUTIONS) {
-      updateInstitutionInStore(id, payload)
-    } else {
-      try {
-        setIsSaving(true)
-        await updateInstitution(id, payload)
-        try {
-          await institutionQueries.update(id, payload)
-        } catch (localError) {
-          // Falha ao atualizar o banco local nao deve bloquear o salvamento remoto
-          console.warn('Falha ao atualizar instituicao no banco local:', localError)
-        }
-      } catch (saveError) {
-        console.error('Erro ao atualizar instituicao:', saveError)
-        form.setNameError('Não foi possível salvar. Tente novamente.')
-        setIsSaving(false)
-        return
-      }
+    try {
+      setIsSaving(true)
+      const updatedInstitution = await institutionQueries.update(id, payload)
+      updateInstitutionInStore(
+        id,
+        mapLocalInstitutionToListItem(updatedInstitution, currentInstitution?.accountsCount ?? 0),
+      )
+      setShowSuccess(true)
+      setTimeout(() => router.navigate('/institutions'), 900)
+    } catch (saveError) {
+      console.error('Erro ao atualizar instituicao:', saveError)
+      form.setNameError('Não foi possível salvar. Tente novamente.')
+    } finally {
       setIsSaving(false)
     }
-
-    setShowSuccess(true)
-    setTimeout(() => router.navigate('/institutions'), 900)
   }
 
   const handleClose = () => router.navigate('/institutions')

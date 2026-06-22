@@ -39,6 +39,10 @@ export const getInstitutionsCount = async () => {
   return institutionsCollection().query().fetchCount()
 }
 
+export const getInstitutionAccountsCount = async (id: string) => {
+  return database.get('accounts').query(Q.where('institution_id', id)).fetchCount()
+}
+
 export const createInstitution = async (input: InstitutionInput) => {
   return database.write(async () => {
     return institutionsCollection().create((institution) => {
@@ -104,6 +108,7 @@ export const institutionQueries = {
   getAll: getAllInstitutions,
   getById: getInstitutionById,
   getCount: getInstitutionsCount,
+  getAccountsCount: getInstitutionAccountsCount,
   create: createInstitution,
   update: updateInstitution,
   delete: markInstitutionAsDeleted,

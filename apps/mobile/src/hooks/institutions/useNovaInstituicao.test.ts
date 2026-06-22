@@ -9,21 +9,29 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({}),
 }))
 
-jest.mock('@/services/api/institutions', () => ({
-  createInstitution: jest.fn(),
-}))
-
 jest.mock('@/services/database/queries/institution', () => ({
   institutionQueries: { create: jest.fn() },
 }))
 
 const mockedNavigate = jest.mocked(router.navigate)
+const mockedCreate = jest.requireMock('@/services/database/queries/institution').institutionQueries
+  .create as jest.Mock
 
 describe('useNovaInstituicao', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest.useFakeTimers()
     useInstitutionsStore.setState({ institutions: [...mockInstitutions] })
+    mockedCreate.mockResolvedValue({
+      id: 'inst-new',
+      name: 'Banco Inter',
+      color: '#6E72FF',
+      icon: 'landmark',
+      logoUrl: null,
+      userId: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
   })
 
   afterEach(() => {

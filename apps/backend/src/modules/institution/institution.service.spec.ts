@@ -22,6 +22,7 @@ const mockInstitution = {
   userId: 'user-001',
   name: 'Nubank',
   color: '#8A05BE',
+  icon: 'landmark',
   logoUrl: null,
 }
 
@@ -31,10 +32,7 @@ describe('InstitutionService', () => {
   beforeEach(async () => {
     jest.resetAllMocks()
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        InstitutionService,
-        { provide: PrismaService, useValue: mockPrisma },
-      ],
+      providers: [InstitutionService, { provide: PrismaService, useValue: mockPrisma }],
     }).compile()
     service = module.get<InstitutionService>(InstitutionService)
   })
@@ -93,7 +91,9 @@ describe('InstitutionService', () => {
     it('deve lançar ConflictException se nome duplicado', async () => {
       mockPrisma.institution.findUnique.mockResolvedValueOnce(mockInstitution)
       mockPrisma.institution.findFirst.mockResolvedValue({ ...mockInstitution, id: 'inst-002' })
-      await expect(service.update('user-001', 'inst-001', { name: 'Nubank' })).rejects.toThrow(ConflictException)
+      await expect(service.update('user-001', 'inst-001', { name: 'Nubank' })).rejects.toThrow(
+        ConflictException,
+      )
     })
   })
 

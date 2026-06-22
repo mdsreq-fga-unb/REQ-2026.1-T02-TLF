@@ -26,21 +26,21 @@ export class InstitutionService {
 
     return this.prisma.institution.create({
       data: { ...dto, userId },
-      select: { id: true, name: true, color: true, logoUrl: true },
+      select: { id: true, name: true, color: true, icon: true, logoUrl: true },
     })
   }
 
   async findAll(userId: string) {
     return this.prisma.institution.findMany({
       where: { userId },
-      select: { id: true, name: true, color: true, logoUrl: true },
+      select: { id: true, name: true, color: true, icon: true, logoUrl: true },
     })
   }
 
   async findOne(userId: string, id: string) {
     const institution = await this.prisma.institution.findUnique({
       where: { id, userId },
-      select: { id: true, name: true, color: true, logoUrl: true },
+      select: { id: true, name: true, color: true, icon: true, logoUrl: true },
     })
     if (!institution) throw new NotFoundException('Instituição não encontrada')
     return institution
@@ -57,7 +57,7 @@ export class InstitutionService {
     return this.prisma.institution.update({
       where: { id },
       data: dto,
-      select: { id: true, name: true, color: true, logoUrl: true },
+      select: { id: true, name: true, color: true, icon: true, logoUrl: true },
     })
   }
 

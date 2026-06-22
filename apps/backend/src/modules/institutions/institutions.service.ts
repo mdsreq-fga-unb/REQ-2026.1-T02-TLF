@@ -35,14 +35,16 @@ export class InstitutionsService {
         userId,
         name: dto.name,
         color: dto.color,
-        logoUrl: dto.logoUrl ?? null,
+        ...(dto.icon !== undefined && { icon: dto.icon }),
+        ...(dto.logoUrl !== undefined && { logoUrl: dto.logoUrl }),
         ...(dto.createdAt && { createdAt: new Date(dto.createdAt) }),
         ...(dto.updatedAt && { updatedAt: new Date(dto.updatedAt) }),
       },
       update: {
         name: dto.name,
         color: dto.color,
-        logoUrl: dto.logoUrl ?? null,
+        ...(dto.icon !== undefined && { icon: dto.icon }),
+        ...(dto.logoUrl !== undefined && { logoUrl: dto.logoUrl }),
         ...(dto.updatedAt && { updatedAt: new Date(dto.updatedAt) }),
       },
     })
@@ -58,7 +60,8 @@ export class InstitutionsService {
       data: {
         name: dto.name,
         color: dto.color,
-        logoUrl: dto.logoUrl ?? null,
+        ...(dto.icon !== undefined && { icon: dto.icon }),
+        ...(dto.logoUrl !== undefined && { logoUrl: dto.logoUrl }),
         ...(dto.updatedAt && { updatedAt: new Date(dto.updatedAt) }),
       },
     })

@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react'
 import { BudgetService } from '@/services/api/budget'
 import { BudgetData, BudgetListItem, BudgetType } from 'types/types'
 import { formatCurrency } from '@/utils/formatters'
+import { getApiErrorMessage } from '@/utils/apiErrorMessage'
 
 const MAX_CENTS = 9_999_999
 
@@ -119,16 +120,10 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
       reset()
       onSuccess?.()
     } catch (error) {
-      let message = 'Não foi possível salvar a transação. Tente novamente.'
-      if (error instanceof Error) {
-        message = error.message
-      }
-      if (error && typeof error === 'object' && 'response' in error) {
-        const axiosError = error as any
-        console.error('[BudgetCreateSubmit] response data:', axiosError.response?.data)
-        message = axiosError.response?.data?.message || message
-      }
-      setFeedbackMessage(message)
+      console.error('[BudgetCreateSubmit]', error)
+      setFeedbackMessage(
+        getApiErrorMessage(error, 'Não foi possível salvar a transação. Tente novamente.'),
+      )
     } finally {
       setSubmitting(false)
     }
@@ -151,16 +146,10 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
       await BudgetService.update(id, payload)
       onSuccess?.()
     } catch (error) {
-      let message = 'Não foi possível salvar a transação. Tente novamente.'
-      if (error instanceof Error) {
-        message = error.message
-      }
-      if (error && typeof error === 'object' && 'response' in error) {
-        const axiosError = error as any
-        console.error('[BudgetEditSubmit] response data:', axiosError.response?.data)
-        message = axiosError.response?.data?.message || message
-      }
-      setFeedbackMessage(message)
+      console.error('[BudgetEditSubmit]', error)
+      setFeedbackMessage(
+        getApiErrorMessage(error, 'Não foi possível salvar a transação. Tente novamente.'),
+      )
     } finally {
       setSubmitting(false)
     }

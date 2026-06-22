@@ -35,8 +35,7 @@ import {
   frequencyOptions,
   formatDateDisplay,
 } from '@/hooks/recurrences/useNovaRecorrencia'
-import type { TransactionType } from '@/services/database/queries/transaction'
-
+import { TransactionType } from '@/services/database/models/transaction'
 export default function NovaRecorrenciaScreen() {
   const theme = useThemeColor()
   const {

@@ -1,23 +1,23 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
-import { RecurrenceService } from './recurrence.service';
+import { Injectable, Logger } from '@nestjs/common'
+import { Cron } from '@nestjs/schedule'
+import { RecurrenceService } from './recurrence.service'
 
 @Injectable()
 export class RecurrenceScheduler {
-  private readonly logger = new Logger(RecurrenceScheduler.name);
+  private readonly logger = new Logger(RecurrenceScheduler.name)
 
   constructor(private readonly recurrenceService: RecurrenceService) {}
 
   @Cron('0 0 * * *', { timeZone: 'America/Sao_Paulo' })
   async handleDailyRecurrences() {
-    this.logger.log('Starting recurrence generation job...');
+    this.logger.log('Starting recurrence generation job...')
 
     try {
-      await this.recurrenceService.generateTransactionsFromRecurrences();
+      await this.recurrenceService.generateTransactionsFromRecurrences()
 
-      this.logger.log('Recurrence generation finished successfully');
+      this.logger.log('Recurrence generation finished successfully')
     } catch (error) {
-      this.logger.error('Recurrence generation failed', error);
+      this.logger.error('Recurrence generation failed', error)
     }
   }
 }

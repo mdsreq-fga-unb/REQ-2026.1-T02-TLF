@@ -1,8 +1,29 @@
 import { appSchema, tableSchema } from '@nozbe/watermelondb'
 
 export const schema = appSchema({
-  version: 2,
+  version: 1,
   tables: [
+    tableSchema({
+      name: 'categories',
+      columns: [
+        { name: 'name', type: 'string' },
+        { name: 'icon', type: 'string' },
+        { name: 'color', type: 'string' },
+        { name: 'created_at', type: 'number' },
+        { name: 'updated_at', type: 'number' },
+      ],
+    }),
+    tableSchema({
+      name: 'sub_categories',
+      columns: [
+        { name: 'category_id', type: 'string' },
+        { name: 'name', type: 'string' },
+        { name: 'icon', type: 'string' },
+        { name: 'color', type: 'string' },
+        { name: 'created_at', type: 'number' },
+        { name: 'updated_at', type: 'number' },
+      ],
+    }),
     tableSchema({
       name: 'institutions',
       columns: [
@@ -16,6 +37,66 @@ export const schema = appSchema({
       ],
     }),
     tableSchema({
+      name: 'budgets',
+      columns: [
+        { name: 'category_id', type: 'string' },
+        { name: 'name', type: 'string' },
+        { name: 'amount_limit', type: 'number' },
+        { name: 'month', type: 'number' },
+        { name: 'year', type: 'number' },
+        { name: 'created_at', type: 'number' },
+        { name: 'updated_at', type: 'number' },
+      ],
+    }),
+    tableSchema({
+      name: 'accounts',
+      columns: [
+        { name: 'institution_id', type: 'string' },
+        { name: 'name', type: 'string' },
+        { name: 'type', type: 'string' },
+        { name: 'balance', type: 'number' },
+        { name: 'closing_day', type: 'number', isOptional: true },
+        { name: 'due_day', type: 'number', isOptional: true },
+        { name: 'credit_limit', type: 'number', isOptional: true },
+        { name: 'currency', type: 'string' },
+        { name: 'is_active', type: 'boolean' },
+        { name: 'created_at', type: 'number' },
+        { name: 'updated_at', type: 'number' },
+      ],
+    }),
+    tableSchema({
+      name: 'invoices',
+      columns: [
+        { name: 'account_id', type: 'string' },
+        { name: 'status', type: 'string' },
+        { name: 'payment_status', type: 'string' },
+        { name: 'reference_month', type: 'number' },
+        { name: 'reference_year', type: 'number' },
+        { name: 'total_amount', type: 'number' },
+        { name: 'paid_amount', type: 'number' },
+        { name: 'closing_day', type: 'number' },
+        { name: 'due_day', type: 'number' },
+        { name: 'created_at', type: 'number' },
+        { name: 'updated_at', type: 'number' },
+      ],
+    }),
+    tableSchema({
+      name: 'recurrences',
+      columns: [
+        { name: 'account_id', type: 'string' },
+        { name: 'category_id', type: 'string', isOptional: true },
+        { name: 'sub_category_id', type: 'string', isOptional: true },
+        { name: 'description', type: 'string' },
+        { name: 'amount', type: 'number' },
+        { name: 'is_active', type: 'boolean' },
+        { name: 'charge_date', type: 'number' },
+        { name: 'start_date', type: 'number' },
+        { name: 'end_date', type: 'number', isOptional: true },
+        { name: 'created_at', type: 'number' },
+        { name: 'updated_at', type: 'number' },
+      ],
+    }),
+    tableSchema({
       name: 'transactions',
       columns: [
         { name: 'amount', type: 'number' },
@@ -24,7 +105,7 @@ export const schema = appSchema({
         { name: 'type', type: 'string' },
         { name: 'status', type: 'string' },
         { name: 'account_id', type: 'string' },
-        { name: 'category_id', type: 'string' },
+        { name: 'category_id', type: 'string', isOptional: true },
         { name: 'subcategory_id', type: 'string', isOptional: true },
         { name: 'invoice_id', type: 'string', isOptional: true },
         { name: 'recurrence_id', type: 'string', isOptional: true },
@@ -34,6 +115,25 @@ export const schema = appSchema({
         { name: 'installment_total', type: 'number', isOptional: true },
         { name: 'receipt_url', type: 'string', isOptional: true },
         { name: 'external_id', type: 'string', isOptional: true },
+        { name: 'created_at', type: 'number' },
+        { name: 'updated_at', type: 'number' },
+      ],
+    }),
+    tableSchema({
+      name: 'notifications',
+      columns: [
+        { name: 'type', type: 'string' },
+        { name: 'title', type: 'string' },
+        { name: 'description', type: 'string' },
+        { name: 'is_read', type: 'boolean' },
+        { name: 'primary_action_label', type: 'string', isOptional: true },
+        { name: 'primary_action', type: 'string', isOptional: true },
+        { name: 'secondary_action_label', type: 'string', isOptional: true },
+        { name: 'secondary_action', type: 'string', isOptional: true },
+        { name: 'icon', type: 'string' },
+        { name: 'color', type: 'string' },
+        { name: 'reference_id', type: 'string' },
+        { name: 'reference_type', type: 'string' },
         { name: 'created_at', type: 'number' },
         { name: 'updated_at', type: 'number' },
       ],

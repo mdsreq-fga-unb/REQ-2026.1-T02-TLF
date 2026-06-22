@@ -6,7 +6,7 @@ import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { FilterChip } from './FilterChip'
 import { formatTransactionType } from '@/utils/formatters'
-import type { TransactionType } from '@/services/database/queries/transaction'
+import { TransactionType } from '@/services/database/models/transaction'
 
 type props = {
   categories: string[]

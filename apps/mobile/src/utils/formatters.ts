@@ -1,4 +1,4 @@
-import type { TransactionType } from '@/services/database/queries/transaction'
+import { TransactionType } from '@/services/database/models/transaction'
 
 export const formatCurrency = (value: number) =>
   new Intl.NumberFormat('pt-BR', {

@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
-import { createTransaction, type TransactionType } from '@/services/database/queries/transaction'
+import { createTransaction } from '@/services/database/repository/transaction'
+import { TransactionType } from '@/services/database/models/transaction'
 import { ACCOUNTS, MAX_AMOUNT_CENTS, TRANSACTION_FORM_ERRORS } from '@/utils/transactionForm'
 
 export type TransactionInitialValues = {
@@ -77,7 +78,7 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
         description: notes.trim() || categoryId || type,
         date,
         type,
-        status: 'CONFIRMED',
+        status: 'COMPLETED',
         accountId,
         categoryId: categoryId || 'uncategorized',
         subcategoryId: subcategoryId || null,

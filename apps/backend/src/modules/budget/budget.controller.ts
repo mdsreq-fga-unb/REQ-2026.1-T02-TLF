@@ -25,33 +25,33 @@ export class BudgetController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() dto: CreateBudgetDto, @CurrentUser('id') userId:string) {
+  create(@Body() dto: CreateBudgetDto, @CurrentUser('id') userId: string) {
     return this.budgetService.create(userId, dto)
   }
 
   @Get()
-  findAll(@CurrentUser('id') userId:string) {
+  findAll(@CurrentUser('id') userId: string) {
     return this.budgetService.findAll(userId)
   }
 
   @Get('category/:categoryId')
-  findByCategory(@Param('categoryId') categoryId: string, @CurrentUser('id') userId:string) {
+  findByCategory(@Param('categoryId') categoryId: string, @CurrentUser('id') userId: string) {
     return this.budgetService.findByCategory(userId, categoryId)
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @CurrentUser('id') userId:string) {
+  findOne(@Param('id') id: string, @CurrentUser('id') userId: string) {
     return this.budgetService.findOne(userId, id)
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateBudgetDto, @CurrentUser('id') userId:string) {
+  update(@Param('id') id: string, @Body() dto: UpdateBudgetDto, @CurrentUser('id') userId: string) {
     return this.budgetService.update(userId, id, dto)
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  remove(@Param('id') id: string, @CurrentUser('id') userId:string) {
-    return this.budgetService.remove(userId, id)
+  remove(@Param('id') id: string, @CurrentUser('id') userId: string) {
+    return this.budgetService.remove({ userId, id })
   }
 }

@@ -12,18 +12,11 @@ export interface CreateBudgetDTO {
 export const BudgetService = {
   getAll: () => api.get<BudgetListItem[]>('/budget'),
 
-  getById: (id: string) =>
-    api.get(`/budget/${id}`),
+  getById: (id: string) => api.get(`/budget/${id}`),
 
-  create: (data: CreateBudgetDTO) =>
-    api.post('/budget', data),
+  create: (data: CreateBudgetDTO) => api.post('/budget', data),
 
-  update: (
-    id: string,
-    data: Partial<CreateBudgetDTO>,
-  ) =>
-    api.patch(`/budget/${id}`, data),
+  update: (id: string, data: Partial<CreateBudgetDTO>) => api.patch(`/budget/${id}`, data),
 
-  delete: (id: string) =>
-    api.delete(`/budget/${id}`),
+  delete: (id: string) => api.delete(`/budget/${id}`),
 }

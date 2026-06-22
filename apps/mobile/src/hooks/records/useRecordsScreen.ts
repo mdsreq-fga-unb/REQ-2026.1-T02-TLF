@@ -15,8 +15,8 @@ import {
   listTransactionsByCategory,
   listTransactionsByType,
 } from '@/services/api/transactions'
-import { transactionQueries } from '@/services/database/queries/transaction'
-import type { TransactionType } from '@/services/database/queries/transaction'
+import { transactionQueries } from '@/services/database/repository/transaction'
+import { TransactionType } from '@/services/database/models/transaction'
 import {
   buildCategoryData,
   buildCategoryOptions,

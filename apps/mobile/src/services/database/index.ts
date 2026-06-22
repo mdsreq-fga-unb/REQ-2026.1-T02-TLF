@@ -1,9 +1,16 @@
 import { Database } from '@nozbe/watermelondb'
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite'
 import { schema } from './schema'
-import { migrations } from './migration'
+import migrations from './migration'
 import { Transaction } from './models/transaction'
+import { Notification } from './models/notification'
+import { Category } from './models/category'
+import { SubCategory } from './models/subCategory'
 import { Institution } from './models/institution'
+import { Account } from './models/account'
+import { Invoice } from './models/invoice'
+import { Recurrence } from './models/recurrece'
+import { Budget } from './models/budget'
 
 const adapter = new SQLiteAdapter({
   schema,
@@ -15,5 +22,15 @@ const adapter = new SQLiteAdapter({
 
 export const database = new Database({
   adapter,
-  modelClasses: [Transaction, Institution],
+  modelClasses: [
+    Category,
+    SubCategory,
+    Institution,
+    Budget,
+    Account,
+    Invoice,
+    Recurrence,
+    Transaction,
+    Notification,
+  ],
 })

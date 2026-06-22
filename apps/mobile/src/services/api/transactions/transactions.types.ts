@@ -41,6 +41,7 @@ export type TransactionApiItem = {
 }
 
 export type CreateTransactionPayload = {
+  id?: string
   institutionId: string
   categoryId: string
   subCategoryId?: string

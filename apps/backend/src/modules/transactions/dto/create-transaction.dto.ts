@@ -3,6 +3,15 @@ import { IsEnum, IsInt, IsISO8601, IsOptional, IsString, IsUUID, Min } from 'cla
 import { TransactionType, TransactionStatus } from '../../../../generated/prisma/client'
 
 export class CreateTransactionDto {
+  @ApiPropertyOptional({
+    example: 'd4f7a1b8-4dc8-49d2-8d37-5f5de0f5d0a1',
+    description:
+      'ID da transação. Quando informado, é reutilizado no cadastro local e no servidor.',
+  })
+  @IsOptional()
+  @IsUUID()
+  id?: string
+
   @ApiProperty({
     example: 'ae73db85-6c25-4b8d-91b2-d0cda2830c65',
     description: 'ID da instituição',

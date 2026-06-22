@@ -5,6 +5,7 @@ import { institutionQueries } from '@/services/database/queries/institution'
 import { useInstitutionForm } from '@/hooks/institutions/useInstitutionForm'
 import { useInstitutionsStore } from '@/stores/institutions'
 import { mapLocalInstitutionToListItem } from '@/utils/institutions/institutionMappers'
+import { syncDatabase } from '@/services/database/sync'
 import type { IconKey } from '@/utils/icons'
 
 const DEFAULT_ICON: IconKey = 'landmark'
@@ -46,6 +47,13 @@ export function useEditarInstituicao() {
         id,
         mapLocalInstitutionToListItem(updatedInstitution, currentInstitution?.accountsCount ?? 0),
       )
+
+      try {
+        await syncDatabase()
+      } catch (syncError) {
+        console.warn('[OFFLINE-FIRST] Falha ao sincronizar a instituição atualizada.', syncError)
+      }
+
       setShowSuccess(true)
       setTimeout(() => router.navigate('/institutions'), 900)
     } catch (saveError) {

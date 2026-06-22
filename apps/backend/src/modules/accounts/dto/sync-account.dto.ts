@@ -1,18 +1,10 @@
-import {
-  IsBoolean,
-  IsEnum,
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Min,
-} from 'class-validator'
+import { IsBoolean, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator'
 import { AccountType, Currency } from 'generated/prisma/client'
 import { SyncRecordDto } from '@common/sync/dto/sync-record.dto'
 
 export class SyncAccountDto extends SyncRecordDto {
-  @IsUUID()
+  @IsString()
+  @IsNotEmpty()
   institutionId!: string
 
   @IsString()

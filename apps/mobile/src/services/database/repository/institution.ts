@@ -66,24 +66,31 @@ export const markInstitutionAsDeleted = async (id: string) => {
     const accounts = await database.get('accounts').query(Q.where('institution_id', id)).fetch()
     const accountIds = accounts.map((account) => account.id)
 
-    const [invoices, recurrences, transactions, institution] = await Promise.all([
-      accountIds.length
-        ? database
-            .get('invoices')
-            .query(Q.where('account_id', Q.oneOf(accountIds)))
-            .fetch()
-        : Promise.resolve([]),
-      accountIds.length
-        ? database
-            .get('recurrences')
-            .query(Q.where('account_id', Q.oneOf(accountIds)))
-            .fetch()
-        : Promise.resolve([]),
-      database.get('transactions').query(Q.where('institution_id', id)).fetch(),
-      getInstitutionById(id),
-    ])
+    const [invoices, recurrences, transactions, destinationTransactions, institution] =
+      await Promise.all([
+        accountIds.length
+          ? database
+              .get('invoices')
+              .query(Q.where('account_id', Q.oneOf(accountIds)))
+              .fetch()
+          : Promise.resolve([]),
+        accountIds.length
+          ? database
+              .get('recurrences')
+              .query(Q.where('account_id', Q.oneOf(accountIds)))
+              .fetch()
+          : Promise.resolve([]),
+        database.get('transactions').query(Q.where('institution_id', id)).fetch(),
+        database.get('transactions').query(Q.where('destination_institution_id', id)).fetch(),
+        getInstitutionById(id),
+      ])
 
     await database.batch([
+      ...destinationTransactions.map((record) =>
+        record.prepareUpdate((transaction) => {
+          transaction.destinationInstitutionId = null
+        }),
+      ),
       ...transactions.map((record) => record.prepareMarkAsDeleted()),
       ...recurrences.map((record) => record.prepareMarkAsDeleted()),
       ...invoices.map((record) => record.prepareMarkAsDeleted()),

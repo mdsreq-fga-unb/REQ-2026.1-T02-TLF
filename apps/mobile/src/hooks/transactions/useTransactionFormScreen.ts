@@ -2,6 +2,8 @@ import { router, useFocusEffect } from 'expo-router'
 import { useCallback, useMemo, useState } from 'react'
 import { useInstitutionsStore } from '@/stores/institutions'
 import { getCategories, type CategoryDTO } from '@/services/api/category'
+import { institutionQueries } from '@/services/database/queries/institution'
+import { mapLocalInstitutionToListItem } from '@/utils/institutions/institutionMappers'
 import { TRANSACTION_FORM_COPY } from '@/utils/transactionForm'
 import {
   useTransactionForm,
@@ -25,6 +27,7 @@ export function useTransactionFormScreen({
 }: Options = {}) {
   const form = useTransactionForm(initialValues)
   const institutions = useInstitutionsStore((state) => state.institutions)
+  const setInstitutions = useInstitutionsStore((state) => state.setInstitutions)
   const [showInstitutionPicker, setShowInstitutionPicker] = useState(false)
   const [showDestinationPicker, setShowDestinationPicker] = useState(false)
   const [showCategoryPicker, setShowCategoryPicker] = useState(false)
@@ -41,10 +44,31 @@ export function useTransactionFormScreen({
     }
   }, [])
 
+  const loadInstitutions = useCallback(async () => {
+    if (institutions.length > 0) return
+
+    try {
+      const localInstitutions = await institutionQueries.getAll()
+      const items = await Promise.all(
+        localInstitutions.map(async (institution) =>
+          mapLocalInstitutionToListItem(
+            institution,
+            await institutionQueries.getAccountsCount(institution.id),
+          ),
+        ),
+      )
+
+      setInstitutions(items)
+    } catch (error) {
+      console.error('[TransactionForm] Failed to load institutions', error)
+    }
+  }, [institutions.length, setInstitutions])
+
   useFocusEffect(
     useCallback(() => {
       void loadCategories()
-    }, [loadCategories]),
+      void loadInstitutions()
+    }, [loadCategories, loadInstitutions]),
   )
 
   const categoryOptions = useMemo(

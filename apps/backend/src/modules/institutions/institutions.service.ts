@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '@common/prisma/prisma.service'
 import { createDeletedRecords } from '@common/sync/deleted-record.util'
+import { nullifyTransactionDestinationInstitutionRefs } from '@common/sync/set-null.util'
 import { buildTimestampWhere } from '@common/sync/sync-query.util'
 import { AccountsService } from '@modules/accounts/accounts.service'
 import { TableName } from 'generated/prisma/client'
@@ -94,6 +95,8 @@ export class InstitutionsService {
           recurrenceIds: account.recurrences.map((r) => r.id),
         })
       }
+
+      await nullifyTransactionDestinationInstitutionRefs(tx, institutionId)
 
       await createDeletedRecords({
         tx,

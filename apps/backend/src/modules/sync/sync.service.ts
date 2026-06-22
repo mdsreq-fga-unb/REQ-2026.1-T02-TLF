@@ -1,5 +1,5 @@
 import { PrismaService } from '@common/prisma/prisma.service'
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { TableName } from 'generated/prisma/client'
 import { AccountsService } from '../accounts/accounts.service'
 import { BudgetService } from '../budget/budget.service'
@@ -211,7 +211,12 @@ export class SyncService {
       await handlers.update(record)
     }
     for (const id of changes.deleted ?? []) {
-      await handlers.remove(id)
+      try {
+        await handlers.remove(id)
+      } catch (error) {
+        if (error instanceof NotFoundException) continue
+        throw error
+      }
     }
   }
 }

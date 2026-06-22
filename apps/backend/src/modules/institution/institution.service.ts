@@ -5,6 +5,7 @@ import {
   BadRequestException,
 } from '@nestjs/common'
 import { PrismaService } from '@common/prisma/prisma.service'
+import { nullifyTransactionDestinationInstitutionRefs } from '@common/sync/set-null.util'
 import { CreateInstitutionDto } from './dto/create-institution.dto'
 import { UpdateInstitutionDto } from './dto/update-institution.dto'
 
@@ -75,7 +76,11 @@ export class InstitutionService {
       )
     }
 
-    await this.prisma.institution.delete({ where: { id } })
+    await this.prisma.$transaction(async (tx) => {
+      await nullifyTransactionDestinationInstitutionRefs(tx, id)
+      await tx.institution.delete({ where: { id } })
+    })
+
     return { message: 'Instituição removida com sucesso' }
   }
 }

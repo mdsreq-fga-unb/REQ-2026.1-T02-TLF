@@ -9,6 +9,7 @@ const TRANSACTIONS_TABLE = 'transactions'
 const transactionsCollection = () => database.get<Transaction>(TRANSACTIONS_TABLE)
 
 export type TransactionInput = {
+  id?: string
   amount: number
   description: string
   date: Date
@@ -88,6 +89,9 @@ export const getTransactionsByFilters = async (filters: TransactionFilters) => {
 export const createTransaction = async (input: TransactionInput) => {
   return database.write(async () => {
     return transactionsCollection().create((transaction) => {
+      if (input.id) {
+        ;(transaction as any)._raw.id = input.id
+      }
       applyTransactionFields(transaction, input)
     })
   })

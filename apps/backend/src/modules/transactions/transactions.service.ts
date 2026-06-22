@@ -85,6 +85,7 @@ export class TransactionsService {
 
     const transaction = await this.prisma.transaction.create({
       data: {
+        ...(dto.id && { id: dto.id }),
         institutionId: dto.institutionId,
         categoryId: dto.categoryId,
         subCategoryId: dto.subCategoryId,

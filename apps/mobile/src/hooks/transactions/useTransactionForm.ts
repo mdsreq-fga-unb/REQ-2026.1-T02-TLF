@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { TransactionType } from '@/services/database/models/transaction'
-import { transactionsService } from '@/services/api/transactions/transactions.service'
+import { syncDatabase } from '@/services/database/sync'
 import { transactionQueries } from '@/services/database/repository/transaction'
 import { MAX_AMOUNT_CENTS, TRANSACTION_FORM_ERRORS } from '@/utils/transactionForm'
 
@@ -113,20 +113,9 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
           })
         } catch {
           console.warn(
-            '[OFFLINE-FIRST] Registro não encontrado localmente. O update será sincronizado apenas na API.',
+            '[OFFLINE-FIRST] Registro não encontrado localmente. A atualização será sincronizada pelo próximo ciclo.',
           )
         }
-
-        await transactionsService.update(initialValues.id, {
-          amount: amountCents,
-          description: notes.trim() || finalCategoryId || type,
-          type,
-          categoryId: finalCategoryId,
-          institutionId,
-          subCategoryId: subcategoryId || undefined,
-          destinationInstitutionId:
-            type === 'TRANSFER' ? destinationInstitutionId || undefined : undefined,
-        })
       } else {
         await transactionQueries.create({
           amount: amountCents,
@@ -140,20 +129,14 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
           destinationInstitutionId:
             type === 'TRANSFER' ? destinationInstitutionId || undefined : undefined,
         })
-
-        await transactionsService.create({
-          amount: amountCents,
-          description: notes.trim() || finalCategoryId || type,
-          date: date.toISOString(),
-          type,
-          status: 'COMPLETED',
-          institutionId,
-          categoryId: finalCategoryId,
-          subCategoryId: subcategoryId || undefined,
-          destinationInstitutionId:
-            type === 'TRANSFER' ? destinationInstitutionId || undefined : undefined,
-        })
       }
+
+      try {
+        await syncDatabase()
+      } catch (syncError) {
+        console.warn('[OFFLINE-FIRST] Sincronização falhou após salvar localmente.', syncError)
+      }
+
       reset()
       onSuccess?.()
     } catch (error) {

@@ -15,6 +15,10 @@ const mockPrisma = {
   account: {
     count: jest.fn(),
   },
+  transaction: {
+    updateMany: jest.fn(),
+  },
+  $transaction: jest.fn(),
 }
 
 const mockInstitution = {
@@ -31,6 +35,7 @@ describe('InstitutionService', () => {
 
   beforeEach(async () => {
     jest.resetAllMocks()
+    mockPrisma.$transaction.mockImplementation(async (callback: any) => callback(mockPrisma))
     const module: TestingModule = await Test.createTestingModule({
       providers: [InstitutionService, { provide: PrismaService, useValue: mockPrisma }],
     }).compile()
@@ -104,6 +109,10 @@ describe('InstitutionService', () => {
       mockPrisma.institution.delete.mockResolvedValue(mockInstitution)
       const result = await service.remove('user-001', 'inst-001')
       expect(result).toEqual({ message: 'Instituição removida com sucesso' })
+      expect(mockPrisma.transaction.updateMany).toHaveBeenCalledWith({
+        where: { destinationInstitutionId: 'inst-001' },
+        data: { destinationInstitutionId: null, updatedAt: expect.any(Date) },
+      })
     })
 
     it('deve lançar BadRequestException se houver contas vinculadas', async () => {

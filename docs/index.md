@@ -8,12 +8,13 @@ Este site tem a funcionalidade de mostrar a documentação do projeto **TLT Fina
 
 ## Histórico de Revisão
 
-| Data       | Versão | Descrição                                         | Autor         |
-|------------|--------|---------------------------------------------------|---------------|
-| 06/04/26   | 1.0    | Proposta inicial de projeto (seção 1 até 2.3 - Visão de Produto e Projeto) | Equipe TLT    |
-| 08/04/26   | 1.1    | Proposta de projeto atualizada                    | Equipe TLT    |
-| 12/04/26   | 1.2    | Documento de Visão do produto e projeto atualizado para entrega da unidade 1 | Equipe TLT    |
-| 16/05/26   | 1.3    | Documento de Visão do produto e projeto atualizado para entrega da unidade 2 | Equipe TLT    |
+| Data     | Versão | Descrição                                                                    | Autor      |
+| -------- | ------ | ---------------------------------------------------------------------------- | ---------- |
+| 06/04/26 | 1.0    | Proposta inicial de projeto (seção 1 até 2.3 - Visão de Produto e Projeto)   | Equipe TLT |
+| 08/04/26 | 1.1    | Proposta de projeto atualizada                                               | Equipe TLT |
+| 12/04/26 | 1.2    | Documento de Visão do produto e projeto atualizado para entrega da unidade 1 | Equipe TLT |
+| 16/05/26 | 1.3    | Documento de Visão do produto e projeto atualizado para entrega da unidade 2 | Equipe TLT |
+| 14/06/26 | 1.4    | Documento de Visão do produto e projeto atualizado para entrega da unidade 3 | Equipe TLT |
 
 ---
 

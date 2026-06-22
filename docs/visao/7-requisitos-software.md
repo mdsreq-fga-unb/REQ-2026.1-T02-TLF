@@ -33,9 +33,9 @@ Os requisitos funcionais descrevem as funcionalidades específicas que o sistema
 
 ### Orçamentos e Metas
 
-- **RF16** – criar uma meta ou orçamento. (UC16)
-- **RF17** – editar uma meta ou orçamento. (UC17)
-- **RF18** – excluir uma meta ou orçamento. (UC18)
+- **RF16** – criar uma orçamento. (UC16)
+- **RF17** – editar uma orçamento. (UC17)
+- **RF18** – excluir uma orçamento. (UC18)
 
 ### Instituições Financeiras e Contas
 
@@ -54,61 +54,63 @@ Os requisitos funcionais descrevem as funcionalidades específicas que o sistema
 
 ### Relatórios e Exportação
 
-- **RF28** – Exportar um relatório financeiro. (UC28)
+- **RF28** – Exportar um relatório financeiro CSV. (UC28)
 
 ### Notificações e Erros
 
-- **RF29** – notificar quando um limite for atingido ou estiver próximo. (UC29)
+- **RF29** – notificar quando um limite for atingido ou estiver próximo de 80%. (UC29)
 
 ### Interface e Configurações
 
-- **RF30** – permitir o envio de feedback. (UC30)
+- **RF30** – permitir o envio de comentarios de feedback. (UC30)
 
 ### Conteúdos Educacionais
 
-- **RF31** – gerar e exibir dica financeira personalizada. (UC31)
-- **RF32** – disponibilizar materiais de educação financeira. (UC32)
+- **RF31** – gerar e exibir dica financeira com IA. (UC31)
+- **RF32** – disponibilizar PDFs de educação financeira. (UC32)
 
 ## 7.2 Lista de Requisitos Não Funcionais
 
 ### Segurança
 
-- **RNF01** – As senhas devem atender a critérios mínimos de complexidade.
+- **RNF01** – As senhas devem atender a critérios mínimos de complexidade de acordo com uma pontuação acima de 2 na ZXCVBN.
 - **RNF02** – O acesso às funcionalidades deve ser restrito a usuários autenticados.
 
 ### Usabilidade
 
-- **RNF03** – exibir um menu principal de navegação.
-- **RNF04** – As mensagens de erro devem ser orientativas e claras.
-- **RNF05** – As mensagens de erro devem ser exibidas de forma padronizada e legível nas telas do aplicativo móvel.
-- **RNF06** – O sistema deve funcionar nos principais sistemas operacionais móveis Android.
-- **RNF07** – permitir a alteração do tema de visualização.
-- **RNF08** – O sistema deve continuar útil em ambientes com internet instável ou indisponível, preservando a funcionalidade de registro financeiro básico.
+- **RNF03** – exibir um menu principal de navegação na área inicial.
+- **RNF04** – As mensagens de erro devem ser exibidas de forma padronizada e legível nas telas do aplicativo móvel de acordo com padrões da WCAG.
+- **RNF05** – O sistema deve funcionar nos principais sistemas operacionais móveis Android 7.0 (API 24) ou superior.
+- **RNF06** – permitir a alteração do tema de visualização entre claro e escuro.
+- **RNF07** – O sistema deve continuar útil em ambientes com internet instável ou indisponível, preservando a funcionalidade de registro financeiro básico.
 
 ### Desempenho
 
-- **RNF09** – as telas devem ser carregadas em até 3 segundos.
+- **RNF08** – Todas telas devem ser carregadas em até 3 segundos.
 
 ### Confiabilidade
 
-- **RNF10** – Os dados pessoais do usuário devem ser armazenados de forma criptografada no servidor.
-- **RNF11** – O envio de feedback não deve expor, involuntariamente, informações financeiras do usuário.
-- **RNF12** – O sistema deve sincronizar automaticamente com o servidor as transações registradas offline assim que a conexão com a internet for restabelecida.
+- **RNF09** – Os dados pessoais do usuário devem ser armazenados de forma criptografada no servidor.
+- **RNF10** – O envio de feedback não deve expor, involuntariamente, informações do usuário.
+- **RNF11** – O sistema deve sincronizar automaticamente com o servidor as transações registradas offline assim que a conexão com a internet for restabelecida.
 
 ## 7.3 Matriz-síntese de rastreabilidade
+
+<iframe width="100%" height="500" src="https://miro.com/app/board/uXjVHTxsQHI=/?share_link_id=455679825476" title="Árvore de rastreabilidade no miro" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+[Árvore de rastreabilidade no miro](https://miro.com/app/board/uXjVHTxsQHI=/?share_link_id=455679825476)
 
 | Contribuição principal | CP   | RFs relacionados                                                       | RNFs relacionados   |
 | ---------------------- | ---- | ---------------------------------------------------------------------- | ------------------- |
 | OE1                    | CP1  | RF04, RF30                                                             | RFN03               |
 | OE3                    | CP2  | RF07, RF08, RF09, RF25, RF26, RF27                                     | -                   |
-| OE4                    | CP3  | RF05                                                                   | RFN10               |
+| OE4                    | CP3  | RF05                                                                   | RFN09               |
 | OE2                    | CP4  | RF06, RF28                                                             | -                   |
-| OE3                    | CP5  | -                                                                      | RNF08, RNF12        |
-| OE6                    | CP6  | -                                                                      | RNF06, RNF07, RNF09 |
-| OE5                    | CP7  | -                                                                      | RNF01, RNF09        |
+| OE3                    | CP5  | -                                                                      | RNF07, RNF11        |
+| OE6                    | CP6  | -                                                                      | RNF05, RNF06, RNF08 |
+| OE5                    | CP7  | -                                                                      | RNF01, RNF10        |
 | OE3                    | CP8  | RF19, RF20, RF21, RF22, RF23, RF24, RF10, RF11, RF12, RF13, RF14, RF15 | -                   |
 | OE1                    | CP9  | RF16, RF17, RF18, RF29                                                 | -                   |
 | OE5                    | CP10 | RF01, RF02, RF03                                                       | RNF02               |
-| OE6                    | CP11 | -                                                                      | RNF04, RNF05        |
+| OE6                    | CP11 | -                                                                      | RNF04               |
 
 ---

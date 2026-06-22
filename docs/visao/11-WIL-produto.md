@@ -1,8 +1,8 @@
-# 9. BACKLOG DE PRODUTO
+# 11. Work Item List do produto
 
 > Aqui, cabe destacar que todas Requisitos Funcionais, a seguir, são derivadas da lista de Casos de Uso apresentados. Esta é uma lista preliminar e deverá sofrer ajustes sempre que necessário, durante o desenvolvimento do produto do TLT finanças.
 
-## 9.1 Backlog Geral
+## 11.1 WIL Geral
 
 A tabela, a seguir, apresenta cada um dos requisitos funcionais (RFs) declarados utilizando a técnica de Casos de Uso (UCs), assim como a rastreabilidade com os requisitos não funcionais (RNFs).
 
@@ -23,9 +23,9 @@ A tabela, a seguir, apresenta cada um dos requisitos funcionais (RFs) declarados
 | RF13 – criar uma subcategoria de transação.                        | UC13        | Permite ao usuário criar uma subcategoria vinculada a uma categoria existente.                             | RNF02, RNF03, RNF04, RNF05, RNF09               |
 | RF14 – editar uma subcategoria de transação.                       | UC14        | Permite ao usuário alterar o nome de uma subcategoria existente.                                           | RNF02, RNF03, RNF04, RNF05, RNF09               |
 | RF15 – excluir uma subcategoria de transação.                      | UC15        | Permite ao usuário remover uma subcategoria do sistema.                                                    | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF16 – criar uma meta ou orçamento.                                | UC16        | Permite ao usuário criar objetivos financeiros e definir metas ou limites de gastos.                       | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF17 – editar uma meta ou orçamento.                               | UC17        | Permite ao usuário modificar metas financeiras e limites de gastos já cadastrados.                         | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF18 – excluir uma meta ou orçamento.                              | UC18        | Permite ao usuário remover um planejamento financeiro ou meta do sistema.                                  | RNF02, RNF03, RNF04, RNF05, RNF09               |
+| RF16 – criar uma orçamento.                                        | UC16        | Permite ao usuário criar objetivos financeiros e definir metas ou limites de gastos.                       | RNF02, RNF03, RNF04, RNF05, RNF09               |
+| RF17 – editar uma orçamento.                                       | UC17        | Permite ao usuário modificar metas financeiras e limites de gastos já cadastrados.                         | RNF02, RNF03, RNF04, RNF05, RNF09               |
+| RF18 – excluir uma orçamento.                                      | UC18        | Permite ao usuário remover um planejamento financeiro ou meta do sistema.                                  | RNF02, RNF03, RNF04, RNF05, RNF09               |
 | RF19 – cadastrar uma instituição financeira.                       | UC19        | Permite ao usuário cadastrar uma instituição financeira, como banco ou corretora.                          | RNF02, RNF03, RNF04, RNF05, RNF09               |
 | RF20 – editar uma instituição financeira.                          | UC20        | Permite ao usuário modificar os dados de uma instituição financeira cadastrada.                            | RNF02, RNF03, RNF04, RNF05, RNF09               |
 | RF21 – excluir uma instituição financeira.                         | UC21        | Permite ao usuário remover uma instituição financeira do sistema.                                          | RNF02, RNF03, RNF04, RNF05, RNF09               |
@@ -41,7 +41,7 @@ A tabela, a seguir, apresenta cada um dos requisitos funcionais (RFs) declarados
 | RF31 – gerar e exibir dica financeira personalizada.               | UC31        | Permite ao sistema analisar o comportamento financeiro do usuário e exibir dicas personalizadas.           | RNF02, RNF03, RNF04, RNF05, RNF09               |
 | RF32 – disponibilizar materiais de educação financeira.            | UC32        | Permite ao usuário acessar materiais educativos recomendados, como cursos, vídeos e artigos.               | RNF02, RNF03, RNF04, RNF05, RNF06, RNF09        |
 
-## 9.2 Priorização do Backlog Geral e MVP
+## 11.2 Priorização da WIL e escopo
 
 Para a priorização do backlog foram utilizados os seguintes critérios:
 
@@ -65,8 +65,7 @@ O número de acessos e utilizações foram adquiridos dividindo o Impacto em Esp
 A partir disso, foi gerada a seguinte Matriz de valor e impacto:
 
 <iframe width="100%" height="500" src="https://miro.com/app/board/uXjVHTBwhKE=/?share_link_id=623549294839" title="Matriz de impacto e esforçp" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-[Matriz de valo e impacto](https://miro.com/app/board/uXjVHTBwhKE=/?share_link_id=623549294839)
-
+[Matriz de valor e impacto](https://miro.com/app/board/uXjVHTBwhKE=/?share_link_id=623549294839)
 
 | RF / RNF | Descrição                                                                                                                                         | Impacto       | Esforço       | Quadrante | Prioridade sugerida |
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------- | --------- | ------------------- |
@@ -80,23 +79,22 @@ A partir disso, foi gerada a seguinte Matriz de valor e impacto:
 | RF10     | criar uma categoria de transação.                                                                                                                 | Alto Impacto  | Baixo esforço | Q1        | Prioridade 1        |
 | RF11     | editar uma categoria de transação.                                                                                                                | Alto Impacto  | Baixo esforço | Q1        | Prioridade 1        |
 | RF12     | excluir uma categoria de transação.                                                                                                               | Alto Impacto  | Baixo esforço | Q1        | Prioridade 1        |
-| RF16     | criar uma meta ou orçamento.                                                                                                                      | Alto Impacto  | Baixo esforço | Q1        | Prioridade 1        |
-| RF17     | editar uma meta ou orçamento.                                                                                                                     | Alto Impacto  | Baixo esforço | Q1        | Prioridade 1        |
-| RF18     | excluir uma meta ou orçamento.                                                                                                                    | Alto Impacto  | Baixo esforço | Q1        | Prioridade 1        |
-| RFN1     | As senhas devem atender a critérios mínimos de complexidade.                                                                                      | Alto Impacto  | Baixo esforço | Q1        | Prioridade 1        |
+| RF16     | criar uma orçamento.                                                                                                                              | Alto Impacto  | Baixo esforço | Q1        | Prioridade 1        |
+| RF17     | editar uma orçamento.                                                                                                                             | Alto Impacto  | Baixo esforço | Q1        | Prioridade 1        |
+| RF18     | excluir uma orçamento.                                                                                                                            | Alto Impacto  | Baixo esforço | Q1        | Prioridade 1        |
+| RFN1     | As senhas devem atender a critérios mínimos de complexidade de acordo com uma pontuação acima de 2 na ZXCVBN.                                     | Alto Impacto  | Baixo esforço | Q1        | Prioridade 1        |
 | RFN2     | O acesso às funcionalidades deve ser restrito a usuários autenticados.                                                                            | Alto Impacto  | Baixo esforço | Q1        | Prioridade 1        |
-| RFN10    | Os dados pessoais do usuário devem ser armazenados de forma criptografada no servidor.                                                            | Alto Impacto  | Baixo esforço | Q1        | Prioridade 1        |
-| RFN03    | exibir um menu principal de navegação.                                                                                                            | Alto Impacto  | Baixo esforço | Q1        | Prioridade 1        |
+| RFN9     | Os dados pessoais do usuário devem ser armazenados de forma criptografada no servidor.                                                            | Alto Impacto  | Baixo esforço | Q1        | Prioridade 1        |
+| RFN03    | exibir um menu principal de navegação na área inicial.                                                                                            | Alto Impacto  | Baixo esforço | Q1        | Prioridade 1        |
 | RF06     | gerar um painel com resumo gráfico.                                                                                                               | Alto Impacto  | Alto esforço  | Q2        | Prioridade 2        |
 | RF25     | cadastrar uma transação recorrente.                                                                                                               | Alto Impacto  | Alto esforço  | Q2        | Prioridade 2        |
 | RF26     | editar uma transação recorrente.                                                                                                                  | Alto Impacto  | Alto esforço  | Q2        | Prioridade 2        |
 | RF27     | excluir uma transação recorrente.                                                                                                                 | Alto Impacto  | Alto esforço  | Q2        | Prioridade 2        |
-| RF29     | notificar quando um limite for atingido ou estiver próximo.                                                                                       | Alto Impacto  | Alto esforço  | Q2        | Prioridade 2        |
-| RFN04    | As mensagens de erro devem ser orientativas e claras.                                                                                             | Alto Impacto  | Alto esforço  | Q2        | Prioridade 2        |
-| RFN05    | As mensagens de erro devem ser exibidas de forma padronizada e legível nas telas do aplicativo móvel.                                             | Alto Impacto  | Alto esforço  | Q2        | Prioridade 2        |
-| RFN06    | O sistema deve funcionar nos principais sistemas operacionais móveis Android.                                                                     | Alto Impacto  | Alto esforço  | Q2        | Prioridade 2        |
-| RFN08    | O sistema deve continuar útil em ambientes com internet instável ou indisponível, preservando a funcionalidade de registro financeiro básico.     | Alto Impacto  | Alto esforço  | Q2        | Prioridade 2        |
-| RFN12    | O sistema deve sincronizar automaticamente com o servidor as transações registradas offline assim que a conexão com a internet for restabelecida. | Alto Impacto  | Alto esforço  | Q2        | Prioridade 2        |
+| RF29     | notificar quando um limite for atingido ou estiver próximo de 80%.                                                                                | Alto Impacto  | Alto esforço  | Q2        | Prioridade 2        |
+| RFN04    | As mensagens de erro devem ser exibidas de forma padronizada e legível nas telas do aplicativo móvel.                                             | Alto Impacto  | Alto esforço  | Q2        | Prioridade 2        |
+| RFN05    | O sistema deve funcionar nos principais sistemas operacionais móveis Android 7.0 (API 24) ou superior.                                            | Alto Impacto  | Alto esforço  | Q2        | Prioridade 2        |
+| RFN07    | O sistema deve continuar útil em ambientes com internet instável ou indisponível, preservando a funcionalidade de registro financeiro básico.     | Alto Impacto  | Alto esforço  | Q2        | Prioridade 2        |
+| RFN11    | O sistema deve sincronizar automaticamente com o servidor as transações registradas offline assim que a conexão com a internet for restabelecida. | Alto Impacto  | Alto esforço  | Q2        | Prioridade 2        |
 | RF13     | criar uma subcategoria de transação.                                                                                                              | Baixo Impacto | Baixo esforço | Q3        | Prioridade 3        |
 | RF14     | editar uma subcategoria de transação.                                                                                                             | Baixo Impacto | Baixo esforço | Q3        | Prioridade 3        |
 | RF15     | excluir uma subcategoria de transação.                                                                                                            | Baixo Impacto | Baixo esforço | Q3        | Prioridade 3        |
@@ -106,13 +104,13 @@ A partir disso, foi gerada a seguinte Matriz de valor e impacto:
 | RF22     | registrar uma conta financeira.                                                                                                                   | Baixo Impacto | Baixo esforço | Q3        | Prioridade 3        |
 | RF23     | editar uma conta financeira.                                                                                                                      | Baixo Impacto | Baixo esforço | Q3        | Prioridade 3        |
 | RF24     | excluir uma conta financeira.                                                                                                                     | Baixo Impacto | Baixo esforço | Q3        | Prioridade 3        |
-| RF30     | permitir o envio de feedback.                                                                                                                     | Baixo Impacto | Baixo esforço | Q3        | Prioridade 3        |
+| RF30     | permitir o envio de comentario de feedback.                                                                                                       | Baixo Impacto | Baixo esforço | Q3        | Prioridade 3        |
 | RF03     | permitir a recuperação de senha.                                                                                                                  | Baixo Impacto | Baixo esforço | Q3        | Prioridade 3        |
-| RNF07    | permitir a alteração do tema de visualização.                                                                                                     | Baixo Impacto | Baixo esforço | Q3        | Prioridade 3        |
-| RNF09    | as telas devem ser carregadas em até 3 segundos.                                                                                                  | Baixo Impacto | Baixo esforço | Q3        | Prioridade 3        |
-| RNF11    | O envio de feedback não deve expor, involuntariamente, informações financeiras do usuário.                                                        | Baixo Impacto | Baixo esforço | Q3        | Prioridade 3        |
-| RF28     | Exportar um relatório financeiro.                                                                                                                 | Baixo Impacto | Alto esforço  | Q4        | Prioridade 4        |
-| RF31     | gerar e exibir dica financeira personalizada.                                                                                                     | Baixo Impacto | Alto esforço  | Q4        | Prioridade 4        |
-| RF32     | disponibilizar materiais de educação financeira.                                                                                                  | Baixo Impacto | Alto esforço  | Q4        | Prioridade 4        |
+| RNF06    | permitir a alteração do tema de visualização entre claro e escuro.                                                                                | Baixo Impacto | Baixo esforço | Q3        | Prioridade 3        |
+| RNF08    | as telas devem ser carregadas em até 3 segundos.                                                                                                  | Baixo Impacto | Baixo esforço | Q3        | Prioridade 3        |
+| RNF10    | O envio de feedback não deve expor, involuntariamente, informações do usuário.                                                                    | Baixo Impacto | Baixo esforço | Q3        | Prioridade 3        |
+| RF28     | Exportar um relatório financeiro CSV.                                                                                                             | Baixo Impacto | Alto esforço  | Q4        | Prioridade 4        |
+| RF31     | gerar e exibir dica financeira personalizada com IA.                                                                                              | Baixo Impacto | Alto esforço  | Q4        | Prioridade 4        |
+| RF32     | disponibilizar PDFs de educação financeira.                                                                                                       | Baixo Impacto | Alto esforço  | Q4        | Prioridade 4        |
 
 ---

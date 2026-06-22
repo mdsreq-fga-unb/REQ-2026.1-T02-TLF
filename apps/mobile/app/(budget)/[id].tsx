@@ -38,6 +38,8 @@ export default function EditBudgetScreen({ initialValues }: Props) {
             amountCents={form.amountLimit}
             type={'TRANSFER'}
             showType={false}
+            type={'TRANSFER'}
+            showType={false}
             onPress={() => form.setShowKeypad(true)}
           />
           {form.submitAttempted && form.errors.amount && (

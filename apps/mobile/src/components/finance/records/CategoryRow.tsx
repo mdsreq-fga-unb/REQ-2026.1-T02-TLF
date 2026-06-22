@@ -3,6 +3,7 @@ import { ThemedText } from '@/components/ui/ThemedText'
 import { formatCurrency } from '@/utils/formatters'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import type { CategoryData } from '../../../../types/types'
+import { useColors } from '@/hooks/useColors'
 
 type props = {
   category: CategoryData
@@ -16,6 +17,7 @@ export function CategoryRow({ category, total, minShare = 2 }: props) {
   const shareLabel = `${Math.round(share)}%`
   const barWidth = `${Math.max(share, minShare)}%` as `${number}%`
   const displayName = category.name || 'Sem categoria'
+  const { withOpacity } = useColors()
 
   return (
     <View style={styles.row}>
@@ -48,7 +50,7 @@ export function CategoryRow({ category, total, minShare = 2 }: props) {
         </View>
       </View>
 
-      <View style={[styles.barTrack, { backgroundColor: theme.mutedForeground }]}>
+      <View style={[styles.barTrack, { backgroundColor: withOpacity(category.color, 0.17) }]}>
         <View style={[styles.barFill, { backgroundColor: category.color, width: barWidth }]} />
       </View>
     </View>

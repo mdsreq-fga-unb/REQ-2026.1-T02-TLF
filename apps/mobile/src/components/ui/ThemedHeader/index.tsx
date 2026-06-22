@@ -1,25 +1,29 @@
+import { Pressable, View } from 'react-native'
+import { UserRound, Bell } from 'lucide-react-native'
 import { useThemeColor } from '@/hooks/useThemeColor'
-import { View } from 'react-native'
-import { TextTypographyVariant, TextTone, ThemedText } from '../ThemedText'
+import { resolveTextTone, TextTone } from '@/utils/textTone'
+import { iconSize } from '@/utils/dimensions'
 import { styles } from './style'
 
 type props = {
-  variant?: TextTypographyVariant
-  tone?: TextTone
-  text?: string
+  iconTone?: TextTone
 }
 
-export function ThemedHeader({ variant = 'display', tone = 'default', text = 'titulo' }: props) {
+export function ThemedHeader({ iconTone = 'default' }: props) {
   const colors = useThemeColor()
+  const iconColor = resolveTextTone(colors, iconTone)
   return (
-    <View style={[styles.header, { backgroundColor: 'transparent', borderColor: colors.border }]}>
-      <ThemedText
-        children
-        text={text}
-        tone={tone}
-        variant={variant}
-        style={{ alignSelf: 'auto' }}
-      />
+    <View style={[styles.header, { backgroundColor: colors.primary }]}>
+      {/* TODO: add caminho para perfil do usuario (configs, dados como email e outros) */}
+      <Pressable>
+        <View style={[styles.iconWrap, { backgroundColor: colors.surfaceMuted }]}>
+          <UserRound color={iconColor} size={iconSize.lg} />
+        </View>
+      </Pressable>
+      {/* TODO: add caminho para assistencia ou perguntas frequentes ou algo nesse sentido */}
+      <Pressable>
+        <Bell color={iconColor} size={iconSize.lg} />
+      </Pressable>
     </View>
   )
 }

@@ -11,7 +11,7 @@ type props = {
 export function BalanceHighlight({ value, label = 'Saldo', showDivider = false }: props) {
   const theme = useThemeColor()
   const isPositive = value >= 0
-  const accentColor = isPositive ? '#2CB67D' : theme.expense
+  const accentColor = isPositive ? theme.income : theme.expense
   const sign = value < 0 ? '-' : ''
   const magnitude = new Intl.NumberFormat('pt-BR', {
     minimumFractionDigits: 2,
@@ -29,7 +29,6 @@ export function BalanceHighlight({ value, label = 'Saldo', showDivider = false }
           styles.value,
           {
             color: accentColor,
-            textShadowColor: applyAlpha(accentColor, 0.7),
           },
         ]}
       />

@@ -27,19 +27,20 @@ export default function CreateBudgetScreen({ initialValues }: Props) {
   return (
     <ThemedBackground>
       <View style={{ width: '100%' }}>
-        <View
+        {/* <View
           style={{ paddingHorizontal: 24, paddingTop: 8, paddingBottom: 16, alignItems: 'center' }}
         >
           <ThemedText
-            children
             text={`Criar ${form.type == 'BUDGET' ? 'Orçamento' : 'Meta'}`}
             variant="title"
           />
-        </View>
+        </View> */}
         {/* <BudgetTypeTabs value={form.type} onChange={form.handleTypeChange} /> */}
         <ScrollView>
           <AmountDisplay
             amountCents={form.amountLimit}
+            type={'TRANSFER'}
+            showType={false}
             type={'TRANSFER'}
             showType={false}
             onPress={() => form.setShowKeypad(true)}

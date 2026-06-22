@@ -3,7 +3,7 @@ import { clearTokens, getAccessToken, getRefreshToken, saveTokens } from './toke
 
 const baseURL = process.env.EXPO_PUBLIC_API_URL
 
-if (__DEV__ && (!baseURL || baseURL.includes(':8081'))) {
+if (__DEV__ && !process.env.JEST_WORKER_ID && (!baseURL || baseURL.includes(':8081'))) {
   console.warn(
     `[api] EXPO_PUBLIC_API_URL seems invalid (${baseURL ?? 'undefined'}). Expected something like http://<LAN-IP>:3000/api/v1`,
   )

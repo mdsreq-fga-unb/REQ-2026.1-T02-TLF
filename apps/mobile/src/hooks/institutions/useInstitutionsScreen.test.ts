@@ -1,6 +1,7 @@
-import { renderHook, act, waitFor } from '@testing-library/react-native'
+import { act, renderHook, waitFor } from '@testing-library/react-native'
 import { router } from 'expo-router'
 import { mockInstitutions } from '@/utils/fixtures/institutions'
+import { institutionQueries } from '@/services/database/queries/institution'
 import { useInstitutionsStore } from '@/stores/institutions'
 import { useInstitutionsScreen } from './useInstitutionsScreen'
 
@@ -8,26 +9,37 @@ jest.mock('expo-router', () => ({
   router: { push: jest.fn(), navigate: jest.fn(), back: jest.fn() },
 }))
 
-jest.mock('@/services/api/institutions', () => ({
-  listInstitutions: jest.fn(),
-  deleteInstitution: jest.fn(),
-}))
-
 jest.mock('@/services/database/queries/institution', () => ({
-  institutionQueries: { getAll: jest.fn(), delete: jest.fn() },
+  institutionQueries: {
+    getAll: jest.fn(),
+    getAccountsCount: jest.fn(),
+    delete: jest.fn(),
+  },
 }))
 
 const mockedPush = jest.mocked(router.push)
+const mockedInstitutionQueries = jest.mocked(institutionQueries)
+
+async function renderScreen() {
+  const hook = renderHook(() => useInstitutionsScreen())
+
+  await waitFor(() => {
+    expect(hook.result.current.isLoading).toBe(false)
+  })
+
+  return hook
+}
 
 describe('useInstitutionsScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     useInstitutionsStore.setState({ institutions: [...mockInstitutions] })
+    mockedInstitutionQueries.delete.mockResolvedValue(undefined)
   })
 
   describe('initial state', () => {
-    it('should expose the institutions from the store without loading', () => {
-      const { result } = renderHook(() => useInstitutionsScreen())
+    it('should expose the institutions from the store without loading', async () => {
+      const { result } = await renderScreen()
 
       expect(result.current.isLoading).toBe(false)
       expect(result.current.error).toBeNull()
@@ -38,8 +50,8 @@ describe('useInstitutionsScreen', () => {
   })
 
   describe('search', () => {
-    it('should filter institutions by name', () => {
-      const { result } = renderHook(() => useInstitutionsScreen())
+    it('should filter institutions by name', async () => {
+      const { result } = await renderScreen()
 
       act(() => {
         result.current.setSearchQuery('nubank')
@@ -49,8 +61,8 @@ describe('useInstitutionsScreen', () => {
       expect(result.current.institutions[0].name).toBe('Nubank')
     })
 
-    it('should toggle the search and clear the query when closing', () => {
-      const { result } = renderHook(() => useInstitutionsScreen())
+    it('should toggle the search and clear the query when closing', async () => {
+      const { result } = await renderScreen()
 
       act(() => {
         result.current.toggleSearch()
@@ -73,8 +85,8 @@ describe('useInstitutionsScreen', () => {
   })
 
   describe('navigation', () => {
-    it('should open an institution detail', () => {
-      const { result } = renderHook(() => useInstitutionsScreen())
+    it('should open an institution detail', async () => {
+      const { result } = await renderScreen()
 
       act(() => {
         result.current.handleOpen(mockInstitutions[0])
@@ -91,8 +103,8 @@ describe('useInstitutionsScreen', () => {
       })
     })
 
-    it('should navigate to the create screen', () => {
-      const { result } = renderHook(() => useInstitutionsScreen())
+    it('should navigate to the create screen', async () => {
+      const { result } = await renderScreen()
 
       act(() => {
         result.current.handleCreate()
@@ -104,7 +116,7 @@ describe('useInstitutionsScreen', () => {
 
   describe('delete', () => {
     it('should block deletion for institutions with linked accounts', async () => {
-      const { result } = renderHook(() => useInstitutionsScreen())
+      const { result } = await renderScreen()
 
       await act(async () => {
         result.current.handleDelete(mockInstitutions[0].id)
@@ -117,7 +129,7 @@ describe('useInstitutionsScreen', () => {
     })
 
     it('should open the confirmation for institutions without accounts', async () => {
-      const { result } = renderHook(() => useInstitutionsScreen())
+      const { result } = await renderScreen()
 
       await act(async () => {
         result.current.handleDelete(mockInstitutions[1].id)
@@ -130,7 +142,7 @@ describe('useInstitutionsScreen', () => {
     })
 
     it('should remove the institution from the store on confirm', async () => {
-      const { result } = renderHook(() => useInstitutionsScreen())
+      const { result } = await renderScreen()
 
       await act(async () => {
         result.current.handleDelete(mockInstitutions[1].id)
@@ -138,16 +150,22 @@ describe('useInstitutionsScreen', () => {
 
       await act(async () => {
         result.current.confirmDelete()
+        await Promise.resolve()
       })
 
-      expect(result.current.confirmVisible).toBe(false)
+      await waitFor(() => {
+        expect(result.current.confirmVisible).toBe(false)
+      })
+
       expect(
-        useInstitutionsStore.getState().institutions.find((item) => item.id === mockInstitutions[1].id),
+        useInstitutionsStore
+          .getState()
+          .institutions.find((item) => item.id === mockInstitutions[1].id),
       ).toBeUndefined()
     })
 
     it('should cancel a pending deletion without removing anything', async () => {
-      const { result } = renderHook(() => useInstitutionsScreen())
+      const { result } = await renderScreen()
 
       await act(async () => {
         result.current.handleDelete(mockInstitutions[1].id)
@@ -162,7 +180,7 @@ describe('useInstitutionsScreen', () => {
     })
 
     it('should dismiss the blocked modal', async () => {
-      const { result } = renderHook(() => useInstitutionsScreen())
+      const { result } = await renderScreen()
 
       await act(async () => {
         result.current.handleDelete(mockInstitutions[0].id)

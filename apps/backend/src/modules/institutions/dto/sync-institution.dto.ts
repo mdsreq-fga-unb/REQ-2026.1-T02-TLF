@@ -12,5 +12,9 @@ export class SyncInstitutionDto extends SyncRecordDto {
 
   @IsOptional()
   @IsString()
+  icon?: string | null
+
+  @IsOptional()
+  @IsString()
   logoUrl?: string | null
 }

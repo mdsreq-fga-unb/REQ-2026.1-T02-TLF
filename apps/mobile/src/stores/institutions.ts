@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import { mockInstitutions } from '@/components/finance/institutions/institutions-data'
 import type { InstitutionListItem } from '@/components/finance/institutions/types'
 
 type InstitutionsState = {
@@ -11,7 +10,7 @@ type InstitutionsState = {
 }
 
 export const useInstitutionsStore = create<InstitutionsState>((set) => ({
-  institutions: mockInstitutions,
+  institutions: [],
   setInstitutions: (items) => set({ institutions: items }),
   addInstitution: (item) => set((state) => ({ institutions: [...state.institutions, item] })),
   updateInstitution: (id, changes) =>

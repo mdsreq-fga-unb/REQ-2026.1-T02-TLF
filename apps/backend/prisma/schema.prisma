@@ -137,6 +137,7 @@ model Institution {
 
   name    String
   color   String
+  icon    String? @map("icon")
   logoUrl String? @map("logo_url")
 
   createdAt DateTime @default(now()) @map("created_at")

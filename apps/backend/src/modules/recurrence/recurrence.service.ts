@@ -15,17 +15,18 @@ import { RecurrenceListResponseDto } from './dto/recurrence-list.response.dto'
 import { RecurrenceDetailResponseDto } from './dto/recurrence-detail.response.dto'
 import { DeleteRecurrenceDto } from './dto/delete-recurrence.dto'
 import { RecurrenceDeleteScope } from './enums/recurrence-delete-scope.enum'
+import { ConfirmRecurrenceDto } from './dto/confirm-recurrence.dto'
+import { RecurrenceConfirmResponseDto } from './dto/recurrence-confirm.response.dto'
+import { RecurrenceUnconfirmResponseDto } from './dto/recurrence-unconfirm.response.dto'
+import { createDeletedRecords } from '@common/sync/deleted-record.util'
+import { TableName } from '../../../generated/prisma/client'
 
 type RecurrenceWithRelations = Prisma.RecurrenceGetPayload<{
   include: typeof recurrenceInclude
 }>
 
 const recurrenceInclude = {
-  account: {
-    include: {
-      institution: true,
-    },
-  },
+  institution: true,
   category: true,
   subCategory: true,
 } as const satisfies Prisma.RecurrenceInclude
@@ -51,9 +52,9 @@ export class RecurrenceService {
             name: recurrence.category.name,
           }
         : undefined,
-      account: {
-        id: recurrence.account.id,
-        name: recurrence.account.name,
+      institution: {
+        id: recurrence.institution.id,
+        name: recurrence.institution.name,
       },
     }
   }
@@ -71,7 +72,7 @@ export class RecurrenceService {
   }
 
   async create(userId: string, dto: CreateRecurrenceDto): Promise<RecurrenceDetailResponseDto> {
-    await this.validateAccountOwnership(userId, dto.accountId)
+    await this.validateInstitutionOwnership(userId, dto.institutionId)
 
     await this.validateCategoryOwnership(userId, dto.categoryId)
 
@@ -81,7 +82,7 @@ export class RecurrenceService {
 
     const recurrence = await this.prisma.recurrence.create({
       data: {
-        accountId: dto.accountId,
+        institutionId: dto.institutionId,
         categoryId: dto.categoryId,
         subCategoryId: dto.subCategoryId,
         description: dto.description,
@@ -105,10 +106,8 @@ export class RecurrenceService {
     const [recurrences, total] = await this.prisma.$transaction([
       this.prisma.recurrence.findMany({
         where: {
-          account: {
-            institution: {
-              userId,
-            },
+          institution: {
+            userId,
           },
           ...(categoryId && { categoryId }),
         },
@@ -122,10 +121,8 @@ export class RecurrenceService {
 
       this.prisma.recurrence.count({
         where: {
-          account: {
-            institution: {
-              userId,
-            },
+          institution: {
+            userId,
           },
           ...(categoryId && { categoryId }),
         },
@@ -158,8 +155,8 @@ export class RecurrenceService {
 
     const categoryId = dto.categoryId ?? recurrence.categoryId
 
-    if (dto.accountId !== undefined) {
-      await this.validateAccountOwnership(userId, dto.accountId)
+    if (dto.institutionId !== undefined) {
+      await this.validateInstitutionOwnership(userId, dto.institutionId)
     }
 
     if (dto.categoryId !== undefined) {
@@ -184,7 +181,7 @@ export class RecurrenceService {
       const updated = await tx.recurrence.update({
         where: { id },
         data: {
-          account: dto.accountId ? { connect: { id: dto.accountId } } : undefined,
+          institution: dto.institutionId ? { connect: { id: dto.institutionId } } : undefined,
 
           category: dto.categoryId ? { connect: { id: dto.categoryId } } : undefined,
 
@@ -391,6 +388,128 @@ export class RecurrenceService {
     return this.toDetail(result)
   }
 
+  // Confirma a ocorrência da recorrência no mês de referência, lançando-a no sistema de
+  // transações. Usa "complete-or-create": conclui a transação PENDENTE gerada pelo job
+  // mensal (se existir) em vez de criar uma duplicada; cria uma COMPLETED quando não há
+  // nenhuma; e é idempotente quando já existe uma concluída no mês.
+  async confirmOccurrence(
+    userId: string,
+    id: string,
+    dto?: ConfirmRecurrenceDto,
+  ): Promise<RecurrenceConfirmResponseDto> {
+    const recurrence = await this.getRecurrenceOrThrow(userId, id)
+
+    const reference = dto?.referenceDate ? new Date(dto.referenceDate) : new Date()
+    const year = reference.getFullYear()
+    const month = reference.getMonth()
+
+    const startOfMonth = new Date(year, month, 1)
+    const startOfNextMonth = new Date(year, month + 1, 1)
+    const lastDay = new Date(year, month + 1, 0).getDate()
+    const day = Math.min(recurrence.chargeDate, lastDay)
+    // Meio-dia UTC para o dia da cobrança não "voltar" um dia ao exibir em fusos negativos.
+    const chargeDate = new Date(Date.UTC(year, month, day, 12, 0, 0))
+
+    const transaction = await this.prisma.$transaction(async (tx) => {
+      const existing = await tx.transaction.findFirst({
+        where: {
+          recurrenceId: id,
+          date: { gte: startOfMonth, lt: startOfNextMonth },
+        },
+        orderBy: { createdAt: 'asc' },
+      })
+
+      if (existing) {
+        // Idempotência: já concluída neste mês, não duplica.
+        if (existing.status === TransactionStatus.COMPLETED) {
+          return { record: existing, created: false }
+        }
+
+        // Conclui a transação pendente (gerada pelo job) sincronizando os dados da recorrência.
+        const updated = await tx.transaction.update({
+          where: { id: existing.id },
+          data: {
+            status: TransactionStatus.COMPLETED,
+            amount: recurrence.amount,
+            categoryId: recurrence.categoryId,
+            subCategoryId: recurrence.subCategoryId,
+            description: recurrence.description,
+            date: chargeDate,
+          },
+        })
+
+        return { record: updated, created: false }
+      }
+
+      const created = await tx.transaction.create({
+        data: {
+          institutionId: recurrence.institutionId,
+          categoryId: recurrence.categoryId,
+          subCategoryId: recurrence.subCategoryId,
+          amount: recurrence.amount,
+          description: recurrence.description,
+          type: TransactionType.EXPENSE,
+          status: TransactionStatus.COMPLETED,
+          date: chargeDate,
+          recurrenceId: id,
+        },
+      })
+
+      return { record: created, created: true }
+    })
+
+    return {
+      id: transaction.record.id,
+      recurrenceId: id,
+      status: transaction.record.status,
+      amount: transaction.record.amount,
+      date: transaction.record.date.toISOString(),
+      created: transaction.created,
+    }
+  }
+
+  // Desfaz a confirmação do mês: remove a(s) transação(ões) lançada(s) para a recorrência
+  // naquele mês, registrando a exclusão para o sync (offline-first).
+  async unconfirmOccurrence(
+    userId: string,
+    id: string,
+    dto?: ConfirmRecurrenceDto,
+  ): Promise<RecurrenceUnconfirmResponseDto> {
+    await this.getRecurrenceOrThrow(userId, id)
+
+    const reference = dto?.referenceDate ? new Date(dto.referenceDate) : new Date()
+    const year = reference.getFullYear()
+    const month = reference.getMonth()
+    const startOfMonth = new Date(year, month, 1)
+    const startOfNextMonth = new Date(year, month + 1, 1)
+
+    return this.prisma.$transaction(async (tx) => {
+      const existing = await tx.transaction.findMany({
+        where: {
+          recurrenceId: id,
+          date: { gte: startOfMonth, lt: startOfNextMonth },
+        },
+        select: { id: true },
+      })
+
+      if (existing.length === 0) {
+        return { recurrenceId: id, removed: false, count: 0 }
+      }
+
+      const recordIds = existing.map((t) => t.id)
+
+      await createDeletedRecords({
+        tx,
+        userId,
+        tableName: TableName.TRANSACTIONS,
+        recordIds,
+      })
+      await tx.transaction.deleteMany({ where: { id: { in: recordIds } } })
+
+      return { recurrenceId: id, removed: true, count: recordIds.length }
+    })
+  }
+
   async generateTransactionsFromRecurrences() {
     const now = new Date()
     this.logger.log(`Recurrence job started at ${now.toISOString()}`)
@@ -437,14 +556,15 @@ export class RecurrenceService {
         const day = Math.min(recurrence.chargeDate, lastDay)
 
         return {
-          institutionId: recurrence.account.institution.id,
+          institutionId: recurrence.institutionId,
           categoryId: recurrence.categoryId,
           subCategoryId: recurrence.subCategoryId,
           amount: recurrence.amount,
           description: recurrence.description,
           type: TransactionType.EXPENSE,
           status: TransactionStatus.PENDING,
-          date: new Date(year, month, day),
+          // Meio-dia UTC para o dia da cobrança ser estável independente do fuso.
+          date: new Date(Date.UTC(year, month, day, 12, 0, 0)),
           recurrenceId: recurrence.id,
         }
       }),
@@ -454,23 +574,20 @@ export class RecurrenceService {
     this.logger.log('Recurrence job finished successfully')
   }
 
-  private async validateAccountOwnership(userId: string, accountId: string) {
-    const account = await this.prisma.account.findUnique({
-      where: { id: accountId },
-      include: {
-        institution: true,
-      },
+  private async validateInstitutionOwnership(userId: string, institutionId: string) {
+    const institution = await this.prisma.institution.findUnique({
+      where: { id: institutionId },
     })
 
-    if (!account) {
-      throw new NotFoundException('Conta não encontrada')
+    if (!institution) {
+      throw new NotFoundException('Instituição não encontrada')
     }
 
-    if (account.institution.userId !== userId) {
-      throw new ForbiddenException('Conta não pertence ao usuário')
+    if (institution.userId !== userId) {
+      throw new ForbiddenException('Instituição não pertence ao usuário')
     }
 
-    return account
+    return institution
   }
 
   private async validateCategoryOwnership(userId: string, categoryId: string) {
@@ -529,7 +646,7 @@ export class RecurrenceService {
       throw new NotFoundException('Recorrência não encontrada')
     }
 
-    if (recurrence.account.institution.userId !== userId) {
+    if (recurrence.institution.userId !== userId) {
       throw new ForbiddenException('Você não tem acesso a esta recorrência')
     }
 

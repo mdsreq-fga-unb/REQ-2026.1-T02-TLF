@@ -144,6 +144,7 @@ model Institution {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   accounts             Account[]
+  recurrences          Recurrence[]
   transactions         Transaction[] @relation("InstitutionTransactions")
   transferDestinations Transaction[] @relation("TransferDestinationInstitutions")
 
@@ -202,7 +203,6 @@ model Account {
   // - "AccountTransactions"     -> this row is the source account (accountId on Transaction)
   // - "TransferDestinations"   -> this row is the other leg of a transfer (destinationAccountId)
   invoices             Invoice[]
-  recurrences          Recurrence[]
   // transactions         Transaction[] @relation("AccountTransactions")
   // transferDestinations Transaction[] @relation("TransferDestinations")
 
@@ -239,8 +239,8 @@ model Invoice {
 model Recurrence {
   id String @id @default(uuid())
 
-  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  accountId String  @map("account_id")
+  institution   Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  institutionId String      @map("institution_id")
 
   category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   categoryId String?   @map("category_id")

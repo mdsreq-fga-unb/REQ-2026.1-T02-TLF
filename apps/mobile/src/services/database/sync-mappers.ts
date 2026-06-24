@@ -109,7 +109,7 @@ const TABLE_DEFS: Record<string, TableDef> = {
   },
   recurrences: {
     fields: [
-      { local: 'account_id', remote: 'accountId' },
+      { local: 'institution_id', remote: 'institutionId' },
       { local: 'category_id', remote: 'categoryId' },
       { local: 'sub_category_id', remote: 'subCategoryId' },
       { local: 'description', remote: 'description' },

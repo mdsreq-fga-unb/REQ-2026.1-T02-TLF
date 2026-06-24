@@ -29,11 +29,11 @@ export function EditScopeModal({ visible, onConfirm, onCancel }: Props) {
             <AppIcon name="pencil" size={28} color={theme.primary} />
           </View>
 
-          <ThemedText style={styles.title} text="Onde aplicar as alterações?" />
+          <ThemedText style={styles.title} text="Aplicar alterações" />
           <ThemedText
             tone="muted"
             style={styles.description}
-            text="Esta é uma transação recorrente. Escolha como deseja propagar os novos dados."
+            text="Esta é uma transação recorrente. As alterações valem para as próximas ocorrências."
           />
 
           <View style={styles.options}>
@@ -43,13 +43,6 @@ export function EditScopeModal({ visible, onConfirm, onCancel }: Props) {
               icon="refresh-cw"
               title="Apenas próximas ocorrências"
               description="Alterações valem de agora em diante. O histórico permanece intacto."
-            />
-            <OptionCard
-              selected={scope === 'all'}
-              onPress={() => setScope('all')}
-              icon="history"
-              title="Todas as ocorrências"
-              description="Inclui transações passadas vinculadas. Útil para corrigir erros retroativos."
             />
           </View>
 

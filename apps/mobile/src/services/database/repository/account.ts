@@ -32,6 +32,8 @@ const applyAccountFields = (account: Account, input: AccountInput | AccountUpdat
   if (input.isActive !== undefined) account.isActive = input.isActive
 }
 
+export const getAllAccounts = async () => accountsCollection().query().fetch()
+
 export const getAccountById = async (id: string) => accountsCollection().find(id)
 
 export const createAccount = async (input: AccountInput) => {
@@ -59,14 +61,12 @@ export const updateAccount = async (id: string, input: AccountUpdateInput) => {
 
 export const markAccountAsDeleted = async (id: string) => {
   return database.write(async () => {
-    const [invoices, recurrences, account] = await Promise.all([
+    const [invoices, account] = await Promise.all([
       database.get('invoices').query(Q.where('account_id', id)).fetch(),
-      database.get('recurrences').query(Q.where('account_id', id)).fetch(),
       getAccountById(id),
     ])
 
     await database.batch([
-      ...recurrences.map((record) => record.prepareMarkAsDeleted()),
       ...invoices.map((record) => record.prepareMarkAsDeleted()),
       account.prepareMarkAsDeleted(),
     ])
@@ -75,6 +75,7 @@ export const markAccountAsDeleted = async (id: string) => {
 
 export const accountQueries = {
   table: ACCOUNTS_TABLE,
+  getAll: getAllAccounts,
   getById: getAccountById,
   create: createAccount,
   update: updateAccount,

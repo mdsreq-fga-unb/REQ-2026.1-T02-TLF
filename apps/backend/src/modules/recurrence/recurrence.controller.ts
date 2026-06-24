@@ -21,6 +21,9 @@ import { FilterRecurrenceDto } from './dto/filter-recurrence.dto'
 import { RecurrenceListResponseDto } from './dto/recurrence-list.response.dto'
 import { RecurrenceDetailResponseDto } from './dto/recurrence-detail.response.dto'
 import { DeleteRecurrenceDto } from './dto/delete-recurrence.dto'
+import { ConfirmRecurrenceDto } from './dto/confirm-recurrence.dto'
+import { RecurrenceConfirmResponseDto } from './dto/recurrence-confirm.response.dto'
+import { RecurrenceUnconfirmResponseDto } from './dto/recurrence-unconfirm.response.dto'
 
 @ApiBearerAuth('supabase-jwt')
 @UseGuards(AuthGuard)
@@ -60,6 +63,40 @@ export class RecurrenceController {
   @Get(':id')
   findOne(@CurrentUser('id') userId: string, @Param('id') id: string) {
     return this.recurrenceService.findOne(userId, id)
+  }
+
+  @ApiResponse({
+    status: 200,
+    type: RecurrenceConfirmResponseDto,
+    description: 'Ocorrência da recorrência confirmada (transação criada ou concluída)',
+  })
+  @ApiResponse({ status: 404, description: 'Recorrência não encontrada' })
+  @ApiResponse({ status: 403, description: 'Acesso negado' })
+  @Post(':id/confirm')
+  @HttpCode(HttpStatus.OK)
+  confirm(
+    @CurrentUser('id') userId: string,
+    @Param('id') id: string,
+    @Body() dto: ConfirmRecurrenceDto,
+  ) {
+    return this.recurrenceService.confirmOccurrence(userId, id, dto)
+  }
+
+  @ApiResponse({
+    status: 200,
+    type: RecurrenceUnconfirmResponseDto,
+    description: 'Confirmação desfeita (transação do mês removida)',
+  })
+  @ApiResponse({ status: 404, description: 'Recorrência não encontrada' })
+  @ApiResponse({ status: 403, description: 'Acesso negado' })
+  @Post(':id/unconfirm')
+  @HttpCode(HttpStatus.OK)
+  unconfirm(
+    @CurrentUser('id') userId: string,
+    @Param('id') id: string,
+    @Body() dto: ConfirmRecurrenceDto,
+  ) {
+    return this.recurrenceService.unconfirmOccurrence(userId, id, dto)
   }
 
   @ApiResponse({

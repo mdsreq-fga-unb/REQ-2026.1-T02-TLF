@@ -13,13 +13,13 @@ export class RecurrencesService {
   constructor(private readonly prisma: PrismaService) {}
 
   findMany(dto: FindManyRecurrencesDto) {
-    const { userId, id, accountId, categoryId, isActive, createdAfter, updatedAfter } = dto
+    const { userId, id, institutionId, categoryId, isActive, createdAfter, updatedAfter } = dto
 
     return this.prisma.recurrence.findMany({
       where: {
-        account: { institution: { userId } },
+        institution: { userId },
         ...(id && { id }),
-        ...(accountId && { accountId }),
+        ...(institutionId && { institutionId }),
         ...(categoryId && { categoryId }),
         ...(isActive !== undefined && { isActive }),
         ...buildTimestampWhere({ createdAfter, updatedAfter }),
@@ -27,22 +27,21 @@ export class RecurrencesService {
     })
   }
 
-  private async assertAccountOwnership(userId: string, accountId: string) {
-    const account = await this.prisma.account.findUnique({
-      where: { id: accountId },
-      include: { institution: true },
+  private async assertInstitutionOwnership(userId: string, institutionId: string) {
+    const institution = await this.prisma.institution.findUnique({
+      where: { id: institutionId },
     })
-    if (!account) throw new NotFoundException('Conta não encontrada')
-    if (account.institution.userId !== userId) throw new ForbiddenException('Acesso negado')
+    if (!institution) throw new NotFoundException('Instituição não encontrada')
+    if (institution.userId !== userId) throw new ForbiddenException('Acesso negado')
   }
 
   async syncCreate(userId: string, dto: SyncRecurrenceDto) {
-    await this.assertAccountOwnership(userId, dto.accountId)
+    await this.assertInstitutionOwnership(userId, dto.institutionId)
     return this.prisma.recurrence.upsert({
       where: { id: dto.id },
       create: {
         id: dto.id,
-        accountId: dto.accountId,
+        institutionId: dto.institutionId,
         categoryId: dto.categoryId ?? null,
         subCategoryId: dto.subCategoryId ?? null,
         description: dto.description,
@@ -55,7 +54,7 @@ export class RecurrencesService {
         ...(dto.updatedAt && { updatedAt: new Date(dto.updatedAt) }),
       },
       update: {
-        accountId: dto.accountId,
+        institutionId: dto.institutionId,
         categoryId: dto.categoryId ?? null,
         subCategoryId: dto.subCategoryId ?? null,
         description: dto.description,
@@ -72,16 +71,15 @@ export class RecurrencesService {
   async syncUpdate(userId: string, dto: SyncRecurrenceDto) {
     const recurrence = await this.prisma.recurrence.findUnique({
       where: { id: dto.id },
-      include: { account: { include: { institution: true } } },
+      include: { institution: true },
     })
     if (!recurrence) throw new NotFoundException('Recorrência não encontrada')
-    if (recurrence.account.institution.userId !== userId)
-      throw new ForbiddenException('Acesso negado')
+    if (recurrence.institution.userId !== userId) throw new ForbiddenException('Acesso negado')
 
     return this.prisma.recurrence.update({
       where: { id: dto.id },
       data: {
-        accountId: dto.accountId,
+        institutionId: dto.institutionId,
         categoryId: dto.categoryId ?? null,
         subCategoryId: dto.subCategoryId ?? null,
         description: dto.description,
@@ -99,11 +97,10 @@ export class RecurrencesService {
     const { userId, id: recurrenceId } = dto
     const recurrence = await this.prisma.recurrence.findUnique({
       where: { id: recurrenceId },
-      include: { account: { include: { institution: true } } },
+      include: { institution: true },
     })
     if (!recurrence) throw new NotFoundException('Recorrência não encontrada')
-    if (recurrence.account.institution.userId !== userId)
-      throw new ForbiddenException('Acesso negado')
+    if (recurrence.institution.userId !== userId) throw new ForbiddenException('Acesso negado')
 
     await this.prisma.$transaction(async (tx) => {
       await nullifyTransactionRecurrenceRefs(tx, recurrenceId)

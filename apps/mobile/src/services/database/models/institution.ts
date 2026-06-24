@@ -1,6 +1,7 @@
 import { Model, Q } from '@nozbe/watermelondb'
 import { date, field, lazy, readonly, text } from '@nozbe/watermelondb/decorators'
 import type { Account } from './account'
+import type { Recurrence } from './recurrece'
 import type { Transaction } from './transaction'
 
 export class Institution extends Model {
@@ -8,6 +9,7 @@ export class Institution extends Model {
 
   static associations = {
     accounts: { type: 'has_many' as const, foreignKey: 'institution_id' },
+    recurrences: { type: 'has_many' as const, foreignKey: 'institution_id' },
     transactions: { type: 'has_many' as const, foreignKey: 'institution_id' },
     transfer_destinations: { type: 'has_many' as const, foreignKey: 'destination_institution_id' },
   }
@@ -22,6 +24,11 @@ export class Institution extends Model {
 
   @lazy
   accounts = this.collections.get<Account>('accounts').query(Q.where('institution_id', this.id))
+
+  @lazy
+  recurrences = this.collections
+    .get<Recurrence>('recurrences')
+    .query(Q.where('institution_id', this.id))
 
   @lazy
   transactions = this.collections

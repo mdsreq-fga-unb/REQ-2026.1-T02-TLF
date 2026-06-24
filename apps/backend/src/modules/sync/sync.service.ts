@@ -77,10 +77,14 @@ export class SyncService {
       {} as Record<TableName, string[]>,
     )
 
+    // O cliente sincroniza com `sendCreatedAsUpdated`, então enviamos todas as mudanças no
+    // balde `updated` (o WatermelonDB faz upsert: cria se não existir, atualiza se existir).
+    // Assim evitamos os diagnósticos de "created já existe localmente" e de violação do
+    // contrato do `sendCreatedAsUpdated` quando um registro novo chega como `created`.
     const splitChanges = <T extends { createdAt: Date; updatedAt: Date }>(records: T[]) => ({
-      created: records.filter((record) => record.createdAt > lastUpdatedAt),
+      created: [] as T[],
       updated: records.filter(
-        (record) => record.updatedAt > lastUpdatedAt && record.createdAt <= lastUpdatedAt,
+        (record) => record.updatedAt > lastUpdatedAt || record.createdAt > lastUpdatedAt,
       ),
     })
     return {

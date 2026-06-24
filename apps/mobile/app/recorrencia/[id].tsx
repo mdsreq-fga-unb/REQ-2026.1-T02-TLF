@@ -5,6 +5,7 @@ import { AnnualProjectionCard } from '@/components/finance/recurrences/AnnualPro
 import { DeleteRecurrenceModal } from '@/components/finance/recurrences/DeleteRecurrenceModal'
 import { PaymentHistoryTimeline } from '@/components/finance/recurrences/PaymentHistoryTimeline'
 import { RecurrenceDetailsCard } from '@/components/finance/recurrences/RecurrenceDetailsCard'
+import { SuccessToast } from '@/components/ui/SuccessToast'
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
 import { ThemedScrollArea } from '@/components/ui/ThemedScrollArea'
 import { ThemedText } from '@/components/ui/ThemedText'
@@ -34,6 +35,8 @@ export default function RecorrenciaDetailsScreen() {
     setShowDeleteModal,
     handleEdit,
     handleDeleteConfirm,
+    error,
+    dismissError,
   } = useRecorrenciaDetails()
 
   const amountColor = isExpense ? theme.expense : theme.income
@@ -86,6 +89,8 @@ export default function RecorrenciaDetailsScreen() {
         onConfirm={handleDeleteConfirm}
         onCancel={() => setShowDeleteModal(false)}
       />
+
+      <SuccessToast visible={!!error} message={error ?? ''} onHide={dismissError} />
     </ThemedBackground>
   )
 }

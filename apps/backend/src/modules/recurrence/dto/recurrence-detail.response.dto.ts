@@ -54,7 +54,7 @@ export class RecurrenceDetailResponseDto {
       name: 'Nubank',
     },
   })
-  account!: {
+  institution!: {
     id: string
     name: string
   }

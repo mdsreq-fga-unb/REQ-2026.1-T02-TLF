@@ -15,7 +15,7 @@ export class RecurrenceListResponseDto {
           id: '3cec466a-096d-4016-bb10-bcc9b94a7d36',
           name: 'Assinaturas',
         },
-        account: {
+        institution: {
           id: '077e482b-dfd9-48cb-9b79-15a3c25a83a5',
           name: 'Nubank',
         },
@@ -35,7 +35,7 @@ export class RecurrenceListResponseDto {
       id: string
       name: string
     }
-    account: {
+    institution: {
       id: string
       name: string
     }

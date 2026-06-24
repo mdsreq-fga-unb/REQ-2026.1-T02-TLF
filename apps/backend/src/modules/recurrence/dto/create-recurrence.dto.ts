@@ -13,10 +13,10 @@ import {
 export class CreateRecurrenceDto {
   @ApiProperty({
     example: 'ae73db85-6c25-4b8d-91b2-d0cda2830c65',
-    description: 'ID da conta bancária associada à recorrência',
+    description: 'ID da instituição associada à recorrência',
   })
   @IsUUID()
-  accountId!: string
+  institutionId!: string
 
   @ApiProperty({
     example: '3cec466a-096d-4016-bb10-bcc9b94a7d36',

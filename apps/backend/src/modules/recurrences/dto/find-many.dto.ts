@@ -8,7 +8,7 @@ export class FindManyRecurrencesDto extends SyncFindManyBaseDto {
 
   @IsOptional()
   @IsUUID()
-  accountId?: string
+  institutionId?: string
 
   @IsOptional()
   @IsUUID()

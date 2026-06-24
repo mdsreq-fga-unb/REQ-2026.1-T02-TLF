@@ -12,7 +12,7 @@ import { SyncRecordDto } from '@common/sync/dto/sync-record.dto'
 
 export class SyncRecurrenceDto extends SyncRecordDto {
   @IsUUID()
-  accountId!: string
+  institutionId!: string
 
   @IsOptional()
   @IsUUID()

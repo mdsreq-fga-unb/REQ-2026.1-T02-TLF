@@ -76,9 +76,9 @@ export class InstitutionsService {
         accounts: {
           include: {
             invoices: true,
-            recurrences: true,
           },
         },
+        recurrences: true,
         transactions: true,
       },
     })
@@ -92,9 +92,16 @@ export class InstitutionsService {
           userId,
           accountId: account.id,
           invoiceIds: account.invoices.map((i) => i.id),
-          recurrenceIds: account.recurrences.map((r) => r.id),
+          recurrenceIds: [],
         })
       }
+
+      await createDeletedRecords({
+        tx,
+        userId,
+        tableName: TableName.RECURRENCES,
+        recordIds: institution.recurrences.map((recurrence) => recurrence.id),
+      })
 
       await nullifyTransactionDestinationInstitutionRefs(tx, institutionId)
 

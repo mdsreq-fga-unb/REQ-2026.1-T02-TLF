@@ -74,12 +74,7 @@ export const markInstitutionAsDeleted = async (id: string) => {
               .query(Q.where('account_id', Q.oneOf(accountIds)))
               .fetch()
           : Promise.resolve([]),
-        accountIds.length
-          ? database
-              .get('recurrences')
-              .query(Q.where('account_id', Q.oneOf(accountIds)))
-              .fetch()
-          : Promise.resolve([]),
+        database.get('recurrences').query(Q.where('institution_id', id)).fetch(),
         database.get('transactions').query(Q.where('institution_id', id)).fetch(),
         database.get('transactions').query(Q.where('destination_institution_id', id)).fetch(),
         getInstitutionById(id),

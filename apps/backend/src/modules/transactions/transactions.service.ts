@@ -291,13 +291,13 @@ export class TransactionsService {
     if (data.recurrenceId) {
       const recurrence = await this.prisma.recurrence.findUnique({
         where: { id: data.recurrenceId },
-        include: { account: { include: { institution: true } } },
+        include: { institution: true },
       })
       if (!recurrence) throw new NotFoundException('Recorrência não encontrada')
-      if (recurrence.account.institution.userId !== userId) {
+      if (recurrence.institution.userId !== userId) {
         throw new ForbiddenException('Acesso negado')
       }
-      if (recurrence.account.institutionId !== data.institutionId) {
+      if (recurrence.institutionId !== data.institutionId) {
         throw new BadRequestException('Recorrência deve pertencer à mesma instituição da transação')
       }
     }

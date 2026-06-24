@@ -114,7 +114,6 @@ export class AccountsService {
       include: {
         institution: true,
         invoices: true,
-        recurrences: true,
       },
     })
     if (!account) throw new NotFoundException('Conta não encontrada')
@@ -126,7 +125,7 @@ export class AccountsService {
         userId,
         accountId,
         invoiceIds: account.invoices.map((i) => i.id),
-        recurrenceIds: account.recurrences.map((r) => r.id),
+        recurrenceIds: [],
       })
     })
   }

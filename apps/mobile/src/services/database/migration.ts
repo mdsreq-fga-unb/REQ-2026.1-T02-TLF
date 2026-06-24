@@ -3,6 +3,27 @@ import { schemaMigrations, addColumns } from '@nozbe/watermelondb/Schema/migrati
 export default schemaMigrations({
   migrations: [
     {
+      toVersion: 3,
+      steps: [
+        addColumns({
+          table: 'recurrences',
+          columns: [{ name: 'institution_id', type: 'string', isIndexed: true }],
+        }),
+        {
+          type: 'sql',
+          sql: `
+            UPDATE recurrences
+            SET institution_id = (
+              SELECT institution_id
+              FROM accounts
+              WHERE accounts.id = recurrences.account_id
+            )
+            WHERE institution_id IS NULL OR institution_id = '';
+          `,
+        },
+      ],
+    },
+    {
       toVersion: 2,
       steps: [
         addColumns({

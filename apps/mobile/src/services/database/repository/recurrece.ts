@@ -6,7 +6,7 @@ const RECURRENCES_TABLE = 'recurrences'
 const recurrencesCollection = () => database.get<Recurrence>(RECURRENCES_TABLE)
 
 export type RecurrenceInput = {
-  accountId: string
+  institutionId: string
   categoryId?: string | null
   subCategoryId?: string | null
   description: string
@@ -23,7 +23,7 @@ const applyRecurrenceFields = (
   recurrence: Recurrence,
   input: RecurrenceInput | RecurrenceUpdateInput,
 ) => {
-  if (input.accountId !== undefined) recurrence.accountId = input.accountId
+  if (input.institutionId !== undefined) recurrence.institutionId = input.institutionId
   if (input.categoryId !== undefined) recurrence.categoryId = input.categoryId
   if (input.subCategoryId !== undefined) recurrence.subCategoryId = input.subCategoryId
   if (input.description !== undefined) recurrence.description = input.description

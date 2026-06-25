@@ -1,1 +1,0 @@
-{"version":3,"file":"invoices.module.js","sourceRoot":"","sources":["../../../../src/modules/invoices/invoices.module.ts"],"names":[],"mappings":";;;;;;;;;AAAA,2CAAuC;AACvC,uDAAkD;AAM3C,IAAM,cAAc,GAApB,MAAM,cAAc;CAAG,CAAA;AAAjB,wCAAc;yBAAd,cAAc;IAJ1B,IAAA,eAAM,EAAC;QACN,SAAS,EAAE,CAAC,gCAAc,CAAC;QAC3B,OAAO,EAAE,CAAC,gCAAc,CAAC;KAC1B,CAAC;GACW,cAAc,CAAG"}

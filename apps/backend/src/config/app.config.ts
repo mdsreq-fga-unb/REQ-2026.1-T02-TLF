@@ -9,7 +9,7 @@ const envSchema = z.object({
   SUPABASE_ANON_KEY: z.string().min(10),
   SUPABASE_SERVICE_KEY: z.string().min(10),
   SUPABASE_JWT_SECRET: z.string().min(10),
-  HTTP_BODY_LIMIT: z.string(),
+  HTTP_BODY_LIMIT: z.string().default('10mb'),
 })
 
 export type AppConfig = z.infer<typeof envSchema>

@@ -86,7 +86,7 @@ Os requisitos funcionais descrevem as funcionalidades específicas que o sistema
 
 ### Desempenho
 
-- **RNF08** – Todas telas devem ser carregadas em até 3 segundos.
+- **RNF08** – Todas telas devem ser carregadas em até 5 segundos.
 
 ### Confiabilidade
 

@@ -57,6 +57,8 @@ Deste modo, a solução proposta pelo TLT Finanças se diferencia por:
 
 - **Gratuidade e inclusão digital**: A proposta objetiva ser acessível sem barreiras financeiras, ampliando o público-alvo para aqueles que não têm condições de arcar com soluções pagas.
 
+<a id="26-viabilidade-da-proposta"></a>
+
 ## 2.6 Viabilidade da Proposta
 
 A proposta do TLT Finanças se revela viável no contexto da disciplina, tendo em vista o escopo definido, a composição da equipe e a possibilidade de um desenvolvimento incremental ao longo do semestre. O projeto foi pensado dentro de um modelo iterativo e incremental, com iterações semanais e entregas contínuas, possibilitando assim a validação frequente das funcionalidades com o cliente e o ajuste do escopo ao longo do tempo. Essa abordagem minimiza riscos e proporciona uma maior aderência da solução às efetivas necessidades do usuário.

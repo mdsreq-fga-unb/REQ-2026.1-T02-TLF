@@ -6,13 +6,13 @@
 
 #### Elicitação e Descoberta
 
-- [_Brainstorm_](../entregas/reunioes.md#reunião---iteração-1): Essa técnica de Brainstorm realizada com os stakeholders, auxilia para o desenvolvimento criativo do projeto TLT Finanças, incluindo ideias para a melhoria da experiência do usuário e ideias de implementação.
-- [_Entrevista_](../entregas/reunioes.md#reunião---iteração-1): A entrevista com os stakeholders pode ajudar a entender as necessidades, problemas, soluções e expectativas em relação ao produto de software. Além disso, pode alinhar a identificação das funcionalidades importantes para o projeto.
+- [_Brainstorm_](../entregas/reunioes.md#reuniao-iteracao-1): Essa técnica de Brainstorm realizada com os stakeholders, auxilia para o desenvolvimento criativo do projeto TLT Finanças, incluindo ideias para a melhoria da experiência do usuário e ideias de implementação.
+- [_Entrevista_](../entregas/reunioes.md#reuniao-iteracao-1): A entrevista com os stakeholders pode ajudar a entender as necessidades, problemas, soluções e expectativas em relação ao produto de software. Além disso, pode alinhar a identificação das funcionalidades importantes para o projeto.
 - [_Análise de Viabilidade_](./2-solucao.md#26-viabilidade-da-proposta): Avaliação técnica preliminar das tecnologias escolhidas (React Native, NestJS, PostgreSQL) para garantir que a equipe consegue implementar o MVP no prazo.
 
 #### Análise e Consenso
 
-- [_Análise de custo/Benefício_](./11-WIL-produto.md#112-priorização-da-wil-e-escopo): Análise de custo e benefício das funcionalidades ajuda a saber quais serão as decisões tomadas em relação a o escopo do projeto, ao analisar fatores como a satisfação do cliente e custo de execução.
+- [_Análise de custo/Benefício_](./11-WIL-produto.md#112-priorizacao-da-wil-e-escopo): Análise de custo e benefício das funcionalidades ajuda a saber quais serão as decisões tomadas em relação a o escopo do projeto, ao analisar fatores como a satisfação do cliente e custo de execução.
 - [_Priorização MoSCoW_](./9-MoSCoW.md): Técnica utilizada para definir o que é mais crítico para o projeto em termos de valor de negócio e risco arquitetural e o nível de prioridade de cada requisitos. Essa técnica é classificada como: Must Have, Should have, Could have, Won't have.
 - [_Análise de Objetivo e Domínio_](./2-solucao.md): Essa técnica garante que o que será desenvolvido atende o objetivo do produto ao examinar a relação entre objetivos de negócios e tarefas.
 
@@ -32,7 +32,7 @@
 
 #### Elicitação e Descoberta:
 
-- [_Entrevista Estruturada_](../entregas/reunioes.md#reunião-090526---iteração-5): Realização de sessões de perguntas roteirizadas e direcionadas com o cliente para detalhar as funcionalidades críticas e regras de negócio identificadas na Concepção. O objetivo é extrair informações específicas sobre como o sistema deve se comportar em cenários de exceção, como falhas de conexão e sincronização de dados.
+- [_Entrevista Estruturada_](../entregas/reunioes.md#reuniao-090526-iteracao-5): Realização de sessões de perguntas roteirizadas e direcionadas com o cliente para detalhar as funcionalidades críticas e regras de negócio identificadas na Concepção. O objetivo é extrair informações específicas sobre como o sistema deve se comportar em cenários de exceção, como falhas de conexão e sincronização de dados.
 
 #### Análise e Consenso:
 
@@ -41,7 +41,7 @@
 
 #### Declaração:
 
-- [_Especificação Suplementar_](./7-requisitos-software.md#72-lista-de-requisitos-não-funcionais): Levantamento de requisitos não funcionais e regras de negócio críticos para o TLT Finanças, como segurança da LGPD, persistência offline e tempo de resposta da sincronização.
+- [_Especificação Suplementar_](./7-requisitos-software.md#72-lista-de-requisitos-nao-funcionais): Levantamento de requisitos não funcionais e regras de negócio críticos para o TLT Finanças, como segurança da LGPD, persistência offline e tempo de resposta da sincronização.
 
 #### Representação:
 
@@ -91,7 +91,7 @@
 
 #### Organização e Atualização:
 
--[_Encerramento da Work Item List_](./11-WIL-produto.md): Revisão final da Work Item List para encerramento do ciclo de desenvolvimento, garantindo que todos os itens do MVP estejam concluídos ou devidamente registrados para evolução futura.
+- [_Encerramento da Work Item List_](./11-WIL-produto.md): Revisão final da Work Item List para encerramento do ciclo de desenvolvimento, garantindo que todos os itens do MVP estejam concluídos ou devidamente registrados para evolução futura.
 
 ## 4.2 Engenharia de Requisitos e o OpenUP
 

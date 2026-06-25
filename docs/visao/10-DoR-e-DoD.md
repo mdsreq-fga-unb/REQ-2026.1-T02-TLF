@@ -1,5 +1,7 @@
 # 10. DoR e DoD
 
+<a id="101-definition-of-ready-dor"></a>
+
 ## 10.1 Definition of Ready (DoR)
 
 1. O item foi validado pelo cliente para garantir agregue valor ao produto, e apresentado na reunião de planejamento da iteração sem dúvidas em aberto, e sua descrição está registrada na Work Item List com título, contexto de negócio e comportamento esperado preenchidos, de forma que qualquer membro da equipe consiga implementá-lo sem solicitar esclarecimentos adicionais.
@@ -10,6 +12,8 @@
 6. O item está associado a pelo menos um requisito funcional ou não funcional, ou um caso de uso documentado nas Listas de Requisitos de Software ou Casos de uso do projeto, garantindo rastreabilidade.
 7. Não há decisões pendentes de alinhamento com o cliente nem aprovações de escopo em aberto que impeçam o início do desenvolvimento do item.
 8. Um membro da equipe foi designado como responsável principal pela implementação do item, com registro na Work Item List.
+
+<a id="102-definition-of-done-dod"></a>
 
 ## 10.2 Definition of Done (DoD)
 

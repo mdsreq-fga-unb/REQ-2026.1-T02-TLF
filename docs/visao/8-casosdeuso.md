@@ -10,6 +10,7 @@
 
 ---
 
+<a id="uc01-cadastrar-usuario"></a>
 ## UC01 - Cadastrar Usuário
 
 **Descrição:** Permite ao usuário criar uma conta no sistema.  
@@ -36,6 +37,7 @@
 
 ---
 
+<a id="uc02-realizar-login"></a>
 ## UC02 - Realizar Login
 
 **Descrição:** Permite o acesso do usuário à sua conta no sistema.  
@@ -60,6 +62,7 @@
 
 ---
 
+<a id="uc03-recuperar-senha"></a>
 ## UC03 - Recuperar Senha
 
 **Descrição:** Permite ao usuário redefinir sua senha caso a tenha esquecido.  
@@ -90,6 +93,7 @@
 
 ---
 
+<a id="uc04-visualizar-painel-inicial-sem-graficos"></a>
 ## UC04 - Visualizar Painel Inicial (sem gráficos)
 
 **Descrição:** Exibe ao usuário uma visão geral simplificada de suas finanças, sem componentes gráficos.  
@@ -114,6 +118,7 @@
 
 ---
 
+<a id="uc05-visualizar-historico-pelo-painel-inicial"></a>
 ## UC05 - Visualizar Histórico pelo Painel Inicial
 
 **Descrição:** Permite ao usuário acessar e visualizar o histórico completo de transações diretamente do painel inicial.  
@@ -138,6 +143,7 @@
 
 ---
 
+<a id="uc06-visualizar-painel-com-resumo-grafico"></a>
 ## UC06 - Visualizar Painel com Resumo Gráfico
 
 **Descrição:** Exibe painel financeiro consolidado com um resumo gráfico interativo.  
@@ -162,6 +168,7 @@
 
 ---
 
+<a id="uc07-registrar-transacao-receita-ou-despesa"></a>
 ## UC07 - Registrar Transação (Receita ou Despesa)
 
 **Descrição:** Permite registrar entradas (receitas) ou saídas (despesas) de dinheiro.  
@@ -186,6 +193,7 @@
 
 ---
 
+<a id="uc08-editar-transacao"></a>
 ## UC08 - Editar Transação
 
 **Descrição:** Permite ao usuário modificar os dados de uma transação financeira registrada anteriormente.  
@@ -212,6 +220,7 @@
 
 ---
 
+<a id="uc09-deletar-transacao"></a>
 ## UC09 - Deletar Transação
 
 **Descrição:** Permite ao usuário excluir uma transação financeira registrada.  
@@ -235,6 +244,7 @@
 
 ---
 
+<a id="uc10-criar-categoria-de-transacao"></a>
 ## UC10 - Criar Categoria de Transação
 
 **Descrição:** Permite ao usuário criar uma nova categoria personalizada para classificar suas transações.  
@@ -259,6 +269,7 @@
 
 ---
 
+<a id="uc11-editar-categoria-de-transacao"></a>
 ## UC11 - Editar Categoria de Transação
 
 **Descrição:** Permite ao usuário modificar o nome ou aparência de uma categoria existente.  
@@ -284,6 +295,7 @@
 
 ---
 
+<a id="uc12-apagar-categoria-de-transacao"></a>
 ## UC12 - Apagar Categoria de Transação
 
 **Descrição:** Permite ao usuário remover uma categoria personalizada do sistema.  
@@ -309,6 +321,7 @@
 
 ---
 
+<a id="uc13-criar-subcategoria-de-transacao"></a>
 ## UC13 - Criar Subcategoria de Transação
 
 **Descrição:** Permite ao usuário criar uma subcategoria vinculada a uma categoria existente para detalhar melhor suas transações.  
@@ -333,6 +346,7 @@
 
 ---
 
+<a id="uc14-editar-subcategoria-de-transacao"></a>
 ## UC14 - Editar Subcategoria de Transação
 
 **Descrição:** Permite modificar o nome de uma subcategoria existente.  
@@ -357,6 +371,7 @@
 
 ---
 
+<a id="uc15-apagar-subcategoria-de-transacao"></a>
 ## UC15 - Apagar Subcategoria de Transação
 
 **Descrição:** Permite remover uma subcategoria do sistema.  
@@ -381,6 +396,7 @@
 
 ---
 
+<a id="uc16-criar-orcamento"></a>
 ## UC16 - Criar Orçamento
 
 **Descrição:** Permite criar objetivos financeiros e definir metas/limites de gastos mensais.  
@@ -403,6 +419,7 @@
 
 ---
 
+<a id="uc17-editar-orcamento"></a>
 ## UC17 - Editar Orçamento
 
 **Descrição:** Permite ao usuário modificar metas financeiras e limites de gastos existentes.  
@@ -427,6 +444,7 @@
 
 ---
 
+<a id="uc18-apagar-orcamento"></a>
 ## UC18 - Apagar Orçamento
 
 **Descrição:** Permite ao usuário remover um planejamento financeiro ou meta do sistema.  
@@ -450,6 +468,7 @@
 
 ---
 
+<a id="uc19-registrar-instituicao-financeira"></a>
 ## UC19 - Registrar Instituição Financeira
 
 **Descrição:** Permite ao usuário cadastrar uma instituição financeira (banco, corretora, etc.) no sistema.  
@@ -474,6 +493,7 @@
 
 ---
 
+<a id="uc20-editar-registro-de-instituicao"></a>
 ## UC20 - Editar Registro de Instituição
 
 **Descrição:** Permite modificar os dados de uma instituição financeira previamente cadastrada.  
@@ -497,6 +517,7 @@
 
 ---
 
+<a id="uc21-apagar-registro-de-instituicao"></a>
 ## UC21 - Apagar Registro de Instituição
 
 **Descrição:** Permite remover uma instituição financeira do sistema.  
@@ -521,6 +542,7 @@
 
 ---
 
+<a id="uc22-registrar-conta-em-instituicao"></a>
 ## UC22 - Registrar Conta em Instituição
 
 **Descrição:** Permite ao usuário registrar uma conta financeira (corrente, poupança, investimento) vinculada a uma instituição.  
@@ -545,6 +567,7 @@
 
 ---
 
+<a id="uc23-editar-conta-de-instituicao"></a>
 ## UC23 - Editar Conta de Instituição
 
 **Descrição:** Permite modificar os dados de uma conta financeira registrada.  
@@ -568,6 +591,7 @@
 
 ---
 
+<a id="uc24-apagar-conta-de-instituicao"></a>
 ## UC24 - Apagar Conta de Instituição
 
 **Descrição:** Permite apagar o registro de uma conta financeira cadastrada.  
@@ -592,6 +616,7 @@
 
 ---
 
+<a id="uc25-registrar-transacao-recorrente"></a>
 ## UC25 - Registrar Transação Recorrente
 
 **Descrição:** Permite ao usuário cadastrar uma transação que se repete periodicamente (assinaturas, salário, etc.).  
@@ -616,6 +641,7 @@
 
 ---
 
+<a id="uc26-editar-transacao-recorrente"></a>
 ## UC26 - Editar Transação Recorrente
 
 **Descrição:** Permite modificar uma recorrência existente.  
@@ -640,6 +666,7 @@
 
 ---
 
+<a id="uc27-apagar-transacao-recorrente"></a>
 ## UC27 - Apagar Transação Recorrente
 
 **Descrição:** Permite cancelar uma recorrência, interrompendo a geração de transações futuras.  
@@ -664,6 +691,7 @@
 
 ---
 
+<a id="uc28-exportar-relatorios-csv"></a>
 ## UC28 - Exportar Relatórios CSV
 
 **Descrição:** Permite exportar relatórios financeiros em formato CSV.  
@@ -688,6 +716,7 @@
 
 ---
 
+<a id="uc29-receber-notificacoes-de-alerta"></a>
 ## UC29 - Receber Notificações de Alerta
 
 **Descrição:** Notificação de limites de gastos atingidos ou próximos de 80%.  
@@ -712,6 +741,7 @@
 
 ---
 
+<a id="uc30-enviar-feedback"></a>
 ## UC30 - Enviar Feedback
 
 **Descrição:** Permite enviar feedback, reportar erros ou sugerir melhorias para o app TLT Finanças.  
@@ -735,6 +765,7 @@
 
 ---
 
+<a id="uc31-visualizar-dicas-financeiras"></a>
 ## UC31 - Visualizar Dicas Financeiras
 
 **Descrição:** Usuário acessa dicas financeiras personalizadas com base no comportamento do usuário.  
@@ -759,6 +790,7 @@
 
 ---
 
+<a id="uc32-acessar-materiais-de-educacao-financeira"></a>
 ## UC32 - Acessar Materiais de Educação Financeira
 
 **Descrição:** Permite acessar uma aba com conteúdos educativos recomendados.  

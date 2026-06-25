@@ -123,37 +123,36 @@ A partir disso, foi gerada a seguinte Matriz de valor e impacto:
 
 | Item | RF    | UC    | Iteração | Responsavel      | Status    | Evidencias                                                              |
 | :--: | ----- | ----- | :------- | ---------------- | ------ | ---------- |
-|  1   | RF-01 | [UC-01](./8-casosdeuso.md#uc01---cadastrar-usuário) | 3        | Danilo; Gabriel; | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/1)  |
-|  2   | RF-02 | [UC-02](./8-casosdeuso.md#uc02---realizar-login) | 3        | Danilo; Gabriel; | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/4)  |
-|  3   | RF-03 | [UC-03](./8-casosdeuso.md#uc03---recuperar-senha) | -        | -                | 📵      | -                                                                       |
-|  4   | RF-04 | [UC-04](./8-casosdeuso.md#uc04---visualizar-painel-inicial-sem-gráficos) | 4        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/9)  |
-|  5   | RF-05 | [UC-05](./8-casosdeuso.md#uc05---visualizar-histórico-pelo-painel-inicial) | 4        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/9)  |
-|  6   | RF-06 | [UC-06](./8-casosdeuso.md#uc06---visualizar-painel-com-resumo-gráfico) | 7        | Gabriel;         | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/1)  |
-|  7   | RF-07 | [UC-07](./8-casosdeuso.md#uc07---registrar-transação-receita-ou-despesa) | 4        | Lucas; Tiago;    | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/12) |
-|  8   | RF-08 | [UC-08](./8-casosdeuso.md#uc08---editar-transação) | 4        | Lucas; Tiago;    | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/12) |
-|  9   | RF-09 | [UC-09](./8-casosdeuso.md#uc09---deletar-transação) | 4        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/9)  |
-|  10  | RF-10 | [UC-10](./8-casosdeuso.md#uc10---criar-categoria-de-transação) | 6        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/10) |
-|  11  | RF-11 | [UC-11](./8-casosdeuso.md#uc11---editar-categoria-de-transação) | 6        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/10) |
-|  12  | RF-12 | [UC-12](./8-casosdeuso.md#uc12---apagar-categoria-de-transação) | 6        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/10) |
-|  13  | RF-13 | [UC-13](./8-casosdeuso.md#uc13---criar-subcategoria-de-transação) | -        | -                | ❌  | -                                                                       |
-|  14  | RF-14 | [UC-14](./8-casosdeuso.md#uc14---editar-subcategoria-de-transação) | -        | -                | ❌  | -                                                                       |
-|  15  | RF-15 | [UC-15](./8-casosdeuso.md#uc15---apagar-subcategoria-de-transação) | -        | -                | ❌  | -                                                                       |
-|  16  | RF-16 | [UC-16](./8-casosdeuso.md#uc16---criar-orçamento) | 5        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/23) |
-|  17  | RF-17 | [UC-17](./8-casosdeuso.md#uc17---editar-orçamento) | 5        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/23) |
-|  18  | RF-18 | [UC-18](./8-casosdeuso.md#uc18---apagar-orçamento) | 5        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/23) |
-|  19  | RF-19 | [UC-19](./8-casosdeuso.md#uc19---registrar-instituição-financeira) | 8        | Lucas; Tiago;    | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/54) |
-|  20  | RF-20 | [UC-20](./8-casosdeuso.md#uc20---editar-registro-de-instituição) | 8        | Lucas; Tiago;    | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/54) |
-|  21  | RF-21 | [UC-21](./8-casosdeuso.md#uc21---apagar-registro-de-instituição) | 8        | Lucas; Tiago;    | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/54) |
-|  22  | RF-22 | [UC-22](./8-casosdeuso.md#uc22---registrar-conta-em-instituição) | -        | -                | ❌  | -                                                                       |
-|  23  | RF-23 | [UC-23](./8-casosdeuso.md#uc23---editar-conta-de-instituição) | -        | -                | ❌  | -                                                                       |
-|  24  | RF-24 | [UC-24](./8-casosdeuso.md#uc24---apagar-conta-de-instituição) | -        | -                | ❌  | -                                                                       |
-|  25  | RF-25 | [UC-25](./8-casosdeuso.md#uc25---registrar-transação-recorrente) | 5        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/26) |
-|  26  | RF-26 | [UC-26](./8-casosdeuso.md#uc26---editar-transação-recorrente) | 5        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/26) |
-|  27  | RF-27 | [UC-27](./8-casosdeuso.md#uc27---apagar-transação-recorrente) | 5        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/26) |
-|  28  | RF-28 | [UC-28](./8-casosdeuso.md#uc28---exportar-relatórios-csv) | -        | -                | ❌  | -                                                                       |
-|  29  | RF-29 | [UC-29](./8-casosdeuso.md#uc29---receber-notificações-de-alerta) | 6        | Danilo;          | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/42) |
-|  30  | RF-30 | [UC-30](./8-casosdeuso.md#uc30---enviar-feedback) | -        | -                | 📵      | -                                                                       |
-|  31  | RF-31 | [UC-31](./8-casosdeuso.md#uc31---visualizar-dicas-financeiras) | -        | -                | 📵      | -                                                                       |
-|  32  | RF-32 | [UC-32](./8-casosdeuso.md#uc32---acessar-materiais-de-educação-financeira) | -        | -                | 📵      | -                                                                       |
-
+|  1   | RF-01 | [UC-01](./8-casosdeuso.md#uc01-cadastrar-usuario) | 3        | Danilo; Gabriel; | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/1)  |
+|  2   | RF-02 | [UC-02](./8-casosdeuso.md#uc02-realizar-login) | 3        | Danilo; Gabriel; | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/4)  |
+|  3   | RF-03 | [UC-03](./8-casosdeuso.md#uc03-recuperar-senha) | -        | -                | 📵      | -                                                                       |
+|  4   | RF-04 | [UC-04](./8-casosdeuso.md#uc04-visualizar-painel-inicial-sem-graficos) | 4        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/9)  |
+|  5   | RF-05 | [UC-05](./8-casosdeuso.md#uc05-visualizar-historico-pelo-painel-inicial) | 4        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/9)  |
+|  6   | RF-06 | [UC-06](./8-casosdeuso.md#uc06-visualizar-painel-com-resumo-grafico) | 7        | Gabriel;         | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/1)  |
+|  7   | RF-07 | [UC-07](./8-casosdeuso.md#uc07-registrar-transacao-receita-ou-despesa) | 4        | Lucas; Tiago;    | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/12) |
+|  8   | RF-08 | [UC-08](./8-casosdeuso.md#uc08-editar-transacao) | 4        | Lucas; Tiago;    | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/12) |
+|  9   | RF-09 | [UC-09](./8-casosdeuso.md#uc09-deletar-transacao) | 4        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/9)  |
+|  10  | RF-10 | [UC-10](./8-casosdeuso.md#uc10-criar-categoria-de-transacao) | 6        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/10) |
+|  11  | RF-11 | [UC-11](./8-casosdeuso.md#uc11-editar-categoria-de-transacao) | 6        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/10) |
+|  12  | RF-12 | [UC-12](./8-casosdeuso.md#uc12-apagar-categoria-de-transacao) | 6        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/10) |
+|  13  | RF-13 | [UC-13](./8-casosdeuso.md#uc13-criar-subcategoria-de-transacao) | -        | -                | ❌  | -                                                                       |
+|  14  | RF-14 | [UC-14](./8-casosdeuso.md#uc14-editar-subcategoria-de-transacao) | -        | -                | ❌  | -                                                                       |
+|  15  | RF-15 | [UC-15](./8-casosdeuso.md#uc15-apagar-subcategoria-de-transacao) | -        | -                | ❌  | -                                                                       |
+|  16  | RF-16 | [UC-16](./8-casosdeuso.md#uc16-criar-orcamento) | 5        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/23) |
+|  17  | RF-17 | [UC-17](./8-casosdeuso.md#uc17-editar-orcamento) | 5        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/23) |
+|  18  | RF-18 | [UC-18](./8-casosdeuso.md#uc18-apagar-orcamento) | 5        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/23) |
+|  19  | RF-19 | [UC-19](./8-casosdeuso.md#uc19-registrar-instituicao-financeira) | 8        | Lucas; Tiago;    | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/54) |
+|  20  | RF-20 | [UC-20](./8-casosdeuso.md#uc20-editar-registro-de-instituicao) | 8        | Lucas; Tiago;    | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/54) |
+|  21  | RF-21 | [UC-21](./8-casosdeuso.md#uc21-apagar-registro-de-instituicao) | 8        | Lucas; Tiago;    | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/54) |
+|  22  | RF-22 | [UC-22](./8-casosdeuso.md#uc22-registrar-conta-em-instituicao) | -        | -                | ❌  | -                                                                       |
+|  23  | RF-23 | [UC-23](./8-casosdeuso.md#uc23-editar-conta-de-instituicao) | -        | -                | ❌  | -                                                                       |
+|  24  | RF-24 | [UC-24](./8-casosdeuso.md#uc24-apagar-conta-de-instituicao) | -        | -                | ❌  | -                                                                       |
+|  25  | RF-25 | [UC-25](./8-casosdeuso.md#uc25-registrar-transacao-recorrente) | 5        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/26) |
+|  26  | RF-26 | [UC-26](./8-casosdeuso.md#uc26-editar-transacao-recorrente) | 5        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/26) |
+|  27  | RF-27 | [UC-27](./8-casosdeuso.md#uc27-apagar-transacao-recorrente) | 5        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/26) |
+|  28  | RF-28 | [UC-28](./8-casosdeuso.md#uc28-exportar-relatorios-csv) | -        | -                | ❌  | -                                                                       |
+|  29  | RF-29 | [UC-29](./8-casosdeuso.md#uc29-receber-notificacoes-de-alerta) | 6        | Danilo;          | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/42) |
+|  30  | RF-30 | [UC-30](./8-casosdeuso.md#uc30-enviar-feedback) | -        | -                | 📵      | -                                                                       |
+|  31  | RF-31 | [UC-31](./8-casosdeuso.md#uc31-visualizar-dicas-financeiras) | -        | -                | 📵      | -                                                                       |
+|  32  | RF-32 | [UC-32](./8-casosdeuso.md#uc32-acessar-materiais-de-educacao-financeira) | -        | -                | 📵      | -                                                                       |
 ---

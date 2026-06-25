@@ -1512,6 +1512,7 @@
 <li><strong>Usuário</strong>: Indivíduo que utiliza o sistema para gerenciar suas finanças pessoais.</li>
 </ul>
 <hr />
+<p><a id="uc01-cadastrar-usuario"></a></p>
 <h2 id="uc01-cadastrar-usuario">UC01 - Cadastrar Usuário</h2>
 <p><strong>Descrição:</strong> Permite ao usuário criar uma conta no sistema.<br />
 <strong>Pré-condições:</strong> Usuário não deve estar cadastrado.<br />
@@ -1535,6 +1536,7 @@
 <li>Dados inválidos: sistema solicita correção.</li>
 </ul>
 <hr />
+<p><a id="uc02-realizar-login"></a></p>
 <h2 id="uc02-realizar-login">UC02 - Realizar Login</h2>
 <p><strong>Descrição:</strong> Permite o acesso do usuário à sua conta no sistema.<br />
 <strong>Pré-condições:</strong> Usuário deve estar cadastrado.<br />
@@ -1556,6 +1558,7 @@
 <li>Falha de conexão: sistema exibe mensagem de erro.</li>
 </ul>
 <hr />
+<p><a id="uc03-recuperar-senha"></a></p>
 <h2 id="uc03-recuperar-senha">UC03 - Recuperar Senha</h2>
 <p><strong>Descrição:</strong> Permite ao usuário redefinir sua senha caso a tenha esquecido.<br />
 <strong>Pré-condições:</strong> Usuário possui conta cadastrada e tem acesso ao e-mail vinculado.<br />
@@ -1583,6 +1586,7 @@
 <li>Senha deve atender critérios de segurança e senhas anteriores não podem ser reutilizadas.</li>
 </ul>
 <hr />
+<p><a id="uc04-visualizar-painel-inicial-sem-graficos"></a></p>
 <h2 id="uc04-visualizar-painel-inicial-sem-graficos">UC04 - Visualizar Painel Inicial (sem gráficos)</h2>
 <p><strong>Descrição:</strong> Exibe ao usuário uma visão geral simplificada de suas finanças, sem componentes gráficos.<br />
 <strong>Pré-condições:</strong> Usuário autenticado.<br />
@@ -1604,6 +1608,7 @@
 <li>Falha ao carregar dados: sistema exibe mensagem de erro e botão para tentar novamente.</li>
 </ul>
 <hr />
+<p><a id="uc05-visualizar-historico-pelo-painel-inicial"></a></p>
 <h2 id="uc05-visualizar-historico-pelo-painel-inicial">UC05 - Visualizar Histórico pelo Painel Inicial</h2>
 <p><strong>Descrição:</strong> Permite ao usuário acessar e visualizar o histórico completo de transações diretamente do painel inicial.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e existência de transações registradas.<br />
@@ -1625,6 +1630,7 @@
 <li>Falha ao carregar histórico: sistema exibe erro e botão para recarregar.</li>
 </ul>
 <hr />
+<p><a id="uc06-visualizar-painel-com-resumo-grafico"></a></p>
 <h2 id="uc06-visualizar-painel-com-resumo-grafico">UC06 - Visualizar Painel com Resumo Gráfico</h2>
 <p><strong>Descrição:</strong> Exibe painel financeiro consolidado com um resumo gráfico interativo.<br />
 <strong>Pré-condições:</strong> Usuário autenticado.<br />
@@ -1646,6 +1652,7 @@
 <li>Período sem movimentações: sistema informa ausência de dados para o período.</li>
 </ul>
 <hr />
+<p><a id="uc07-registrar-transacao-receita-ou-despesa"></a></p>
 <h2 id="uc07-registrar-transacao-receita-ou-despesa">UC07 - Registrar Transação (Receita ou Despesa)</h2>
 <p><strong>Descrição:</strong> Permite registrar entradas (receitas) ou saídas (despesas) de dinheiro.<br />
 <strong>Pré-condições:</strong> Usuário autenticado.<br />
@@ -1667,6 +1674,7 @@
 <li>Sem conexão com internet: transação é salva offline e sincronizada posteriormente.</li>
 </ul>
 <hr />
+<p><a id="uc08-editar-transacao"></a></p>
 <h2 id="uc08-editar-transacao">UC08 - Editar Transação</h2>
 <p><strong>Descrição:</strong> Permite ao usuário modificar os dados de uma transação financeira registrada anteriormente.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e existência de pelo menos uma transação.<br />
@@ -1690,6 +1698,7 @@
 <li>Usuário cancela a edição: alterações são descartadas.</li>
 </ul>
 <hr />
+<p><a id="uc09-deletar-transacao"></a></p>
 <h2 id="uc09-deletar-transacao">UC09 - Deletar Transação</h2>
 <p><strong>Descrição:</strong> Permite ao usuário excluir uma transação financeira registrada.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e existência de pelo menos uma transação.<br />
@@ -1710,6 +1719,7 @@
 <li>Usuário cancela a operação: exclusão interrompida.</li>
 </ul>
 <hr />
+<p><a id="uc10-criar-categoria-de-transacao"></a></p>
 <h2 id="uc10-criar-categoria-de-transacao">UC10 - Criar Categoria de Transação</h2>
 <p><strong>Descrição:</strong> Permite ao usuário criar uma nova categoria personalizada para classificar suas transações.<br />
 <strong>Pré-condições:</strong> Usuário autenticado.<br />
@@ -1735,6 +1745,7 @@
 <li>Nome vazio ou inválido: sistema solicita preenchimento correto.</li>
 </ul>
 <hr />
+<p><a id="uc11-editar-categoria-de-transacao"></a></p>
 <h2 id="uc11-editar-categoria-de-transacao">UC11 - Editar Categoria de Transação</h2>
 <p><strong>Descrição:</strong> Permite ao usuário modificar o nome ou aparência de uma categoria existente.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e existência de pelo menos uma categoria.<br />
@@ -1757,6 +1768,7 @@
 <li>Usuário cancela: alterações descartadas.</li>
 </ul>
 <hr />
+<p><a id="uc12-apagar-categoria-de-transacao"></a></p>
 <h2 id="uc12-apagar-categoria-de-transacao">UC12 - Apagar Categoria de Transação</h2>
 <p><strong>Descrição:</strong> Permite ao usuário remover uma categoria personalizada do sistema.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e categoria a ser excluída não pode ser padrão do sistema.<br />
@@ -1779,6 +1791,7 @@
 <li>Usuário cancela: categoria mantida.</li>
 </ul>
 <hr />
+<p><a id="uc13-criar-subcategoria-de-transacao"></a></p>
 <h2 id="uc13-criar-subcategoria-de-transacao">UC13 - Criar Subcategoria de Transação</h2>
 <p><strong>Descrição:</strong> Permite ao usuário criar uma subcategoria vinculada a uma categoria existente para detalhar melhor suas transações.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e existência de categoria pai.<br />
@@ -1800,6 +1813,7 @@
 <li>Nome vazio: sistema solicita preenchimento.</li>
 </ul>
 <hr />
+<p><a id="uc14-editar-subcategoria-de-transacao"></a></p>
 <h2 id="uc14-editar-subcategoria-de-transacao">UC14 - Editar Subcategoria de Transação</h2>
 <p><strong>Descrição:</strong> Permite modificar o nome de uma subcategoria existente.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e subcategoria existente.<br />
@@ -1821,6 +1835,7 @@
 <li>Usuário cancela: nome mantido.</li>
 </ul>
 <hr />
+<p><a id="uc15-apagar-subcategoria-de-transacao"></a></p>
 <h2 id="uc15-apagar-subcategoria-de-transacao">UC15 - Apagar Subcategoria de Transação</h2>
 <p><strong>Descrição:</strong> Permite remover uma subcategoria do sistema.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e subcategoria existente.<br />
@@ -1842,6 +1857,7 @@
 <li>Erro ao reclassificar: sistema notifica e aborta.</li>
 </ul>
 <hr />
+<p><a id="uc16-criar-orcamento"></a></p>
 <h2 id="uc16-criar-orcamento">UC16 - Criar Orçamento</h2>
 <p><strong>Descrição:</strong> Permite criar objetivos financeiros e definir metas/limites de gastos mensais.<br />
 <strong>Pré-condições:</strong> Usuário autenticado.<br />
@@ -1861,6 +1877,7 @@
 <li>Dados ou valores informados são inválidos: sistema exibe erro.</li>
 </ul>
 <hr />
+<p><a id="uc17-editar-orcamento"></a></p>
 <h2 id="uc17-editar-orcamento">UC17 - Editar Orçamento</h2>
 <p><strong>Descrição:</strong> Permite ao usuário modificar metas financeiras e limites de gastos existentes.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e existência de pelo menos uma meta ou orçamento cadastrado.<br />
@@ -1882,6 +1899,7 @@
 <li>Usuário cancela: alterações descartadas.</li>
 </ul>
 <hr />
+<p><a id="uc18-apagar-orcamento"></a></p>
 <h2 id="uc18-apagar-orcamento">UC18 - Apagar Orçamento</h2>
 <p><strong>Descrição:</strong> Permite ao usuário remover um planejamento financeiro ou meta do sistema.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e existência de meta ou orçamento.<br />
@@ -1902,6 +1920,7 @@
 <li>Erro ao excluir: sistema exibe mensagem de falha.</li>
 </ul>
 <hr />
+<p><a id="uc19-registrar-instituicao-financeira"></a></p>
 <h2 id="uc19-registrar-instituicao-financeira">UC19 - Registrar Instituição Financeira</h2>
 <p><strong>Descrição:</strong> Permite ao usuário cadastrar uma instituição financeira (banco, corretora, etc.) no sistema.<br />
 <strong>Pré-condições:</strong> Usuário autenticado.<br />
@@ -1923,6 +1942,7 @@
 <li>Dados incompletos: sistema solicita preenchimento.</li>
 </ul>
 <hr />
+<p><a id="uc20-editar-registro-de-instituicao"></a></p>
 <h2 id="uc20-editar-registro-de-instituicao">UC20 - Editar Registro de Instituição</h2>
 <p><strong>Descrição:</strong> Permite modificar os dados de uma instituição financeira previamente cadastrada.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e instituição existente.<br />
@@ -1943,6 +1963,7 @@
 <li>Usuário cancela: dados originais mantidos.</li>
 </ul>
 <hr />
+<p><a id="uc21-apagar-registro-de-instituicao"></a></p>
 <h2 id="uc21-apagar-registro-de-instituicao">UC21 - Apagar Registro de Instituição</h2>
 <p><strong>Descrição:</strong> Permite remover uma instituição financeira do sistema.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e instituição sem contas vinculadas ativas.<br />
@@ -1964,6 +1985,7 @@
 <li>Usuário cancela: instituição mantida.</li>
 </ul>
 <hr />
+<p><a id="uc22-registrar-conta-em-instituicao"></a></p>
 <h2 id="uc22-registrar-conta-em-instituicao">UC22 - Registrar Conta em Instituição</h2>
 <p><strong>Descrição:</strong> Permite ao usuário registrar uma conta financeira (corrente, poupança, investimento) vinculada a uma instituição.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e instituição previamente cadastrada.<br />
@@ -1985,6 +2007,7 @@
 <li>Instituição não encontrada: sistema orienta cadastrar instituição primeiro.</li>
 </ul>
 <hr />
+<p><a id="uc23-editar-conta-de-instituicao"></a></p>
 <h2 id="uc23-editar-conta-de-instituicao">UC23 - Editar Conta de Instituição</h2>
 <p><strong>Descrição:</strong> Permite modificar os dados de uma conta financeira registrada.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e conta existente.<br />
@@ -2005,6 +2028,7 @@
 <li>Usuário cancela: dados mantidos.</li>
 </ul>
 <hr />
+<p><a id="uc24-apagar-conta-de-instituicao"></a></p>
 <h2 id="uc24-apagar-conta-de-instituicao">UC24 - Apagar Conta de Instituição</h2>
 <p><strong>Descrição:</strong> Permite apagar o registro de uma conta financeira cadastrada.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e conta existente.<br />
@@ -2026,6 +2050,7 @@
 <li>Erro ao excluir: sistema exibe mensagem de falha.</li>
 </ul>
 <hr />
+<p><a id="uc25-registrar-transacao-recorrente"></a></p>
 <h2 id="uc25-registrar-transacao-recorrente">UC25 - Registrar Transação Recorrente</h2>
 <p><strong>Descrição:</strong> Permite ao usuário cadastrar uma transação que se repete periodicamente (assinaturas, salário, etc.).<br />
 <strong>Pré-condições:</strong> Usuário autenticado.<br />
@@ -2047,6 +2072,7 @@
 <li>Valor zerado: sistema rejeita.</li>
 </ul>
 <hr />
+<p><a id="uc26-editar-transacao-recorrente"></a></p>
 <h2 id="uc26-editar-transacao-recorrente">UC26 - Editar Transação Recorrente</h2>
 <p><strong>Descrição:</strong> Permite modificar uma recorrência existente.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e recorrência cadastrada.<br />
@@ -2068,6 +2094,7 @@
 <li>Usuário cancela: recorrência mantida.</li>
 </ul>
 <hr />
+<p><a id="uc27-apagar-transacao-recorrente"></a></p>
 <h2 id="uc27-apagar-transacao-recorrente">UC27 - Apagar Transação Recorrente</h2>
 <p><strong>Descrição:</strong> Permite cancelar uma recorrência, interrompendo a geração de transações futuras.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e recorrência existente.<br />
@@ -2089,6 +2116,7 @@
 <li>Erro ao remover instâncias: sistema notifica falha parcial.</li>
 </ul>
 <hr />
+<p><a id="uc28-exportar-relatorios-csv"></a></p>
 <h2 id="uc28-exportar-relatorios-csv">UC28 - Exportar Relatórios CSV</h2>
 <p><strong>Descrição:</strong> Permite exportar relatórios financeiros em formato CSV.<br />
 <strong>Pré-condições:</strong> Usuário autenticado e existência de dados registrados.<br />
@@ -2110,6 +2138,7 @@
 <li>Formato não suportado ou erro ao gerar/baixar: sistema informa falha.</li>
 </ul>
 <hr />
+<p><a id="uc29-receber-notificacoes-de-alerta"></a></p>
 <h2 id="uc29-receber-notificacoes-de-alerta">UC29 - Receber Notificações de Alerta</h2>
 <p><strong>Descrição:</strong> Notificação de limites de gastos atingidos ou próximos de 80%.<br />
 <strong>Pré-condições:</strong> Limite de gastos deve estar previamente definido.<br />
@@ -2131,6 +2160,7 @@
 <li>Permissão de notificação negada: sistema exibe alerta apenas internamente.</li>
 </ul>
 <hr />
+<p><a id="uc30-enviar-feedback"></a></p>
 <h2 id="uc30-enviar-feedback">UC30 - Enviar Feedback</h2>
 <p><strong>Descrição:</strong> Permite enviar feedback, reportar erros ou sugerir melhorias para o app TLT Finanças.<br />
 <strong>Pré-condições:</strong> Usuário autenticado.<br />
@@ -2151,6 +2181,7 @@
 <li>Falha no envio: sistema sugere tentar novamente mais tarde.</li>
 </ul>
 <hr />
+<p><a id="uc31-visualizar-dicas-financeiras"></a></p>
 <h2 id="uc31-visualizar-dicas-financeiras">UC31 - Visualizar Dicas Financeiras</h2>
 <p><strong>Descrição:</strong> Usuário acessa dicas financeiras personalizadas com base no comportamento do usuário.<br />
 <strong>Pré-condições:</strong> Usuário autenticado.<br />
@@ -2172,6 +2203,7 @@
 <li>Falha ao gerar dicas: sistema convida usuário a retornar mais tarde.</li>
 </ul>
 <hr />
+<p><a id="uc32-acessar-materiais-de-educacao-financeira"></a></p>
 <h2 id="uc32-acessar-materiais-de-educacao-financeira">UC32 - Acessar Materiais de Educação Financeira</h2>
 <p><strong>Descrição:</strong> Permite acessar uma aba com conteúdos educativos recomendados.<br />
 <strong>Pré-condições:</strong> Autenticação no sistema e conexão ativa com a internet.<br />

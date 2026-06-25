@@ -2,6 +2,8 @@
 
 **Documento Consolidado de Especificação de Software**
 
+![Diagrama de casos de uso - TLT Finanças](../images/diagrama_casos_de_uso_tlt_financas.svg)
+
 ## Atores do Sistema
 
 - **Usuário**: Indivíduo que utiliza o sistema para gerenciar suas finanças pessoais.

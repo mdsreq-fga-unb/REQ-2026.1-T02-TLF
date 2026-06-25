@@ -1,0 +1,10 @@
+import { Prisma } from 'generated/prisma/client';
+type TransactionClient = Prisma.TransactionClient;
+export declare function nullifyTransactionCategoryRefs(tx: TransactionClient, categoryId: string): Promise<void>;
+export declare function nullifyTransactionSubCategoryRefs(tx: TransactionClient, subCategoryId: string): Promise<void>;
+export declare function nullifyTransactionRecurrenceRefs(tx: TransactionClient, recurrenceId: string): Promise<void>;
+export declare function nullifyTransactionInvoiceRefs(tx: TransactionClient, invoiceId: string): Promise<void>;
+export declare function nullifyTransactionDestinationInstitutionRefs(tx: TransactionClient, institutionId: string): Promise<void>;
+export declare function nullifyRecurrenceCategoryRefs(tx: TransactionClient, categoryId: string): Promise<void>;
+export declare function nullifyRecurrenceSubCategoryRefs(tx: TransactionClient, subCategoryId: string): Promise<void>;
+export {};

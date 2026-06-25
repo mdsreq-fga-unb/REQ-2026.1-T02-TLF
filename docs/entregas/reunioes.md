@@ -1,5 +1,17 @@
 # Reuniões
 
+**OBS.:** Devido a natureza da materia as iterações 1 e 2 não possuem reuniões gravadas, pois só fomos informados da necessidade de evidencias a partir da unidade 2 (23/04/26).
+
+## "Reunião" - Iteração 1
+
+![Brainstorm_PT1](../images/Brainstorm_PT1.jpeg)
+![Brainstorm_PT2](../images/Brainstorm_PT2.jpeg)
+
+## "Reunião" - Iteração 2
+
+![PR_Setup](../images/PR_Setup.png)
+[Pull Request](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/pull/8)
+
 ## Reunião 25/04/26 - Iteração 3
 
 Reunião com a equipe
@@ -32,7 +44,7 @@ Reunião com o Cliente
 
 ---
 
-## Reunião 02/05/26  - Iteração 4
+## Reunião 02/05/26 - Iteração 4
 
 Reunião com a equipe
 
@@ -241,3 +253,7 @@ Reunião com o Cliente
 ![Reunião com o Cliente dia 13/06/26](../images/reuniao_13-06-26.png)
 
 [Assista à reunião com o cliente](https://youtu.be/xdgnHqfKMCQ)
+
+## Reunião 22/06/26 - Iteração 10
+
+## Reunião 27/06/26 - Iteração 11

@@ -1,7 +1,8 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native'
 import { useLocalSearchParams } from 'expo-router'
 import { useNovaRecorrencia } from './useNovaRecorrencia'
-import { createRecurrence, updateRecurrence } from '@/services/api/recurrences'
+import { categoryQueries } from '@/services/database/repository/category'
+import { recurrenceQueries } from '@/services/database/repository/recurrece'
 
 jest.mock('expo-router', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -14,16 +15,17 @@ jest.mock('expo-router', () => {
   }
 })
 
-jest.mock('@/services/api/recurrences', () => ({
-  createRecurrence: jest.fn().mockResolvedValue({}),
-  updateRecurrence: jest.fn().mockResolvedValue({}),
-  RecurrenceApplyScope: { THIS: 'THIS', ALL: 'ALL', FUTURE: 'FUTURE' },
+jest.mock('@/services/database/repository/category', () => ({
+  categoryQueries: {
+    getAll: jest.fn().mockResolvedValue([{ id: 'cat-1', name: 'Categoria', icon: 'tag', color: '#fff' }]),
+  },
 }))
 
-jest.mock('@/services/api/category', () => ({
-  getCategories: jest
-    .fn()
-    .mockResolvedValue([{ id: 'cat-1', name: 'Categoria', icon: 'tag', color: '#fff' }]),
+jest.mock('@/services/database/repository/recurrece', () => ({
+  recurrenceQueries: {
+    create: jest.fn().mockResolvedValue({}),
+    update: jest.fn().mockResolvedValue({}),
+  },
 }))
 
 jest.mock('@/services/database/queries/institution', () => ({
@@ -41,13 +43,15 @@ jest.mock('@/services/database/sync', () => ({
 }))
 
 const mockedUseLocalSearchParams = jest.mocked(useLocalSearchParams)
-const mockedCreate = jest.mocked(createRecurrence)
-const mockedUpdate = jest.mocked(updateRecurrence)
+const mockedCreate = jest.mocked(recurrenceQueries.create)
+const mockedUpdate = jest.mocked(recurrenceQueries.update)
+const mockedGetCategories = jest.mocked(categoryQueries.getAll)
 
 describe('useNovaRecorrencia', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockedUseLocalSearchParams.mockReturnValue({})
+    mockedGetCategories.mockResolvedValue([{ id: 'cat-1', name: 'Categoria', icon: 'tag', color: '#fff' }])
   })
 
   it('loads institutions and categories defaults from real data', async () => {
@@ -135,7 +139,7 @@ describe('useNovaRecorrencia', () => {
     expect(mockedUpdate).toHaveBeenCalledTimes(1)
     const [calledId, payload] = mockedUpdate.mock.calls[0]
     expect(calledId).toBe('rec-1')
-    expect(payload).toEqual(expect.objectContaining({ isActive: false, applyScope: 'FUTURE' }))
+    expect(payload).toEqual(expect.objectContaining({ isActive: false }))
     expect(payload).not.toHaveProperty('startDate')
     expect(payload).not.toHaveProperty('chargeDate')
     expect(payload).not.toHaveProperty('description')

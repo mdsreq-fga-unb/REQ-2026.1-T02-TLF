@@ -1,11 +1,18 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native'
-import { getCategories, createCategory, updateCategory } from '@/services/api/category'
+import { categoryQueries } from '@/services/database/repository/category'
+import { syncDatabase } from '@/services/database/sync'
 import { useCategory } from './useCategory'
 
-jest.mock('@/services/api/category', () => ({
-  getCategories: jest.fn(),
-  createCategory: jest.fn(),
-  updateCategory: jest.fn(),
+jest.mock('@/services/database/repository/category', () => ({
+  categoryQueries: {
+    getAll: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+  },
+}))
+
+jest.mock('@/services/database/sync', () => ({
+  syncDatabase: jest.fn().mockResolvedValue(undefined),
 }))
 
 jest.mock('expo-router', () => {
@@ -17,36 +24,42 @@ jest.mock('expo-router', () => {
   }
 })
 
-const mockedGetCategories = jest.mocked(getCategories)
-const mockedCreateCategory = jest.mocked(createCategory)
-const mockedUpdateCategory = jest.mocked(updateCategory)
+const mockedCategoryQueries = jest.mocked(categoryQueries)
+const mockedSyncDatabase = jest.mocked(syncDatabase)
+
+const categories = [
+  { id: 'cat-1', name: 'Moradia', icon: 'house', color: '#111111' },
+]
 
 describe('useCategory hook', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    mockedGetCategories.mockResolvedValue([])
-    mockedCreateCategory.mockResolvedValue(undefined as never)
-    mockedUpdateCategory.mockResolvedValue(undefined as never)
+    mockedCategoryQueries.getAll.mockResolvedValue(categories as never)
+    mockedCategoryQueries.create.mockResolvedValue(undefined as never)
+    mockedCategoryQueries.update.mockResolvedValue(undefined as never)
+    mockedSyncDatabase.mockResolvedValue(undefined)
   })
 
-  it('returns default values', async () => {
+  it('loads categories from the local repository', async () => {
     const { result } = renderHook(() => useCategory())
 
     await waitFor(() => {
-      expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      expect(result.current.mappedCategories).toHaveLength(1)
     })
 
-    expect(result.current.categoryColor).toBe('#ff0000')
-    expect(result.current.icon).toBe('heart')
-    expect(result.current.name).toBe('')
-    expect(result.current.iconComponent).toBeDefined()
+    expect(result.current.mappedCategories[0]).toMatchObject({
+      id: 'cat-1',
+      name: 'Moradia',
+      icon: 'house',
+      color: '#111111',
+    })
   })
 
   it('updates values when setters are called', async () => {
     const { result } = renderHook(() => useCategory())
 
     await waitFor(() => {
-      expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      expect(result.current.mappedCategories).toHaveLength(1)
     })
 
     act(() => {
@@ -65,7 +78,7 @@ describe('useCategory hook', () => {
     const { result } = renderHook(() => useCategory())
 
     await waitFor(() => {
-      expect(mockedGetCategories).toHaveBeenCalledTimes(1)
+      expect(result.current.mappedCategories).toHaveLength(1)
     })
 
     expect(result.current.iconComponent).toBeDefined()

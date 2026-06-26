@@ -11,11 +11,18 @@ jest.mock('@/services/database/repository/transaction', () => ({
   },
 }))
 
-jest.mock('@/services/api/transactions/transactions.service', () => ({
-  transactionsService: {
-    list: jest.fn().mockResolvedValue(jest.requireActual('@/utils/fixtures/records').mockTransactions),
-    delete: jest.fn().mockResolvedValue(undefined),
+jest.mock('@/services/database/repository/category', () => ({
+  categoryQueries: {
+    getAll: jest.fn(),
   },
+}))
+
+jest.mock('@/services/database/sync', () => ({
+  syncDatabase: jest.fn().mockResolvedValue(undefined),
+}))
+
+jest.mock('@/utils/records/transactionMappers', () => ({
+  mapLocalTransactionToListItem: jest.fn((transaction) => transaction),
 }))
 
 jest.mock('expo-router', () => {
@@ -28,13 +35,21 @@ jest.mock('expo-router', () => {
 })
 
 const mockedPush = jest.mocked(router.push)
+const mockedTransactionQueries = jest.mocked(
+  jest.requireMock('@/services/database/repository/transaction').transactionQueries,
+)
+const mockedCategoryQueries = jest.mocked(
+  jest.requireMock('@/services/database/repository/category').categoryQueries,
+)
 
 describe('useRecordsScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    mockedTransactionQueries.getAll.mockResolvedValue(mockTransactions as never)
+    mockedCategoryQueries.getAll.mockResolvedValue([] as never)
   })
 
-  it('loads mock transactions on mount', async () => {
+  it('loads transactions on mount', async () => {
     const { result } = renderHook(() => useRecordsScreen())
 
     await waitFor(() => {

@@ -43,8 +43,6 @@ function HomeView({ transactions, categories }: HomeProps) {
     }, [fetchBudgets]),
   )
 
-  const budget = budgets[0]
-
   const categoryById = useMemo(() => {
     return new Map(
       categories.map((category) => [
@@ -53,6 +51,26 @@ function HomeView({ transactions, categories }: HomeProps) {
       ]),
     )
   }, [categories])
+
+  const budget = useMemo(() => {
+    const item = budgets[0]
+    if (!item) return null
+
+    const spentValue = transactions.reduce((sum, transaction) => {
+      if (transaction.type !== 'EXPENSE') return sum
+      if (transaction.categoryId !== item.categoryId) return sum
+      const txDate = new Date(transaction.date)
+      if (txDate.getMonth() + 1 !== item.month || txDate.getFullYear() !== item.year) return sum
+      return sum + transaction.amount
+    }, 0)
+
+    return {
+      ...item,
+      spentValue,
+      remainingValue: item.amountLimit - spentValue,
+      spentPercentage: item.amountLimit > 0 ? Math.round((spentValue / item.amountLimit) * 100) : 0,
+    }
+  }, [budgets, transactions])
 
   const { balance, spentTotal, chartData } = useMemo(() => {
     const totals = new Map<string, ChartItem>()
@@ -111,7 +129,7 @@ function HomeView({ transactions, categories }: HomeProps) {
           <BudgetItem
             id={budget.id}
             categoryId={budget.categoryId}
-            categoryColor={categoryById.get(budget.categoryId)?.color ?? budget.category?.color}
+            categoryColor={categoryById.get(budget.categoryId)?.color}
             amountLimit={budget.amountLimit}
             name={budget.name}
             month={budget.month}
@@ -179,24 +197,26 @@ function HomeView({ transactions, categories }: HomeProps) {
               </View>
             )}
 
-            <View
-              style={{
-                position: 'absolute',
-                height: '100%',
-                width: '100%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                <ThemedText text="Total Gasto" variant="label" tone="muted" />
-                <ThemedText
-                  text={formatAmount(spentTotal)}
-                  variant="headline"
-                  style={{ fontWeight: 'bold', marginTop: 2 }}
-                />
+            {transactions[0] && (
+              <View
+                style={{
+                  position: 'absolute',
+                  height: '100%',
+                  width: '100%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                  <ThemedText text="Total Gasto" variant="label" tone="muted" />
+                  <ThemedText
+                    text={formatAmount(spentTotal)}
+                    variant="headline"
+                    style={{ fontWeight: 'bold', marginTop: 2 }}
+                  />
+                </View>
               </View>
-            </View>
+            )}
           </View>
         </ThemedContainer>
 

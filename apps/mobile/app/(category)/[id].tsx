@@ -15,7 +15,8 @@ import { ThemedFieldError } from '@/components/ui/ThemedFieldError'
 import { ThemedInputContainer } from '@/components/ui/ThemedInputContainer'
 import { ThemedInputForm } from '@/components/ui/ThemedInputForm'
 import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
-import { deleteCategory } from '@/services/api/category'
+import { categoryQueries } from '@/services/database/repository/category'
+import { syncDatabase } from '@/services/database/sync'
 import { ActivityIndicator } from 'react-native'
 
 export default function EditCategoryScreen() {
@@ -164,12 +165,13 @@ export default function EditCategoryScreen() {
             label: 'Confirmar',
             onPress: async () => {
               try {
-                await deleteCategory(id)
+                await categoryQueries.delete(id)
+                void syncDatabase()
                 dismissFeedback()
                 router.back()
               } catch (deleteError) {
-                console.error('Erro ao excluir orçamento:', deleteError)
-                setFeedbackMessage('Não foi possível excluir o orçamento. Tente novamente.')
+                console.error('Erro ao excluir categoria:', deleteError)
+                setFeedbackMessage('Não foi possível excluir a categoria. Tente novamente.')
               }
             },
           },

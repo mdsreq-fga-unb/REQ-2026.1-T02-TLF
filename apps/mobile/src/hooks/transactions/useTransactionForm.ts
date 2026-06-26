@@ -16,6 +16,8 @@ export type TransactionInitialValues = {
   date?: string
 }
 
+type SubmitOptions = { transferCategoryId?: string; categoryLabel?: string }
+
 export function useTransactionForm(initialValues?: TransactionInitialValues) {
   const [type, setType] = useState<TransactionType>(initialValues?.type ?? 'EXPENSE')
   const [amountCents, setAmountCents] = useState(initialValues?.amountCents ?? 0)
@@ -79,7 +81,7 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
     setSubmitError(null)
   }
 
-  const submit = async (onSuccess?: () => void, options?: { transferCategoryId?: string }) => {
+  const submit = async (onSuccess?: () => void, options?: SubmitOptions) => {
     setSubmitAttempted(true)
     if (!isValid || submitting) return
     if (type === 'TRANSFER' && destinationInstitutionId === institutionId) {
@@ -91,6 +93,7 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
 
     const finalCategoryId =
       type === 'TRANSFER' ? categoryId || options?.transferCategoryId || '' : categoryId
+    const finalCategoryLabel = options?.categoryLabel?.trim() || finalCategoryId
 
     if (!finalCategoryId) {
       setSubmitError('Category is required')
@@ -103,8 +106,8 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
         try {
           await transactionQueries.update(initialValues.id, {
             amount: amountCents,
-            description: notes.trim() || finalCategoryId || type,
-            type: type as any,
+            description: notes.trim() || finalCategoryLabel || type,
+            type: type,
             institutionId,
             categoryId: finalCategoryId,
             subcategoryId: subcategoryId || undefined,
@@ -119,9 +122,9 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
       } else {
         await transactionQueries.create({
           amount: amountCents,
-          description: notes.trim() || finalCategoryId || type,
+          description: notes.trim() || finalCategoryLabel || type,
           date: date,
-          type: type as any,
+          type: type,
           status: 'PENDING',
           institutionId,
           categoryId: finalCategoryId,
@@ -141,13 +144,12 @@ export function useTransactionForm(initialValues?: TransactionInitialValues) {
       onSuccess?.()
     } catch (error) {
       console.error('[TRANSACTION SUBMIT ERROR]', error)
-      const axiosError = error as any
-      if (axiosError?.response?.data) {
-        console.log(
-          '[TRANSACTION SUBMIT ERROR DETAILS]',
-          JSON.stringify(axiosError.response.data, null, 2),
-        )
-      }
+      // if (axiosError?.response?.data) {
+      //   console.log(
+      //     '[TRANSACTION SUBMIT ERROR DETAILS]',
+      //     JSON.stringify(axiosError.response.data, null, 2),
+      //   )
+      // }
       const message = error instanceof Error ? error.message : TRANSACTION_FORM_ERRORS.submit
       setSubmitError(message)
     } finally {

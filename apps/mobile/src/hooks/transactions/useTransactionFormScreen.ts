@@ -1,7 +1,8 @@
 import { router, useFocusEffect } from 'expo-router'
 import { useCallback, useMemo, useState } from 'react'
 import { useInstitutionsStore } from '@/stores/institutions'
-import { getCategories, type CategoryDTO } from '@/services/api/category'
+import type { CategoryDTO } from '@/services/api/category'
+import { categoryQueries } from '@/services/database/repository/category'
 import { institutionQueries } from '@/services/database/queries/institution'
 import { mapLocalInstitutionToListItem } from '@/utils/institutions/institutionMappers'
 import { TRANSACTION_FORM_COPY } from '@/utils/transactionForm'
@@ -37,8 +38,10 @@ export function useTransactionFormScreen({
 
   const loadCategories = useCallback(async () => {
     try {
-      const data = await getCategories()
-      setCategories(data)
+      const data = await categoryQueries.getAll()
+      setCategories(
+        data.map((item) => ({ id: item.id, name: item.name, icon: item.icon, color: item.color })),
+      )
     } catch (error) {
       console.error('[TransactionForm] Failed to load categories', error)
     }
@@ -139,9 +142,12 @@ export function useTransactionFormScreen({
       () => {
         setSuccessAlertVisible(true)
       },
-      { transferCategoryId },
+      {
+        transferCategoryId,
+        categoryLabel: selectedCategory?.label,
+      },
     )
-  }, [form, transferCategoryId])
+  }, [form, selectedCategory?.label, transferCategoryId])
 
   const openRecorrencias = useCallback(() => {
     router.push('/recorrencia')

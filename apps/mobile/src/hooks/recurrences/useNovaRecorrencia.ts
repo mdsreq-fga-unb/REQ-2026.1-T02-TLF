@@ -1,15 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
 import type { RecurrenceFrequency, RecurrenceType } from '@/components/finance/recurrences/types'
-import type { EditScope } from '@/hooks/recurrences/useEditScopeModal'
-import { getCategories, type CategoryDTO } from '@/services/api/category'
-import {
-  createRecurrence,
-  updateRecurrence,
-  RecurrenceApplyScope,
-  type RecurrenceUpdatePayload,
-} from '@/services/api/recurrences'
+import { categoryQueries } from '@/services/database/repository/category'
 import { institutionQueries } from '@/services/database/queries/institution'
+import { recurrenceQueries } from '@/services/database/repository/recurrece'
 import { subCategoryQueries } from '@/services/database/repository/subCategory'
 import { syncDatabase } from '@/services/database/sync'
 import { getApiErrorMessage } from '@/utils/apiErrorMessage'
@@ -62,8 +56,6 @@ export function useNovaRecorrencia() {
   }>()
 
   const isEditing = !!params.id
-
-  // Valor inicial (centavos) vindo dos params — usado para detectar alteração na edição.
   const initialAmountCents = (() => {
     if (params.amount) {
       const parsed = parseFloat(params.amount.replace(',', '.'))
@@ -72,7 +64,6 @@ export function useNovaRecorrencia() {
     return 0
   })()
 
-  // Recorrência é sempre despesa no backend (não há campo de tipo); mantido fixo.
   const type: RecurrenceType = 'EXPENSE'
   const [amountCents, setAmountCents] = useState<number>(initialAmountCents)
   const [keypadVisible, setKeypadVisible] = useState(false)
@@ -109,9 +100,9 @@ export function useNovaRecorrencia() {
 
   const loadOptions = useCallback(async () => {
     try {
-      const [localInstitutions, apiCategories, localSubcategories] = await Promise.all([
+      const [localInstitutions, localCategories, localSubcategories] = await Promise.all([
         institutionQueries.getAll(),
-        getCategories().catch((): CategoryDTO[] => []),
+        categoryQueries.getAll(),
         subCategoryQueries.getAll(),
       ])
 
@@ -122,7 +113,7 @@ export function useNovaRecorrencia() {
       setInstitutions(institutionOptions)
 
       setCategories(
-        apiCategories.map((category) => ({
+        localCategories.map((category) => ({
           id: category.id,
           name: category.name,
           icon: (category.icon as IconKey) ?? 'tag',
@@ -136,9 +127,8 @@ export function useNovaRecorrencia() {
       }
       setSubcategoriesByCategory(grouped)
 
-      // Define padrões na criação quando ainda não houver seleção.
       setInstitutionId((prev) => prev || institutionOptions[0]?.id || '')
-      setCategoryId((prev) => prev || apiCategories[0]?.id || '')
+      setCategoryId((prev) => prev || localCategories[0]?.id || '')
     } catch (loadError) {
       console.error('[Recurrences] Falha ao carregar opções do formulário', loadError)
     }
@@ -188,7 +178,6 @@ export function useNovaRecorrencia() {
       setShowSuccess(false)
       router.back()
     }, 1600)
-
     timeoutRef.current = timeout
     if (typeof (timeout as any)?.unref === 'function') {
       ;(timeout as any).unref()
@@ -210,24 +199,18 @@ export function useNovaRecorrencia() {
     description: description.trim(),
     amount: amountCents,
     chargeDate: parseInt(dueDay, 10),
-    startDate: (startDate as Date).toISOString(),
-    endDate: !isIndeterminate && endDate ? endDate.toISOString() : undefined,
+    startDate: startDate as Date,
+    endDate: !isIndeterminate && endDate ? endDate : undefined,
     isActive,
   })
 
-  // Converte uma data em 'yyyy-mm-dd' (mesmo formato que vem nos params da edição).
   const toYmd = (date: Date | null): string | undefined =>
     date
-      ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
-          date.getDate(),
-        ).padStart(2, '0')}`
+      ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
       : undefined
 
-  // Na edição enviamos só o que mudou (PATCH). Isso evita reenviar startDate/chargeDate
-  // inalterados, que o backend interpretaria como mudança de período e bloquearia (400)
-  // quando já existem transações geradas.
-  const buildUpdatePayload = (): RecurrenceUpdatePayload => {
-    const payload: RecurrenceUpdatePayload = {}
+  const buildUpdatePayload = () => {
+    const payload: any = {}
     const trimmedDescription = description.trim()
 
     if (trimmedDescription !== (params.description ?? '')) payload.description = trimmedDescription
@@ -239,38 +222,27 @@ export function useNovaRecorrencia() {
       payload.subCategoryId = subcategoryId || undefined
     }
     if (isActive !== (params.isActive !== '0')) payload.isActive = isActive
-
     if (toYmd(startDate) !== (params.startDate || undefined) && startDate) {
-      payload.startDate = startDate.toISOString()
+      payload.startDate = startDate
     }
-
     const currentEndYmd = isIndeterminate ? undefined : toYmd(endDate)
     if (currentEndYmd !== (params.endDate || undefined) && currentEndYmd && endDate) {
-      payload.endDate = endDate.toISOString()
+      payload.endDate = endDate
     }
-
     return payload
   }
 
-  const persist = async (scope?: EditScope) => {
+  const persist = async () => {
     if (submitting) return
     setFeedbackMessage(null)
     setSubmitting(true)
     try {
       if (isEditing && params.id) {
-        const applyScope = scope === 'all' ? RecurrenceApplyScope.ALL : RecurrenceApplyScope.FUTURE
-        await updateRecurrence(params.id, { ...buildUpdatePayload(), applyScope })
+        await recurrenceQueries.update(params.id, buildUpdatePayload())
       } else {
-        await createRecurrence(buildPayload())
+        await recurrenceQueries.create(buildPayload())
       }
-
-      // Reconcilia o banco local com o servidor (mesmo padrão de confirmar/desfazer).
-      try {
-        await syncDatabase()
-      } catch (syncError) {
-        console.warn('[OFFLINE-FIRST] Sync falhou após salvar recorrência.', syncError)
-      }
-
+      void syncDatabase()
       showSuccessAndGoBack()
     } catch (saveError) {
       console.error('[Recurrences] Falha ao salvar recorrência', saveError)
@@ -291,9 +263,9 @@ export function useNovaRecorrencia() {
     return persist()
   }
 
-  const handleScopeConfirm = (scope: EditScope) => {
+  const handleScopeConfirm = (_scope: unknown) => {
     setShowEditScopeModal(false)
-    return persist(scope)
+    return persist()
   }
 
   const subcategoryOptions = useMemo(

@@ -10,7 +10,8 @@ import { useThemeColor } from '@/hooks/useThemeColor'
 import { ProgressBar } from '../ProgressBar'
 import { formatCurrency } from '@/utils/formatters'
 import { useState } from 'react'
-import { BudgetService } from '@/services/api/budget'
+import { budgetQueries } from '@/services/database/repository/budget'
+import { syncDatabase } from '@/services/database/sync'
 import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
 import { useBudgetScreen } from '@/hooks/budget/useBudgetScreen'
 import { useColors } from '@/hooks/useColors'
@@ -144,7 +145,8 @@ export function BudgetItem({
             label: 'Confirmar',
             onPress: async () => {
               try {
-                await BudgetService.delete(id)
+                await budgetQueries.delete(id)
+                void syncDatabase()
                 useBudget.dismissFeedback()
                 onDelete?.(id)
               } catch (deleteError) {

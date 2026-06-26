@@ -22,6 +22,8 @@ const applyCategoryFields = (category: Category, input: CategoryInput | Category
 
 export const getCategoryById = async (id: string) => categoriesCollection().find(id)
 
+export const getAllCategories = async () => categoriesCollection().query().fetch()
+
 export const createCategory = async (input: CategoryInput) => {
   return database.write(async () => {
     return categoriesCollection().create((category) => {
@@ -41,13 +43,17 @@ export const updateCategory = async (id: string, input: CategoryUpdateInput) => 
 
 export const markCategoryAsDeleted = async (id: string) => {
   return database.write(async () => {
-    const [subCategories, budgets, category] = await Promise.all([
+    const [subCategories, budgets, recurrences, transactions, category] = await Promise.all([
       database.get('sub_categories').query(Q.where('category_id', id)).fetch(),
       database.get('budgets').query(Q.where('category_id', id)).fetch(),
+      database.get('recurrences').query(Q.where('category_id', id)).fetch(),
+      database.get('transactions').query(Q.where('category_id', id)).fetch(),
       getCategoryById(id),
     ])
 
     await database.batch([
+      ...transactions.map((record) => record.prepareMarkAsDeleted()),
+      ...recurrences.map((record) => record.prepareMarkAsDeleted()),
       ...subCategories.map((record) => record.prepareMarkAsDeleted()),
       ...budgets.map((record) => record.prepareMarkAsDeleted()),
       category.prepareMarkAsDeleted(),
@@ -57,6 +63,8 @@ export const markCategoryAsDeleted = async (id: string) => {
 
 export const categoryQueries = {
   table: CATEGORIES_TABLE,
+
+  getAll: getAllCategories,
   getById: getCategoryById,
   create: createCategory,
   update: updateCategory,

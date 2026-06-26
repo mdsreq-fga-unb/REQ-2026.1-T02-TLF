@@ -1,12 +1,10 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useFocusEffect } from 'expo-router'
 
-import { transactionsService } from '@/services/api/transactions/transactions.service'
+import { categoryQueries } from '@/services/database/repository/category'
 import { transactionQueries } from '@/services/database/repository/transaction'
-import {
-  mapApiTransactionToListItem,
-  mapLocalTransactionToListItem,
-} from '@/utils/records/transactionMappers'
+import { syncDatabase } from '@/services/database/sync'
+import { mapLocalTransactionToListItem } from '@/utils/records/transactionMappers'
 import { buildCategoryData, buildSummaryData } from '@/utils/records/recordsCalculations'
 import type {
   CategoryData,
@@ -24,23 +22,53 @@ export function useHomeScreen() {
       setIsLoading(true)
       setError(null)
 
-      const data = await transactionsService.list()
-      setTransactions(data.map(mapApiTransactionToListItem))
+      const [localTransactions, categories] = await Promise.all([
+        transactionQueries.getAll(),
+        categoryQueries.getAll(),
+      ])
+
+      const categoryLookup = new Map(
+        categories.map((category) => [category.id, { id: category.id, name: category.name }]),
+      )
+
+      setTransactions(
+        localTransactions.map((transaction) =>
+          mapLocalTransactionToListItem(transaction, categoryLookup),
+        ),
+      )
     } catch (loadError) {
       console.error('loadHomeTransactions failed', loadError)
-
-      try {
-        const localData = await transactionQueries.getAll()
-        setTransactions(localData.map(mapLocalTransactionToListItem))
-        setError('Sem conexão. Exibindo dados locais.')
-      } catch (localError) {
-        console.error('loadHomeTransactions local fallback failed', localError)
-        setTransactions([])
-        setError('Não foi possível carregar as transações.')
-      }
+      setTransactions([])
+      setError('Não foi possível carregar as transações.')
     } finally {
       setIsLoading(false)
     }
+
+    void (async () => {
+      try {
+        await syncDatabase()
+        const [refreshedTransactions, refreshedCategories] = await Promise.all([
+          transactionQueries.getAll(),
+          categoryQueries.getAll(),
+        ])
+        const refreshedLookup = new Map(
+          refreshedCategories.map((category) => [
+            category.id,
+            { id: category.id, name: category.name },
+          ]),
+        )
+        setTransactions(
+          refreshedTransactions.map((transaction) =>
+            mapLocalTransactionToListItem(transaction, refreshedLookup),
+          ),
+        )
+      } catch (syncError) {
+        console.warn(
+          '[OFFLINE-FIRST] Sincronização de transações indisponível no momento.',
+          syncError,
+        )
+      }
+    })()
   }, [])
 
   useFocusEffect(

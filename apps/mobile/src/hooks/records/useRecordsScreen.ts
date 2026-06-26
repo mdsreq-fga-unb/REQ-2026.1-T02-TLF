@@ -9,8 +9,9 @@ import type {
   TransactionListItem,
 } from '@/components/finance/records/types'
 import type { ThemedOverlayAlertAction } from '@/components/ui/ThemedOverlayAlert'
-import { transactionsService } from '@/services/api/transactions/transactions.service'
+import { categoryQueries } from '@/services/database/repository/category'
 import { transactionQueries } from '@/services/database/repository/transaction'
+import { syncDatabase } from '@/services/database/sync'
 import { TransactionType } from '@/services/database/models/transaction'
 import {
   buildCategoryData,
@@ -18,13 +19,9 @@ import {
   buildSummaryData,
   filterTransactions,
 } from '@/utils/records/recordsCalculations'
-import {
-  mapApiTransactionToListItem,
-  mapLocalTransactionToListItem,
-} from '@/utils/records/transactionMappers'
-import { router } from 'expo-router'
+import { mapLocalTransactionToListItem } from '@/utils/records/transactionMappers'
+import { router, useFocusEffect } from 'expo-router'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useFocusEffect } from 'expo-router'
 
 const USE_MOCK_TRANSACTIONS = false
 
@@ -49,14 +46,50 @@ export function useRecordsScreen() {
     try {
       setIsLoading(true)
 
-      const data = await transactionsService.list()
-      setTransactions(data.map(mapApiTransactionToListItem))
+      const [localTransactions, categories] = await Promise.all([
+        transactionQueries.getAll(),
+        categoryQueries.getAll(),
+      ])
+      const categoryLookup = new Map(
+        categories.map((category) => [category.id, { id: category.id, name: category.name }]),
+      )
+      setTransactions(
+        localTransactions.map((transaction) =>
+          mapLocalTransactionToListItem(transaction, categoryLookup),
+        ),
+      )
       setError(null)
+
+      void (async () => {
+        try {
+          await syncDatabase()
+          const [refreshedTransactions, refreshedCategories] = await Promise.all([
+            transactionQueries.getAll(),
+            categoryQueries.getAll(),
+          ])
+          const refreshedLookup = new Map(
+            refreshedCategories.map((category) => [
+              category.id,
+              { id: category.id, name: category.name },
+            ]),
+          )
+          setTransactions(
+            refreshedTransactions.map((transaction) =>
+              mapLocalTransactionToListItem(transaction, refreshedLookup),
+            ),
+          )
+        } catch (syncError) {
+          console.warn(
+            '[OFFLINE-FIRST] Sincronização de transações indisponível no momento.',
+            syncError,
+          )
+        }
+      })()
     } catch (loadError) {
       console.error('loadTransactions failed', loadError)
       try {
         const localData = await transactionQueries.getAll()
-        setTransactions(localData.map(mapLocalTransactionToListItem))
+        setTransactions(localData.map((transaction) => mapLocalTransactionToListItem(transaction)))
         setError('Sem conexao. Exibindo dados locais.')
       } catch {
         setError('Nao foi possivel carregar as transacoes.')
@@ -115,33 +148,14 @@ export function useRecordsScreen() {
       setTransactions((prev) => prev.filter((item) => item.id !== transactionId))
 
       try {
-        try {
-          await transactionQueries.delete(transactionId)
-        } catch {
-          console.warn(
-            '[OFFLINE-FIRST] Registro não encontrado localmente. Tentando excluir apenas na API.',
-          )
-        }
-
-        try {
-          await transactionsService.delete(transactionId)
-          setError(null)
-          setAlert({
-            title: 'Transação excluída',
-            message: 'A transação foi removida com sucesso.',
-            actions: [{ label: 'Entendi', onPress: dismissAlert }],
-          })
-        } catch (apiError) {
-          console.warn(
-            '[OFFLINE-FIRST] Falha ao excluir na API, o registro será sincronizado depois.',
-            apiError,
-          )
-          setAlert({
-            title: 'Excluído localmente',
-            message: 'Sem conexão. A alteração será sincronizada em breve.',
-            actions: [{ label: 'Entendi', onPress: dismissAlert }],
-          })
-        }
+        await transactionQueries.delete(transactionId)
+        void syncDatabase()
+        setError(null)
+        setAlert({
+          title: 'Transação excluída',
+          message: 'A exclusão foi salva localmente e será sincronizada quando houver conexão.',
+          actions: [{ label: 'Entendi', onPress: dismissAlert }],
+        })
       } catch (error) {
         console.error('Erro crítico no delete:', error)
         setTransactions(previousTransactions)

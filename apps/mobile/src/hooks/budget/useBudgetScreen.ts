@@ -1,7 +1,9 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useFocusEffect } from 'expo-router'
-import { BudgetService } from '@/services/api/budget'
-import { getCategories, type CategoryDTO } from '@/services/api/category'
+import type { CategoryDTO } from '@/services/api/category'
+import { budgetQueries } from '@/services/database/repository/budget'
+import { categoryQueries } from '@/services/database/repository/category'
+import { syncDatabase } from '@/services/database/sync'
 import { BudgetData, BudgetListItem, BudgetType } from 'types/types'
 import { formatCurrency } from '@/utils/formatters'
 import { getApiErrorMessage } from '@/utils/apiErrorMessage'
@@ -37,8 +39,27 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
 
   const loadCategories = useCallback(async () => {
     try {
-      const data = await getCategories()
-      setCategories(data)
+      const data = await categoryQueries.getAll()
+      setCategories(
+        data.map((item) => ({ id: item.id, name: item.name, icon: item.icon, color: item.color })),
+      )
+
+      void (async () => {
+        try {
+          await syncDatabase()
+          const refreshed = await categoryQueries.getAll()
+          setCategories(
+            refreshed.map((item) => ({
+              id: item.id,
+              name: item.name,
+              icon: item.icon,
+              color: item.color,
+            })),
+          )
+        } catch (syncError) {
+          console.warn('[OFFLINE-FIRST] Sincronização de categorias indisponível.', syncError)
+        }
+      })()
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Não foi possível carregar as categorias'
@@ -70,8 +91,36 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
 
   async function fetchBudgets() {
     try {
-      const response = await BudgetService.getAll()
-      setBudgets(response.data)
+      const data = await budgetQueries.getAll()
+      setBudgets(
+        data.map((budget) => ({
+          id: budget.id,
+          name: budget.name,
+          amountLimit: budget.amountLimit,
+          month: budget.month,
+          year: budget.year,
+          categoryId: budget.categoryId,
+        })),
+      )
+
+      void (async () => {
+        try {
+          await syncDatabase()
+          const refreshed = await budgetQueries.getAll()
+          setBudgets(
+            refreshed.map((budget) => ({
+              id: budget.id,
+              name: budget.name,
+              amountLimit: budget.amountLimit,
+              month: budget.month,
+              year: budget.year,
+              categoryId: budget.categoryId,
+            })),
+          )
+        } catch (syncError) {
+          console.warn('[OFFLINE-FIRST] Sincronização de orçamentos indisponível.', syncError)
+        }
+      })()
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred'
       setFeedbackMessage(errorMessage)
@@ -85,8 +134,7 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
   }
 
   async function fetchBudget(id: string) {
-    const response = await BudgetService.getById(id)
-    const budget = response.data
+    const budget = await budgetQueries.getById(id)
 
     setName(budget.name)
     setAmountLimit(budget.amountLimit)
@@ -144,7 +192,8 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
         categoryId,
       }
 
-      await BudgetService.create(payload)
+      await budgetQueries.create(payload)
+      void syncDatabase()
       reset()
       onSuccess?.()
     } catch (error) {
@@ -172,7 +221,8 @@ export function useBudgetScreen(initialValues?: BudgetInitialValues) {
         categoryId,
       }
 
-      await BudgetService.update(id, payload)
+      await budgetQueries.update(id, payload)
+      void syncDatabase()
       onSuccess?.()
     } catch (error) {
       console.error('[BudgetEditSubmit]', error)

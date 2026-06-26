@@ -7,14 +7,16 @@ import { useBudgetScreen } from '@/hooks/budget/useBudgetScreen'
 import { useFocusEffect } from 'expo-router'
 import { database } from '@/services/database'
 import { Category } from '@/services/database/models/category'
+import { Transaction } from '@/services/database/models/transaction'
 import { Q } from '@nozbe/watermelondb'
 import { withObservables } from '@nozbe/watermelondb/react'
 
 type BudgetsScreenProps = {
   categories: Category[]
+  transactions: Transaction[]
 }
 
-function BudgetsScreenView({ categories }: BudgetsScreenProps) {
+function BudgetsScreenView({ categories, transactions }: BudgetsScreenProps) {
   const useBudget = useBudgetScreen()
 
   useFocusEffect(
@@ -27,16 +29,38 @@ function BudgetsScreenView({ categories }: BudgetsScreenProps) {
     return new Map(categories.map((category) => [category.id, category.color]))
   }, [categories])
 
+  const budgetsWithUsage = useMemo(() => {
+    return useBudget.budgets.map((budget) => {
+      const spentValue = transactions.reduce((sum, transaction) => {
+        if (transaction.type !== 'EXPENSE') return sum
+        if (transaction.categoryId !== budget.categoryId) return sum
+        const txDate = new Date(transaction.date)
+        if (txDate.getMonth() + 1 !== budget.month || txDate.getFullYear() !== budget.year) {
+          return sum
+        }
+        return sum + transaction.amount
+      }, 0)
+
+      return {
+        ...budget,
+        spentValue,
+        remainingValue: budget.amountLimit - spentValue,
+        spentPercentage:
+          budget.amountLimit > 0 ? Math.round((spentValue / budget.amountLimit) * 100) : 0,
+      }
+    })
+  }, [transactions, useBudget.budgets])
+
   return (
     <ThemedBackground>
       <FlatList
-        data={useBudget.budgets}
+        data={budgetsWithUsage}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <BudgetItem
             id={item.id}
             categoryId={item.categoryId}
-            categoryColor={categoryById.get(item.categoryId) ?? item.category?.color}
+            categoryColor={categoryById.get(item.categoryId)}
             amountLimit={item.amountLimit}
             name={item.name}
             month={item.month}
@@ -57,9 +81,11 @@ function BudgetsScreenView({ categories }: BudgetsScreenProps) {
 
 const BudgetsScreen = withObservables([], () => {
   const categoriesCollection = database.get<Category>('categories')
+  const transactionsCollection = database.get<Transaction>('transactions')
 
   return {
     categories: categoriesCollection.query(Q.sortBy('name', 'asc')),
+    transactions: transactionsCollection.query(Q.sortBy('created_at', 'desc')),
   }
 })(BudgetsScreenView)
 

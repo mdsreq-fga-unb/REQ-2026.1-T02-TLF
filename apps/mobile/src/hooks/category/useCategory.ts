@@ -1,4 +1,6 @@
-import { CategoryDTO, createCategory, getCategories, updateCategory } from '@/services/api/category'
+import type { CategoryDTO } from '@/services/api/category'
+import { categoryQueries } from '@/services/database/repository/category'
+import { syncDatabase } from '@/services/database/sync'
 import { router, useFocusEffect } from 'expo-router'
 import { useState, useMemo, useCallback } from 'react'
 import { resolveIcon, type AppIcon } from '@/utils/icons'
@@ -189,8 +191,27 @@ export function useCategory() {
   const loadCategories = useCallback(async () => {
     try {
       setLoading(true)
-      const data = await getCategories()
-      setCategories(data)
+      const data = await categoryQueries.getAll()
+      setCategories(
+        data.map((item) => ({ id: item.id, name: item.name, icon: item.icon, color: item.color })),
+      )
+
+      void (async () => {
+        try {
+          await syncDatabase()
+          const refreshed = await categoryQueries.getAll()
+          setCategories(
+            refreshed.map((item) => ({
+              id: item.id,
+              name: item.name,
+              icon: item.icon,
+              color: item.color,
+            })),
+          )
+        } catch (syncError) {
+          console.warn('[OFFLINE-FIRST] Sincronização de categorias indisponível.', syncError)
+        }
+      })()
     } finally {
       setLoading(false)
     }
@@ -221,23 +242,25 @@ export function useCategory() {
   const dismissFeedback = useCallback(() => setFeedbackMessage(null), [])
 
   const handleCreateSubmit = async (name: string, icon: string, color: string) => {
-    await createCategory({
-      name,
-      icon,
-      color,
-    })
-
-    router.back()
+    try {
+      await categoryQueries.create({ name, icon, color })
+      void syncDatabase()
+      router.back()
+    } catch (error) {
+      console.error('[Category] Falha ao criar categoria', error)
+      setFeedbackMessage('Não foi possível salvar a categoria.')
+    }
   }
 
   const handleEditSubmit = async (id: string, name: string, icon: string, color: string) => {
-    await updateCategory(id, {
-      name,
-      icon,
-      color,
-    })
-
-    router.back()
+    try {
+      await categoryQueries.update(id, { name, icon, color })
+      void syncDatabase()
+      router.back()
+    } catch (error) {
+      console.error('[Category] Falha ao atualizar categoria', error)
+      setFeedbackMessage('Não foi possível atualizar a categoria.')
+    }
   }
 
   return {

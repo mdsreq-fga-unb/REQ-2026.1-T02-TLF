@@ -1,13 +1,21 @@
 import type { TransactionListItem } from '@/components/finance/records/types'
 import type { TransactionApiItem } from '@/services/api/transactions/transactions.types'
+import type { Category } from '@/services/database/models/category'
 import type { Transaction } from '@/services/database/models/transaction'
 
-export function mapLocalTransactionToListItem(transaction: Transaction): TransactionListItem {
+export type CategoryLookup = Map<string, Pick<Category, 'id' | 'name'>>
+
+export function mapLocalTransactionToListItem(
+  transaction: Transaction,
+  categoryLookup?: CategoryLookup,
+): TransactionListItem {
+  const category = transaction.categoryId ? categoryLookup?.get(transaction.categoryId) : undefined
+
   return {
     id: transaction.id,
     description: transaction.description,
-    category: transaction.categoryId || 'Sem categoria',
-    categoryId: transaction.categoryId,
+    category: category?.name ?? 'Sem categoria',
+    categoryId: transaction.categoryId ?? '',
     subcategoryId: transaction.subcategoryId || undefined,
     institutionId: transaction.institutionId,
     destinationInstitutionId: transaction.destinationInstitutionId || undefined,

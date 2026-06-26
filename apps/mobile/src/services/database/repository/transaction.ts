@@ -33,6 +33,7 @@ export type TransactionUpdateInput = Partial<TransactionInput>
 export type TransactionFilters = {
   institutionId?: string
   categoryId?: string
+  recurrenceId?: string
   status?: TransactionStatus
   type?: TransactionType
 }
@@ -78,6 +79,7 @@ export const getTransactionsByFilters = async (filters: TransactionFilters) => {
 
   if (filters.institutionId) conditions.push(Q.where('institution_id', filters.institutionId))
   if (filters.categoryId) conditions.push(Q.where('category_id', filters.categoryId))
+  if (filters.recurrenceId) conditions.push(Q.where('recurrence_id', filters.recurrenceId))
   if (filters.status) conditions.push(Q.where('status', filters.status))
   if (filters.type) conditions.push(Q.where('type', filters.type))
 
@@ -90,7 +92,7 @@ export const createTransaction = async (input: TransactionInput) => {
   return database.write(async () => {
     return transactionsCollection().create((transaction) => {
       if (input.id) {
-        ;(transaction as any)._raw.id = input.id
+        transaction._raw.id = input.id
       }
       applyTransactionFields(transaction, input)
     })

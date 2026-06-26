@@ -1,3 +1,4 @@
+import { Q } from '@nozbe/watermelondb'
 import { database } from '..'
 import { Recurrence } from '../models/recurrece'
 
@@ -36,6 +37,8 @@ const applyRecurrenceFields = (
 
 export const getRecurrenceById = async (id: string) => recurrencesCollection().find(id)
 
+export const getAllRecurrences = async () => recurrencesCollection().query().fetch()
+
 export const createRecurrence = async (input: RecurrenceInput) => {
   return database.write(async () => {
     return recurrencesCollection().create((recurrence) => {
@@ -56,12 +59,22 @@ export const updateRecurrence = async (id: string, input: RecurrenceUpdateInput)
 export const markRecurrenceAsDeleted = async (id: string) => {
   return database.write(async () => {
     const recurrence = await getRecurrenceById(id)
-    await recurrence.markAsDeleted()
+    const linkedTransactions = await database
+      .get('transactions')
+      .query(Q.where('recurrence_id', id))
+      .fetch()
+
+    await database.batch([
+      ...linkedTransactions.map((record) => record.prepareMarkAsDeleted()),
+      recurrence.prepareMarkAsDeleted(),
+    ])
   })
 }
 
 export const recurrenceQueries = {
   table: RECURRENCES_TABLE,
+
+  getAll: getAllRecurrences,
   getById: getRecurrenceById,
   create: createRecurrence,
   update: updateRecurrence,

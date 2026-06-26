@@ -2,18 +2,20 @@ import { useCallback, useEffect, useState } from 'react'
 import { router, useLocalSearchParams } from 'expo-router'
 import type { Recurrence } from '@/components/finance/recurrences/types'
 import type { PaymentHistoryEntry } from '@/utils/fixtures/recurrences'
-import { getCategories } from '@/services/api/category'
-import {
-  deleteRecurrence,
-  getRecurrenceById,
-  RecurrenceDeleteScope,
-} from '@/services/api/recurrences'
-import type { DeleteScope } from '@/hooks/recurrences/useDeleteRecurrenceModal'
+import { categoryQueries } from '@/services/database/repository/category'
+import { institutionQueries } from '@/services/database/queries/institution'
+import { recurrenceQueries } from '@/services/database/repository/recurrece'
+import { subCategoryQueries } from '@/services/database/repository/subCategory'
 import { syncDatabase } from '@/services/database/sync'
 import { useRecurrencesStore } from '@/stores/recurrences'
 import { getApiErrorMessage } from '@/utils/apiErrorMessage'
 import { getNextBillingLabel } from '@/utils/recurrences/dates'
-import { buildCategoryLookup, mapApiRecurrenceToUi } from '@/utils/recurrences/recurrenceMappers'
+import {
+  buildCategoryLookup,
+  buildInstitutionLookup,
+  buildSubcategoryLookup,
+  mapLocalRecurrenceToUi,
+} from '@/utils/recurrences/recurrenceMappers'
 import type { IconKey } from '@/utils/icons'
 
 export function useRecorrenciaDetails() {
@@ -30,11 +32,38 @@ export function useRecorrenciaDetails() {
     if (!id) return
     try {
       setError(null)
-      const [categories, detail] = await Promise.all([
-        getCategories().catch(() => []),
-        getRecurrenceById(id),
+      const [categories, institutions, subcategories, recurrenceRecord] = await Promise.all([
+        categoryQueries.getAll(),
+        institutionQueries.getAll(),
+        subCategoryQueries.getAll(),
+        recurrenceQueries.getById(id),
       ])
-      setRecurrence(mapApiRecurrenceToUi(detail, buildCategoryLookup(categories)))
+      setRecurrence(
+        mapLocalRecurrenceToUi(
+          recurrenceRecord,
+          buildCategoryLookup(
+            categories.map((item) => ({
+              id: item.id,
+              name: item.name,
+              icon: item.icon,
+              color: item.color,
+            })),
+          ),
+          buildInstitutionLookup(institutions.map((item) => ({ id: item.id, name: item.name }))),
+          buildSubcategoryLookup(subcategories.map((item) => ({ id: item.id, name: item.name }))),
+        ),
+      )
+
+      void (async () => {
+        try {
+          await syncDatabase()
+        } catch (syncError) {
+          console.warn(
+            '[OFFLINE-FIRST] Sincronização de detalhes da recorrência indisponível.',
+            syncError,
+          )
+        }
+      })()
     } catch (loadError) {
       console.error('[Recurrences] Falha ao carregar detalhes', loadError)
       setError(getApiErrorMessage(loadError, 'Não foi possível carregar a recorrência.'))
@@ -60,7 +89,6 @@ export function useRecorrenciaDetails() {
   const icon: IconKey = recurrence?.categoryIcon ?? 'tag'
   const iconColor = recurrence?.categoryColor ?? '#4A5060'
 
-  // Histórico de pagamentos ainda não é exposto pela API.
   const history: PaymentHistoryEntry[] = []
   const annualProjection = amount * 12
   const nextBillingLabel = getNextBillingLabel(dueDay)
@@ -90,19 +118,11 @@ export function useRecorrenciaDetails() {
     })
   }
 
-  const handleDeleteConfirm = async (scope: DeleteScope) => {
+  const handleDeleteConfirm = async (_scope: any) => {
     if (!id) return
-    const deleteScope = scope === 'remove' ? RecurrenceDeleteScope.ALL : RecurrenceDeleteScope.THIS
     try {
-      await deleteRecurrence(id, deleteScope)
-
-      // Reconcilia o banco local com o servidor (mesmo padrão de confirmar/desfazer).
-      try {
-        await syncDatabase()
-      } catch (syncError) {
-        console.warn('[OFFLINE-FIRST] Sync falhou após excluir recorrência.', syncError)
-      }
-
+      await recurrenceQueries.delete(id)
+      void syncDatabase()
       setPendingDeleteId(id)
       setShowDeleteModal(false)
       router.back()

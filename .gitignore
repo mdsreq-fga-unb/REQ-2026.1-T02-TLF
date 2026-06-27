@@ -1,13 +1,76 @@
 site/
-.DS_Store
-.env
 venv/
 __pycache__/
 *.pyc
+.python-version
+
+# OS and editors
+.DS_Store
+*.pem
 .vscode/
 .idea/
-.python-version
-node_modules
-.venv
+
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.*
+.env*.local
+!.env.example
+!**/.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build output and caches
+dist/
+build/
+coverage/
+web-build/
+.turbo/
+*.tsbuildinfo
 app.json
+
+# Prisma
+generated/
+
+# Expo / React Native
+.expo/
+expo-env.d.ts
+.metro-health-check*
+
+# Generated native mobile projects
 android
+/apps/mobile/android/
+/apps/mobile/ios/
+
+# Android / iOS signing and tooling
+android
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+app.json
+
+# Python / MkDocs
+site/
+venv/
+.venv
+__pycache__/
+*.pyc
+.python-version
+
+# OS and editors
+.DS_Store
+*.pem
+.vscode/
+.idea/

@@ -12,7 +12,9 @@
 </p>
 
 ---
+
 ## 🌐 Documentação Oficial
+
 Nosso portal de documentação, está disponível em: 👉 https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/
 
 ---
@@ -66,16 +68,19 @@ Uma aplicação que centraliza o controle financeiro do usuário, permitindo:
 ## 🛠️ Tecnologias
 
 ### Frontend
+
 - React Native (Expo)
 - Victory Native
 
 ### Backend
+
 - Node.js
 - NestJS
 - PostgreSQL
 - Prisma
 
 ### Outros
+
 - Supabase Auth
 - Jest
 - Swagger
@@ -87,18 +92,18 @@ Uma aplicação que centraliza o controle financeiro do usuário, permitindo:
 
 ### Pré-requisitos
 
-- Node.js (>= 18)
+- Node.js (>= 20)
 - npm ou yarn
-- Expo CLI
+- Xcode / Android Studio (para emuladores) — desenvolvimento do app Expo
 
 ### 🔧 Instalação
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/tlt-financas.git
+git clone https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF.git
 
-# Acesse o projeto
-cd tlt-financas
+# Acesse o projeto (o nome da pasta segue o repositório)
+cd REQ-2026.1-T02-TLF
 ```
 
 ### ▶️ Rodando o frontend (mobile)
@@ -111,18 +116,6 @@ cd tlt-financas
 
 ```bash
 🚧 Em desenvolvimento
-```
-
-### ▶️ Servindo a documentação MkDocs
-
-Para servir a documentação localmente com o tema Material:
-
-```bash
-# Na raiz do projeto
-python3 -m venv .venv
-. .venv/bin/activate
-python3 -m pip install -r requirements.txt
-mkdocs serve
 ```
 
 ---
@@ -142,14 +135,14 @@ O projeto foi dividido em **13 iterações**:
 
 ## 👥 Equipe
 
-| Nome | Função |
-|------|--------|
-| Gabriel Mota | Gerente de Projeto / DevOps |
-| Lucas Fujimoto | Frontend |
-| Guilherme Ventura | Frontend |
-| Danilo de Melo | Backend |
-| Daniel Lira | Backend / Requisitos |
-| Tiago Lyra | Backend |
+| Nome              | Função                      |
+| ----------------- | --------------------------- |
+| Gabriel Mota      | Gerente de Projeto / DevOps |
+| Lucas Fujimoto    | Frontend                    |
+| Guilherme Ventura | Frontend                    |
+| Danilo de Melo    | Backend                     |
+| Daniel Lira       | Backend / Requisitos        |
+| Tiago Lyra        | Backend                     |
 
 ---
 

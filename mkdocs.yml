@@ -36,10 +36,6 @@ theme:
 plugins:
   - search
 
-extra:
-  version:
-    provider: mike
-
 nav:
   - Início: index.md
   - Visão do Produto e Projeto:

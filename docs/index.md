@@ -15,6 +15,7 @@ Este site tem a funcionalidade de mostrar a documentação do projeto **TLT Fina
 | 12/04/26 | 1.2    | Documento de Visão do produto e projeto atualizado para entrega da unidade 1 | Equipe TLT |
 | 16/05/26 | 1.3    | Documento de Visão do produto e projeto atualizado para entrega da unidade 2 | Equipe TLT |
 | 14/06/26 | 1.4    | Documento de Visão do produto e projeto atualizado para entrega da unidade 3 | Equipe TLT |
+| 14/06/26 | 1.5    | Documento de Visão do produto e projeto atualizado para entrega da unidade 4 | Equipe TLT |
 
 ---
 

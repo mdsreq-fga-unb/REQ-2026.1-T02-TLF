@@ -36,10 +36,6 @@ theme:
 plugins:
   - search
 
-extra:
-  version:
-    provider: mike
-
 nav:
   - Início: index.md
   - Visão do Produto e Projeto:
@@ -58,10 +54,10 @@ nav:
       - 12.2-Unidade 2: visao/12-unidade-2.md
       - 12.3-Unidade 3: visao/12-unidade-3.md
       - Referências: visao/referencias.md
-  - Entregas:
-      - 1-Apresentações: entregas/apresentacao.md
-      - 2-Reuniões: entregas/reunioes.md
-      - 3-Coverage: entregas/Cobertura.md
-      - 4-Prototipo: entregas/prototipo.md
+  - Evidencias:
+      - 1-Reuniões: entregas/reunioes.md
+      - 2-Coverage: entregas/Cobertura.md
+      - 3-Prototipo: entregas/prototipo.md
+  - Apresentações: entregas/apresentacao.md
 
       

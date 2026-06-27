@@ -3,12 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - docs/unidade-3
+      - main
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Versão (ex: unidade-3)'
-        required: true
 
 permissions:
   contents: write
@@ -34,7 +30,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Deploy version with mike
-        run: |
-          mike deploy --push --update-aliases "${{ github.event.inputs.version || 'unidade-3' }}" latest
-          mike set-default --push latest
+      - name: Deploy with mkdocs
+        run: mkdocs gh-deploy --force

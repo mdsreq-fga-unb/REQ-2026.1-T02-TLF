@@ -69,6 +69,8 @@ Os requisitos funcionais descrevem as funcionalidades específicas que o sistema
 - **RF31** – gerar e exibir dica financeira com IA. (UC31)
 - **RF32** – disponibilizar PDFs de educação financeira. (UC32)
 
+<a id="72-lista-de-requisitos-nao-funcionais"></a>
+
 ## 7.2 Lista de Requisitos Não Funcionais
 
 ### Segurança
@@ -86,7 +88,7 @@ Os requisitos funcionais descrevem as funcionalidades específicas que o sistema
 
 ### Desempenho
 
-- **RNF08** – Todas telas devem ser carregadas em até 3 segundos.
+- **RNF08** – Todas telas devem ser carregadas em até 5 segundos.
 
 ### Confiabilidade
 

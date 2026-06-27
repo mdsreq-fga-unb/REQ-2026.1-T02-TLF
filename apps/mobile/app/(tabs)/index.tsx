@@ -15,6 +15,7 @@ import { formatCurrency } from '@/utils/formatters'
 import { resolveCategoryColor } from '@/utils/records/categoryColors'
 import { Q } from '@nozbe/watermelondb'
 import { withObservables } from '@nozbe/watermelondb/react'
+import { runNotificationChecks } from '@/services/notification/notification-checker'
 import { router, useFocusEffect } from 'expo-router'
 import { useCallback, useMemo } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
@@ -40,6 +41,7 @@ function HomeView({ transactions, categories }: HomeProps) {
   useFocusEffect(
     useCallback(() => {
       fetchBudgets()
+      void runNotificationChecks()
     }, [fetchBudgets]),
   )
 

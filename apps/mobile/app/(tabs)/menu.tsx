@@ -1,14 +1,55 @@
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
-import { notificationTypes } from '@/services/database/models/notification'
-import { triggerNotification } from '@/services/notification/notification.service'
-import { router } from 'expo-router'
 import { ThemedListItem } from '@/components/ui/ThemedListItem'
-import { FileText, ChartColumnStacked, LogOut } from 'lucide-react-native'
 import { ThemedSimpleHeader } from '@/components/ui/ThemedSimpleHeader'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { ThemedContainer } from '@/components/ui/ThemedContainer'
+import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
+import { deleteAccountAndSignOut, signOut } from '@/services/api/auth-session'
+import { router } from 'expo-router'
+import { ChartColumnStacked, FileText, LogOut, Trash2 } from 'lucide-react-native'
+import { useCallback, useState } from 'react'
 
-export default function BudgetsScreen() {
+export default function MenuScreen() {
+  const [isSigningOut, setIsSigningOut] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null)
+
+  const handleLogout = useCallback(async () => {
+    if (isSigningOut) return
+
+    setIsSigningOut(true)
+    try {
+      await signOut()
+      router.replace('/(auth)/login')
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Não foi possível sair. Tente novamente.'
+      setFeedbackMessage(message)
+    } finally {
+      setIsSigningOut(false)
+    }
+  }, [isSigningOut])
+
+  const handleDeleteAccount = useCallback(async () => {
+    if (isDeleting) return
+
+    setIsDeleting(true)
+    try {
+      await deleteAccountAndSignOut()
+      setShowDeleteConfirm(false)
+      router.replace('/(auth)/login')
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Não foi possível excluir a conta. Tente novamente.'
+      setFeedbackMessage(message)
+    } finally {
+      setIsDeleting(false)
+    }
+  }, [isDeleting])
+
   return (
     <ThemedBackground>
       <ThemedSimpleHeader text="Menu" />
@@ -25,23 +66,45 @@ export default function BudgetsScreen() {
           onPress={() => router.push('/notifications')}
         />
         <ThemedListItem
-          text="Criar notificações"
-          icon={FileText}
-          onPress={() =>
-            triggerNotification({
-              type: notificationTypes.BUDGET_WARNING,
-              title: 'O seu orçamento pode ser excedido em breve',
-              description: 'Verifique as suas transações e ajuste o seu orçamento',
-              icon: 'alert-circle',
-              color: 'red',
-              referenceId: Math.random().toString(36).substring(2, 15),
-              referenceType: 'budget',
-            })
-          }
+          text={isSigningOut ? 'Saindo...' : 'Logout'}
+          icon={LogOut}
+          onPress={() => void handleLogout()}
         />
-        {/* TODO: fazer logout de vdd */}
-        <ThemedListItem text="Logout*" icon={LogOut} onPress={() => router.push('/(auth)/login')} />
+        <ThemedListItem
+          text={isDeleting ? 'Excluindo...' : 'Excluir conta'}
+          icon={Trash2}
+          onPress={() => setShowDeleteConfirm(true)}
+        />
       </ThemedContainer>
+
+      <ThemedOverlayAlert
+        visible={showDeleteConfirm}
+        onRequestClose={() => setShowDeleteConfirm(false)}
+        message="Esta ação é permanente. Todos os seus dados serão removidos."
+        actions={[
+          {
+            label: 'Cancelar',
+            onPress: () => setShowDeleteConfirm(false),
+          },
+          {
+            label: 'Excluir',
+            onPress: () => void handleDeleteAccount(),
+          },
+        ]}
+      >
+        <ThemedText
+          variant="headline"
+          text="Excluir conta?"
+          style={{ textAlign: 'center', width: '100%' }}
+        />
+      </ThemedOverlayAlert>
+
+      <ThemedOverlayAlert
+        visible={feedbackMessage != null}
+        onRequestClose={() => setFeedbackMessage(null)}
+        message={feedbackMessage ?? ''}
+        actions={[{ label: 'Entendi', onPress: () => setFeedbackMessage(null) }]}
+      />
     </ThemedBackground>
   )
 }

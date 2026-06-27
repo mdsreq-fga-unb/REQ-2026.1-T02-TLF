@@ -7,8 +7,10 @@ type AuthState = {
   accessToken: string | null
   refreshToken: string | null
   isAuthenticated: boolean
-  setSession: (user: User, acessToken: string, refreshToken: string) => void
+  isBootstrapping: boolean
+  setSession: (user: User, accessToken: string, refreshToken: string) => void
   logout: () => void
+  finishBootstrap: () => void
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -16,10 +18,16 @@ export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
   refreshToken: null,
   isAuthenticated: false,
+  isBootstrapping: true,
   setSession: (user, accessToken, refreshToken) =>
-    //TODO: Should we save refresh token and access token in the store? Considering that we already save it in the secure store?
     set({ user, accessToken, refreshToken, isAuthenticated: true }),
   logout: () => {
-    set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false })
+    set({
+      user: null,
+      accessToken: null,
+      refreshToken: null,
+      isAuthenticated: false,
+    })
   },
+  finishBootstrap: () => set({ isBootstrapping: false }),
 }))

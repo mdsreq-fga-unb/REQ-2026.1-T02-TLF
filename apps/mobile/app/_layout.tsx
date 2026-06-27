@@ -8,15 +8,21 @@ import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useFonts } from 'expo-font'
 import { useEffect } from 'react'
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, AppState } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useSync } from '@/hooks/sync/useSync'
+import { useAuthBootstrap } from '@/hooks/auth/useAuthBootstrap'
+import { useAuthStore } from '@/stores/auth'
+import { runNotificationChecks } from '@/services/notification/notification-checker'
 
 void SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
+  useAuthBootstrap()
   useSync()
+
   const colors = useThemeColor()
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
 
   const [fontsLoaded] = useFonts(fonts.Manrope.files)
 
@@ -25,6 +31,18 @@ export default function RootLayout() {
       void SplashScreen.hideAsync()
     }
   }, [fontsLoaded])
+
+  useEffect(() => {
+    if (!isAuthenticated) return
+
+    const subscription = AppState.addEventListener('change', (nextState) => {
+      if (nextState === 'active') {
+        void runNotificationChecks()
+      }
+    })
+
+    return () => subscription.remove()
+  }, [isAuthenticated])
 
   if (!fontsLoaded) {
     return (

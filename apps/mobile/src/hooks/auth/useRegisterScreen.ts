@@ -1,4 +1,5 @@
 import { register as registerUser } from '@/services/api/auth'
+import { runNotificationChecks } from '@/services/notification/notification-checker'
 import { useAuthStore } from '@/stores/auth'
 import { router } from 'expo-router'
 import { useCallback, useMemo, useState } from 'react'
@@ -47,6 +48,7 @@ export function useRegisterScreen() {
     try {
       const session = await registerUser({ name, email, password })
       setSession(session.user, session.accessToken, session.refreshToken)
+      void runNotificationChecks()
       router.replace('/(tabs)')
     } catch (err) {
       const message =

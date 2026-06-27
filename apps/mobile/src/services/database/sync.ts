@@ -8,13 +8,24 @@ let isSyncing = false
 
 const isNetworkError = (error: unknown) => axios.isAxiosError(error) && !error.response
 
+const isClientError = (error: unknown) =>
+  axios.isAxiosError(error) &&
+  error.response?.status != null &&
+  error.response.status >= 400 &&
+  error.response.status < 500
+
+function toLastUpdatedAtParam(lastPulledAt: number | undefined) {
+  if (lastPulledAt == null || Number.isNaN(lastPulledAt)) {
+    return new Date(0).toISOString()
+  }
+
+  return new Date(lastPulledAt).toISOString()
+}
+
 async function runSync(): Promise<void> {
   await synchronize({
     database,
     migrationsEnabledAtVersion: 2,
-    // O backend particiona created/updated por timestamp (createdAt > lastPulledAt). Com qualquer
-    // descompasso de relógio entre device e servidor, um registro já existente pode voltar como
-    // "created" — isso trata esse caso como update em vez de logar erro de diagnóstico.
     sendCreatedAsUpdated: true,
 
     pullChanges: async ({ lastPulledAt }) => {
@@ -36,7 +47,7 @@ async function runSync(): Promise<void> {
         { changes: mapPushChanges(changes) },
         {
           params: {
-            lastUpdatedAt: new Date(lastPulledAt).toISOString(),
+            lastUpdatedAt: toLastUpdatedAtParam(lastPulledAt),
           },
         },
       )
@@ -53,15 +64,15 @@ export async function syncDatabase(): Promise<void> {
   } catch (error) {
     if (isNetworkError(error)) return
 
-    console.error('Sync falhou, tentando retry:', error)
-
-    try {
-      await runSync()
-    } catch (retryError) {
-      if (!isNetworkError(retryError)) {
-        console.error('Sync falhou após retry:', retryError)
-      }
+    if (isClientError(error)) {
+      console.warn(
+        '[sync] Falha de sincronização:',
+        axios.isAxiosError(error) ? error.response?.status : error,
+      )
+      return
     }
+
+    console.error('Sync falhou:', error)
   } finally {
     isSyncing = false
   }

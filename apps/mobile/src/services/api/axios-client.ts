@@ -15,6 +15,10 @@ export const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
+function isUnauthorizedError(error: unknown): boolean {
+  return axios.isAxiosError(error) && error.response?.status === 401
+}
+
 api.interceptors.request.use(async (config) => {
   const token = await getAccessToken()
   if (token) config.headers.Authorization = `Bearer ${token}`
@@ -36,7 +40,6 @@ api.interceptors.response.use(
 
       const refreshToken = await getRefreshToken()
       if (!refreshToken) {
-        await clearTokens()
         return Promise.reject(error)
       }
 
@@ -48,7 +51,9 @@ api.interceptors.response.use(
         original.headers.Authorization = `Bearer ${data.accessToken}`
         return api(original)
       } catch (refreshError) {
-        await clearTokens()
+        if (isUnauthorizedError(refreshError)) {
+          await clearTokens()
+        }
         return Promise.reject(refreshError)
       }
     }

@@ -5,6 +5,12 @@ import { router } from 'expo-router'
 import { useLoginScreen } from './useLoginScreen'
 
 jest.mock('@/services/api/auth')
+jest.mock('@/services/api/token-storage', () => ({
+  getUser: jest.fn().mockResolvedValue(null),
+}))
+jest.mock('@/services/notification/notification-checker', () => ({
+  runNotificationChecks: jest.fn().mockResolvedValue(undefined),
+}))
 jest.mock('expo-router', () => ({
   router: { replace: jest.fn(), back: jest.fn(), canGoBack: jest.fn(() => false) },
 }))

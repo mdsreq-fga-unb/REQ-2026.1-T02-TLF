@@ -46,6 +46,11 @@ export default function LoginScreen() {
             source={NamedLogo}
             style={{ width: layout.authLogoSize, height: layout.authLogoSize }}
           />
+          <ThemedText
+            variant="title"
+            text="TLT FINANÇAS"
+            style={{ textAlign: 'center', marginBottom: spacing.sm }}
+          />
           <ThemedContainer variant="transparent" style={{ marginBottom: spacing.lg }}>
             <ThemedContainer variant="transparent" style={{ gap: 0, padding: 0 }}>
               <ThemedText variant="headline" text="Bem vindo de volta," />
@@ -98,7 +103,6 @@ export default function LoginScreen() {
                 style={{ textAlign: 'center' }}
               />
               <ThemedLink replace href="/(auth)/register" text="Crie uma conta aqui" />
-              <ThemedLink replace href="/(tabs)/" text="tabs" />
             </ThemedContainer>
           </ThemedContainer>
         </ThemedContainer>

@@ -7,8 +7,9 @@
   "license": "MIT",
   "scripts": {
     "dev": "nest start --watch",
-    "build": "nest build",
-    "start": "node dist/main",
+    "build": "prisma generate && nest build",
+    "start": "node dist/src/main",
+    "start:prod": "npm run db:deploy && node dist/src/main",
     "lint": "eslint \"{src,test}/**/*.ts\" --fix",
     "test": "prisma generate && jest --passWithNoTests",
     "test:unit": "jest --testPathPattern=unit --passWithNoTests",

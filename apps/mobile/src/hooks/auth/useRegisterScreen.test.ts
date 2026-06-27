@@ -5,6 +5,9 @@ import { router } from 'expo-router'
 import { useRegisterScreen } from './useRegisterScreen'
 
 jest.mock('@/services/api/auth')
+jest.mock('@/services/notification/notification-checker', () => ({
+  runNotificationChecks: jest.fn().mockResolvedValue(undefined),
+}))
 jest.mock('expo-router', () => ({
   router: { replace: jest.fn(), back: jest.fn(), canGoBack: jest.fn(() => false) },
 }))

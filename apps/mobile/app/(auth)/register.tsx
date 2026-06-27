@@ -56,6 +56,11 @@ export default function RegisterScreen() {
             source={NamedLogo}
             style={{ width: layout.authLogoSize, height: layout.authLogoSize }}
           />
+          <ThemedText
+            variant="title"
+            text="TLT FINANÇAS"
+            style={{ textAlign: 'center', marginBottom: spacing.sm }}
+          />
           <ThemedContainer variant="transparent" style={{ marginBottom: spacing.lg }}>
             <ThemedContainer variant="transparent" style={{ gap: 0, padding: 0 }}>
               <ThemedText variant="headline" text="Criar uma conta," />

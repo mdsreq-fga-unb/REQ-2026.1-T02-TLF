@@ -1,4 +1,7 @@
 import { login } from '@/services/api/auth'
+import { getUser } from '@/services/api/token-storage'
+import { database } from '@/services/database'
+import { runNotificationChecks } from '@/services/notification/notification-checker'
 import { useAuthStore } from '@/stores/auth'
 import { router } from 'expo-router'
 import { useCallback, useMemo, useState } from 'react'
@@ -26,8 +29,17 @@ export function useLoginScreen() {
     }
     setIsSubmitting(true)
     try {
+      const previousUser = await getUser()
       const response = await login(email, password)
+
+      if (previousUser && previousUser.id !== response.user.id) {
+        await database.write(async () => {
+          await database.unsafeResetDatabase()
+        })
+      }
+
       setSession(response.user, response.accessToken, response.refreshToken)
+      void runNotificationChecks()
       router.replace('/(tabs)')
     } catch (err) {
       const message =

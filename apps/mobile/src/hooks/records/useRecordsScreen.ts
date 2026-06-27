@@ -9,13 +9,9 @@ import type {
   TransactionListItem,
 } from '@/components/finance/records/types'
 import type { ThemedOverlayAlertAction } from '@/components/ui/ThemedOverlayAlert'
-import {
-  deleteTransaction,
-  listTransactions,
-  listTransactionsByCategory,
-  listTransactionsByType,
-} from '@/services/api/transactions'
+import { categoryQueries } from '@/services/database/repository/category'
 import { transactionQueries } from '@/services/database/repository/transaction'
+import { syncDatabase } from '@/services/database/sync'
 import { TransactionType } from '@/services/database/models/transaction'
 import {
   buildCategoryData,
@@ -23,14 +19,11 @@ import {
   buildSummaryData,
   filterTransactions,
 } from '@/utils/records/recordsCalculations'
-import {
-  mapApiTransactionToListItem,
-  mapLocalTransactionToListItem,
-} from '@/utils/records/transactionMappers'
-import { router } from 'expo-router'
+import { mapLocalTransactionToListItem } from '@/utils/records/transactionMappers'
+import { router, useFocusEffect } from 'expo-router'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-const USE_MOCK_TRANSACTIONS = true
+const USE_MOCK_TRANSACTIONS = false
 
 export type RecordsScreenAlert = {
   title?: string
@@ -47,60 +40,78 @@ export function useRecordsScreen() {
   const [searchQuery, setSearchQuery] = useState('')
   const [alert, setAlert] = useState<RecordsScreenAlert | null>(null)
 
-  useEffect(() => {
-    if (!USE_MOCK_TRANSACTIONS) return
-    setTransactions(mockTransactions)
-    setIsLoading(false)
-    setError(null)
+  const loadTransactions = useCallback(async () => {
+    if (USE_MOCK_TRANSACTIONS) return
+
+    try {
+      setIsLoading(true)
+
+      const [localTransactions, categories] = await Promise.all([
+        transactionQueries.getAll(),
+        categoryQueries.getAll(),
+      ])
+      const categoryLookup = new Map(
+        categories.map((category) => [category.id, { id: category.id, name: category.name }]),
+      )
+      setTransactions(
+        localTransactions.map((transaction) =>
+          mapLocalTransactionToListItem(transaction, categoryLookup),
+        ),
+      )
+      setError(null)
+
+      void (async () => {
+        try {
+          await syncDatabase()
+          const [refreshedTransactions, refreshedCategories] = await Promise.all([
+            transactionQueries.getAll(),
+            categoryQueries.getAll(),
+          ])
+          const refreshedLookup = new Map(
+            refreshedCategories.map((category) => [
+              category.id,
+              { id: category.id, name: category.name },
+            ]),
+          )
+          setTransactions(
+            refreshedTransactions.map((transaction) =>
+              mapLocalTransactionToListItem(transaction, refreshedLookup),
+            ),
+          )
+        } catch (syncError) {
+          console.warn(
+            '[OFFLINE-FIRST] Sincronização de transações indisponível no momento.',
+            syncError,
+          )
+        }
+      })()
+    } catch (loadError) {
+      console.error('loadTransactions failed', loadError)
+      try {
+        const localData = await transactionQueries.getAll()
+        setTransactions(localData.map((transaction) => mapLocalTransactionToListItem(transaction)))
+        setError('Sem conexao. Exibindo dados locais.')
+      } catch {
+        setError('Nao foi possivel carregar as transacoes.')
+      }
+    } finally {
+      setIsLoading(false)
+    }
   }, [])
 
   useEffect(() => {
-    if (USE_MOCK_TRANSACTIONS) return
-    let isActive = true
-
-    const loadTransactions = async () => {
-      try {
-        setIsLoading(true)
-        let data
-
-        if (categoryFilter !== 'Todas') {
-          data = await listTransactionsByCategory(categoryFilter)
-        } else if (typeFilter !== 'ALL') {
-          data = await listTransactionsByType(typeFilter)
-        } else {
-          data = await listTransactions()
-        }
-
-        if (!isActive) return
-
-        setTransactions(data.map(mapApiTransactionToListItem))
-        setError(null)
-      } catch (loadError) {
-        if (!isActive) return
-
-        try {
-          const localData = await transactionQueries.getAll()
-
-          if (!isActive) return
-
-          setTransactions(localData.map(mapLocalTransactionToListItem))
-          setError('Sem conexao. Exibindo dados locais.')
-        } catch (localError) {
-          console.error('Erro ao carregar transacoes:', loadError)
-          console.error('Erro ao carregar transacoes locais:', localError)
-          setError('Nao foi possivel carregar as transacoes.')
-        }
-      } finally {
-        if (isActive) setIsLoading(false)
-      }
+    if (USE_MOCK_TRANSACTIONS) {
+      setTransactions(mockTransactions)
+      setIsLoading(false)
+      setError(null)
     }
+  }, [])
 
-    loadTransactions()
-
-    return () => {
-      isActive = false
-    }
-  }, [categoryFilter, typeFilter])
+  useFocusEffect(
+    useCallback(() => {
+      loadTransactions()
+    }, [loadTransactions]),
+  )
 
   const dismissAlert = useCallback(() => setAlert(null), [])
 
@@ -111,8 +122,15 @@ export function useRecordsScreen() {
         id: transaction.id,
         type: transaction.type,
         amount: transaction.amount.toString(),
-        categoryId: transaction.category,
+        categoryId: transaction.categoryId,
+        subcategoryId: transaction.subcategoryId || '',
+        institutionId: transaction.institutionId,
+        destinationInstitutionId: transaction.destinationInstitutionId || '',
         description: transaction.description,
+        date:
+          typeof transaction.date === 'string'
+            ? transaction.date
+            : new Date(transaction.date).toISOString(),
       },
     })
   }, [])
@@ -123,35 +141,28 @@ export function useRecordsScreen() {
 
       if (USE_MOCK_TRANSACTIONS) {
         setTransactions((prev) => prev.filter((item) => item.id !== transactionId))
-        setError(null)
-        setAlert({
-          title: 'Transacao excluida',
-          message: 'A transacao foi removida com sucesso.',
-          actions: [{ label: 'Entendi', onPress: dismissAlert }],
-        })
         return
       }
 
+      const previousTransactions = [...transactions]
+      setTransactions((prev) => prev.filter((item) => item.id !== transactionId))
+
       try {
-        await deleteTransaction(transactionId)
-        setTransactions((prev) => prev.filter((item) => item.id !== transactionId))
-        try {
-          await transactionQueries.delete(transactionId)
-        } catch {
-          // Local delete is best-effort to keep offline cache in sync.
-        }
+        await transactionQueries.delete(transactionId)
+        void syncDatabase()
         setError(null)
         setAlert({
-          title: 'Transacao excluida',
-          message: 'A transacao foi removida com sucesso.',
+          title: 'Transação excluída',
+          message: 'A exclusão foi salva localmente e será sincronizada quando houver conexão.',
           actions: [{ label: 'Entendi', onPress: dismissAlert }],
         })
-      } catch (deleteError) {
-        console.error('Erro ao excluir transacao:', deleteError)
-        setError('Nao foi possivel excluir a transacao.')
+      } catch (error) {
+        console.error('Erro crítico no delete:', error)
+        setTransactions(previousTransactions)
+        setError('Não foi possível excluir a transação.')
       }
     },
-    [dismissAlert],
+    [dismissAlert, transactions],
   )
 
   const handleDelete = useCallback(

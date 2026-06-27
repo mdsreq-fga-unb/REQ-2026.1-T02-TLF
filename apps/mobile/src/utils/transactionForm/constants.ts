@@ -25,7 +25,7 @@ export const TYPE_TABS: { value: TransactionType; label: string }[] = [
 export const TRANSACTION_FORM_ERRORS = {
   amount: 'Informe o valor da transação',
   category: 'Selecione uma categoria',
-  destinationAccount: 'Selecione uma conta de destino diferente da origem',
+  destinationInstitution: 'Selecione uma instituição de destino diferente da origem',
   submit: 'Não foi possível salvar a transação. Tente novamente.',
 } as const
 

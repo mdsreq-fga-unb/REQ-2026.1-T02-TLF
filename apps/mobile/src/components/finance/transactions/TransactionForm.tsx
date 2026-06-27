@@ -1,24 +1,23 @@
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { AlertCircle, Calendar, CreditCard, Landmark, Pencil, Tag } from 'lucide-react-native'
-import { ThemedButton } from '@/components/ui/ThemedButton'
-import { ThemedFieldError } from '@/components/ui/ThemedFieldError'
-import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
-import { ThemedText } from '@/components/ui/ThemedText'
-import { useThemeColor } from '@/hooks/useThemeColor'
 import {
   useTransactionFormScreen,
   type TransactionFormMode,
   type TransactionInitialValues,
 } from '@/hooks/transactions/useTransactionFormScreen'
+import { ThemedText } from '@/components/ui/ThemedText'
+import { ThemedButton } from '@/components/ui/ThemedButton'
+import { useThemeColor } from '@/hooks/useThemeColor'
+import { ThemedFieldError } from '@/components/ui/ThemedFieldError'
+import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
+import { CreditCard, Landmark, Tag, Calendar, Pencil, AlertCircle } from 'lucide-react-native'
 import { TRANSACTION_FORM_COPY } from '@/utils/transactionForm'
-import { formatDateTimeShort } from '@/utils/formatters'
-import { ACCOUNTS } from './types'
-import { TransactionTypeTabs } from './TransactionTypeTabs'
+import { FormField } from './FormField'
 import { AmountDisplay } from './AmountDisplay'
 import { NumericKeypad } from './NumericKeypad'
-import { FormField } from './FormField'
+import { TransactionTypeTabs } from './TransactionTypeTabs'
 import { SubcategoryChips } from './SubcategoryChips'
 import { PickerModal } from './PickerModal'
+import { DatePickerModal } from '@/components/ui/DatePickerModal'
 
 type Props = {
   title?: string
@@ -36,20 +35,23 @@ export function TransactionForm({ title, mode, initialValues, onSuccess }: Props
     successTitle,
     successMessage,
     categories,
-    selectedAccount,
-    selectedDestination,
+    selectedInstitution,
+    selectedDestinationInstitution,
     selectedCategory,
     destinationOptions,
-    showAccountPicker,
-    setShowAccountPicker,
+    showInstitutionPicker,
+    setShowInstitutionPicker,
     showDestinationPicker,
     setShowDestinationPicker,
     showCategoryPicker,
     setShowCategoryPicker,
+    showDatePicker,
+    setShowDatePicker,
     successAlertVisible,
     dismissSuccessAlert,
     handleSubmit,
     openRecorrencias,
+    institutionOptions,
   } = useTransactionFormScreen({ title, mode, initialValues, onSuccess })
 
   return (
@@ -82,18 +84,19 @@ export function TransactionForm({ title, mode, initialValues, onSuccess }: Props
         <View style={[styles.fields, { backgroundColor: theme.surfaceMuted }]}>
           <FormField
             icon={CreditCard}
-            label={form.type === 'TRANSFER' ? 'De Conta' : 'Conta'}
-            value={selectedAccount?.label ?? ''}
-            onPress={() => setShowAccountPicker(true)}
+            label={form.type === 'TRANSFER' ? 'Da Instituição' : 'Instituição'}
+            value={selectedInstitution?.label ?? 'Selecionar...'}
+            onPress={() => setShowInstitutionPicker(true)}
+            error={form.submitAttempted ? form.errors.institution : undefined}
           />
 
           {form.type === 'TRANSFER' && (
             <FormField
               icon={Landmark}
-              label="Para Conta"
-              value={selectedDestination?.label ?? ''}
+              label="Para Instituição"
+              value={selectedDestinationInstitution?.label ?? 'Selecionar...'}
               onPress={() => setShowDestinationPicker(true)}
-              error={form.submitAttempted ? form.errors.destinationAccount : undefined}
+              error={form.submitAttempted ? form.errors.destinationInstitution : undefined}
             />
           )}
 
@@ -101,7 +104,7 @@ export function TransactionForm({ title, mode, initialValues, onSuccess }: Props
             <FormField
               icon={Tag}
               label="Categoria"
-              value={selectedCategory?.label ?? ''}
+              value={selectedCategory?.label ?? 'Selecionar...'}
               onPress={() => setShowCategoryPicker(true)}
               error={form.submitAttempted ? form.errors.category : undefined}
             />
@@ -119,8 +122,8 @@ export function TransactionForm({ title, mode, initialValues, onSuccess }: Props
           <FormField
             icon={Calendar}
             label="Data e Hora"
-            value={formatDateTimeShort(new Date())}
-            onPress={() => {}}
+            value={formatDateTimeShort(form.date)}
+            onPress={() => setShowDatePicker(true)}
           />
 
           <FormField
@@ -164,20 +167,20 @@ export function TransactionForm({ title, mode, initialValues, onSuccess }: Props
       />
 
       <PickerModal
-        visible={showAccountPicker}
-        title="Selecionar Conta"
-        options={ACCOUNTS}
-        selectedId={form.accountId}
-        onSelect={form.setAccountId}
-        onClose={() => setShowAccountPicker(false)}
+        visible={showInstitutionPicker}
+        title="Selecionar Instituição"
+        options={institutionOptions}
+        selectedId={form.institutionId}
+        onSelect={form.setInstitutionId}
+        onClose={() => setShowInstitutionPicker(false)}
       />
 
       <PickerModal
         visible={showDestinationPicker}
-        title="Conta Destino"
+        title="Instituição Destino"
         options={destinationOptions}
-        selectedId={form.destinationAccountId}
-        onSelect={form.setDestinationAccountId}
+        selectedId={form.destinationInstitutionId}
+        onSelect={form.setDestinationInstitutionId}
         onClose={() => setShowDestinationPicker(false)}
       />
 
@@ -185,9 +188,19 @@ export function TransactionForm({ title, mode, initialValues, onSuccess }: Props
         visible={showCategoryPicker}
         title="Selecionar Categoria"
         options={categories}
-        selectedId={form.categoryId}
+        selectedId={form.categoryId ? form.categoryId : '123'}
         onSelect={form.setCategoryId}
         onClose={() => setShowCategoryPicker(false)}
+      />
+
+      <DatePickerModal
+        visible={showDatePicker}
+        value={form.date}
+        onConfirm={(date) => {
+          form.setDate(date)
+          setShowDatePicker(false)
+        }}
+        onCancel={() => setShowDatePicker(false)}
       />
 
       <ThemedOverlayAlert
@@ -205,6 +218,12 @@ export function TransactionForm({ title, mode, initialValues, onSuccess }: Props
     </View>
   )
 }
+
+const formatDateTimeShort = (date: Date) =>
+  new Intl.DateTimeFormat('pt-BR', {
+    dateStyle: 'short',
+    timeStyle: 'short',
+  }).format(date)
 
 const styles = StyleSheet.create({
   container: {

@@ -6,5 +6,4 @@ export type DeleteAccountInTransactionDto = {
   accountId: string
   invoiceIds: string[]
   recurrenceIds: string[]
-  transactionIds: string[]
 }

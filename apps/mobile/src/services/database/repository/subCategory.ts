@@ -1,9 +1,15 @@
+import { Q } from '@nozbe/watermelondb'
 import { database } from '..'
 import { SubCategory } from '../models/subCategory'
 
 const SUB_CATEGORIES_TABLE = 'sub_categories'
 
 const subCategoriesCollection = () => database.get<SubCategory>(SUB_CATEGORIES_TABLE)
+
+export const getAllSubCategories = async () => subCategoriesCollection().query().fetch()
+
+export const getSubCategoriesByCategory = async (categoryId: string) =>
+  subCategoriesCollection().query(Q.where('category_id', categoryId)).fetch()
 
 export type SubCategoryInput = {
   categoryId: string
@@ -52,6 +58,8 @@ export const markSubCategoryAsDeleted = async (id: string) => {
 
 export const subCategoryQueries = {
   table: SUB_CATEGORIES_TABLE,
+  getAll: getAllSubCategories,
+  getByCategory: getSubCategoriesByCategory,
   getById: getSubCategoryById,
   create: createSubCategory,
   update: updateSubCategory,

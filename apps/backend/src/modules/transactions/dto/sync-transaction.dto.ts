@@ -4,7 +4,7 @@ import { SyncRecordDto } from '@common/sync/dto/sync-record.dto'
 
 export class SyncTransactionDto extends SyncRecordDto {
   @IsUUID()
-  accountId!: string
+  institutionId!: string
 
   @IsOptional()
   @IsUUID()
@@ -43,7 +43,7 @@ export class SyncTransactionDto extends SyncRecordDto {
 
   @IsOptional()
   @IsUUID()
-  destinationAccountId?: string | null
+  destinationInstitutionId?: string | null
 
   @IsOptional()
   @IsString()

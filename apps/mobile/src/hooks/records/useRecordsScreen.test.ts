@@ -6,29 +6,50 @@ import { useRecordsScreen } from './useRecordsScreen'
 jest.mock('@/services/database/repository/transaction', () => ({
   transactionQueries: {
     getAll: jest.fn(),
+    getByFilters: jest.fn(),
     delete: jest.fn(),
   },
 }))
 
-jest.mock('@/services/api/transactions', () => ({
-  listTransactions: jest.fn(),
-  listTransactionsByCategory: jest.fn(),
-  listTransactionsByType: jest.fn(),
-  deleteTransaction: jest.fn(),
+jest.mock('@/services/database/repository/category', () => ({
+  categoryQueries: {
+    getAll: jest.fn(),
+  },
 }))
 
-jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
+jest.mock('@/services/database/sync', () => ({
+  syncDatabase: jest.fn().mockResolvedValue(undefined),
 }))
+
+jest.mock('@/utils/records/transactionMappers', () => ({
+  mapLocalTransactionToListItem: jest.fn((transaction) => transaction),
+}))
+
+jest.mock('expo-router', () => {
+  const React = require('react')
+
+  return {
+    router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
+    useFocusEffect: (effect: () => void | (() => void)) => React.useEffect(effect, []),
+  }
+})
 
 const mockedPush = jest.mocked(router.push)
+const mockedTransactionQueries = jest.mocked(
+  jest.requireMock('@/services/database/repository/transaction').transactionQueries,
+)
+const mockedCategoryQueries = jest.mocked(
+  jest.requireMock('@/services/database/repository/category').categoryQueries,
+)
 
 describe('useRecordsScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    mockedTransactionQueries.getAll.mockResolvedValue(mockTransactions as never)
+    mockedCategoryQueries.getAll.mockResolvedValue([] as never)
   })
 
-  it('loads mock transactions on mount', async () => {
+  it('loads transactions on mount', async () => {
     const { result } = renderHook(() => useRecordsScreen())
 
     await waitFor(() => {
@@ -88,8 +109,15 @@ describe('useRecordsScreen', () => {
         id: transaction.id,
         type: transaction.type,
         amount: transaction.amount.toString(),
-        categoryId: transaction.category,
+        categoryId: transaction.categoryId,
+        subcategoryId: transaction.subcategoryId || '',
+        institutionId: transaction.institutionId,
+        destinationInstitutionId: transaction.destinationInstitutionId || '',
         description: transaction.description,
+        date:
+          typeof transaction.date === 'string'
+            ? transaction.date
+            : transaction.date.toISOString(),
       },
     })
   })

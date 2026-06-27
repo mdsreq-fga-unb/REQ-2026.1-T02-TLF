@@ -5,6 +5,9 @@ import { NotFoundException, ForbiddenException, ConflictException } from '@nestj
 
 const mockPrisma = {
   category: { findUnique: jest.fn() },
+  transaction: {
+    aggregate: jest.fn(),
+  },
   budget: {
     findUnique: jest.fn(),
     findMany: jest.fn(),
@@ -33,7 +36,8 @@ const mockBudget = {
   month: 5,
   year: 2026,
   userId: 'user-001',
-  category: { id: 'cat-001', name: 'Alimentação' },
+  categoryId: 'cat-001',
+  category: { id: 'cat-001', name: 'Alimentação', color: '#ff6600', icon: 'fork-knife' },
 }
 
 describe('BudgetService', () => {
@@ -45,6 +49,7 @@ describe('BudgetService', () => {
     }).compile()
     service = module.get<BudgetService>(BudgetService)
     jest.clearAllMocks()
+    mockPrisma.transaction.aggregate.mockResolvedValue({ _sum: { amount: 5000 } })
   })
 
   const dto = {
@@ -60,8 +65,21 @@ describe('BudgetService', () => {
       mockPrisma.category.findUnique.mockResolvedValue(mockCategory)
       mockPrisma.budget.findUnique.mockResolvedValue(null)
       mockPrisma.budget.create.mockResolvedValue(mockBudget)
+
       const result = await service.create('user-001', dto)
-      expect(result).toEqual(mockBudget)
+
+      expect(result).toEqual({
+        id: 'budget-001',
+        name: 'Orçamento Alimentação',
+        amountLimit: 50000,
+        month: 5,
+        year: 2026,
+        categoryId: 'cat-001',
+        category: { id: 'cat-001', name: 'Alimentação', color: '#ff6600', icon: 'fork-knife' },
+        spentValue: 5000,
+        remainingValue: 45000,
+        spentPercentage: 10,
+      })
     })
 
     // TODO: Reativar quando sistemas de categorias for implementado
@@ -85,8 +103,23 @@ describe('BudgetService', () => {
   describe('findAll', () => {
     it('deve retornar lista de orçamentos', async () => {
       mockPrisma.budget.findMany.mockResolvedValue([mockBudget])
+
       const result = await service.findAll('user-001')
-      expect(result).toEqual([mockBudget])
+
+      expect(result).toEqual([
+        {
+          id: 'budget-001',
+          name: 'Orçamento Alimentação',
+          amountLimit: 50000,
+          month: 5,
+          year: 2026,
+          categoryId: 'cat-001',
+          category: { id: 'cat-001', name: 'Alimentação', color: '#ff6600', icon: 'fork-knife' },
+          spentValue: 5000,
+          remainingValue: 45000,
+          spentPercentage: 10,
+        },
+      ])
     })
   })
 
@@ -112,8 +145,21 @@ describe('BudgetService', () => {
     it('deve atualizar orçamento', async () => {
       mockPrisma.budget.findUnique.mockResolvedValue(mockBudget)
       mockPrisma.budget.update.mockResolvedValue({ ...mockBudget, amountLimit: 60000 })
+
       const result = await service.update('user-001', 'budget-001', { amountLimit: 60000 })
-      expect(result.amountLimit).toBe(60000)
+
+      expect(result).toEqual({
+        id: 'budget-001',
+        name: 'Orçamento Alimentação',
+        amountLimit: 60000,
+        month: 5,
+        year: 2026,
+        categoryId: 'cat-001',
+        category: { id: 'cat-001', name: 'Alimentação', color: '#ff6600', icon: 'fork-knife' },
+        spentValue: 5000,
+        remainingValue: 55000,
+        spentPercentage: 8,
+      })
     })
 
     it('deve lançar ForbiddenException se não pertencer ao usuário', async () => {

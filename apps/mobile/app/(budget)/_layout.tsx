@@ -10,7 +10,7 @@ import { TouchableOpacity, useColorScheme } from 'react-native'
 
 void SplashScreen.preventAutoHideAsync()
 
-export default function RootLayout() {
+export default function BudgetLayout() {
   const isDark = useColorScheme() === 'dark'
   const colors = useThemeColor()
 

@@ -1,6 +1,5 @@
-import { iconByKey, type IconKey } from '@/utils/icons'
-import { iconSize } from '@/utils/dimensions'
-import { Tag } from 'lucide-react-native'
+// apps/mobile/src/components/ui/AppIcon/index.tsx
+import { resolveIcon, type IconKey } from '@/utils/icons'
 
 type Props = {
   name: IconKey | string
@@ -9,7 +8,7 @@ type Props = {
   strokeWidth?: number
 }
 
-export function AppIcon({ name, size = iconSize.md, color, strokeWidth = 2 }: Props) {
-  const Icon = iconByKey[name as IconKey] ?? Tag
+export function AppIcon({ name, size = 24, color, strokeWidth }: Props) {
+  const Icon = resolveIcon(name)
   return <Icon size={size} color={color} strokeWidth={strokeWidth} />
 }

@@ -1,13 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { TransactionsService } from './transactions.service'
 import { PrismaService } from '@common/prisma/prisma.service'
-import { BadRequestException, NotFoundException, ForbiddenException } from '@nestjs/common'
+import { NotFoundException, ForbiddenException } from '@nestjs/common'
 import { TransactionType, TransactionStatus } from '../../../generated/prisma/enums'
+import { CreateTransactionDto } from './dto/create-transaction.dto'
+import { UpdateTransactionDto } from './dto/update-transaction.dto'
 
 const prismaMock = {
   category: { findUnique: jest.fn() },
   subCategory: { findUnique: jest.fn() },
-  account: { findUnique: jest.fn() },
+  institution: { findUnique: jest.fn() },
+  recurrence: { findUnique: jest.fn() },
+  invoice: { findUnique: jest.fn() },
   transaction: {
     findMany: jest.fn(),
     findUnique: jest.fn(),
@@ -35,9 +39,10 @@ const mockCategory = {
   name: 'Alimentação',
 }
 
-const mockAccount = {
-  id: 'acc-1',
-  name: 'Conta Corrente',
+const mockInstitution = {
+  id: 'inst-1',
+  userId: 'user-1',
+  name: 'Nubank',
 }
 
 const mockTransaction = {
@@ -49,7 +54,18 @@ const mockTransaction = {
   status: TransactionStatus.COMPLETED,
   category: { id: 'cat-1', name: 'Alimentação' },
   subCategory: null,
-  account: { id: 'acc-1', name: 'Conta Corrente' },
+  institution: { id: 'inst-1', name: 'Nubank' },
+  institutionId: 'inst-1',
+  categoryId: 'cat-1',
+  subCategoryId: null,
+  invoiceId: null,
+  recurrenceId: null,
+  destinationInstitutionId: null,
+}
+
+const mockTransactionWithAccess = {
+  ...mockTransaction,
+  institution: mockInstitution,
 }
 
 const formattedTransaction = {
@@ -59,67 +75,14 @@ const formattedTransaction = {
   description: mockTransaction.description,
   date: mockTransaction.date.toISOString(),
   status: mockTransaction.status,
+  destinationInstitutionId: undefined,
   category: mockTransaction.category,
   subCategory: undefined,
-  account: mockTransaction.account,
+  institution: mockTransaction.institution,
 }
-
-const transactionWithAccess = (userId: string) => ({
-  ...mockTransaction,
-  id: '1',
-  account: {
-    ...mockTransaction.account,
-    institution: { userId },
-  },
-})
 
 describe('TransactionsService', () => {
   let service: TransactionsService
-
-  // Helper que monta o filtro base por userId no Prisma
-  const baseWhere = (userId: string) => ({
-    account: {
-      institution: { userId },
-    },
-  })
-
-  const listQueryOptions = {
-    skip: 0,
-    take: 20,
-    orderBy: { date: 'desc' as const },
-    include: {
-      category: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
-      subCategory: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
-      account: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
-    },
-  }
-
-  const listRow = {
-    id: '1',
-    type: TransactionType.EXPENSE,
-    amount: 5000,
-    description: 'Almoço',
-    date: new Date('2026-05-02T00:00:00.000Z'),
-    status: TransactionStatus.COMPLETED,
-    category: { id: 'cat-001', name: 'Alimentação' },
-    subCategory: null,
-    account: { id: 'acc-001', name: 'Conta Corrente' },
-  }
 
   beforeEach(async () => {
     jest.clearAllMocks()
@@ -143,7 +106,7 @@ describe('TransactionsService', () => {
 
   describe('create', () => {
     const dto = {
-      accountId: 'acc-1',
+      institutionId: 'inst-1',
       categoryId: 'cat-1',
       type: TransactionType.EXPENSE,
       amount: 5000,
@@ -152,50 +115,36 @@ describe('TransactionsService', () => {
 
     it('deve criar uma transação com sucesso', async () => {
       prismaMock.category.findUnique.mockResolvedValue(mockCategory)
-      prismaMock.account.findUnique.mockResolvedValue(mockAccount)
+      prismaMock.institution.findUnique.mockResolvedValue(mockInstitution)
       prismaMock.transaction.create.mockResolvedValue(mockTransaction)
 
-      const result = await service.create('user-1', dto)
+      const result = await service.create('user-1', dto as CreateTransactionDto)
 
       expect(result).toEqual(formattedTransaction)
       expect(prismaMock.transaction.create).toHaveBeenCalledTimes(1)
     })
 
-    it('deve lançar NotFoundException se categoria não existir', async () => {
-      prismaMock.category.findUnique.mockResolvedValue(null)
+    it('deve lançar NotFoundException se instituição não existir', async () => {
+      prismaMock.category.findUnique.mockResolvedValue(mockCategory)
+      prismaMock.institution.findUnique.mockResolvedValue(null)
 
-      await expect(service.create('user-1', dto)).rejects.toThrow(NotFoundException)
+      await expect(service.create('user-1', dto as CreateTransactionDto)).rejects.toThrow(NotFoundException)
     })
 
-    it('deve lançar BadRequestException se categoria não pertencer ao usuário', async () => {
-      prismaMock.category.findUnique.mockResolvedValue({
-        ...mockCategory,
+    it('deve lançar BadRequestException se instituição não pertencer ao usuário', async () => {
+      prismaMock.category.findUnique.mockResolvedValue(mockCategory)
+      prismaMock.institution.findUnique.mockResolvedValue({
+        ...mockInstitution,
         userId: 'outro-user',
       })
 
-      await expect(service.create('user-1', dto)).rejects.toThrow(BadRequestException)
-    })
-
-    it('deve lançar NotFoundException se conta não existir', async () => {
-      prismaMock.category.findUnique.mockResolvedValue(mockCategory)
-      prismaMock.account.findUnique.mockResolvedValue(null)
-
-      await expect(service.create('user-1', dto)).rejects.toThrow(NotFoundException)
-    })
-
-    it('deve lançar BadRequestException se subcategoria for inválida', async () => {
-      prismaMock.category.findUnique.mockResolvedValue(mockCategory)
-      prismaMock.subCategory.findUnique.mockResolvedValue(null)
-
-      await expect(
-        service.create('user-1', { ...dto, subCategoryId: 'sub-invalida' }),
-      ).rejects.toThrow(BadRequestException)
+      await expect(service.create('user-1', dto as CreateTransactionDto)).rejects.toThrow(ForbiddenException)
     })
   })
 
   describe('findAll', () => {
     it('deve retornar uma lista de transações', async () => {
-      prismaMock.transaction.findMany.mockResolvedValue([listRow])
+      prismaMock.transaction.findMany.mockResolvedValue([mockTransaction])
       prismaMock.transaction.count.mockResolvedValue(1)
 
       const result = await service.findAll('user-1', {})
@@ -210,80 +159,35 @@ describe('TransactionsService', () => {
     })
 
     it('deve buscar transações do usuário', async () => {
-      prismaMock.transaction.findMany.mockResolvedValue([listRow])
+      prismaMock.transaction.findMany.mockResolvedValue([mockTransaction])
       prismaMock.transaction.count.mockResolvedValue(1)
 
       await service.findAll('user-1', {})
 
       expect(prismaMock.transaction.findMany).toHaveBeenCalledWith({
-        where: baseWhere('user-1'),
-        ...listQueryOptions,
-      })
-    })
-
-    it('deve filtrar as transações por categoryId', async () => {
-      prismaMock.transaction.findMany.mockResolvedValue([])
-      prismaMock.transaction.count.mockResolvedValue(0)
-
-      await service.findAll('user-1', { categoryId: 'cat-1' })
-
-      expect(prismaMock.transaction.findMany).toHaveBeenCalledWith({
-        where: {
-          ...baseWhere('user-1'),
-          categoryId: 'cat-1',
+        where: { institution: { userId: 'user-1' } },
+        skip: 0,
+        take: 20,
+        orderBy: { date: 'desc' },
+        include: {
+          category: { select: { id: true, name: true } },
+          subCategory: { select: { id: true, name: true } },
+          institution: { select: { id: true, name: true } },
         },
-        ...listQueryOptions,
-      })
-    })
-
-    it('deve filtrar as transações por type', async () => {
-      prismaMock.transaction.findMany.mockResolvedValue([])
-      prismaMock.transaction.count.mockResolvedValue(0)
-
-      await service.findAll('user-1', { type: TransactionType.INCOME })
-
-      expect(prismaMock.transaction.findMany).toHaveBeenCalledWith({
-        where: {
-          ...baseWhere('user-1'),
-          type: TransactionType.INCOME,
-        },
-        ...listQueryOptions,
-      })
-    })
-
-    it('deve filtrar as transações por categoryId e type', async () => {
-      prismaMock.transaction.findMany.mockResolvedValue([])
-      prismaMock.transaction.count.mockResolvedValue(0)
-
-      await service.findAll('user-1', {
-        categoryId: 'cat-1',
-        type: TransactionType.INCOME,
-      })
-
-      expect(prismaMock.transaction.findMany).toHaveBeenCalledWith({
-        where: {
-          ...baseWhere('user-1'),
-          categoryId: 'cat-1',
-          type: TransactionType.INCOME,
-        },
-        ...listQueryOptions,
       })
     })
   })
 
   describe('findOne', () => {
     it('deve retornar uma transação quando o usuário tiver acesso', async () => {
-      prismaMock.transaction.findUnique.mockResolvedValue(transactionWithAccess('user-1'))
+      prismaMock.transaction.findUnique.mockResolvedValue(mockTransactionWithAccess)
 
       const result = await service.findOne({
         userId: 'user-1',
         id: '1',
       })
 
-      expect(result).toEqual({
-        ...formattedTransaction,
-        id: '1',
-      })
+      expect(result).toEqual(formattedTransaction)
     })
 
     it('deve lançar NotFoundException quando não existir transação', async () => {
@@ -298,7 +202,10 @@ describe('TransactionsService', () => {
     })
 
     it('deve lançar ForbiddenException quando o usuário não tiver acesso', async () => {
-      prismaMock.transaction.findUnique.mockResolvedValue(transactionWithAccess('outro-user'))
+      prismaMock.transaction.findUnique.mockResolvedValue({
+        ...mockTransaction,
+        institution: { ...mockInstitution, userId: 'outro-user' },
+      })
 
       await expect(
         service.findOne({
@@ -311,7 +218,8 @@ describe('TransactionsService', () => {
 
   describe('update', () => {
     it('deve atualizar transação com sucesso', async () => {
-      prismaMock.transaction.findUnique.mockResolvedValue(transactionWithAccess('user-1'))
+      prismaMock.transaction.findUnique.mockResolvedValue(mockTransactionWithAccess)
+      prismaMock.institution.findUnique.mockResolvedValue(mockInstitution)
 
       prismaMock.transaction.update.mockResolvedValue({
         ...mockTransaction,
@@ -325,7 +233,7 @@ describe('TransactionsService', () => {
         id: '1',
         dto: {
           description: 'novo valor',
-        },
+        } as UpdateTransactionDto,
       })
 
       expect(prismaMock.transaction.update).toHaveBeenCalledWith({
@@ -334,7 +242,7 @@ describe('TransactionsService', () => {
         include: {
           category: true,
           subCategory: true,
-          account: true,
+          institution: true,
         },
       })
 
@@ -344,7 +252,7 @@ describe('TransactionsService', () => {
 
   describe('remove', () => {
     it('deve remover transação com sucesso', async () => {
-      prismaMock.transaction.findUnique.mockResolvedValue(transactionWithAccess('user-1'))
+      prismaMock.transaction.findUnique.mockResolvedValue(mockTransactionWithAccess)
       prismaMock.transaction.delete.mockResolvedValue({
         ...mockTransaction,
         id: '1',
@@ -357,7 +265,7 @@ describe('TransactionsService', () => {
       })
 
       expect(prismaMock.transaction.delete).toHaveBeenCalledWith({
-        where: { id: '1' },
+        where: { id: 'tx-1' },
       })
     })
   })

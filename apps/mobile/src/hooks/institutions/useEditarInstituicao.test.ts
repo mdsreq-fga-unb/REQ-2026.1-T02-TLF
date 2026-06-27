@@ -16,27 +16,35 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => mockParams,
 }))
 
-jest.mock('@/services/api/institutions', () => ({
-  updateInstitution: jest.fn(),
-}))
-
 jest.mock('@/services/database/queries/institution', () => ({
   institutionQueries: { update: jest.fn() },
 }))
 
 const mockedNavigate = jest.mocked(router.navigate)
+const mockedUpdate = jest.requireMock('@/services/database/queries/institution').institutionQueries
+  .update as jest.Mock
 
 describe('useEditarInstituicao', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest.useFakeTimers()
     mockParams = {
-      id: 'mock-inst-1',
+      id: mockInstitutions[0].id,
       name: 'Nubank',
       color: '#820AD1',
       icon: 'landmark',
     }
     useInstitutionsStore.setState({ institutions: [...mockInstitutions] })
+    mockedUpdate.mockResolvedValue({
+      id: 'mock-inst-1',
+      name: 'Nubank',
+      color: '#820AD1',
+      icon: 'landmark',
+      logoUrl: null,
+      userId: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
   })
 
   afterEach(() => {
@@ -77,13 +85,24 @@ describe('useEditarInstituicao', () => {
         result.current.setName('Nubank Ultravioleta')
       })
 
+      mockedUpdate.mockResolvedValueOnce({
+        id: 'mock-inst-1',
+        name: 'Nubank Ultravioleta',
+        color: '#820AD1',
+        icon: 'landmark',
+        logoUrl: null,
+        userId: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+
       await act(async () => {
         await result.current.handleSave()
       })
 
       const updated = useInstitutionsStore
         .getState()
-        .institutions.find((item) => item.id === 'mock-inst-1')
+        .institutions.find((item) => item.id === mockInstitutions[0].id)
 
       expect(updated?.name).toBe('Nubank Ultravioleta')
       expect(result.current.showSuccess).toBe(true)

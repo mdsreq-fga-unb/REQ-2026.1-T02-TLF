@@ -7,8 +7,8 @@ import {
   readonly,
   relation,
 } from '@nozbe/watermelondb/decorators'
-import type { Account } from './account'
 import type { Category } from './category'
+import type { Institution } from './institution'
 import type { SubCategory } from './subCategory'
 import type { Transaction } from './transaction'
 
@@ -16,13 +16,13 @@ export class Recurrence extends Model {
   static table = 'recurrences'
 
   static associations = {
-    accounts: { type: 'belongs_to' as const, key: 'account_id' },
+    institutions: { type: 'belongs_to' as const, key: 'institution_id' },
     categories: { type: 'belongs_to' as const, key: 'category_id' },
     sub_categories: { type: 'belongs_to' as const, key: 'sub_category_id' },
     transactions: { type: 'has_many' as const, foreignKey: 'recurrence_id' },
   }
 
-  @field('account_id') accountId!: string
+  @field('institution_id') institutionId!: string
   @field('category_id') categoryId!: string | null
   @field('sub_category_id') subCategoryId!: string | null
   @field('description') description!: string
@@ -34,7 +34,7 @@ export class Recurrence extends Model {
   @readonly @date('created_at') createdAt!: Date
   @readonly @date('updated_at') updatedAt!: Date
 
-  @immutableRelation('accounts', 'account_id') account!: Relation<Account>
+  @immutableRelation('institutions', 'institution_id') institution!: Relation<Institution>
   @relation('categories', 'category_id') category!: Relation<Category>
   @relation('sub_categories', 'sub_category_id') subCategory!: Relation<SubCategory>
 

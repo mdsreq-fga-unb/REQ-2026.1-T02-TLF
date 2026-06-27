@@ -1,20 +1,11 @@
-import {
-  categoryColors,
-  categoryIcons,
-  getAccount,
-  getCategory,
-  getSubcategory,
-} from '@/components/finance/recurrences/recurrences-data'
 import type { Recurrence } from '@/components/finance/recurrences/types'
 import type { IconKey } from '@/utils/icons'
 
 export function useConfirmCard(recurrence: Recurrence, isConfirmed: boolean, isSkipped: boolean) {
-  const icon: IconKey = categoryIcons[recurrence.categoryId] ?? 'refresh-cw'
-  const iconBg = categoryColors[recurrence.categoryId] ?? '#4A5060'
-  const accountName = getAccount(recurrence.accountId)?.name ?? recurrence.accountId
-  const subcategoryName = recurrence.subcategoryId
-    ? getSubcategory(recurrence.subcategoryId)?.name
-    : getCategory(recurrence.categoryId)?.name
+  const icon: IconKey = recurrence.categoryIcon ?? 'refresh-cw'
+  const iconBg = recurrence.categoryColor ?? '#4A5060'
+  const accountName = recurrence.institutionName ?? recurrence.institutionId
+  const subcategoryName = recurrence.subcategoryName ?? recurrence.categoryName
   const isExpense = recurrence.type === 'EXPENSE'
   const amountSign = isExpense ? '−' : '+'
   const acted = isConfirmed || isSkipped

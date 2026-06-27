@@ -10,7 +10,7 @@ import { UpdateRecurrenceDto } from './dto/update-recurrence.dto'
 const prismaMock = {
   $transaction: jest.fn(),
 
-  account: {
+  institution: {
     findUnique: jest.fn(),
   },
 
@@ -40,6 +40,10 @@ const prismaMock = {
     update: jest.fn(),
     delete: jest.fn(),
     count: jest.fn(),
+  },
+
+  deletedRecord: {
+    createMany: jest.fn(),
   },
 }
 
@@ -71,10 +75,11 @@ const mockRecurrence = {
   isActive: true,
   category: { id: 'cat-1', name: 'Assinaturas' },
   subCategory: null,
-  account: {
-    id: 'acc-1',
-    name: 'Conta',
-    institution: { userId: 'user-1' },
+  institutionId: 'inst-1',
+  institution: {
+    id: 'inst-1',
+    name: 'Nubank',
+    userId: 'user-1',
   },
 }
 
@@ -103,7 +108,7 @@ describe('RecurrenceService', () => {
 
   describe('create', () => {
     const dto: CreateRecurrenceDto = {
-      accountId: 'acc-1',
+      institutionId: 'inst-1',
       categoryId: 'cat-1',
       description: 'Netflix',
       amount: 2990,
@@ -113,9 +118,9 @@ describe('RecurrenceService', () => {
     }
 
     it('deve criar recorrência com sucesso', async () => {
-      prismaMock.account.findUnique.mockResolvedValue({
-        id: 'acc-1',
-        institution: { userId: 'user-1' },
+      prismaMock.institution.findUnique.mockResolvedValue({
+        id: 'inst-1',
+        userId: 'user-1',
       })
 
       prismaMock.category.findUnique.mockResolvedValue({
@@ -133,16 +138,16 @@ describe('RecurrenceService', () => {
       expect(prismaMock.recurrence.create).toHaveBeenCalledTimes(1)
     })
 
-    it('deve lançar NotFoundException se conta não existir', async () => {
-      prismaMock.account.findUnique.mockResolvedValue(null)
+    it('deve lançar NotFoundException se instituição não existir', async () => {
+      prismaMock.institution.findUnique.mockResolvedValue(null)
 
       await expect(service.create('user-1', dto)).rejects.toThrow(NotFoundException)
     })
 
     it('deve lançar ForbiddenException se categoria não pertencer ao usuário', async () => {
-      prismaMock.account.findUnique.mockResolvedValue({
-        id: 'acc-1',
-        institution: { userId: 'user-1' },
+      prismaMock.institution.findUnique.mockResolvedValue({
+        id: 'inst-1',
+        userId: 'user-1',
       })
 
       prismaMock.category.findUnique.mockResolvedValue({
@@ -199,9 +204,7 @@ describe('RecurrenceService', () => {
     it('deve lançar ForbiddenException se não for dono', async () => {
       prismaMock.recurrence.findUnique.mockResolvedValue({
         ...mockRecurrence,
-        account: {
-          institution: { userId: 'other-user' },
-        },
+        institution: { id: 'inst-1', name: 'Nubank', userId: 'other-user' },
       })
 
       await expect(service.findOne('user-1', 'rec-1')).rejects.toThrow(ForbiddenException)
@@ -228,9 +231,7 @@ describe('RecurrenceService', () => {
     it('deve lançar ForbiddenException se não for dono', async () => {
       prismaMock.recurrence.findUnique.mockResolvedValue({
         ...mockRecurrence,
-        account: {
-          institution: { userId: 'other-user' },
-        },
+        institution: { id: 'inst-1', name: 'Nubank', userId: 'other-user' },
       })
 
       await expect(
@@ -283,6 +284,128 @@ describe('RecurrenceService', () => {
           scope: 'INVALID' as unknown as RecurrenceDeleteScope,
         }),
       ).rejects.toThrow(BadRequestException)
+    })
+  })
+
+  describe('confirmOccurrence', () => {
+    it('conclui a transação PENDENTE existente do mês em vez de duplicar', async () => {
+      prismaMock.recurrence.findUnique.mockResolvedValue(mockRecurrence)
+      prismaMock.transaction.findFirst.mockResolvedValue({
+        id: 't-pending',
+        status: 'PENDING',
+        amount: 2990,
+        date: new Date('2026-06-10T00:00:00.000Z'),
+      })
+      prismaMock.transaction.update.mockResolvedValue({
+        id: 't-pending',
+        status: 'COMPLETED',
+        amount: 2990,
+        date: new Date('2026-06-10T00:00:00.000Z'),
+      })
+
+      const result = await service.confirmOccurrence('user-1', 'rec-1')
+
+      expect(prismaMock.transaction.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 't-pending' },
+          data: expect.objectContaining({ status: 'COMPLETED' }),
+        }),
+      )
+      expect(prismaMock.transaction.create).not.toHaveBeenCalled()
+      expect(result.created).toBe(false)
+      expect(result.status).toBe('COMPLETED')
+    })
+
+    it('cria uma transação COMPLETED quando não há nenhuma no mês', async () => {
+      prismaMock.recurrence.findUnique.mockResolvedValue(mockRecurrence)
+      prismaMock.transaction.findFirst.mockResolvedValue(null)
+      prismaMock.transaction.create.mockResolvedValue({
+        id: 't-new',
+        status: 'COMPLETED',
+        amount: 2990,
+        date: new Date('2026-06-10T00:00:00.000Z'),
+      })
+
+      const result = await service.confirmOccurrence('user-1', 'rec-1')
+
+      expect(prismaMock.transaction.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            status: 'COMPLETED',
+            type: 'EXPENSE',
+            recurrenceId: 'rec-1',
+            institutionId: 'inst-1',
+          }),
+        }),
+      )
+      expect(prismaMock.transaction.update).not.toHaveBeenCalled()
+      expect(result.created).toBe(true)
+    })
+
+    it('é idempotente quando já existe uma transação concluída no mês', async () => {
+      prismaMock.recurrence.findUnique.mockResolvedValue(mockRecurrence)
+      prismaMock.transaction.findFirst.mockResolvedValue({
+        id: 't-done',
+        status: 'COMPLETED',
+        amount: 2990,
+        date: new Date('2026-06-10T00:00:00.000Z'),
+      })
+
+      const result = await service.confirmOccurrence('user-1', 'rec-1')
+
+      expect(prismaMock.transaction.update).not.toHaveBeenCalled()
+      expect(prismaMock.transaction.create).not.toHaveBeenCalled()
+      expect(result.id).toBe('t-done')
+      expect(result.created).toBe(false)
+    })
+
+    it('lança ForbiddenException se não for dono', async () => {
+      prismaMock.recurrence.findUnique.mockResolvedValue({
+        ...mockRecurrence,
+        institution: { id: 'inst-1', name: 'Nubank', userId: 'other-user' },
+      })
+
+      await expect(service.confirmOccurrence('user-1', 'rec-1')).rejects.toThrow(ForbiddenException)
+    })
+  })
+
+  describe('unconfirmOccurrence', () => {
+    it('remove a(s) transação(ões) do mês e registra o delete para o sync', async () => {
+      prismaMock.recurrence.findUnique.mockResolvedValue(mockRecurrence)
+      prismaMock.transaction.findMany.mockResolvedValue([{ id: 't-1' }])
+      prismaMock.deletedRecord.createMany.mockResolvedValue({ count: 1 })
+
+      const result = await service.unconfirmOccurrence('user-1', 'rec-1')
+
+      expect(prismaMock.deletedRecord.createMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.arrayContaining([expect.objectContaining({ recordId: 't-1' })]),
+        }),
+      )
+      expect(result.removed).toBe(true)
+      expect(result.count).toBe(1)
+    })
+
+    it('é no-op quando não há transação no mês', async () => {
+      prismaMock.recurrence.findUnique.mockResolvedValue(mockRecurrence)
+      prismaMock.transaction.findMany.mockResolvedValue([])
+
+      const result = await service.unconfirmOccurrence('user-1', 'rec-1')
+
+      expect(prismaMock.deletedRecord.createMany).not.toHaveBeenCalled()
+      expect(result.removed).toBe(false)
+      expect(result.count).toBe(0)
+    })
+
+    it('lança ForbiddenException se não for dono', async () => {
+      prismaMock.recurrence.findUnique.mockResolvedValue({
+        ...mockRecurrence,
+        institution: { id: 'inst-1', name: 'Nubank', userId: 'other-user' },
+      })
+
+      await expect(service.unconfirmOccurrence('user-1', 'rec-1')).rejects.toThrow(
+        ForbiddenException,
+      )
     })
   })
 

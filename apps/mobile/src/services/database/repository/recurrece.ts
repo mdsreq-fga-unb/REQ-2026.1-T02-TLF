@@ -1,3 +1,4 @@
+import { Q } from '@nozbe/watermelondb'
 import { database } from '..'
 import { Recurrence } from '../models/recurrece'
 
@@ -6,7 +7,7 @@ const RECURRENCES_TABLE = 'recurrences'
 const recurrencesCollection = () => database.get<Recurrence>(RECURRENCES_TABLE)
 
 export type RecurrenceInput = {
-  accountId: string
+  institutionId: string
   categoryId?: string | null
   subCategoryId?: string | null
   description: string
@@ -23,7 +24,7 @@ const applyRecurrenceFields = (
   recurrence: Recurrence,
   input: RecurrenceInput | RecurrenceUpdateInput,
 ) => {
-  if (input.accountId !== undefined) recurrence.accountId = input.accountId
+  if (input.institutionId !== undefined) recurrence.institutionId = input.institutionId
   if (input.categoryId !== undefined) recurrence.categoryId = input.categoryId
   if (input.subCategoryId !== undefined) recurrence.subCategoryId = input.subCategoryId
   if (input.description !== undefined) recurrence.description = input.description
@@ -35,6 +36,8 @@ const applyRecurrenceFields = (
 }
 
 export const getRecurrenceById = async (id: string) => recurrencesCollection().find(id)
+
+export const getAllRecurrences = async () => recurrencesCollection().query().fetch()
 
 export const createRecurrence = async (input: RecurrenceInput) => {
   return database.write(async () => {
@@ -56,12 +59,22 @@ export const updateRecurrence = async (id: string, input: RecurrenceUpdateInput)
 export const markRecurrenceAsDeleted = async (id: string) => {
   return database.write(async () => {
     const recurrence = await getRecurrenceById(id)
-    await recurrence.markAsDeleted()
+    const linkedTransactions = await database
+      .get('transactions')
+      .query(Q.where('recurrence_id', id))
+      .fetch()
+
+    await database.batch([
+      ...linkedTransactions.map((record) => record.prepareMarkAsDeleted()),
+      recurrence.prepareMarkAsDeleted(),
+    ])
   })
 }
 
 export const recurrenceQueries = {
   table: RECURRENCES_TABLE,
+
+  getAll: getAllRecurrences,
   getById: getRecurrenceById,
   create: createRecurrence,
   update: updateRecurrence,

@@ -7,6 +7,7 @@ export type SummaryData = {
 }
 
 export type CategoryData = {
+  id: string
   name: string
   icon?: string
   color: string
@@ -17,6 +18,11 @@ export type TransactionListItem = {
   id: string
   description: string
   category: string
+  categoryId: string
+  subcategoryId?: string
+  subcategory?: string
+  institutionId: string
+  destinationInstitutionId?: string
   type: 'EXPENSE' | 'INCOME' | 'TRANSFER'
   date: Date | number | string
   amount: number
@@ -47,10 +53,12 @@ export type BudgetData = {
 export type BudgetListItem = {
   id: string
   name: string
-  categoryId: string
   amountLimit: number
   month: number
   year: number
-  totalValue?: number
   spentValue?: number
+  remainingValue?: number
+  spentPercentage?: number
+  categoryId: string
+  category?: CategoryData
 }

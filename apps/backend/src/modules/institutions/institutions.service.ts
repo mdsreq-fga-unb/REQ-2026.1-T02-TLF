@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '@common/prisma/prisma.service'
 import { createDeletedRecords } from '@common/sync/deleted-record.util'
+import { nullifyTransactionDestinationInstitutionRefs } from '@common/sync/set-null.util'
 import { buildTimestampWhere } from '@common/sync/sync-query.util'
 import { AccountsService } from '@modules/accounts/accounts.service'
 import { TableName } from 'generated/prisma/client'
@@ -35,14 +36,16 @@ export class InstitutionsService {
         userId,
         name: dto.name,
         color: dto.color,
-        logoUrl: dto.logoUrl ?? null,
+        ...(dto.icon !== undefined && { icon: dto.icon }),
+        ...(dto.logoUrl !== undefined && { logoUrl: dto.logoUrl }),
         ...(dto.createdAt && { createdAt: new Date(dto.createdAt) }),
         ...(dto.updatedAt && { updatedAt: new Date(dto.updatedAt) }),
       },
       update: {
         name: dto.name,
         color: dto.color,
-        logoUrl: dto.logoUrl ?? null,
+        ...(dto.icon !== undefined && { icon: dto.icon }),
+        ...(dto.logoUrl !== undefined && { logoUrl: dto.logoUrl }),
         ...(dto.updatedAt && { updatedAt: new Date(dto.updatedAt) }),
       },
     })
@@ -58,7 +61,8 @@ export class InstitutionsService {
       data: {
         name: dto.name,
         color: dto.color,
-        logoUrl: dto.logoUrl ?? null,
+        ...(dto.icon !== undefined && { icon: dto.icon }),
+        ...(dto.logoUrl !== undefined && { logoUrl: dto.logoUrl }),
         ...(dto.updatedAt && { updatedAt: new Date(dto.updatedAt) }),
       },
     })
@@ -72,10 +76,10 @@ export class InstitutionsService {
         accounts: {
           include: {
             invoices: true,
-            recurrences: true,
-            transactions: true,
           },
         },
+        recurrences: true,
+        transactions: true,
       },
     })
     if (!institution) throw new NotFoundException('Instituição não encontrada')
@@ -88,10 +92,25 @@ export class InstitutionsService {
           userId,
           accountId: account.id,
           invoiceIds: account.invoices.map((i) => i.id),
-          recurrenceIds: account.recurrences.map((r) => r.id),
-          transactionIds: account.transactions.map((t) => t.id),
+          recurrenceIds: [],
         })
       }
+
+      await createDeletedRecords({
+        tx,
+        userId,
+        tableName: TableName.RECURRENCES,
+        recordIds: institution.recurrences.map((recurrence) => recurrence.id),
+      })
+
+      await nullifyTransactionDestinationInstitutionRefs(tx, institutionId)
+
+      await createDeletedRecords({
+        tx,
+        userId,
+        tableName: TableName.TRANSACTIONS,
+        recordIds: institution.transactions.map((transaction) => transaction.id),
+      })
 
       await createDeletedRecords({
         tx,
@@ -99,6 +118,11 @@ export class InstitutionsService {
         tableName: TableName.INSTITUTIONS,
         recordIds: [institutionId],
       })
+
+      for (const transaction of institution.transactions) {
+        await tx.transaction.delete({ where: { id: transaction.id } })
+      }
+
       await tx.institution.delete({ where: { id: institutionId } })
     })
   }

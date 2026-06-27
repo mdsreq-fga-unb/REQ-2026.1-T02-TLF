@@ -137,12 +137,16 @@ model Institution {
 
   name    String
   color   String
+  icon    String? @map("icon")
   logoUrl String? @map("logo_url")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  accounts Account[]
+  accounts             Account[]
+  recurrences          Recurrence[]
+  transactions         Transaction[] @relation("InstitutionTransactions")
+  transferDestinations Transaction[] @relation("TransferDestinationInstitutions")
 
   @@map("institutions")
 }
@@ -153,8 +157,11 @@ model Budget {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
 
-  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  categoryId String?   @map("category_id")
+  // TODO: retirar opcionalidade quando a logica de categorias for implementada
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String  @map("category_id")
+  // category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  // categoryId String?   @map("category_id")
 
   name        String
   amountLimit Int    @map("amount_limit")
@@ -196,9 +203,8 @@ model Account {
   // - "AccountTransactions"     -> this row is the source account (accountId on Transaction)
   // - "TransferDestinations"   -> this row is the other leg of a transfer (destinationAccountId)
   invoices             Invoice[]
-  recurrences          Recurrence[]
-  transactions         Transaction[] @relation("AccountTransactions")
-  transferDestinations Transaction[] @relation("TransferDestinations")
+  // transactions         Transaction[] @relation("AccountTransactions")
+  // transferDestinations Transaction[] @relation("TransferDestinations")
 
   @@map("accounts")
 }
@@ -233,8 +239,8 @@ model Invoice {
 model Recurrence {
   id String @id @default(uuid())
 
-  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  accountId String  @map("account_id")
+  institution   Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  institutionId String      @map("institution_id")
 
   category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   categoryId String?   @map("category_id")
@@ -262,18 +268,15 @@ model Recurrence {
 model Transaction {
   id String @id @default(uuid())
 
-  // Source account — every transaction debits/credits this account first.
-  account   Account @relation("AccountTransactions", fields: [accountId], references: [id], onDelete: Cascade)
-  accountId String  @map("account_id")
+  institution   Institution @relation("InstitutionTransactions", fields: [institutionId], references: [id], onDelete: Cascade)
+  institutionId String      @map("institution_id")
 
-  // When type is TRANSFER, this is the other account (credit side). Null for non-transfers.
-  destinationAccount   Account? @relation("TransferDestinations", fields: [destinationAccountId], references: [id], onDelete: SetNull)
-  destinationAccountId String?  @map("destination_account_id")
+  destinationInstitution   Institution? @relation("TransferDestinationInstitutions", fields: [destinationInstitutionId], references: [id], onDelete: SetNull)
+  destinationInstitutionId String?      @map("destination_institution_id")
 
-  // Recurrences create rows as PENDING until the user (or a job) marks them COMPLETED; one-off tx usually starts COMPLETED.
   status TransactionStatus @default(COMPLETED)
   type   TransactionType   @default(EXPENSE)
-  
+
   category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   categoryId String?   @map("category_id")
 
@@ -290,17 +293,16 @@ model Transaction {
   invoice   Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
   invoiceId String?  @map("invoice_id")
 
-  // Installments: e.g. 1000 in 10x -> 10 rows sharing the same reference, installmentNumber 1..N, installmentTotal N.
-  // Wire to invoice / closing logic for credit cards when you implement card billing.
   installmentReference String? @map("installment_reference")
   installmentNumber    Int?    @map("installment_number")
   installmentTotal     Int?    @map("installment_total")
 
-  receiptUrl String? @map("receipt_url") // Institution-issued receipt URL — post-MVP
-  externalId String? @map("external_id") // Open Finance / bank tx id — post-MVP
+  receiptUrl String? @map("receipt_url")
+  externalId String? @map("external_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
   @@map("transactions")
 }
 

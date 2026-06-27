@@ -21,6 +21,9 @@ export class TransactionDetailResponseDto {
   @ApiProperty({ example: 'COMPLETED', required: false })
   status?: string
 
+  @ApiProperty({ example: '5b6d0359-79e2-4e67-9d6f-81bc96e76095', required: false })
+  destinationInstitutionId?: string
+
   @ApiProperty({
     example: {
       id: '3cec466a-096d-4016-bb10-bcc9b94a7d36',
@@ -50,7 +53,7 @@ export class TransactionDetailResponseDto {
       name: 'Nubank',
     },
   })
-  account!: {
+  institution!: {
     id: string
     name: string
   }

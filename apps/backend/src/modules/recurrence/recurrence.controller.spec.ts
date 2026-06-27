@@ -42,7 +42,7 @@ describe('RecurrenceController', () => {
   describe('create', () => {
     it('deve criar recorrência com sucesso', async () => {
       const dto: CreateRecurrenceDto = {
-        accountId: 'acc-1',
+        institutionId: 'inst-1',
         categoryId: 'cat-1',
         description: 'Netflix',
         amount: 2990,

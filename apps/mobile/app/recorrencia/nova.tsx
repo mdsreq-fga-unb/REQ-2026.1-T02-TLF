@@ -27,7 +27,6 @@ import { EditScopeModal } from '@/components/finance/recurrences/EditScopeModal'
 import { AmountDisplay } from '@/components/finance/transactions/AmountDisplay'
 import { NumericKeypad } from '@/components/finance/transactions/NumericKeypad'
 import { DatePickerModal } from '@/components/ui/DatePickerModal'
-import { mockAccounts, mockCategories } from '@/components/finance/recurrences/recurrences-data'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { ThemedBackground } from '@/components/ui/ThemedBackground'
 import {
@@ -41,7 +40,6 @@ export default function NovaRecorrenciaScreen() {
   const {
     isEditing,
     type,
-    setType,
     amountCents,
     keypadVisible,
     setKeypadVisible,
@@ -51,8 +49,8 @@ export default function NovaRecorrenciaScreen() {
     setFrequency,
     dueDay,
     setDueDay,
-    accountId,
-    setAccountId,
+    institutionId,
+    setInstitutionId,
     categoryId,
     setCategoryId,
     subcategoryId,
@@ -85,7 +83,9 @@ export default function NovaRecorrenciaScreen() {
     setShowSubcategoryPicker,
     isFormValid,
     selectedFrequencyLabel,
-    selectedAccount,
+    institutions,
+    categories,
+    selectedInstitution,
     selectedCategory,
     subcategoryOptions,
     selectedSubcategory,
@@ -93,6 +93,8 @@ export default function NovaRecorrenciaScreen() {
     handleSave,
     handleScopeConfirm,
     validateField,
+    submitting,
+    feedbackMessage,
     NO_SUBCATEGORY,
   } = useNovaRecorrencia()
 
@@ -120,30 +122,10 @@ export default function NovaRecorrenciaScreen() {
             style={styles.title}
           />
           <ThemedText
-            text="Configure um pagamento ou recebimento automático."
+            text="Configure um pagamento automático."
             tone="muted"
             style={styles.subtitle}
           />
-        </View>
-
-        <View style={[styles.typeTabs, { backgroundColor: theme.surface }]}>
-          {(['EXPENSE', 'INCOME'] as const).map((t) => (
-            <Pressable
-              key={t}
-              onPress={() => setType(t)}
-              style={[
-                styles.typeTab,
-                type === t && { backgroundColor: t === 'EXPENSE' ? theme.expense : theme.success },
-              ]}
-            >
-              <ThemedText
-                text={t === 'EXPENSE' ? 'DESPESA' : 'RECEITA'}
-                variant="label"
-                tone={type === t ? 'onPrimary' : 'muted'}
-                style={[styles.typeTabText, type === t && { color: '#0F0F13' }]}
-              />
-            </Pressable>
-          ))}
         </View>
 
         <AmountDisplay
@@ -279,30 +261,31 @@ export default function NovaRecorrenciaScreen() {
           </View>
 
           <View style={styles.fieldGroup}>
-            <ThemedText
-              tone="muted"
-              style={styles.label}
-              text={type === 'INCOME' ? 'CONTA DE DESTINO' : 'CONTA DE ORIGEM'}
-            />
+            <ThemedText tone="muted" style={styles.label} text="INSTITUIÇÃO" />
             <Pressable
               onPress={() => setShowAccountPicker((v) => !v)}
               style={[styles.dropdownRow, { backgroundColor: theme.surface }]}
             >
-              <ThemedText text={selectedAccount.name} variant="body" style={styles.dropdownText} />
+              <ThemedText
+                text={selectedInstitution?.name ?? 'Selecione uma instituição'}
+                variant="body"
+                tone={selectedInstitution ? 'default' : 'muted'}
+                style={styles.dropdownText}
+              />
               <ChevronsUpDown size={20} color={theme.mutedForeground} />
             </Pressable>
             {showAccountPicker && (
               <View style={[styles.pickerList, { backgroundColor: theme.surface }]}>
-                {mockAccounts.map((opt) => (
+                {institutions.map((opt) => (
                   <Pressable
                     key={opt.id}
                     onPress={() => {
-                      setAccountId(opt.id)
+                      setInstitutionId(opt.id)
                       setShowAccountPicker(false)
                     }}
                     style={[
                       styles.pickerItem,
-                      opt.id === accountId && { backgroundColor: `${theme.success}22` },
+                      opt.id === institutionId && { backgroundColor: `${theme.success}22` },
                     ]}
                   >
                     <ThemedText
@@ -310,10 +293,10 @@ export default function NovaRecorrenciaScreen() {
                       variant="body"
                       style={[
                         styles.pickerItemText,
-                        { color: opt.id === accountId ? theme.success : theme.foreground },
+                        { color: opt.id === institutionId ? theme.success : theme.foreground },
                       ]}
                     />
-                    {opt.id === accountId && <Check size={18} color={theme.success} />}
+                    {opt.id === institutionId && <Check size={18} color={theme.success} />}
                   </Pressable>
                 ))}
               </View>
@@ -326,12 +309,21 @@ export default function NovaRecorrenciaScreen() {
               onPress={() => setShowCategoryPicker((v) => !v)}
               style={[styles.dropdownRow, { backgroundColor: theme.surface }]}
             >
-              <ThemedText text={selectedCategory.name} variant="body" style={styles.dropdownText} />
-              <AppIcon name={selectedCategory.icon} size={20} color={theme.mutedForeground} />
+              <ThemedText
+                text={selectedCategory?.name ?? 'Selecione uma categoria'}
+                variant="body"
+                tone={selectedCategory ? 'default' : 'muted'}
+                style={styles.dropdownText}
+              />
+              <AppIcon
+                name={selectedCategory?.icon ?? 'tag'}
+                size={20}
+                color={theme.mutedForeground}
+              />
             </Pressable>
             {showCategoryPicker && (
               <View style={[styles.pickerList, { backgroundColor: theme.surface }]}>
-                {mockCategories.map((opt) => (
+                {categories.map((opt) => (
                   <Pressable
                     key={opt.id}
                     onPress={() => {
@@ -518,11 +510,19 @@ export default function NovaRecorrenciaScreen() {
           </View>
 
           <ThemedButton
-            title={isEditing ? 'Atualizar Recorrência' : 'Salvar Recorrência'}
-            disabled={!isFormValid}
+            title={
+              submitting
+                ? 'Salvando...'
+                : isEditing
+                  ? 'Atualizar Recorrência'
+                  : 'Salvar Recorrência'
+            }
+            disabled={!isFormValid || submitting}
             onPress={handleSave}
             style={{ width: '100%' }}
           />
+
+          <ThemedFieldError message={feedbackMessage ?? ''} visible={!!feedbackMessage} />
 
           <View style={styles.bottomSpacer} />
         </ScrollView>
@@ -617,23 +617,6 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 13,
-  },
-  typeTabs: {
-    flexDirection: 'row',
-    borderRadius: 10,
-    padding: 4,
-    marginHorizontal: 20,
-  },
-  typeTab: {
-    flex: 1,
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  typeTabText: {
-    fontSize: 13,
-    fontWeight: '700',
-    letterSpacing: 0.5,
   },
   fieldGroup: {
     gap: 6,

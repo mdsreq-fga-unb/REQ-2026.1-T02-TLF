@@ -25,6 +25,8 @@ const applyBudgetFields = (budget: Budget, input: BudgetInput | BudgetUpdateInpu
 
 export const getBudgetById = async (id: string) => budgetsCollection().find(id)
 
+export const getAllBudgets = async () => budgetsCollection().query().fetch()
+
 export const createBudget = async (input: BudgetInput) => {
   return database.write(async () => {
     return budgetsCollection().create((budget) => {
@@ -51,6 +53,8 @@ export const markBudgetAsDeleted = async (id: string) => {
 
 export const budgetQueries = {
   table: BUDGETS_TABLE,
+
+  getAll: getAllBudgets,
   getById: getBudgetById,
   create: createBudget,
   update: updateBudget,

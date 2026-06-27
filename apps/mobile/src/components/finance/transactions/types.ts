@@ -1,7 +1,7 @@
 export type {
-  FormAccount,
+  FormInstitution,
   FormCategory,
   FormSubcategory,
   TransactionType,
 } from '@/utils/transactionForm/data'
-export { ACCOUNTS, CATEGORIES } from '@/utils/transactionForm/data'
+export { CATEGORIES } from '@/utils/transactionForm/data'

@@ -1,7 +1,8 @@
-import { IsDateString, IsOptional, IsUUID } from 'class-validator'
+import { IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
 export class SyncRecordDto {
-  @IsUUID()
+  @IsString()
+  @IsNotEmpty()
   id!: string
 
   @IsOptional()

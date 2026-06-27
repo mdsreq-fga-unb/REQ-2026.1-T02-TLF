@@ -10,6 +10,7 @@ export class TransactionListResponseDto {
         description: 'Almoço',
         date: '2026-05-02T00:00:00.000Z',
         status: 'COMPLETED',
+        destinationInstitutionId: '5b6d0359-79e2-4e67-9d6f-81bc96e76095',
         category: {
           id: '3cec466a-096d-4016-bb10-bcc9b94a7d36',
           name: 'Alimentação',
@@ -18,7 +19,7 @@ export class TransactionListResponseDto {
           id: 'a55d44df-6f3b-480d-9db4-388235e931bc',
           name: 'Restaurante',
         },
-        account: {
+        institution: {
           id: '077e482b-dfd9-48cb-9b79-15a3c25a83a5',
           name: 'Nubank',
         },
@@ -33,6 +34,7 @@ export class TransactionListResponseDto {
     description?: string
     date: string
     status?: string
+    destinationInstitutionId?: string
     category?: {
       id: string
       name: string
@@ -41,7 +43,7 @@ export class TransactionListResponseDto {
       id: string
       name: string
     }
-    account: {
+    institution: {
       id: string
       name: string
     }

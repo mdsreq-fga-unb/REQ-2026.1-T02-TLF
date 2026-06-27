@@ -7,21 +7,112 @@ import {
 import { PrismaService } from '@common/prisma/prisma.service'
 import { createDeletedRecords } from '@common/sync/deleted-record.util'
 import { buildTimestampWhere } from '@common/sync/sync-query.util'
-import { TableName } from 'generated/prisma/client'
+import { TableName, TransactionType } from 'generated/prisma/client'
 import { CreateBudgetDto } from './dto/create-budget.dto'
 import { FindManyBudgetsDto } from './dto/find-many.dto'
 import { RemoveBudgetRequestDto } from './dto/remove.dto'
 import { UpdateBudgetDto } from './dto/update-budget.dto'
 import { SyncBudgetDto } from './dto/sync-budget.dto'
 
+type BudgetCategory = {
+  id: string
+  name: string
+  color: string
+  icon: string
+}
+
+type BudgetBase = {
+  id: string
+  name: string
+  amountLimit: number
+  month: number
+  year: number
+  categoryId: string
+  userId?: string
+  category?: BudgetCategory | null
+  createdAt: Date
+  updatedAt: Date
+}
+
+type BudgetSummary = {
+  spentValue: number
+  remainingValue: number
+  spentPercentage: number
+}
+
+type BudgetWithSummary = BudgetBase & BudgetSummary
+
 @Injectable()
 export class BudgetService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findMany(dto: FindManyBudgetsDto) {
+  private getBudgetPeriod(month: number, year: number) {
+    return {
+      start: new Date(Date.UTC(year, month - 1, 1)),
+      end: new Date(Date.UTC(year, month, 1)),
+    }
+  }
+
+  private async getBudgetSpentValue(userId: string, categoryId: string, month: number, year: number) {
+    const { start, end } = this.getBudgetPeriod(month, year)
+    const result = await this.prisma.transaction.aggregate({
+      where: {
+        type: TransactionType.EXPENSE,
+        categoryId,
+        institution: {
+          userId,
+        },
+        date: {
+          gte: start,
+          lt: end,
+        },
+      },
+      _sum: {
+        amount: true,
+      },
+    })
+
+    return result._sum.amount ?? 0
+  }
+
+  private normalizeBudget<T extends BudgetBase>(budget: T): BudgetBase {
+    const { userId: _, ...result } = budget
+    return result
+  }
+
+  private async attachBudgetSummary<T extends BudgetBase>(
+    budget: T,
+    userId?: string,
+  ): Promise<BudgetWithSummary> {
+    const normalizedBudget = this.normalizeBudget(budget)
+    const spentValue = await this.getBudgetSpentValue(
+      userId ?? budget.userId ?? '',
+      normalizedBudget.categoryId,
+      normalizedBudget.month,
+      normalizedBudget.year,
+    )
+    const remainingValue = normalizedBudget.amountLimit - spentValue
+    const spentPercentage =
+      normalizedBudget.amountLimit > 0
+        ? Math.round((spentValue / normalizedBudget.amountLimit) * 100)
+        : 0
+
+    return {
+      ...normalizedBudget,
+      spentValue,
+      remainingValue,
+      spentPercentage,
+    }
+  }
+
+  private async attachBudgetsSummary<T extends BudgetBase>(budgets: T[], userId?: string) {
+    return Promise.all(budgets.map((budget) => this.attachBudgetSummary(budget, userId)))
+  }
+
+  async findMany(dto: FindManyBudgetsDto) {
     const { userId, id, categoryId, month, year, createdAfter, updatedAfter } = dto
 
-    return this.prisma.budget.findMany({
+    const budgets = await this.prisma.budget.findMany({
       where: {
         userId,
         ...(id && { id }),
@@ -31,22 +122,24 @@ export class BudgetService {
         ...buildTimestampWhere({ createdAfter, updatedAfter }),
       },
     })
+
+    return this.attachBudgetsSummary(budgets as BudgetBase[], userId)
   }
 
   async create(userId: string, dto: CreateBudgetDto) {
     // TODO: Validar categoria quando o módulo de categorias estiver implementado
-    // const category = await this.prisma.category.findUnique({
-    //   where: { id: dto.categoryId },
-    // })
-    // if (!category) throw new NotFoundException('Categoria não encontrada')
-    // if (category.userId !== userId)
-    //   throw new ForbiddenException('Categoria não pertence ao usuário')
+    const category = await this.prisma.category.findUnique({
+      where: { id: dto.categoryId },
+    })
+    if (!category) throw new NotFoundException('Categoria não encontrada')
+    if (category.userId !== userId)
+      throw new ForbiddenException('Categoria não pertence ao usuário')
 
     const existing = await this.prisma.budget.findUnique({
       where: {
         userId_categoryId_month_year: {
           userId,
-          categoryId: dto.categoryId ? dto.categoryId : '',
+          categoryId: dto.categoryId,
           month: dto.month,
           year: dto.year,
         },
@@ -55,7 +148,7 @@ export class BudgetService {
 
     if (existing) throw new ConflictException('Orçamento já existe para essa categoria/mês/ano')
 
-    return this.prisma.budget.create({
+    const budget = await this.prisma.budget.create({
       data: { ...dto, userId },
       select: {
         id: true,
@@ -65,13 +158,15 @@ export class BudgetService {
         year: true,
         categoryId: true,
         // TODO: Retornar category quando o módulo de categorias estiver implementado
-        // category: { select: { id: true, name: true } },
+        category: { select: { id: true, name: true, color: true, icon: true } },
       },
     })
+
+    return this.attachBudgetSummary(budget as BudgetBase, userId)
   }
 
   async findAll(userId: string) {
-    return this.prisma.budget.findMany({
+    const budgets = await this.prisma.budget.findMany({
       where: { userId },
       select: {
         id: true,
@@ -80,10 +175,11 @@ export class BudgetService {
         month: true,
         year: true,
         categoryId: true,
-        // TODO: Retornar category quando o módulo de categorias estiver implementado
-        // category: { select: { id: true, name: true } },
+        category: { select: { id: true, name: true, color: true, icon: true } },
       },
     })
+
+    return this.attachBudgetsSummary(budgets as BudgetBase[], userId)
   }
 
   async findOne(userId: string, id: string) {
@@ -97,21 +193,18 @@ export class BudgetService {
         year: true,
         categoryId: true,
         userId: true,
-        // TODO: Retornar category quando o módulo de categorias estiver implementado
-        // category: { select: { id: true, name: true } },
+        category: { select: { id: true, name: true, color: true, icon: true } },
       },
     })
 
     if (!budget) throw new NotFoundException('Orçamento não encontrado')
     if (budget.userId !== userId) throw new ForbiddenException('Acesso negado')
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { userId: _, ...result } = budget
-    return result
+    return this.attachBudgetSummary(budget as BudgetBase, userId)
   }
 
   async findByCategory(userId: string, categoryId: string) {
-    return this.prisma.budget.findMany({
+    const budgets = await this.prisma.budget.findMany({
       where: { userId, categoryId },
       select: {
         id: true,
@@ -120,10 +213,11 @@ export class BudgetService {
         month: true,
         year: true,
         categoryId: true,
-        // TODO: Retornar category quando o módulo de categorias estiver implementado
-        // category: { select: { id: true, name: true } },
+        category: { select: { id: true, name: true, color: true, icon: true } },
       },
     })
+
+    return this.attachBudgetsSummary(budgets as BudgetBase[], userId)
   }
 
   async update(userId: string, id: string, dto: UpdateBudgetDto) {
@@ -132,7 +226,7 @@ export class BudgetService {
     if (!budget) throw new NotFoundException('Orçamento não encontrado')
     if (budget.userId !== userId) throw new ForbiddenException('Acesso negado')
 
-    return this.prisma.budget.update({
+    const updatedBudget = await this.prisma.budget.update({
       where: { id },
       data: dto,
       select: {
@@ -142,10 +236,11 @@ export class BudgetService {
         month: true,
         year: true,
         categoryId: true,
-        // TODO: Retornar category quando o módulo de categorias estiver implementado
-        // category: { select: { id: true, name: true } },
+        category: { select: { id: true, name: true, color: true, icon: true } },
       },
     })
+
+    return this.attachBudgetSummary(updatedBudget as BudgetBase, userId)
   }
 
   async syncCreate(userId: string, dto: SyncBudgetDto) {
@@ -154,7 +249,7 @@ export class BudgetService {
     if (category.userId !== userId)
       throw new ForbiddenException('Categoria não pertence ao usuário')
 
-    return this.prisma.budget.upsert({
+    const budget = await this.prisma.budget.upsert({
       where: { id: dto.id },
       create: {
         id: dto.id,
@@ -176,6 +271,8 @@ export class BudgetService {
         ...(dto.updatedAt && { updatedAt: new Date(dto.updatedAt) }),
       },
     })
+
+    return this.attachBudgetSummary(budget as BudgetBase, userId)
   }
 
   async syncUpdate(userId: string, dto: SyncBudgetDto) {
@@ -183,7 +280,7 @@ export class BudgetService {
     if (!budget) throw new NotFoundException('Orçamento não encontrado')
     if (budget.userId !== userId) throw new ForbiddenException('Acesso negado')
 
-    return this.prisma.budget.update({
+    const updatedBudget = await this.prisma.budget.update({
       where: { id: dto.id },
       data: {
         categoryId: dto.categoryId,
@@ -194,6 +291,8 @@ export class BudgetService {
         ...(dto.updatedAt && { updatedAt: new Date(dto.updatedAt) }),
       },
     })
+
+    return this.attachBudgetSummary(updatedBudget as BudgetBase, userId)
   }
 
   async remove(dto: RemoveBudgetRequestDto): Promise<void> {

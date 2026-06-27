@@ -45,18 +45,18 @@ export function TransactionItem({ transaction, onDelete, onPress, onEdit }: prop
 
           <View style={styles.details}>
             <ThemedText
-              text={transaction.description}
+              text={transaction.category}
               variant="label"
               style={styles.description}
               numberOfLines={1}
             />
-            <ThemedText
-              text={transaction.category}
+            {/* <ThemedText
+              text={`${transaction.subcategory ? ` • ${transaction.subcategory}` : ''}`}
               variant="caption"
               tone="muted"
               style={styles.subtitle}
               numberOfLines={1}
-            />
+            /> */}
           </View>
         </View>
 

@@ -6,8 +6,6 @@ site_url: https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/
 theme:
   name: material
   language: pt
-  logo: images/tlt-icon.png
-  favicon: images/tlt-icon.png
   features:
     - navigation.instant
     - navigation.tabs
@@ -36,32 +34,13 @@ theme:
 plugins:
   - search
 
-extra:
-  version:
-    provider: mike
-
 nav:
-  - Início: index.md
   - Visão do Produto e Projeto:
-      - 1-Cenário: visao/1-cenario.md
-      - 2-Solução: visao/2-solucao.md
-      - 3-Estratégias: visao/3-estrategias.md
-      - 4-Engenharia de Requisitos: visao/4-engenharia-requisitos.md
-      - 5-Cronograma: visao/5-cronograma.md
-      - 6-Interação entre equipe e cliente: visao/6-interacao-equipe.md
-      - 7-Requisitos de Software: visao/7-requisitos-software.md
-      - 8-Casos de Uso: visao/8-casosdeuso.md
-      - 9-MoSCoW: visao/9-MoSCoW.md
-      - 10-DoR e DoD: visao/10-DoR-e-DoD.md
-      - 11-WIL do Produto: visao/11-WIL-produto.md
-      - 12.1-Unidade 1: visao/12-unidade-1.md
-      - 12.2-Unidade 2: visao/12-unidade-2.md
-      - 12.3-Unidade 3: visao/12-unidade-3.md
-      - Referências: visao/referencias.md
-  - Entregas:
-      - 1-Apresentações: entregas/apresentacao.md
-      - 2-Reuniões: entregas/reunioes.md
-      - 3-Coverage: entregas/Cobertura.md
-      - 4-Prototipo: entregas/prototipo.md
-
-      
+    - 1-Cenário: visao/1-cenario.md
+    - 2-Solução: visao/2-solucao.md
+    - 3-Estratégias: visao/3-estrategias.md
+    - 4-Engenharia de Requisitos: visao/4-engenharia-requisitos.md
+    - 5-Cronograma: visao/5-cronograma.md
+    - 6-Interação entre equipe e cliente: visao/6-interacao-equipe.md
+    - 10.1-Unidade 1: visao/10-unidade-1.md
+  - Entregas: entregas/apresentacao.md

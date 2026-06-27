@@ -51,16 +51,14 @@ app.json
 
 # Python / MkDocs
 site/
-.DS_Store
-.env
 venv/
 .venv
 __pycache__/
 *.pyc
+.python-version
+
+# OS and editors
+.DS_Store
+*.pem
 .vscode/
 .idea/
-.python-version
-node_modules
-.venv
-app.json
-android

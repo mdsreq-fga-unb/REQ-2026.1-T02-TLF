@@ -1,6 +1,6 @@
-# 12 UNIDADE 1
+# 10 UNIDADE 1
 
-## 12.1 Unidade 1
+## 10.1 Unidade 1
 
 Durante a unidade 1 do projeto TLT Finanças, a equipe consolidou as bases do produto e definiu os principais elementos que orientariam o desenvolvimento ao longo das próximas iterações. Nessa etapa, o projeto foi estruturado como uma solução de gestão financeira pessoal voltada à organização de receitas e despesas, com foco em usabilidade, segurança, persistência offline e sincronização automática. A proposta técnica também exigiu a definição de uma pilha composta por React Native, Node.js/NestJS, PostgreSQL, Prisma, Supabase Auth, Swagger, Jest, Git e GitHub, o que reforçou a necessidade de organização e alinhamento desde o início.
 

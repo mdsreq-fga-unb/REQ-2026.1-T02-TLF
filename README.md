@@ -7,8 +7,8 @@
 <p align="center">
   <img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow" />
   <img src="https://img.shields.io/badge/version-0.1.0-blue" />
-  <img src="https://img.shields.io/badge/license-academic-lightgrey" />
-  <img src="https://img.shields.io/badge/node-%3E%3D18-green" />
+  <img src="https://img.shields.io/badge/license-MIT-green" />
+  <img src="https://img.shields.io/badge/node-%3E%3D20-green" />
 </p>
 
 ---
@@ -104,7 +104,8 @@ cd tlt-financas
 ### ▶️ Rodando o frontend (mobile)
 
 ```bash
-🚧 Em desenvolvimento
+cd apps/mobile
+npm start
 ```
 
 ### ▶️ Rodando o backend
@@ -161,7 +162,7 @@ O projeto foi dividido em **13 iterações**:
 
 ## 📄 Licença
 
-Projeto acadêmico sem fins comerciais.
+Este projeto está licenciado sob a **MIT License**.
 
 ---
 
@@ -170,3 +171,16 @@ Projeto acadêmico sem fins comerciais.
 A aplicação pode ser publicada via **GitHub Pages** para a landing page.
 
 ---
+
+## 🤝 Contribuição
+
+Centralizamos o guia de contribuição em `.github/CONTRIBUTING.md`, incluindo:
+
+- setup completo do ambiente de desenvolvimento;
+- fluxo de branches e padrão de commits;
+- comandos do dia a dia;
+- convenções técnicas do projeto.
+- arquitetura e fluxos de produto (offline-first, onboarding e autenticação);
+- build mobile com EAS e referência de variáveis de ambiente.
+
+Para contribuir, leia: `.github/CONTRIBUTING.md`.

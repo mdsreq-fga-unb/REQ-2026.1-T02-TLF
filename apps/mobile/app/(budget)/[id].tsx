@@ -1,0 +1,141 @@
+import React, { useEffect } from 'react'
+import { ThemedBackground } from '@/components/ui/ThemedBackground'
+import { AmountDisplay } from '@/components/finance/transactions/AmountDisplay'
+import { FormField } from '@/components/finance/transactions/FormField'
+import { NumericKeypad } from '@/components/finance/transactions/NumericKeypad'
+import { PickerModal } from '@/components/finance/transactions/PickerModal'
+import { ThemedButton } from '@/components/ui/ThemedButton'
+import { ThemedText } from '@/components/ui/ThemedText'
+import { BudgetInitialValues, useBudgetScreen } from '@/hooks/budget/useBudgetScreen'
+import { useThemeColor } from '@/hooks/useThemeColor'
+import { View, ScrollView } from 'react-native'
+import { router, useLocalSearchParams } from 'expo-router'
+import { ThemedOverlayAlert } from '@/components/ui/ThemedOverlayAlert'
+import { Bookmark, LayoutGrid, Banknote, CircleAlert } from 'lucide-react-native'
+
+type Props = {
+  title?: string
+  initialValues?: BudgetInitialValues
+}
+
+export default function EditBudgetScreen({ initialValues }: Props) {
+  const theme = useThemeColor()
+  const form = useBudgetScreen(initialValues)
+  const params = useLocalSearchParams<{ id?: string }>()
+  const id = String(params.id ?? '')
+
+  useEffect(() => {
+    if (id) {
+      form.fetchBudget(id)
+    }
+  }, [id])
+
+  return (
+    <ThemedBackground>
+      <View style={{ width: '100%' }}>
+        <ScrollView>
+          <AmountDisplay
+            amountCents={form.amountLimit}
+            type={'TRANSFER'}
+            showType={false}
+            type={'TRANSFER'}
+            showType={false}
+            onPress={() => form.setShowKeypad(true)}
+          />
+          {form.submitAttempted && form.errors.amount && (
+            <ThemedText children text={form.errors.amount} tone="warning" />
+          )}
+          <View
+            style={{
+              backgroundColor: theme.surfaceMuted,
+              width: '100%',
+              borderRadius: 16,
+              padding: 16,
+              marginTop: 15,
+            }}
+          >
+            <FormField
+              isInput
+              icon={Bookmark}
+              value={form.name}
+              label="Nome"
+              placeholder="Nome"
+              onChangeText={form.setName}
+            />
+
+            <FormField
+              icon={LayoutGrid}
+              label="Categoria"
+              value={form.selectedCategoryLabel}
+              onPress={() => form.setShowCategoryPicker(true)}
+            />
+
+            <FormField
+              icon={Banknote}
+              label={form.type == 'BUDGET' ? 'Limite' : 'Meta'}
+              value={form.amount}
+              onPress={() => {}}
+              onChangeText={(text: string) => form.setAmountLimit(Number(text))}
+            />
+          </View>
+          <NumericKeypad
+            visible={form.showKeypad}
+            amountCents={form.amountLimit}
+            type={'TRANSFER'}
+            onKeyPress={form.handleKeypad}
+            onSave={() => form.setShowKeypad(false)}
+          />
+
+          <PickerModal
+            visible={form.showCategoryPicker}
+            title="Selecionar Categoria"
+            options={form.categoryOptions}
+            selectedId={form.categoryId}
+            onSelect={form.setCategoryId}
+            onClose={() => form.setShowCategoryPicker(false)}
+          />
+        </ScrollView>
+        <View
+          style={{
+            borderTopColor: `${theme.mutedForeground}25`,
+            paddingHorizontal: 24,
+            paddingVertical: 16,
+            borderTopWidth: 1,
+            alignItems: 'center',
+            gap: 10,
+          }}
+        >
+          {form.feedbackMessage && (
+            <View
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 8, alignSelf: 'stretch' }}
+            >
+              <CircleAlert size={18} color="#f2685a" />
+              <ThemedText children text={form.feedbackMessage} tone="warning" />
+            </View>
+          )}
+          <ThemedButton
+            title={form.submitting ? 'Salvando...' : 'Salvar'}
+            disabled={form.submitting || !form.isValid}
+            onPress={() => {
+              void form.handleEditSubmit(id, () => {
+                router.back()
+              })
+            }}
+          />
+        </View>
+      </View>
+      <ThemedOverlayAlert
+        visible={form.feedbackMessage != null}
+        onRequestClose={form.dismissFeedback}
+        message={form.feedbackMessage ?? ''}
+        actions={[{ label: 'Entendi', onPress: form.dismissFeedback }]}
+      >
+        <ThemedText
+          variant="headline"
+          text="Erro ao Editar"
+          style={{ textAlign: 'center', width: '100%' }}
+        />
+      </ThemedOverlayAlert>
+    </ThemedBackground>
+  )
+}

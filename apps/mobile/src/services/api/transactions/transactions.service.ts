@@ -13,18 +13,13 @@ import type {
 } from './transactions.types'
 
 export const transactionsService = {
-  list: (filters?: TransactionFilters) =>
-    listTransactions(filters),
+  list: (filters?: TransactionFilters) => listTransactions(filters),
 
-  getById: (id: string) =>
-    getTransactionById(id),
+  getById: (id: string) => getTransactionById(id),
 
-  update: (id: string, payload: TransactionUpdatePayload) =>
-    updateTransaction(id, payload),
+  update: (id: string, payload: TransactionUpdatePayload) => updateTransaction(id, payload),
 
-  delete: (id: string) =>
-    deleteTransaction(id),
+  delete: (id: string) => deleteTransaction(id),
 
-  create: (payload: CreateTransactionPayload) =>
-    createTransaction(payload),
+  create: (payload: CreateTransactionPayload) => createTransaction(payload),
 }

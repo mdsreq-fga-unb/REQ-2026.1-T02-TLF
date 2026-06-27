@@ -16,6 +16,7 @@ jest.mock('@/services/database/sync', () => ({
 }))
 
 jest.mock('expo-router', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React = require('react')
 
   return {
@@ -27,9 +28,7 @@ jest.mock('expo-router', () => {
 const mockedCategoryQueries = jest.mocked(categoryQueries)
 const mockedSyncDatabase = jest.mocked(syncDatabase)
 
-const categories = [
-  { id: 'cat-1', name: 'Moradia', icon: 'house', color: '#111111' },
-]
+const categories = [{ id: 'cat-1', name: 'Moradia', icon: 'house', color: '#111111' }]
 
 describe('useCategory hook', () => {
   beforeEach(() => {

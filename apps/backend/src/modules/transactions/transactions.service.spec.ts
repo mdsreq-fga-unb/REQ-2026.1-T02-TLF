@@ -128,7 +128,9 @@ describe('TransactionsService', () => {
       prismaMock.category.findUnique.mockResolvedValue(mockCategory)
       prismaMock.institution.findUnique.mockResolvedValue(null)
 
-      await expect(service.create('user-1', dto as CreateTransactionDto)).rejects.toThrow(NotFoundException)
+      await expect(service.create('user-1', dto as CreateTransactionDto)).rejects.toThrow(
+        NotFoundException,
+      )
     })
 
     it('deve lançar BadRequestException se instituição não pertencer ao usuário', async () => {
@@ -138,7 +140,9 @@ describe('TransactionsService', () => {
         userId: 'outro-user',
       })
 
-      await expect(service.create('user-1', dto as CreateTransactionDto)).rejects.toThrow(ForbiddenException)
+      await expect(service.create('user-1', dto as CreateTransactionDto)).rejects.toThrow(
+        ForbiddenException,
+      )
     })
   })
 

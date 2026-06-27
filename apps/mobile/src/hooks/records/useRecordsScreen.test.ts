@@ -26,6 +26,7 @@ jest.mock('@/utils/records/transactionMappers', () => ({
 }))
 
 jest.mock('expo-router', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React = require('react')
 
   return {
@@ -117,7 +118,7 @@ describe('useRecordsScreen', () => {
         date:
           typeof transaction.date === 'string'
             ? transaction.date
-            : transaction.date.toISOString(),
+            : new Date(transaction.date).toISOString(),
       },
     })
   })

@@ -53,7 +53,12 @@ export class BudgetService {
     }
   }
 
-  private async getBudgetSpentValue(userId: string, categoryId: string, month: number, year: number) {
+  private async getBudgetSpentValue(
+    userId: string,
+    categoryId: string,
+    month: number,
+    year: number,
+  ) {
     const { start, end } = this.getBudgetPeriod(month, year)
     const result = await this.prisma.transaction.aggregate({
       where: {
@@ -76,7 +81,8 @@ export class BudgetService {
   }
 
   private normalizeBudget<T extends BudgetBase>(budget: T): BudgetBase {
-    const { userId: _, ...result } = budget
+    const { userId, ...result } = budget
+    void userId
     return result
   }
 

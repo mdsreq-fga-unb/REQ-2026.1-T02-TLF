@@ -16,6 +16,7 @@ import {
   buildSubcategoryLookup,
   mapLocalRecurrenceToUi,
 } from '@/utils/recurrences/recurrenceMappers'
+import type { DeleteScope } from '@/hooks/recurrences/useDeleteRecurrenceModal'
 import type { IconKey } from '@/utils/icons'
 
 export function useRecorrenciaDetails() {
@@ -118,7 +119,7 @@ export function useRecorrenciaDetails() {
     })
   }
 
-  const handleDeleteConfirm = async (_scope: any) => {
+  const handleDeleteConfirm = async (_scope: DeleteScope) => {
     if (!id) return
     try {
       await recurrenceQueries.delete(id)

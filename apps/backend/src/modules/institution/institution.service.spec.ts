@@ -35,7 +35,9 @@ describe('InstitutionService', () => {
 
   beforeEach(async () => {
     jest.resetAllMocks()
-    mockPrisma.$transaction.mockImplementation(async (callback: any) => callback(mockPrisma))
+    mockPrisma.$transaction.mockImplementation(
+      async <T>(callback: (tx: typeof mockPrisma) => T): Promise<T> => callback(mockPrisma),
+    )
     const module: TestingModule = await Test.createTestingModule({
       providers: [InstitutionService, { provide: PrismaService, useValue: mockPrisma }],
     }).compile()

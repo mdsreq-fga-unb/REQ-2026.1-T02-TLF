@@ -3,7 +3,10 @@ import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
 import type { RecurrenceFrequency, RecurrenceType } from '@/components/finance/recurrences/types'
 import { categoryQueries } from '@/services/database/repository/category'
 import { institutionQueries } from '@/services/database/queries/institution'
-import { recurrenceQueries } from '@/services/database/repository/recurrece'
+import {
+  recurrenceQueries,
+  type RecurrenceUpdateInput,
+} from '@/services/database/repository/recurrece'
 import { subCategoryQueries } from '@/services/database/repository/subCategory'
 import { syncDatabase } from '@/services/database/sync'
 import { getApiErrorMessage } from '@/utils/apiErrorMessage'
@@ -177,11 +180,9 @@ export function useNovaRecorrencia() {
     const timeout = globalThis.setTimeout(() => {
       setShowSuccess(false)
       router.back()
-    }, 1600)
+    }, 1600) as ReturnType<typeof setTimeout> & { unref?: () => void }
     timeoutRef.current = timeout
-    if (typeof (timeout as any)?.unref === 'function') {
-      ;(timeout as any).unref()
-    }
+    timeout.unref?.()
   }
 
   useEffect(() => {
@@ -209,8 +210,8 @@ export function useNovaRecorrencia() {
       ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
       : undefined
 
-  const buildUpdatePayload = () => {
-    const payload: any = {}
+  const buildUpdatePayload = (): RecurrenceUpdateInput => {
+    const payload: RecurrenceUpdateInput = {}
     const trimmedDescription = description.trim()
 
     if (trimmedDescription !== (params.description ?? '')) payload.description = trimmedDescription

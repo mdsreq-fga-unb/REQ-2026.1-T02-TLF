@@ -17,7 +17,9 @@ jest.mock('expo-router', () => {
 
 jest.mock('@/services/database/repository/category', () => ({
   categoryQueries: {
-    getAll: jest.fn().mockResolvedValue([{ id: 'cat-1', name: 'Categoria', icon: 'tag', color: '#fff' }]),
+    getAll: jest
+      .fn()
+      .mockResolvedValue([{ id: 'cat-1', name: 'Categoria', icon: 'tag', color: '#fff' }]),
   },
 }))
 
@@ -51,7 +53,9 @@ describe('useNovaRecorrencia', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockedUseLocalSearchParams.mockReturnValue({})
-    mockedGetCategories.mockResolvedValue([{ id: 'cat-1', name: 'Categoria', icon: 'tag', color: '#fff' }])
+    mockedGetCategories.mockResolvedValue([
+      { id: 'cat-1', name: 'Categoria', icon: 'tag', color: '#fff' },
+    ])
   })
 
   it('loads institutions and categories defaults from real data', async () => {

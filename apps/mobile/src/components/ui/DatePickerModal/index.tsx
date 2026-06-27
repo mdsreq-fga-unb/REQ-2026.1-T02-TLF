@@ -152,20 +152,33 @@ export function DatePickerModal({ visible, value, onConfirm, onCancel }: Props) 
           </View>
           <View style={styles.weekRow}>
             {WEEK_DAYS.map((d, i) => (
-              <ThemedText key={i} text={d} variant="caption" tone="muted" style={styles.weekDayLabel} />
+              <ThemedText
+                key={i}
+                text={d}
+                variant="caption"
+                tone="muted"
+                style={styles.weekDayLabel}
+              />
             ))}
           </View>
           <View style={styles.grid}>
             {Array.from({ length: cells.length / 7 }, (_, row) => (
               <View key={row} style={styles.weekRow}>
                 {cells.slice(row * 7, row * 7 + 7).map((day, col) => {
-                  const isSelected = day != null && selectedDate.getDate() === day && selectedDate.getMonth() === month && selectedDate.getFullYear() === year
+                  const isSelected =
+                    day != null &&
+                    selectedDate.getDate() === day &&
+                    selectedDate.getMonth() === month &&
+                    selectedDate.getFullYear() === year
                   return (
                     <Pressable
                       key={col}
                       disabled={!day}
                       onPress={() => day && setSelectedDate(new Date(year, month, day))}
-                      style={[styles.dayCell, isSelected && { backgroundColor: theme.primary, borderRadius: 10 }]}
+                      style={[
+                        styles.dayCell,
+                        isSelected && { backgroundColor: theme.primary, borderRadius: 10 },
+                      ]}
                     >
                       <ThemedText
                         text={day != null ? String(day) : ''}
@@ -179,13 +192,18 @@ export function DatePickerModal({ visible, value, onConfirm, onCancel }: Props) 
             ))}
           </View>
         </>
-      ) : renderTimePicker()}
+      ) : (
+        renderTimePicker()
+      )}
 
       <View style={styles.footer}>
         <Pressable onPress={onCancel} style={styles.cancelBtn}>
           <ThemedText text="Cancelar" variant="button" tone="muted" />
         </Pressable>
-        <Pressable onPress={handleConfirm} style={[styles.confirmBtn, { backgroundColor: theme.primary }]}>
+        <Pressable
+          onPress={handleConfirm}
+          style={[styles.confirmBtn, { backgroundColor: theme.primary }]}
+        >
           <ThemedText text="Confirmar" variant="button" tone="onPrimary" />
         </Pressable>
       </View>
@@ -208,5 +226,5 @@ const customStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
-  }
+  },
 })

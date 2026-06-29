@@ -6,40 +6,55 @@
 
 A tabela, a seguir, apresenta cada um dos requisitos funcionais (RFs) declarados utilizando a técnica de Casos de Uso (UCs), assim como a rastreabilidade com os requisitos não funcionais (RNFs).
 
-| RF                                                                 | Caso de Uso | Descrição do caso de uso                                                                                   | RNFs relacionados                               |
-| ------------------------------------------------------------------ | ----------- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| RF01 – cadastrar uma conta.                                        | UC01        | Permite ao usuário criar uma conta no sistema para iniciar seu acesso.                                     | RNF01, RNF04, RNF05, RNF09, RNF10               |
-| RF02 – autenticar o usuário.                                       | UC02        | Permite ao usuário acessar sua conta no sistema por meio de login.                                         | RNF01, RNF03, RNF04, RNF05, RNF09               |
-| RF03 – permitir a recuperação de senha.                            | UC03        | Permite ao usuário redefinir sua senha caso a tenha esquecido.                                             | RNF01, RNF04, RNF05, RNF09                      |
-| RF04 – exibir um painel financeiro inicial.                        | UC04        | Exibe ao usuário uma visão geral simplificada das finanças, com saldo, últimas transações e resumo básico. | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF05 – exibir o histórico de transações.                           | UC05        | Permite ao usuário acessar o histórico completo de transações diretamente pelo painel inicial.             | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF06 – gerar um painel com resumo gráfico.                         | UC06        | Exibe um painel financeiro consolidado com gráficos e indicadores visuais.                                 | RNF02, RNF03, RNF05, RNF06, RNF09               |
-| RF07 – registrar uma transação financeira.                         | UC07        | Permite ao usuário registrar receitas e despesas para atualizar o saldo e o controle financeiro.           | RNF02, RNF03, RNF04, RNF05, RNF08, RNF09, RNF12 |
-| RF08 – editar uma transação.                                       | UC08        | Permite ao usuário alterar dados de uma transação financeira registrada anteriormente.                     | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF09 – excluir uma transação.                                      | UC09        | Permite ao usuário remover uma transação financeira registrada.                                            | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF10 – criar uma categoria de transação.                           | UC10        | Permite ao usuário criar uma nova categoria personalizada para classificar transações.                     | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF11 – editar uma categoria de transação.                          | UC11        | Permite ao usuário modificar dados de uma categoria existente.                                             | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF12 – excluir uma categoria de transação.                         | UC12        | Permite ao usuário remover uma categoria personalizada do sistema.                                         | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF13 – criar uma subcategoria de transação.                        | UC13        | Permite ao usuário criar uma subcategoria vinculada a uma categoria existente.                             | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF14 – editar uma subcategoria de transação.                       | UC14        | Permite ao usuário alterar o nome de uma subcategoria existente.                                           | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF15 – excluir uma subcategoria de transação.                      | UC15        | Permite ao usuário remover uma subcategoria do sistema.                                                    | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF16 – criar uma orçamento.                                        | UC16        | Permite ao usuário criar objetivos financeiros e definir metas ou limites de gastos.                       | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF17 – editar uma orçamento.                                       | UC17        | Permite ao usuário modificar metas financeiras e limites de gastos já cadastrados.                         | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF18 – excluir uma orçamento.                                      | UC18        | Permite ao usuário remover um planejamento financeiro ou meta do sistema.                                  | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF19 – cadastrar uma instituição financeira.                       | UC19        | Permite ao usuário cadastrar uma instituição financeira, como banco ou corretora.                          | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF20 – editar uma instituição financeira.                          | UC20        | Permite ao usuário modificar os dados de uma instituição financeira cadastrada.                            | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF21 – excluir uma instituição financeira.                         | UC21        | Permite ao usuário remover uma instituição financeira do sistema.                                          | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF22 – registrar uma conta financeira.                             | UC22        | Permite ao usuário registrar uma conta financeira vinculada a uma instituição.                             | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF23 – editar de uma conta financeira.                             | UC23        | Permite ao usuário modificar os dados de uma conta financeira registrada.                                  | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF24 – excluir uma conta financeira.                               | UC24        | Permite ao usuário apagar o registro de uma conta financeira cadastrada.                                   | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF25 – cadastrar uma transação recorrente.                         | UC25        | Permite ao usuário cadastrar uma transação que se repete periodicamente.                                   | RNF02, RNF03, RNF04, RNF05, RNF08, RNF09, RNF12 |
-| RF26 – editar uma transação recorrente.                            | UC26        | Permite ao usuário modificar uma transação recorrente existente.                                           | RNF02, RNF03, RNF04, RNF05, RNF08, RNF09        |
-| RF27 – excluir uma transação recorrente.                           | UC27        | Permite ao usuário cancelar uma recorrência e interromper lançamentos futuros.                             | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF28 – Exportar um relatório financeiro.                           | UC28        | Permite ao usuário gerar e exportar relatórios financeiros em formatos como PDF ou CSV.                    | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF29 – notificar quando um limite for atingido ou estiver próximo. | UC29        | Permite ao sistema alertar o usuário quando limites de gastos forem atingidos ou estiverem próximos.       | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF30 – permitir o envio de feedback.                               | UC30        | Permite ao usuário enviar feedback, reportar erros ou sugerir melhorias.                                   | RNF02, RNF04, RNF05, RNF09, RNF10, RNF11        |
-| RF31 – gerar e exibir dica financeira personalizada.               | UC31        | Permite ao sistema analisar o comportamento financeiro do usuário e exibir dicas personalizadas.           | RNF02, RNF03, RNF04, RNF05, RNF09               |
-| RF32 – disponibilizar materiais de educação financeira.            | UC32        | Permite ao usuário acessar materiais educativos recomendados, como cursos, vídeos e artigos.               | RNF02, RNF03, RNF04, RNF05, RNF06, RNF09        |
+- ✅ = Concluido
+- 🛠️ = Em andamento
+- 💤 = Não iniciado
+- ❌ = Removido
+- 📵 = Fora do escopo
+
+| Item | UC/RF                      | RNF   | Iteração | Responsavel      | Status | observações                                         |
+| :--: | -------------------------- | ----- | :------- | ---------------- | ------ | --------------------------------------------------- |
+|  1   | [UC-01](./casodeuso-01.md) | RNF01 | 3        | Danilo; Gabriel; | ✅     |                                                     |
+|  2   | [UC-02](./casodeuso-02.md) | RNF01 | 3        | Danilo; Gabriel; | ✅     |                                                     |
+|  3   | [UC-03](./casodeuso-03.md) | RNF01 | -        | -                | 📵     |                                                     |
+|  4   | [UC-04](./casodeuso-04.md) | -     | 4        | Daniel; Lucas;   | ✅     |                                                     |
+|  5   | [UC-05](./casodeuso-05.md) | -     | 4        | Daniel; Lucas;   | ✅     |                                                     |
+|  6   | [UC-06](./casodeuso-06.md) | RNF05 | 7        | Gabriel;         | ✅     |                                                     |
+|  7   | [UC-07](./casodeuso-07.md) | -     | 4        | Lucas; Tiago;    | ✅     |                                                     |
+|  8   | [UC-08](./casodeuso-08.md) | -     | 4        | Lucas; Tiago;    | ✅     |                                                     |
+|  9   | [UC-09](./casodeuso-09.md) | -     | 4        | Daniel; Lucas;   | ✅     |                                                     |
+|  10  | [UC-10](./casodeuso-10.md) | -     | 6        | Gabriel; Tiago;  | ✅     |                                                     |
+|  11  | [UC-11](./casodeuso-11.md) | -     | 6        | Gabriel; Tiago;  | ✅     |                                                     |
+|  12  | [UC-12](./casodeuso-12.md) | -     | 6        | Gabriel; Tiago;  | ✅     |                                                     |
+|  13  | [UC-13](./casodeuso-13.md) | -     | -        | -                | ❌     | Removido devido a atrasos com o fluxo Offline-first |
+|  14  | [UC-14](./casodeuso-14.md) | -     | -        | -                | ❌     | Removido devido a atrasos com o fluxo Offline-first |
+|  15  | [UC-15](./casodeuso-15.md) | -     | -        | -                | ❌     | Removido devido a atrasos com o fluxo Offline-first |
+|  16  | [UC-16](./casodeuso-16.md) | -     | 5        | Gabriel; Tiago;  | ✅     |                                                     |
+|  17  | [UC-17](./casodeuso-17.md) | -     | 5        | Gabriel; Tiago;  | ✅     |                                                     |
+|  18  | [UC-18](./casodeuso-18.md) | -     | 5        | Gabriel; Tiago;  | ✅     |                                                     |
+|  19  | [UC-19](./casodeuso-19.md) | -     | 8        | Lucas; Tiago;    | ✅     |                                                     |
+|  20  | [UC-20](./casodeuso-20.md) | -     | 8        | Lucas; Tiago;    | ✅     |                                                     |
+|  21  | [UC-21](./casodeuso-21.md) | -     | 8        | Lucas; Tiago;    | ✅     |                                                     |
+|  22  | [UC-22](./casodeuso-22.md) | -     | -        | -                | ❌     | Removido devido a atrasos com o fluxo Offline-first |
+|  23  | [UC-23](./casodeuso-23.md) | -     | -        | -                | ❌     | Removido devido a atrasos com o fluxo Offline-first |
+|  24  | [UC-24](./casodeuso-24.md) | -     | -        | -                | ❌     | Removido devido a atrasos com o fluxo Offline-first |
+|  25  | [UC-25](./casodeuso-25.md) | -     | 5        | Daniel; Lucas;   | ✅     |                                                     |
+|  26  | [UC-26](./casodeuso-26.md) | -     | 5        | Daniel; Lucas;   | ✅     |                                                     |
+|  27  | [UC-27](./casodeuso-27.md) | -     | 5        | Daniel; Lucas;   | ✅     |                                                     |
+|  28  | [UC-28](./casodeuso-28.md) | -     | -        | -                | ❌     | Removido devido a atrasos com o fluxo Offline-first |
+|  29  | [UC-29](./casodeuso-29.md) | -     | 6        | Danilo;          | ✅     |                                                     |
+|  30  | [UC-30](./casodeuso-30.md) | RNF10 | -        | -                | 📵     |                                                     |
+|  31  | [UC-31](./casodeuso-31.md) | -     | -        | -                | 📵     |                                                     |
+|  32  | [UC-32](./casodeuso-32.md) | RNF05 | -        | -                | 📵     |                                                     |
+
+- RNF02 se aplica aos UC04 a UC32.
+- RNF03 se aplica aos UC02 e UC04 a UC32.
+- RNF04 se aplica aos UC01, UC02 e UC04 a UC32, exceto UC06.
+- RNF06 se aplica aos UC01 a UC32 (todos).
+- RNF07 se aplica aos UC07, UC25 e UC26.
+- RNF08 se aplica aos UC01 a UC32 (todos).
+- RNF09 se aplica aos UC01 a UC32.
+- RNF11 se aplica aos UC04 a UC32.
 
 ## 11.2 Priorização da WIL e escopo
 
@@ -66,6 +81,8 @@ A partir disso, foi gerada a seguinte Matriz de valor e impacto:
 
 <iframe width="100%" height="500" src="https://miro.com/app/board/uXjVHTBwhKE=/?share_link_id=623549294839" title="Matriz de impacto e esforçp" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 [Matriz de valor e impacto](https://miro.com/app/board/uXjVHTBwhKE=/?share_link_id=623549294839)
+
+<a id="WIL-priorizada"></a>
 
 | RF / RNF | Descrição                                                                                                                                         | Impacto       | Esforço       | Quadrante | Prioridade sugerida |
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------- | --------- | ------------------- |
@@ -115,44 +132,4 @@ A partir disso, foi gerada a seguinte Matriz de valor e impacto:
 
 ## 11.3 Execução da WIL
 
-- ✅ = Concluido
-- 🛠️ = Em andamento
-- 💤 = Não iniciado
-- ❌ = Removido
-- 📵 = Fora do escopo
-
-| Item | RF    | UC    | Iteração | Responsavel      | Status    | Evidencias                                                              |
-| :--: | ----- | ----- | :------- | ---------------- | ------ | ---------- |
-|  1   | RF-01 | [UC-01](./8-casosdeuso.md#uc01-cadastrar-usuario) | 3        | Danilo; Gabriel; | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/1)  |
-|  2   | RF-02 | [UC-02](./8-casosdeuso.md#uc02-realizar-login) | 3        | Danilo; Gabriel; | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/4)  |
-|  3   | RF-03 | [UC-03](./8-casosdeuso.md#uc03-recuperar-senha) | -        | -                | 📵      | -                                                                       |
-|  4   | RF-04 | [UC-04](./8-casosdeuso.md#uc04-visualizar-painel-inicial-sem-graficos) | 4        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/9)  |
-|  5   | RF-05 | [UC-05](./8-casosdeuso.md#uc05-visualizar-historico-pelo-painel-inicial) | 4        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/9)  |
-|  6   | RF-06 | [UC-06](./8-casosdeuso.md#uc06-visualizar-painel-com-resumo-grafico) | 7        | Gabriel;         | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/1)  |
-|  7   | RF-07 | [UC-07](./8-casosdeuso.md#uc07-registrar-transacao-receita-ou-despesa) | 4        | Lucas; Tiago;    | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/12) |
-|  8   | RF-08 | [UC-08](./8-casosdeuso.md#uc08-editar-transacao) | 4        | Lucas; Tiago;    | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/12) |
-|  9   | RF-09 | [UC-09](./8-casosdeuso.md#uc09-deletar-transacao) | 4        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/9)  |
-|  10  | RF-10 | [UC-10](./8-casosdeuso.md#uc10-criar-categoria-de-transacao) | 6        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/10) |
-|  11  | RF-11 | [UC-11](./8-casosdeuso.md#uc11-editar-categoria-de-transacao) | 6        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/10) |
-|  12  | RF-12 | [UC-12](./8-casosdeuso.md#uc12-apagar-categoria-de-transacao) | 6        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/10) |
-|  13  | RF-13 | [UC-13](./8-casosdeuso.md#uc13-criar-subcategoria-de-transacao) | -        | -                | ❌  | -                                                                       |
-|  14  | RF-14 | [UC-14](./8-casosdeuso.md#uc14-editar-subcategoria-de-transacao) | -        | -                | ❌  | -                                                                       |
-|  15  | RF-15 | [UC-15](./8-casosdeuso.md#uc15-apagar-subcategoria-de-transacao) | -        | -                | ❌  | -                                                                       |
-|  16  | RF-16 | [UC-16](./8-casosdeuso.md#uc16-criar-orcamento) | 5        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/23) |
-|  17  | RF-17 | [UC-17](./8-casosdeuso.md#uc17-editar-orcamento) | 5        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/23) |
-|  18  | RF-18 | [UC-18](./8-casosdeuso.md#uc18-apagar-orcamento) | 5        | Gabriel; Tiago;  | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/23) |
-|  19  | RF-19 | [UC-19](./8-casosdeuso.md#uc19-registrar-instituicao-financeira) | 8        | Lucas; Tiago;    | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/54) |
-|  20  | RF-20 | [UC-20](./8-casosdeuso.md#uc20-editar-registro-de-instituicao) | 8        | Lucas; Tiago;    | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/54) |
-|  21  | RF-21 | [UC-21](./8-casosdeuso.md#uc21-apagar-registro-de-instituicao) | 8        | Lucas; Tiago;    | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/54) |
-|  22  | RF-22 | [UC-22](./8-casosdeuso.md#uc22-registrar-conta-em-instituicao) | -        | -                | ❌  | -                                                                       |
-|  23  | RF-23 | [UC-23](./8-casosdeuso.md#uc23-editar-conta-de-instituicao) | -        | -                | ❌  | -                                                                       |
-|  24  | RF-24 | [UC-24](./8-casosdeuso.md#uc24-apagar-conta-de-instituicao) | -        | -                | ❌  | -                                                                       |
-|  25  | RF-25 | [UC-25](./8-casosdeuso.md#uc25-registrar-transacao-recorrente) | 5        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/26) |
-|  26  | RF-26 | [UC-26](./8-casosdeuso.md#uc26-editar-transacao-recorrente) | 5        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/26) |
-|  27  | RF-27 | [UC-27](./8-casosdeuso.md#uc27-apagar-transacao-recorrente) | 5        | Daniel; Lucas;   | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/26) |
-|  28  | RF-28 | [UC-28](./8-casosdeuso.md#uc28-exportar-relatorios-csv) | -        | -                | ❌  | -                                                                       |
-|  29  | RF-29 | [UC-29](./8-casosdeuso.md#uc29-receber-notificacoes-de-alerta) | 6        | Danilo;          | ✅ | [Issue](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/42) |
-|  30  | RF-30 | [UC-30](./8-casosdeuso.md#uc30-enviar-feedback) | -        | -                | 📵      | -                                                                       |
-|  31  | RF-31 | [UC-31](./8-casosdeuso.md#uc31-visualizar-dicas-financeiras) | -        | -                | 📵      | -                                                                       |
-|  32  | RF-32 | [UC-32](./8-casosdeuso.md#uc32-acessar-materiais-de-educacao-financeira) | -        | -                | 📵      | -                                                                       |
 ---

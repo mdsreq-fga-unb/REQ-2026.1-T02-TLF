@@ -13,7 +13,7 @@
 7. Não há decisões pendentes de alinhamento com o cliente nem aprovações de escopo em aberto que impeçam o início do desenvolvimento do item.
 8. Um membro da equipe foi designado como responsável principal pela implementação do item, com registro na Work Item List.
 
-<a id="102-definition-of-done-dod"></a>
+<a id="DOD"></a>
 
 ## 10.2 Definition of Done (DoD)
 

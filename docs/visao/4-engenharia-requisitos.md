@@ -37,7 +37,7 @@
 #### Análise e Consenso:
 
 - [_Decomposição de Tarefas_](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues): A equipe realiza a quebra dos requisitos priorizados na iteração em tarefas técnicas menores. Isso permite definir o esforço técnico necessário e facilita a auto-organização da equipe para o desenvolvimento da sprint.
-- _Discussão em equipe_: Reuniões para o alinhamento do projeto com a equipe de desenvolvimento garante um melhor entendimento na maneira de desenvolver o projeto, e quais tecnologias serão necessárias para o TLT Finanças.
+- [_Discussão em equipe_](): Reuniões para o alinhamento do projeto com a equipe de desenvolvimento garante um melhor entendimento na maneira de desenvolver o projeto, e quais tecnologias serão necessárias para o TLT Finanças.
 
 #### Declaração:
 
@@ -46,12 +46,10 @@
 #### Representação:
 
 - [_Protótipos_](../entregas/prototipo.md): A criação de protótipos como a página de saldo ou a página de gráficos, ajuda a alinhar o entendimento das funções que serão implementadas para os stakeholders.
-- [_Refinamento de Protótipos_](../entregas/prototipo.md): Evolução dos esboços iniciais para protótipos de alta fidelidade para validar o fluxo de navegação complexo de cadastro e lançamentos com o cliente.
 
 #### Verificação e Validação:
 
 - [_Avaliação da Iteração_](../entregas/reunioes.md): Revisão técnica para garantir que os requisitos detalhados estão estáveis e que a base do sistema garante segurança antes do início da fase de Construção.
-- [_Critérios de Aceitação Detalhados_](https://github.com/mdsreq-fga-unb/REQ-2026.1-T02-TLF/issues/2):Definir critérios de aceitação bem detalhados garante a fácil validação e a aprovação dos requisitos. Além disso, também ajuda a ter informações suficientes para o trabalho.
 - [_Definition of Ready (DoR)_](./10-DoR-e-DoD.md#101-definition-of-ready-dor): Estabelecer uma Definition of Ready para que cada requisito esteja suficientemente detalhado, validado e acompanhado de critérios de aceitação claros antes de entrar em desenvolvimento.
 
 #### Organização e Atualização:

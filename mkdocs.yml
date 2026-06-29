@@ -46,7 +46,7 @@ nav:
       - 5-Cronograma: visao/5-cronograma.md
       - 6-Interação entre equipe e cliente: visao/6-interacao-equipe.md
       - 7-Requisitos de Software: visao/7-requisitos-software.md
-      - 8-Casos de Uso: visao/8-casosdeuso.md
+      - 8-Casos de Uso: visao/8-casosdeuso/index.md
       - 9-MoSCoW: visao/9-MoSCoW.md
       - 10-DoR e DoD: visao/10-DoR-e-DoD.md
       - 11-WIL do Produto: visao/11-WIL-produto.md

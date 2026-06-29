@@ -87,7 +87,7 @@ Reunião com a equipe
 <iframe
   width="100%"
   height="500"
-  src="https://www.youtube.com/embed/-AwFMe3b6LM "
+  src="https://www.youtube.com/embed/-AwFMe3b6LM"
   title="Reunião 09/05/26 - Equipe"
   frameborder="0"
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

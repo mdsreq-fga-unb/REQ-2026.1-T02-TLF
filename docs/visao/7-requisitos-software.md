@@ -69,7 +69,7 @@ Os requisitos funcionais descrevem as funcionalidades específicas que o sistema
 - **RF31** – gerar e exibir dica financeira com IA. (UC31)
 - **RF32** – disponibilizar PDFs de educação financeira. (UC32)
 
-<a id="72-lista-de-requisitos-nao-funcionais"></a>
+<a id="RNF"></a>
 
 ## 7.2 Lista de Requisitos Não Funcionais
 
@@ -103,7 +103,7 @@ Os requisitos funcionais descrevem as funcionalidades específicas que o sistema
 
 | Contribuição principal | CP   | RFs relacionados                                                       | RNFs relacionados   |
 | ---------------------- | ---- | ---------------------------------------------------------------------- | ------------------- |
-| OE1                    | CP1  | RF04, RF30                                                             | RFN03               |
+| OE1                    | CP1  | RF04                                                                   | RFN03               |
 | OE3                    | CP2  | RF07, RF08, RF09, RF25, RF26, RF27                                     | -                   |
 | OE4                    | CP3  | RF05                                                                   | RFN09               |
 | OE2                    | CP4  | RF06, RF28                                                             | -                   |
@@ -113,6 +113,6 @@ Os requisitos funcionais descrevem as funcionalidades específicas que o sistema
 | OE3                    | CP8  | RF19, RF20, RF21, RF22, RF23, RF24, RF10, RF11, RF12, RF13, RF14, RF15 | -                   |
 | OE1                    | CP9  | RF16, RF17, RF18, RF29                                                 | -                   |
 | OE5                    | CP10 | RF01, RF02, RF03                                                       | RNF02               |
-| OE6                    | CP11 | -                                                                      | RNF04               |
+| OE6                    | CP11 | RF30                                                                   | RNF04               |
 
 ---

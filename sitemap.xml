@@ -2,87 +2,322 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-06-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/MoSCoW/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/Cobertura/</loc>
+         <lastmod>2026-06-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/apresentacao/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-06-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/casosdeuso/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/database/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/prototipo/</loc>
+         <lastmod>2026-06-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/reunioes/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/Iteracoes/Iteracao-1/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/Iteracoes/Iteracao-10/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/Iteracoes/Iteracao-11/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/Iteracoes/Iteracao-2/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/Iteracoes/Iteracao-3/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/Iteracoes/Iteracao-4/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/Iteracoes/Iteracao-5/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/Iteracoes/Iteracao-6/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/Iteracoes/Iteracao-7/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/Iteracoes/Iteracao-8/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/entregas/Iteracoes/Iteracao-9/</loc>
+         <lastmod>2026-06-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/1-cenario/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-06-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/10-unidade-1/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/10-DoR-e-DoD/</loc>
+         <lastmod>2026-06-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/10-unidade-2/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/11-WIL-produto/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/12-unidade-1/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/12-unidade-2/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/12-unidade-3/</loc>
+         <lastmod>2026-06-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/2-solucao/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-06-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/3-estrategias/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-06-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/4-engenharia-requisitos/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-06-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/5-cronograma/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-06-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/6-interacao-equipe/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-06-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/7-requisitos-software/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-06-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-DoR-e-DoD/</loc>
-         <lastmod>2026-05-19</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/9-backlog-produto/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/9-MoSCoW/</loc>
+         <lastmod>2026-06-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/referencias/</loc>
-         <lastmod>2026-05-19</lastmod>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-01/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-02/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-03/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-04/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-05/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-06/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-07/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-08/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-09/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-10/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-11/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-12/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-13/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-14/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-15/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-16/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-17/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-18/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-19/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-20/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-21/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-22/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-23/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-24/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-25/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-26/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-27/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-28/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-29/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-30/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-31/</loc>
+         <lastmod>2026-06-30</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://mdsreq-fga-unb.github.io/REQ-2026.1-T02-TLF/visao/8-casosdeuso/casodeuso-32/</loc>
+         <lastmod>2026-06-30</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

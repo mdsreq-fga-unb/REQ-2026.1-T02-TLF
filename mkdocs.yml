@@ -33,6 +33,12 @@ theme:
         icon: material/weather-sunny
         name: Alternar para modo claro
 
+markdown_extensions:
+  - attr_list
+
+extra_css:
+  - stylesheets/extra.css
+
 plugins:
   - search
 

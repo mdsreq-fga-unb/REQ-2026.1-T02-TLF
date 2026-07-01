@@ -947,26 +947,274 @@
 <h2 id="101-definition-of-ready-dor">10.1 Definition of Ready (DoR)</h2>
 <ol>
 <li>O item foi validado pelo cliente para garantir agregue valor ao produto, e apresentado na reunião de planejamento da iteração sem dúvidas em aberto, e sua descrição está registrada na Work Item List com título, contexto de negócio e comportamento esperado preenchidos, de forma que qualquer membro da equipe consiga implementá-lo sem solicitar esclarecimentos adicionais.</li>
-<li>Os critérios de aceitação estão escritos de forma objetiva e verificável, permitindo que qualquer membro da equipe confirme seu atendimento de forma independente, sem consultar o responsável pelo item.</li>
 <li>A equipe avaliou coletivamente que o item é realizável dentro da iteração corrente de sete dias, considerando os demais itens planejados e a distribuição de papéis da equipe.</li>
 <li>As dependências técnicas do item foram identificadas, incluindo configurações de Supabase Auth, schemas do banco de dados via Prisma, endpoints de API e comportamento esperado do WatermelonDB quando aplicável, e estão disponíveis ou têm data de disponibilidade confirmada dentro da iteração.</li>
 <li>Quando o item envolve interface com o usuário, existe ao menos um protótipo ou esboço aprovado pelo cliente Rodrigo Átila, disponível como referência no repositório ou na Work Item List no Trello.</li>
-<li>O item está associado a pelo menos um requisito funcional ou não funcional, ou um caso de uso documentado nas Listas de Requisitos de Software ou Casos de uso do projeto, garantindo rastreabilidade.</li>
-<li>Não há decisões pendentes de alinhamento com o cliente nem aprovações de escopo em aberto que impeçam o início do desenvolvimento do item.</li>
-<li>Um membro da equipe foi designado como responsável principal pela implementação do item, com registro na Work Item List.</li>
 </ol>
 <p><a id="DOD"></a></p>
+<table>
+<thead>
+<tr>
+<th>UC</th>
+<th>Validado pelo cliente (1)</th>
+<th>Validado pela equipe (2)</th>
+<th>Dependencias prontas (3)</th>
+<th>Prototipo (4)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UC-01</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-02</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-04</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-05</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-06</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-07</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-08</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-09</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-10</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-11</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-12</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-16</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-17</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-18</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-19</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-20</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-21</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-25</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-26</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-27</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>UC-29</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+</tbody>
+</table>
 <h2 id="102-definition-of-done-dod">10.2 Definition of Done (DoD)</h2>
 <p>Uma funcionalidade é considerada concluída quando todos os critérios abaixo forem satisfeitos:</p>
 <ol>
-<li>O código foi implementado conforme os critérios de aceitação definidos no DoR e atende ao comportamento esperado descrito no Caso de Uso correspondente.</li>
 <li>Foram escritos testes unitários com Jest cobrindo os cenários principais e os casos de borda da funcionalidade, com cobertura mínima de 70% nas camadas de negócio, services e controllers no backend; hooks e funções utilitárias no frontend, excluindo componentes de interface de usuário.</li>
 <li>O código passou por revisão de ao menos um outro membro da equipe via Pull Request no GitHub e foi aprovado antes do merge na branch principal.</li>
 <li>Quando aplicável, os endpoints de backend criados ou alterados pela funcionalidade estão documentados e atualizados no Swagger, com descrição dos parâmetros, corpos de requisição e respostas possíveis.</li>
 <li>Quando aplicável, o comportamento offline foi verificado: a funcionalidade opera corretamente sem conexão via WatermelonDB e os dados são sincronizados com o backend após restabelecimento da conexão.</li>
-<li>Os dados pessoais e financeiros manipulados pela funcionalidade não são acessíveis sem autenticação ativa via Supabase Auth, não são armazenados em texto puro no banco de dados, não aparecem em logs de console em ambiente de produção e não são transmitidos sem criptografia entre cliente e servidor.</li>
-<li>O aplicativo compila e executa sem erros ou crashes no ambiente de desenvolvimento, Expo Go ou build de desenvolvimento, após a integração da funcionalidade.</li>
+<li>A funcionalidade foi implementada e integrada de ponta a ponta e o aplicativo compila e executa sem erros ou crashes no ambiente de desenvolvimento, Expo Go ou build de desenvolvimento, após a integração da funcionalidade.</li>
 </ol>
+<table>
+<thead>
+<tr>
+<th>Iteração</th>
+<th>Testado (1)</th>
+<th>Revisado (2)</th>
+<th>Documentado (3)</th>
+<th>Offline funcional (4)</th>
+<th>Integrada (5)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Iteração 1</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Iteração 2</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Iteração 3</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>-</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>Iteração 4</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>Iteração 5</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>Iteração 6</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>Iteração 7</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>Iteração 8</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>Iteração 9</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+<tr>
+<td>Iteração 10</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+<td>SIM</td>
+</tr>
+</tbody>
+</table>
 <hr />
 
 

@@ -1,5 +1,11 @@
 # Iteração 8
 
+## Casos de uso
+
+- [UC-19](./8-casosdeuso/casodeuso-19.md) 
+- [UC-20](./8-casosdeuso/casodeuso-20.md), 
+- [UC-21](./8-casosdeuso/casodeuso-21.md)
+
 ## Protótipos
 
 - Nenhuma alteração feita no Protótipo nesta iteração
@@ -34,7 +40,9 @@
 
 ## Definition of Done (DoD)
 
-- Nenhuma alteração feita no DOD nesta iteração
+| Iteração   | Testado (1) | Revisado (2) | Documentado (3) | Offline funcional (4) | Integrada (5) |
+| ---------- | ----------- | ------------ | --------------- | --------------------- | ------------- |
+| Iteração 8 | SIM         | SIM          | SIM             | SIM                   | SIM           |
 
 ## Refinamento da Work Item List
 

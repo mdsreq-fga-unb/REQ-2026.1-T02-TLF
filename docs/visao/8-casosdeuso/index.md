@@ -42,3 +42,10 @@
 |  30  | [UC-30](./casodeuso-30.md) |      | -        | -                | 📵     | -                                                                       |
 |  31  | [UC-31](./casodeuso-31.md) |      | -        | -                | 📵     | -                                                                       |
 |  32  | [UC-32](./casodeuso-32.md) |      | -        | -                | 📵     | -                                                                       |
+
+## Digrama de casos de uso
+
+<iframe width="100%" height="500" src="https://miro.com/app/board/uXjVHA_JmbM=/?share_link_id=397284291902" title="Matriz de impacto e esforçp" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+[Matriz de valor e impacto](https://miro.com/app/board/uXjVHA_JmbM=/?share_link_id=397284291902)
+
+<a id="diagrama-UC"></a>

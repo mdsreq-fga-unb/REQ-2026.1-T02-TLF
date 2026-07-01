@@ -1,5 +1,10 @@
 # Iteração 3
 
+## Casos de uso
+
+- [UC-01](./8-casosdeuso/casodeuso-01.md)
+- [UC-02](./8-casosdeuso/casodeuso-02.md)
+
 ## Protótipos
 
 <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/design/JC2E9URvqIjq9ij86enkhi/TLT-finan%C3%A7as?node-id=0-1&embed-host=share" allowfullscreen></iframe>
@@ -38,6 +43,10 @@
 ![Exemplo do DOD](../../images/exemplo_DOD.png)
 
 [DOD](../../visao/10-DoR-e-DoD.md#DOD)
+
+| Iteração   | Testado (1) | Revisado (2) | Documentado (3) | Offline funcional (4) | Integrada (5) |
+| ---------- | ----------- | ------------ | --------------- | --------------------- | ------------- |
+| Iteração 3 | SIM         | SIM          | SIM             | -                     | SIM           |
 
 ## Refinamento da Work Item List
 

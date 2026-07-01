@@ -1,5 +1,13 @@
 # Iteração 4
 
+## Casos de uso
+
+- [UC-04](./8-casosdeuso/casodeuso-04.md) 
+- [UC-05](./8-casosdeuso/casodeuso-05.md) 
+- [UC-07](./8-casosdeuso/casodeuso-07.md)
+- [UC-08](./8-casosdeuso/casodeuso-08.md)
+- [UC-09](./8-casosdeuso/casodeuso-09.md)
+
 ## Protótipos
 
 - Nenhuma alteração feita no Protótipo nesta iteração
@@ -34,7 +42,9 @@
 
 ## Definition of Done (DoD)
 
-- Nenhuma alteração feita no DOD nesta iteração
+| Iteração   | Testado (1) | Revisado (2) | Documentado (3) | Offline funcional (4) | Integrada (5) |
+| ---------- | ----------- | ------------ | --------------- | --------------------- | ------------- |
+| Iteração 4 | SIM         | SIM          | SIM             | SIM                   | SIM           |
 
 ## Refinamento da Work Item List
 

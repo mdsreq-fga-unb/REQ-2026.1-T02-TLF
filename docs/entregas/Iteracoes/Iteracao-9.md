@@ -1,4 +1,8 @@
-# Iteração 4
+# Iteração 9
+
+# Casos de uso
+
+- Devido a problemas indentificados com os RNFs 07 e 11, relacionados ao fluxo offline-first, os UCs 04 a 32, e que estão no escopo, serão revisados e o DoD será reaplicado a todos eles.
 
 ## Protótipos
 
@@ -46,7 +50,9 @@
 
 ## Definition of Done (DoD)
 
-- Nenhuma alteração feita no DOD nesta iteração
+| Iteração   | Testado (1) | Revisado (2) | Documentado (3) | Offline funcional (4) | Integrada (5) |
+| ---------- | ----------- | ------------ | --------------- | --------------------- | ------------- |
+| Iteração 9 | SIM         | SIM          | SIM             | SIM                   | SIM           |
 
 ## Refinamento da Work Item List
 

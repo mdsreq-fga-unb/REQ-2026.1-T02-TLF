@@ -1,6 +1,6 @@
 # 12 UNIDADE 3
 
-## 12.2 Unidade 3
+## 12.3 Unidade 3
 
 Durante a unidade 3 do projeto TLT Finanças, a equipe aprofundou a evolução do produto a partir das bases consolidadas na unidade anterior, avançando na organização do backlog, no refinamento das entregas e na validação incremental das funcionalidades. Nesse período, a equipe passou a lidar de forma mais concreta com os desafios de execução do cronograma, integração entre componentes. Assim, além do amadurecimento técnico, a unidade também evidenciou a necessidade de maior disciplina organizacional e acompanhamento mais rigoroso das entregas.
 

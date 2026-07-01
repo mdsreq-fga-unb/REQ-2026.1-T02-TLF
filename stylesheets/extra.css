@@ -1,0 +1,14 @@
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.img-row {
+  text-align: center;
+}
+
+.img-row img {
+  display: inline-block;
+  margin: 0 8px;
+}

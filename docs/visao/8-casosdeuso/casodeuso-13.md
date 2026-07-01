@@ -21,6 +21,12 @@
 - Subcategoria já existente na mesma categoria pai: sistema exibe erro.
 - Nome vazio: sistema solicita preenchimento.
 
+**Imagem do Protótipo**
+
+![UC13 - Criar Subcategoria de Transação](../../images/prototipo-tlt/Add_Subcategory.png){: width="250" .center }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc14-editar-subcategoria-de-transacao"></a>

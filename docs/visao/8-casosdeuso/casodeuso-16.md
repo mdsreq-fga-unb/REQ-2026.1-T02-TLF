@@ -19,6 +19,14 @@
 
 - Dados ou valores informados são inválidos: sistema exibe erro.
 
+**Imagem do Protótipo**
+
+![UC16 - Tela Inicial de Orçamentos](../../images/prototipo-tlt/Budgets.png){: width="250" }
+![UC16 - Criar Orçamento](../../images/prototipo-tlt/Create_Budget.png){: width="250" }
+{: .img-row }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc17-editar-orcamento"></a>

@@ -21,6 +21,12 @@
 - Nenhum dado disponível: sistema exibe painel vazio com mensagem orientativa.
 - Período sem movimentações: sistema informa ausência de dados para o período.
 
+**Imagem do Protótipo**
+
+![UC06 - Visualizar Painel com Resumo Gráfico](../../images/prototipo-tlt/Stats.png){: width="250" .center }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc07-registrar-transacao-receita-ou-despesa"></a>

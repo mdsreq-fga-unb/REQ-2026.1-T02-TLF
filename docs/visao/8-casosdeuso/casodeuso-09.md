@@ -20,6 +20,12 @@
 - Transação não encontrada ou erro ao excluir: sistema exibe falha.
 - Usuário cancela a operação: exclusão interrompida.
 
+**Imagem do Protótipo**
+
+![UC09 - Deletar Transação](../../images/prototipo-tlt/Records.png){: width="250" .center }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc10-criar-categoria-de-transacao"></a>

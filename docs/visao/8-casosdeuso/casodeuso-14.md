@@ -21,6 +21,12 @@
 - Novo nome já existe na mesma categoria pai: sistema rejeita.
 - Usuário cancela: nome mantido.
 
+**Imagem do Protótipo**
+
+![UC14 - Editar Subcategoria de Transação](../../images/prototipo-tlt/Edit_Subcategory.png){: width="250" .center }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc15-apagar-subcategoria-de-transacao"></a>

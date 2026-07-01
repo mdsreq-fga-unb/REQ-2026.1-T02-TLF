@@ -21,6 +21,14 @@
 - Dados incompletos, campos vazios ou valores inválidos: sistema exibe erro.
 - Sem conexão com internet: transação é salva offline e sincronizada posteriormente.
 
+**Imagem do Protótipo**
+
+![UC07 - Registrar Transação (Despesa)](../../images/prototipo-tlt/Add_Record_Expense.png){: width="250" }
+![UC07 - Registrar Transação (Receita)](../../images/prototipo-tlt/Add_Record_Income.png){: width="250" }
+{: .img-row }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc08-editar-transacao"></a>

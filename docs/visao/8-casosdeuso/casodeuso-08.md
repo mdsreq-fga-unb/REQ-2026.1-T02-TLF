@@ -23,6 +23,12 @@
 - Transação não encontrada: sistema exibe mensagem informativa.
 - Usuário cancela a edição: alterações são descartadas.
 
+**Imagem do Protótipo**
+
+![UC08 - Editar Transação](../../images/prototipo-tlt/Record_Detail.png){: width="250" .center }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc09-deletar-transacao"></a>

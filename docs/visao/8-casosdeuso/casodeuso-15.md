@@ -21,6 +21,12 @@
 - Usuário cancela: subcategoria mantida.
 - Erro ao reclassificar: sistema notifica e aborta.
 
+**Imagem do Protótipo**
+
+![UC15 - Apagar Subcategoria de Transação](../../images/prototipo-tlt/Edit_Subcategory.png){: width="250" .center }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc16-criar-orcamento"></a>

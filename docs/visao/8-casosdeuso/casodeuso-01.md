@@ -23,6 +23,12 @@
 - Usuário ou email já cadastrado: sistema exibe erro.
 - Dados inválidos: sistema solicita correção.
 
+**Imagem do Protótipo**
+
+![UC01 - Cadastrar Usuário](../../images/prototipo-tlt/Sign_Up_With_Logo.png){: width="250" .center }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc02-realizar-login"></a>

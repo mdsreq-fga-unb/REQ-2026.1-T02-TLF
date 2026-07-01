@@ -21,6 +21,12 @@
 - Nenhuma transação encontrada para os filtros: sistema exibe mensagem "Nenhum resultado".
 - Falha ao carregar histórico: sistema exibe erro e botão para recarregar.
 
+**Imagem do Protótipo**
+
+![UC05 - Visualizar Histórico pelo Painel Inicial](../../images/prototipo-tlt/Records.png){: width="250" .center }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc06-visualizar-painel-com-resumo-grafico"></a>

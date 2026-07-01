@@ -21,6 +21,14 @@
 - Credenciais inválidas: erro exibido.
 - Falha de conexão: sistema exibe mensagem de erro.
 
+**Imagem do Protótipo**
+
+![UC02 - Realizar Login](../../images/prototipo-tlt/Main.png){: width="250" }
+![UC02 - Realizar Login (Credenciais inválidas)](../../images/prototipo-tlt/Login_With_Logo.png){: width="250" }
+{: .img-row }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc03-recuperar-senha"></a>

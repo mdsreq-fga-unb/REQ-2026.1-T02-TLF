@@ -22,6 +22,14 @@
 - Categoria padrão do sistema: edição limitada (apenas cor/ícone).
 - Usuário cancela: alterações descartadas.
 
+**Imagem do Protótipo**
+
+![UC11 - Selecionar Categoria](../../images/prototipo-tlt/Select_Category.png){: width="250" }
+![UC11 - Editar Categoria de Transação](../../images/prototipo-tlt/Edit_Category.png){: width="250" }
+{: .img-row }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc12-apagar-categoria-de-transacao"></a>

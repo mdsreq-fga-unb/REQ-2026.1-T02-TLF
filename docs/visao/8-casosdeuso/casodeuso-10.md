@@ -21,6 +21,14 @@
 - Nome de categoria já existente: sistema exibe erro e sugere outro nome.
 - Nome vazio ou inválido: sistema solicita preenchimento correto.
 
+**Imagem do Protótipo**
+
+![UC10 - Selecionar Categoria](../../images/prototipo-tlt/Select_Category.png){: width="250" }
+![UC10 - Criar Categoria de Transação](../../images/prototipo-tlt/Add_Category.png){: width="250" }
+{: .img-row }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc11-editar-categoria-de-transacao"></a>

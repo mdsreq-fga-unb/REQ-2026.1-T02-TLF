@@ -20,6 +20,15 @@
 - Usuário cancela: item mantido.
 - Erro ao excluir: sistema exibe mensagem de falha.
 
+**Imagem do Protótipo**
+
+![UC18 - Tela Inicial de Orçamentos](../../images/prototipo-tlt/Budgets.png){: width="250" }
+![UC18 - Detalhe do Orçamento](../../images/prototipo-tlt/Budget_Detail.png){: width="250" }
+![UC18 - Apagar Orçamento](../../images/prototipo-tlt/Budget_Menu.png){: width="250" }
+{: .img-row }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc19-registrar-instituicao-financeira"></a>

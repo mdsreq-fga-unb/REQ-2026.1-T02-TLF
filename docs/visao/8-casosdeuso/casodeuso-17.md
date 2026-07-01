@@ -21,6 +21,15 @@
 - Dados inválidos: sistema exibe erro e mantém os valores anteriores.
 - Usuário cancela: alterações descartadas.
 
+**Imagem do Protótipo**
+
+![UC17 - Tela Inicial de Orçamentos](../../images/prototipo-tlt/Budgets.png){: width="250" }
+![UC17 - Detalhe do Orçamento](../../images/prototipo-tlt/Budget_Detail.png){: width="250" }
+![UC17 - Editar Orçamento](../../images/prototipo-tlt/Budget_Menu.png){: width="250" }
+{: .img-row }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc18-apagar-orcamento"></a>

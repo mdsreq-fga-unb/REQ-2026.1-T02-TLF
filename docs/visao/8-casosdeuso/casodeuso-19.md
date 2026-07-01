@@ -21,6 +21,12 @@
 - Instituição já cadastrada: sistema exibe erro.
 - Dados incompletos: sistema solicita preenchimento.
 
+**Imagem do Protótipo**
+
+![UC19 - Registrar Instituição Financeira](../../images/prototipo-tlt/Add_Acount.png){: width="250" .center }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc20-editar-registro-de-instituicao"></a>

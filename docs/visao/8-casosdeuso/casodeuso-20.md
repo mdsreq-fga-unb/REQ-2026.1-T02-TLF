@@ -20,6 +20,12 @@
 - Nome duplicado com outra instituição: sistema rejeita.
 - Usuário cancela: dados originais mantidos.
 
+**Imagem do Protótipo**
+
+![UC20 - Editar Registro de Instituição](../../images/prototipo-tlt/Edit_Account.png){: width="250" .center }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc21-apagar-registro-de-instituicao"></a>

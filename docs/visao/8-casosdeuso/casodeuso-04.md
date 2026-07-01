@@ -21,6 +21,12 @@
 - Nenhum dado registrado: sistema exibe painel vazio com mensagem orientativa.
 - Falha ao carregar dados: sistema exibe mensagem de erro e botão para tentar novamente.
 
+**Imagem do Protótipo**
+
+![UC04 - Visualizar Painel Inicial](../../images/prototipo-tlt/Home.png){: width="250" .center }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc05-visualizar-historico-pelo-painel-inicial"></a>

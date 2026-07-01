@@ -22,6 +22,14 @@
 - Tentativa de excluir categoria padrão: sistema bloqueia a ação.
 - Usuário cancela: categoria mantida.
 
+**Imagem do Protótipo**
+
+![UC12 - Selecionar Categoria](../../images/prototipo-tlt/Select_Category.png){: width="250" }
+![UC12 - Apagar Categoria de Transação](../../images/prototipo-tlt/Edit_Category.png){: width="250" }
+{: .img-row }
+
+[Clique aqui para ver o protótipo completo.](../../entregas/prototipo.md)
+
 ---
 
 <a id="uc13-criar-subcategoria-de-transacao"></a>

@@ -98,8 +98,8 @@ Os requisitos funcionais descrevem as funcionalidades específicas que o sistema
 
 ## 7.3 Matriz-síntese de rastreabilidade
 
-<iframe width="100%" height="500" src="https://miro.com/app/board/uXjVHTxsQHI=/?share_link_id=455679825476" title="Árvore de rastreabilidade no miro" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-[Árvore de rastreabilidade no miro](https://miro.com/app/board/uXjVHTxsQHI=/?share_link_id=455679825476)
+<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/DZRSBFWOy3RlxyqTIZS7yM/Arvore-de-Rastreabilidade?node-id=0-1&embed-host=share" allowfullscreen></iframe>
+[Árvore de rastreabilidade no miro](https://www.figma.com/board/DZRSBFWOy3RlxyqTIZS7yM/Arvore-de-Rastreabilidade?node-id=0-1&t=XXiEtC56X8JHpLTF-1)
 
 | Contribuição principal | CP   | RFs relacionados                                                       | RNFs relacionados   |
 | ---------------------- | ---- | ---------------------------------------------------------------------- | ------------------- |
